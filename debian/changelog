@@ -1,3 +1,12 @@
+gtk+3.0 (3.8.7-0linuxmint1) petra; urgency=low
+
+  * Full color icon in dialogs
+  * Fixed memleak in submenus
+  * 2px padding in context menus
+  * All mime handlers visible in gtk app chooser
+
+ -- Clement Lefebvre <root@linuxmint.com>  Fri, 22 Nov 2013 12:33:52 +0000
+
 gtk+3.0 (3.8.4-0ubuntu3) saucy; urgency=low
 
   * debian/patches/git_padding_value.patch: don't use a negative padding, 
