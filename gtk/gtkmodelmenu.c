@@ -343,6 +343,7 @@ gtk_model_menu_binding_populate (GtkModelMenuBinding *binding)
   while (children)
     {
       gtk_container_remove (GTK_CONTAINER (binding->shell), children->data);
+      gtk_widget_destroy (children->data);
       children = g_list_delete_link (children, children);
     }
 
