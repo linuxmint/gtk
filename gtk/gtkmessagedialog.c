@@ -425,8 +425,8 @@ setup_type (GtkMessageDialog *dialog,
 {
   GtkMessageDialogPrivate *priv = dialog->priv;
   const gchar *stock_id = NULL;
+  const gchar *icon_name = NULL;
   AtkObject *atk_obj;
-  GIcon *gicon = NULL;
 
   priv->message_type = type;
 
@@ -434,22 +434,22 @@ setup_type (GtkMessageDialog *dialog,
     {
     case GTK_MESSAGE_INFO:
       stock_id = GTK_STOCK_DIALOG_INFO;
-      gicon = g_themed_icon_new_with_default_fallbacks ("dialog-information-symbolic");
+      icon_name = GTK_STOCK_DIALOG_INFO "-symbolic";
       break;
 
     case GTK_MESSAGE_QUESTION:
       stock_id = GTK_STOCK_DIALOG_QUESTION;
-      gicon = g_themed_icon_new_with_default_fallbacks ("dialog-question-symbolic");
+      icon_name = GTK_STOCK_DIALOG_QUESTION "-symbolic";
       break;
 
     case GTK_MESSAGE_WARNING:
       stock_id = GTK_STOCK_DIALOG_WARNING;
-      gicon = g_themed_icon_new_with_default_fallbacks ("dialog-warning-symbolic");
+      icon_name = GTK_STOCK_DIALOG_WARNING "-symbolic";
       break;
 
     case GTK_MESSAGE_ERROR:
       stock_id = GTK_STOCK_DIALOG_ERROR;
-      gicon = g_themed_icon_new_with_default_fallbacks ("dialog-error-symbolic");
+      icon_name = GTK_STOCK_DIALOG_ERROR "-symbolic";
       break;
 
     case GTK_MESSAGE_OTHER:
@@ -460,9 +460,9 @@ setup_type (GtkMessageDialog *dialog,
       break;
     }
 
-  gtk_image_set_from_gicon (GTK_IMAGE (priv->image), gicon, GTK_ICON_SIZE_DIALOG);
-  if (gicon)
-    g_object_unref (gicon);
+  if (icon_name) {
+    gtk_image_set_from_icon_name (GTK_IMAGE (priv->image), icon_name, GTK_ICON_SIZE_DIALOG);
+  }
 
   atk_obj = gtk_widget_get_accessible (GTK_WIDGET (dialog));
   if (GTK_IS_ACCESSIBLE (atk_obj))
