@@ -4655,12 +4655,12 @@ gtk_menu_position (GtkMenu  *menu,
               (!rtl && needed_width >  space_right))
             {
               /* position left */
-              x = x + padding.left - requisition.width + 1;
+              x = x + padding.left - requisition.width + 1 - 2;
             }
           else
             {
               /* position right */
-              x = x - padding.right;
+              x = x - padding.right + 2;
             }
 
           /* x is clamped on-screen further down */
@@ -4706,9 +4706,9 @@ gtk_menu_position (GtkMenu  *menu,
           needed_height <= space_below)
         {
           if (needed_height <= space_below)
-            y = y - padding.top;
+            y = y - padding.top + 2;
           else
-            y = y + padding.bottom - requisition.height + 1;
+            y = y + padding.bottom - requisition.height + 1 - 2;
 
           y = CLAMP (y, monitor.y,
                      monitor.y + monitor.height - requisition.height);
