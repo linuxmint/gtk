@@ -1,0 +1,54 @@
+Description: We need to have abicheck.sh be dynamic on the enabled GDK backends.
+ In Ubuntu this is because we build the Wayland backend for the shared lib but not the udeb
+Author: Iain Lane <iain.lane@canonical.com>
+Origin: https://bugzilla.gnome.org/show_bug.cgi?id=682709
+
+Index: b/gdk/abicheck.sh
+===================================================================
+--- a/gdk/abicheck.sh
++++ b/gdk/abicheck.sh
+@@ -1,5 +1,30 @@
+ #! /bin/sh
+ 
+-cpp -P -DGDK_WINDOWING_X11  ${srcdir:-.}/gdk.symbols | sed -e '/^$/d' -e 's/ G_GNUC.*$//' | sort | uniq > expected-abi
++has_x11_backend=no
++has_wayland_backend=no
++
++# GDK_BACKENDS passed to this script from gdk/Makefile.am
++for backend in ${GDK_BACKENDS}; do
++    case "$backend" in
++        x11)
++            has_x11_backend=yes
++            ;;
++        wayland)
++            has_wayland_backend=yes
++            ;;
++    esac
++done
++
++cppargs=
++
++if [ $has_x11_backend = "yes" ]; then
++    cppargs="$cppargs -DGDK_WINDOWING_X11"
++fi
++
++if [ $has_wayland_backend = "yes" ]; then
++    cppargs="$cppargs -DGDK_WINDOWING_WAYLAND"
++fi
++
++cpp -P $cppargs ${srcdir:-.}/gdk.symbols | sed -e '/^$/d' -e 's/ G_GNUC.*$//' | sort | uniq > expected-abi
+ nm -D -g --defined-only .libs/libgdk-3.so | cut -d ' ' -f 3 | egrep -v '^(__bss_start|_edata|_end)' | sort > actual-abi
+ diff -u expected-abi actual-abi && rm -f expected-abi actual-abi
+Index: b/gdk/Makefile.am
+===================================================================
+--- a/gdk/Makefile.am
++++ b/gdk/Makefile.am
+@@ -298,7 +298,7 @@
+ gdk.def: gdk.symbols
+ 	$(AM_V_GEN) (echo -e EXPORTS; $(CPP) -P -DGDK_WINDOWING_WIN32 - <$(srcdir)/gdk.symbols | sed -e '/^$$/d' -e 's/^/	/' -e 's/G_GNUC_[^ ]*//g') > $(srcdir)/gdk.def
+ 
+-TESTS_ENVIRONMENT = srcdir="$(srcdir)"
++TESTS_ENVIRONMENT = srcdir="$(srcdir)" GDK_BACKENDS="$(GDK_BACKENDS)"
+ if OS_LINUX
+ TESTS = abicheck.sh
+ endif

@@ -1,0 +1,12 @@
+*,
+#reference {
+  color: lime;
+}
+
+:insensitive {
+  color: red;
+}
+
+GtkLabel:insensitive {
+  color: inherit;
+}
