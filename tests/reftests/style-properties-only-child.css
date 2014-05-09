@@ -1,9 +1,0 @@
-.only-child-ref:nth-child(first):nth-child(last) {
-    color: blue;
-    background-color: red;
-}
-
-.only-child-notref:only-child {
-    color: blue;
-    background-color: red;
-}
