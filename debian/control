@@ -1,9 +1,7 @@
 Source: gtk+3.0
 Section: libs
 Priority: optional
-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-XSBC-Original-Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
-Uploaders: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
+Maintainer: Linux Mint <root@linuxmint.com>
 Build-Depends: debhelper (>= 8.1.3),
                cdbs (>= 0.4.93~),
                dbus-x11,
@@ -50,7 +48,6 @@ Build-Depends-Indep: docbook-xml,
                      libpango1.0-doc,
                      libcairo2-doc
 Standards-Version: 3.9.4
-Vcs-Bzr: https://code.launchpad.net/~ubuntu-desktop/gtk/ubuntugtk3
 Homepage: http://www.gtk.org/
 XS-Testsuite: autopkgtest
 
