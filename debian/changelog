@@ -1,3 +1,9 @@
+gtk+3.0 (3.10.8~1) qiana; urgency=medium
+
+  * Fixed tooltips temporarily drawing at 0x0
+
+ -- Clement Lefebvre <root@linuxmint.com>  Fri, 09 May 2014 13:42:09 +0100
+
 gtk+3.0 (3.10.8-0ubuntu1) trusty; urgency=medium
 
   * New upstream version, drop backports included in the update
