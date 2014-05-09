@@ -1,0 +1,12 @@
+* {
+  engine: none;
+  color: inherit;
+}
+
+GtkButton {
+  color: red;
+}
+
+.testinherit * {
+  color: red;
+}

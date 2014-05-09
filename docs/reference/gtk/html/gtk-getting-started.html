@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>GTK+ 3 Reference Manual: Getting Started with GTK+</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
+<link rel="up" href="gtk.html" title="Part I. GTK+ Overview">
+<link rel="prev" href="gtk.html" title="Part I. GTK+ Overview">
+<link rel="next" href="ch01s02.html" title="Packing">
+<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts"></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="gtk.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="gtk.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="ch01s02.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="chapter">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="gtk-getting-started"></a>Getting Started with GTK+</h2></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="gtk-getting-started.html#id-1.2.3.3">Basics</a></span></dt>
+<dt><span class="section"><a href="ch01s02.html">Packing</a></span></dt>
+<dt><span class="section"><a href="ch01s03.html">Drawing</a></span></dt>
+<dt><span class="section"><a href="ch01s04.html">Building user interfaces</a></span></dt>
+<dt><span class="section"><a href="ch01s05.html">Building applications</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch01s05.html#id-1.2.3.7.5">A trivial application</a></span></dt>
+<dt><span class="section"><a href="ch01s05.html#id-1.2.3.7.6">Populating the window</a></span></dt>
+<dt><span class="section"><a href="ch01s05.html#id-1.2.3.7.7">Opening files</a></span></dt>
+<dt><span class="section"><a href="ch01s05.html#id-1.2.3.7.8">An application menu</a></span></dt>
+<dt><span class="section"><a href="ch01s05.html#id-1.2.3.7.9">A preference dialog</a></span></dt>
+<dt><span class="section"><a href="ch01s05.html#id-1.2.3.7.10">Adding a search bar</a></span></dt>
+<dt><span class="section"><a href="ch01s05.html#id-1.2.3.7.11">Adding a side bar</a></span></dt>
+<dt><span class="section"><a href="ch01s05.html#id-1.2.3.7.12">Properties</a></span></dt>
+</dl></dd>
+</dl></div>
+<p>This chapter contains some tutorial information to get you
+  started with GTK+ programming. It assumes that you have GTK+, its
+  dependencies and a C compiler installed and ready to use. If you
+  need to build GTK+ itself first, refer to the
+  <a class="link" href="gtk-compiling.html" title="Compiling GTK+ Applications">Compiling the GTK+ libraries</a>
+  section in this reference.</p>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id-1.2.3.3"></a>Basics</h2></div></div></div>
+<p>To begin our introduction to GTK, we'll start with the simplest
+    program possible. This program will create an empty 200 × 200 pixel
+    window.</p>
+<div class="informalfigure"><div class="mediaobject"><img src="window-default.png"></div></div>
+<div class="informalexample">
+<p>Create a new file with the following content named example-0.c.</p>
+<pre class="programlisting">#include &lt;gtk/gtk.h&gt;
+
+int
+main (int   argc,
+      char *argv[])
+{
+  GtkWidget *window;
+
+  gtk_init (&amp;argc, &amp;argv);
+
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (window), "Window");
+
+  g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+
+  gtk_widget_show (window);
+
+  gtk_main ();
+
+  return 0;
+}
+</pre>
+</div>
+<p>
+      You can compile the program above with GCC using:
+      </p>
+<div class="literallayout"><p><br>
+        <code class="literal">gcc `pkg-config --cflags gtk+-3.0` -o example-0 example-0.c `pkg-config --libs gtk+-3.0`</code><br>
+      </p></div>
+<p>
+    </p>
+<div class="note"><p>For more information on how to compile a GTK+ application, please
+    refer to the <a class="link" href="gtk-compiling.html" title="Compiling GTK+ Applications">Compiling GTK+ Applications</a>
+    section in this reference.</p></div>
+<p>All GTK+ applications will, of course, include
+    <code class="filename">gtk/gtk.h</code>, which declares functions, types and
+    macros required by GTK+ applications.</p>
+<div class="warning"><p>Even if GTK+ installs multiple header files, only the
+    top-level <code class="filename">gtk/gtk.h</code> header can be directly included
+    by third party code. The compiler will abort with an error if any other
+    header is directly included.</p></div>
+<p>We then proceed into the <code class="function">main</code>() function of the
+    application, and we declare a <code class="varname">window</code> variable as a pointer
+    of type <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>.</p>
+<p>The following line will call <a class="link" href="gtk3-General.html#gtk-init" title="gtk_init ()"><code class="function">gtk_init()</code></a>, which
+    is the initialization function for GTK+; this function will set up GTK+,
+    the type system, the connection to the windowing environment, etc. The
+    <a class="link" href="gtk3-General.html#gtk-init" title="gtk_init ()"><code class="function">gtk_init()</code></a> takes as arguments the pointers to the command line arguments
+    counter and string array; this allows GTK+ to parse specific command line
+    arguments that control the behavior of GTK+ itself. The parsed arguments
+    will be removed from the array, leaving the unrecognized ones for your
+    application to parse.</p>
+<div class="note"><p>For more information on which command line arguments GTK+
+    recognizes, please refer to the <a class="link" href="gtk-running.html" title="Running GTK+ Applications">Running GTK+
+    Applications</a> section in this reference.</p></div>
+<p>The call to <a class="link" href="GtkWindow.html#gtk-window-new" title="gtk_window_new ()"><code class="function">gtk_window_new()</code></a> will create a new <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a> and store
+    it inside the <code class="varname">window</code> variable. The type of the window
+    is <a class="link" href="gtk3-Standard-Enumerations.html#GTK-WINDOW-TOPLEVEL:CAPS"><code class="literal">GTK_WINDOW_TOPLEVEL</code></a>, which means that the <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a> will be managed
+    by the windowing system: it will have a frame, a title bar and window
+    controls, depending on the platform.</p>
+<p>In order to terminate the application when the <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a> is
+    destroyed, we connect the <a class="link" href="GtkWidget.html#GtkWidget-destroy" title="The “destroy” signal"><span class="type">“destroy”</span></a> signal to the <a class="link" href="gtk3-General.html#gtk-main-quit" title="gtk_main_quit ()"><code class="function">gtk_main_quit()</code></a>
+    function. This function will terminate the GTK+ main loop started by calling
+    <a class="link" href="gtk3-General.html#gtk-main" title="gtk_main ()"><code class="function">gtk_main()</code></a> later. The <a class="link" href="GtkWidget.html#GtkWidget-destroy" title="The “destroy” signal"><span class="type">“destroy”</span></a> signal is emitted when a widget is
+    destroyed, either by explicitly calling <a class="link" href="GtkWidget.html#gtk-widget-destroy" title="gtk_widget_destroy ()"><code class="function">gtk_widget_destroy()</code></a> or when the
+    widget is unparented. Top-level <a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a>s are also destroyed when
+    the Close window control button is clicked.</p>
+<p><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>s are hidden by default. By calling <a class="link" href="GtkWidget.html#gtk-widget-show" title="gtk_widget_show ()"><code class="function">gtk_widget_show()</code></a>
+    on a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> we are asking GTK+ to set the visibility attribute so that it
+    can be displayed. All this work is done after the main loop has been
+    started.</p>
+<p>The last line of interest is the call to <a class="link" href="gtk3-General.html#gtk-main" title="gtk_main ()"><code class="function">gtk_main()</code></a>. This function will
+    start the GTK+ main loop and will block the control flow of the
+    <code class="function">main()</code> until the <a class="link" href="gtk3-General.html#gtk-main-quit" title="gtk_main_quit ()"><code class="function">gtk_main_quit()</code></a> function is called.</p>
+<p>While the program is running, GTK+ is receiving
+    <em class="firstterm">events</em>. These are typically input events caused by
+    the user interacting with your program, but also things like messages from
+    the window manager or other applications. GTK+ processes these and as a
+    result, <em class="firstterm">signals</em> may be emitted on your widgets.
+    Connecting handlers for these signals is how you normally make your
+    program do something in response to user input.</p>
+<p>The following example is slightly more complex, and tries to
+    showcase some of the capabilities of GTK+.</p>
+<p>In the long tradition of programming languages and libraries,
+    it is called <span class="emphasis"><em>Hello, World</em></span>.</p>
+<div class="informalfigure"><div class="mediaobject"><img src="hello-world.png"></div></div>
+<div class="example">
+<a name="gtk-getting-started-hello-world"></a><p class="title"><b>Example 1. Hello World in GTK+</b></p>
+<div class="example-contents">
+<p>Create a new file with the following content named example-1.c.</p>
+<pre class="programlisting">#include &lt;gtk/gtk.h&gt;
+
+/* This is a callback function. The data arguments are ignored
+ * in this example. More on callbacks below.
+ */
+static void
+print_hello (GtkWidget *widget,
+             gpointer   data)
+{
+  g_print ("Hello World\n");
+}
+
+static gboolean
+on_delete_event (GtkWidget *widget,
+                 GdkEvent  *event,
+                 gpointer   data)
+{
+  /* If you return FALSE in the "delete_event" signal handler,
+   * GTK will emit the "destroy" signal. Returning TRUE means
+   * you don't want the window to be destroyed.
+   *
+   * This is useful for popping up 'are you sure you want to quit?'
+   * type dialogs.
+   */
+
+  g_print ("delete event occurred\n");
+
+  return TRUE;
+}
+
+int
+main (int   argc,
+      char *argv[])
+{
+  /* GtkWidget is the storage type for widgets */
+  GtkWidget *window;
+  GtkWidget *button;
+
+  /* This is called in all GTK applications. Arguments are parsed
+   * from the command line and are returned to the application.
+   */
+  gtk_init (&amp;argc, &amp;argv);
+
+  /* create a new window, and set its title */
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (window), "Hello");
+
+  /* When the window emits the "delete-event" signal (which is emitted
+   * by GTK+ in response to an event coming from the window manager,
+   * usually as a result of clicking the "close" window control), we
+   * ask it to call the on_delete_event() function as defined above.
+   *
+   * The data passed to the callback function is NULL and is ignored
+   * in the callback function.
+   */
+  g_signal_connect (window, "delete-event", G_CALLBACK (on_delete_event), NULL);
+
+  /* Here we connect the "destroy" event to the gtk_main_quit() function.
+   *
+   * This signal is emitted when we call gtk_widget_destroy() on the window,
+   * or if we return FALSE in the "delete_event" callback.
+   */
+  g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+
+  /* Sets the border width of the window. */
+  gtk_container_set_border_width (GTK_CONTAINER (window), 10);
+
+  /* Creates a new button with the label "Hello World". */
+  button = gtk_button_new_with_label ("Hello World");
+
+  /* When the button receives the "clicked" signal, it will call the
+   * function print_hello() passing it NULL as its argument.
+   *
+   * The print_hello() function is defined above.
+   */
+  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+
+  /* The g_signal_connect_swapped() function will connect the "clicked" signal
+   * of the button to the gtk_widget_destroy() function; instead of calling it
+   * using the button as its argument, it will swap it with the user data
+   * argument. This will cause the window to be destroyed by calling
+   * gtk_widget_destroy() on the window.
+   */
+  g_signal_connect_swapped (button, "clicked", G_CALLBACK (gtk_widget_destroy), window);
+
+  /* This packs the button into the window. A GtkWindow inherits from GtkBin,
+   * which is a special container that can only have one child
+   */
+  gtk_container_add (GTK_CONTAINER (window), button);
+
+  /* The final step is to display this newly created widget... */
+  gtk_widget_show (button);
+
+  /* ... and the window */
+  gtk_widget_show (window);
+
+  /* All GTK applications must have a gtk_main(). Control ends here
+   * and waits for an event to occur (like a key press or a mouse event),
+   * until gtk_main_quit() is called.
+   */
+  gtk_main ();
+
+  return 0;
+}
+</pre>
+</div>
+</div>
+<br class="example-break"><p>
+      You can compile the program above with GCC using:
+      </p>
+<div class="literallayout"><p><br>
+        <code class="literal">gcc `pkg-config --cflags gtk+-3.0` -o example-1 example-1.c `pkg-config --libs gtk+-3.0`</code><br>
+      </p></div>
+<p>
+    </p>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.20.1</div>
+</body>
+</html>

@@ -1,0 +1,4 @@
+[Test]
+Exec=/bin/sh -c "@pkglibexecdir@/installed-tests/accessibility-dump -k --verbose --directory @pkglibexecdir@/installed-tests/a11ytests"
+Type=session
+

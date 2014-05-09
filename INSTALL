@@ -1,0 +1,38 @@
+Prerequisites
+=============
+
+GTK+ requires the following packages:
+
+ - The GLib, Pango, GdkPixbuf, ATK and cairo libraries, available at
+   the same location as GTK+. GTK+ 3.10.8 requires at least
+   GLib 2.37.5, Pango 1.32.4,
+   GdkPixbuf 2.27.1, ATK 2.7.5
+   and cairo 1.12.0.
+
+ - Each GDK backend has its own backend-specific requirements. For
+   the X11 backend, X11 R6 and XInput version 2 (as well as a number
+   of other extensions) are required.
+
+ - gobject-introspection 1.32.0 or newer.
+
+Simple install procedure
+========================
+
+  % tar xf gtk+-3.10.8.tar.xz   # unpack the sources
+  % cd gtk+-3.10.8              # change to the toplevel directory
+  % ./configure                        # run the `configure' script
+  % make                               # build GTK+
+  [ Become root if necessary ]
+  % make install                       # install GTK+
+
+The Details
+===========
+
+Complete information about installing GTK+ and related libraries
+can be found in the file:
+
+ docs/reference/gtk/html/gtk-building.html
+
+Or online at:
+
+ http://library.gnome.org/devel/gtk/stable/gtk-building.html

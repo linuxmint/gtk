@@ -1,0 +1,319 @@
+include $(top_srcdir)/Makefile.decl
+NULL =
+
+TEST_PROGS += gtk-reftest
+
+check_PROGRAMS = $(TEST_PROGS)
+
+gtk_reftest_CFLAGS = \
+	-I$(top_srcdir)                 \
+	-I$(top_builddir)/gdk           \
+	-I$(top_srcdir)/gdk             \
+	-DGDK_DISABLE_DEPRECATED        \
+	-DGTK_DISABLE_DEPRECATED        \
+	$(GTK_DEBUG_FLAGS)              \
+	$(GTK_DEP_CFLAGS)
+
+gtk_reftest_LDADD = \
+	$(top_builddir)/gdk/libgdk-3.la \
+	$(top_builddir)/gtk/libgtk-3.la \
+	$(GTK_DEP_LIBS)
+
+gtk_reftest_SOURCES = \
+	gtk-reftest.c
+
+clean-local:
+	rm -rf output/ || true
+
+EXTRA_DIST += \
+	align-expand.sh \
+	$(NULL)
+
+testdata = \
+	background-area.css \
+	background-area.ref.ui \
+	background-area.ui \
+	background-color-transparent.css \
+	background-color-transparent.ref.ui \
+	background-color-transparent.ui \
+	background-image-multiple.css \
+	background-image-multiple.ref.ui \
+	background-image-multiple.ui \
+	background-origin.css \
+	background-origin.ref.ui \
+	background-origin.ui \
+	background-positioning-area-empty.ref.ui \
+	background-positioning-area-empty.ui \
+	background-position.css \
+	background-position.ref.ui \
+	background-position.ui \
+	background-position-repeat.css \
+	background-position-repeat.ref.ui \
+	background-position-repeat.ui \
+	background-position-repeat-bg.png \
+	background-position-simple.css \
+	background-position-simple.ref.ui \
+	background-position-simple.ui \
+	background-size.css \
+	background-size.ref.ui \
+	background-size.ui \
+	background-size-keywords.css \
+	background-size-keywords.ref.ui \
+	background-size-keywords.ui \
+	background-size-zero.css \
+	background-size-zero.ref.ui \
+	background-size-zero.ui \
+	background-window-transparent.css \
+	background-window-transparent.ref.ui \
+	background-window-transparent.ui \
+	bad-color-names.css \
+	bad-color-names.ref.ui \
+	bad-color-names.ui \
+	reference-background-origin.png	\
+	border-color-default.css \
+	border-color-default.ref.ui \
+	border-color-default.ui \
+	border-half-pixel.css \
+	border-half-pixel.ref.ui \
+	border-half-pixel.ui \
+	border-image-ball-green.png \
+	border-image-ball-red.png \
+	border-image-ball-yellow.png \
+	border-image-balls.png \
+	border-image-3-balls-green.png \
+	border-image-3-balls-yellow.png \
+	border-image-excess-size.css \
+	border-image-excess-size.ref.ui \
+	border-image-excess-size.ui \
+	border-image-gradient.css \
+	border-image-gradient.ref.ui \
+	border-image-gradient.ui \
+	border-image-url.css \
+	border-image-url.ref.ui \
+	border-image-url.ui \
+	border-radius-clamp.css\
+	border-radius-clamp.ref.ui \
+	border-radius-clamp.ui \
+	border-style.css \
+	border-style.ref.ui \
+	border-style.ui \
+	border-style-none.css \
+	border-style-none.ref.ui \
+	border-style-none.ui \
+	box-child-expand.ref.ui \
+	box-child-expand.ui \
+	box-packing.css \
+	box-packing.ref.ui \
+	box-packing.ui \
+	box-pseudo-classes.css \
+	box-pseudo-classes.ref.ui \
+	box-pseudo-classes.ui \
+	box-shadow-spec-inset.css \
+	box-shadow-spec-inset.ref.ui \
+	box-shadow-spec-inset.ui \
+	button-wrapping.ui \
+	button-wrapping.ref.ui \
+	cellrenderer-pixbuf-stock-rtl.css \
+	cellrenderer-pixbuf-stock-rtl.ui \
+	cellrenderer-pixbuf-stock-rtl.ref.ui \
+	css-currentcolor-alpha.css \
+	css-currentcolor-alpha.ui \
+	css-currentcolor-alpha.ref.ui \
+	css-match-class.css \
+	css-match-class.ref.ui \
+	css-match-class.ui \
+	css-match-descendant-later.css \
+	css-match-descendant-later.ref.ui \
+	css-match-descendant-later.ui \
+	css-match-exact.css \
+	css-match-exact.ref.ui \
+	css-match-exact.ui \
+	css-match-import.css \
+	css-match-import-import.css \
+	css-match-import.ui \
+	css-match-import.ref.ui \
+	css-match-inherit.css \
+	css-match-inherit.ref.ui \
+	css-match-inherit.ui \
+	css-match-inherit-different-state.css \
+	css-match-inherit-different-state.ref.ui \
+	css-match-inherit-different-state.ui \
+	css-match-name.css \
+	css-match-name.ref.ui \
+	css-match-name.ui \
+	css-match-region-matches-star.css \
+	css-match-region-matches-star.ui \
+	css-match-region-matches-star.ref.ui \
+	css-match-regions.css \
+	css-match-regions.ref.ui \
+	css-match-regions.ui \
+	css-match-siblings.css \
+	css-match-siblings.ref.ui \
+	css-match-siblings.ui \
+	css-match-style-property-order.css \
+	css-match-style-property-order.ref.ui \
+	css-match-style-property-order.ui \
+	css-match-subtype.css \
+	css-match-subtype.ref.ui \
+	css-match-subtype.ui \
+	css-match-type.css \
+	css-match-type.ref.ui \
+	css-match-type.ui \
+	css-multi-state.css \
+	css-multi-state.ref.ui \
+	css-multi-state.ui \
+	entry-progress-coloring.css \
+	entry-progress-coloring.ref.ui \
+	entry-progress-coloring.ui \
+	fixed-widget-stacking.ref.ui \
+	fixed-widget-stacking.ui \
+	font-sizes-names.css \
+	font-sizes-names.ref.ui \
+	font-sizes-names.ui \
+	gtk-image-effect-inherit.css \
+	gtk-image-effect-inherit.ref.ui \
+	gtk-image-effect-inherit.ui \
+	green-20x20.png \
+	grid-empty-with-spacing.ref.ui \
+	grid-empty-with-spacing.ui \
+	grid-expand.css \
+	grid-expand.ref.ui \
+	grid-expand.ui \
+	grid-wfh.ui \
+	grid-wfh.ref.ui \
+	grid-homogeneous.css \
+	grid-homogeneous.ref.ui \
+	grid-homogeneous.ui \
+	grid-spacing1.ref.ui \
+	grid-spacing1.ui \
+	grid-spacing2.ref.ui \
+	grid-spacing2.ui \
+	grid-spacing3.css \
+	grid-spacing3.ref.ui \
+	grid-spacing3.ui \
+	iconview-empty.css \
+	iconview-empty.ui \
+	iconview-empty.ref.ui \
+	image-load-from-file.css \
+	image-load-from-file.ref.ui \
+	image-load-from-file.ui \
+	info-bar-message-types.css \
+	info-bar-message-types.ref.ui \
+	info-bar-message-types.ui \
+	inherit-and-initial.css \
+	inherit-and-initial.ref.ui \
+	inherit-and-initial.ui \
+	label-attribute-preference.css \
+	label-attribute-preference.ref.ui \
+	label-attribute-preference.ui \
+	label-ellipsize-small.ref.ui \
+	label-ellipsize-small.ui \
+	label-ellipsize-with-big.ref.ui \
+	label-ellipsize-with-big.ui \
+	label-shadows.css \
+	label-shadows.ref.ui \
+	label-shadows.ui \
+	label-sizing.css \
+	label-sizing.ref.ui \
+	label-sizing.ui \
+	label-small-ellipsized.ref.ui \
+	label-small-ellipsized.ui \
+	label-width-chars-dont-shrink.ref.ui \
+	label-width-chars-dont-shrink.ui \
+	label-wrap-justify.ref.ui \
+	label-wrap-justify.ui \
+	linear-gradient.css \
+	linear-gradient.ref.ui \
+	linear-gradient.ui \
+	linear-gradient-transition-to-other.css \
+	linear-gradient-transition-to-other.ref.ui \
+	linear-gradient-transition-to-other.ui \
+	marble.xpm \
+	messagedialog-secondarytext.ui \
+	messagedialog-secondarytext.ref.ui \
+	misc-alignment.css \
+	misc-alignment.ref.ui \
+	misc-alignment.ui \
+	named-colors.css \
+	named-colors.ref.ui \
+	named-colors.ui \
+	no-colors.css \
+	no-colors.ref.ui \
+	no-colors.ui \
+	nonresizable-size.ref.ui \
+	nonresizable-size.ui \
+	notebook-childproperties.css \
+	notebook-childproperties.ui \
+	notebook-childproperties.ref.ui \
+	nth-child.css \
+	nth-child.ref.ui \
+	nth-child.ui \
+	opacity.css \
+	opacity.ui \
+	opacity.ref.ui \
+	paned-undersized.css \
+	paned-undersized.ref.ui \
+	paned-undersized.ui \
+	quit-mnemonic.css \
+	quit-mnemonic.ref.ui \
+	quit-mnemonic.ui \
+	reset-to-defaults.css \
+	rotated-layout.ref.ui \
+	rotated-layout.ui \
+	separator-size.ref.ui \
+	separator-size.ui \
+	shorthand-entry-border.css \
+	shorthand-entry-border.ref.ui \
+	shorthand-entry-border.ui \
+	simple.ref.ui \
+	simple.ui \
+	sizegroups-basics.css \
+	sizegroups-basics.ui \
+	sizegroups-basics.ref.ui \
+	sizegroups-evolution-identity-page.ui \
+	sizegroups-evolution-identity-page.ref.ui \
+	sizegroups-get-preferred-null.ui \
+	sizegroups-get-preferred-null.ref.ui \
+	style-properties-nth-child.css \
+	style-properties-nth-child.ref.ui \
+	style-properties-nth-child.ui \
+	style-properties-only-child.css \
+	style-properties-only-child.ref.ui \
+	style-properties-only-child.ui \
+	toplevel-vs-popup.ref.ui \
+	toplevel-vs-popup.ui \
+	treeview-headers-hidden.ref.ui \
+	treeview-headers-hidden.ui \
+	unresolvable.css \
+	unresolvable.ref.ui \
+	unresolvable.ui \
+	window-default-size.ref.ui \
+	window-default-size.ui \
+	$(NULL)
+
+EXTRA_DIST += 			\
+	$(testdata)		\
+	reftests.test.in	\
+	$(NULL)
+
+if BUILDOPT_INSTALL_TESTS
+insttestdir=$(pkglibexecdir)/installed-tests
+insttest_PROGRAMS = gtk-reftest
+
+reftestdir = $(insttestdir)/reftests
+reftest_DATA = $(testdata)
+
+substitutions = \
+	-e s,@pkglibexecdir\@,$(pkglibexecdir),g \
+	$(NULL)
+
+reftests.test: reftests.test.in Makefile
+	$(AM_V_GEN) sed $(substitutions) $< > $@.tmp && mv $@.tmp $@
+
+DISTCLEANFILES = reftests.test
+
+testmetadir = $(datadir)/installed-tests/$(PACKAGE)
+testmeta_DATA = reftests.test
+endif
+
+-include $(top_srcdir)/git.mk

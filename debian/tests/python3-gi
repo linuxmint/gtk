@@ -1,0 +1,16 @@
+#!/bin/sh
+
+xvfb-run python3 <<EOF
+from gi.repository import GLib, Gtk
+
+def do_quit(user_data):
+    Gtk.main_quit()
+
+dialog = Gtk.Dialog()
+dialog.set_title('Test dialog')
+dialog.add_button(Gtk.STOCK_OK, Gtk.ResponseType.ACCEPT)
+dialog.show_all()
+GLib.timeout_add_seconds(1, do_quit, None)
+Gtk.main()
+EOF
+

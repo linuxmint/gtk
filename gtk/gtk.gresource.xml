@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/gtk/libgtk">
+    <file alias="Raleigh.css">gtk-default.css</file>
+    <file>gtk-win32.css</file>
+    <file>gtk-win32-xp.css</file>
+    <file>gtk-win32-base.css</file>
+    <file>gtk-win32-classic.css</file>
+    <file alias="cursor/dnd-ask.png">cursor_dnd_ask.png</file>
+    <file alias="cursor/dnd-link.png">cursor_dnd_link.png</file>
+    <file alias="cursor/dnd-none.png">cursor_dnd_none.png</file>
+    <file alias="cursor/dnd-move.png">cursor_dnd_move.png</file>
+    <file alias="cursor/dnd-copy.png">cursor_dnd_copy.png</file>
+    <file compressed="true">gtkaboutdialog.ui</file>
+    <file compressed="true">gtkappchooserdialog.ui</file>
+    <file compressed="true">gtkappchooserwidget.ui</file>
+    <file compressed="true">gtkassistant.ui</file>
+    <file compressed="true">gtkcolorchooserdialog.ui</file>
+    <file compressed="true">gtkcoloreditor.ui</file>
+    <file compressed="true">gtkdialog.ui</file>
+    <file compressed="true">gtkfilechooserbutton.ui</file>
+    <file compressed="true">gtkfilechooserdefault.ui</file>
+    <file compressed="true">gtkfilechooserdialog.ui</file>
+    <file compressed="true">gtkfontbutton.ui</file>
+    <file compressed="true">gtkfontchooserdialog.ui</file>
+    <file compressed="true">gtkfontchooserwidget.ui</file>
+    <file compressed="true">gtkinfobar.ui</file>
+    <file compressed="true">gtklockbutton.ui</file>
+    <file compressed="true">gtkmessagedialog.ui</file>
+    <file compressed="true">gtkpagesetupunixdialog.ui</file>
+    <file compressed="true">gtkpathbar.ui</file>
+    <file compressed="true">gtkprintunixdialog.ui</file>
+    <file compressed="true">gtkrecentchooserdefault.ui</file>
+    <file compressed="true">gtksearchbar.ui</file>
+    <file compressed="true">gtkscalebutton.ui</file>
+    <file compressed="true">gtkstatusbar.ui</file>
+    <file compressed="true">gtkvolumebutton.ui</file>
+  </gresource>
+</gresources>

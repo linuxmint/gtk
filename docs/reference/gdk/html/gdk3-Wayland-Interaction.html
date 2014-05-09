@@ -1,0 +1,485 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>GDK 3 Reference Manual: Wayland Interaction</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="GDK 3 Reference Manual">
+<link rel="up" href="reference.html" title="API Reference">
+<link rel="prev" href="gdk3-X-Window-System-Interaction.html" title="X Window System Interaction">
+<link rel="next" href="gdk3-Application-launching.html" title="Application launching">
+<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts">
+<a href="#" class="shortcut">Top</a><span id="nav_description">  <span class="dim">|</span> 
+                  <a href="#gdk3-Wayland-Interaction.description" class="shortcut">Description</a></span>
+</td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
+<td><a accesskey="u" href="reference.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="gdk3-X-Window-System-Interaction.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="gdk3-Application-launching.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="refentry">
+<a name="gdk3-Wayland-Interaction"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="gdk3-Wayland-Interaction.top_of_page"></a>Wayland Interaction</span></h2>
+<p>Wayland Interaction — Wayland backend-specific functions</p>
+</td>
+<td class="gallery_image" valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsect1">
+<a name="gdk3-Wayland-Interaction.functions"></a><h2>Functions</h2>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="functions_return">
+<col class="functions_name">
+</colgroup>
+<tbody>
+<tr>
+<td class="function_type">struct <span class="returnvalue">wl_keyboard</span> *
+</td>
+<td class="function_name">
+<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-device-get-wl-keyboard" title="gdk_wayland_device_get_wl_keyboard ()">gdk_wayland_device_get_wl_keyboard</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">struct <span class="returnvalue">wl_pointer</span> *
+</td>
+<td class="function_name">
+<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-device-get-wl-pointer" title="gdk_wayland_device_get_wl_pointer ()">gdk_wayland_device_get_wl_pointer</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">struct <span class="returnvalue">wl_seat</span> *
+</td>
+<td class="function_name">
+<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-device-get-wl-seat" title="gdk_wayland_device_get_wl_seat ()">gdk_wayland_device_get_wl_seat</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">struct <span class="returnvalue">wl_compositor</span> *
+</td>
+<td class="function_name">
+<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-display-get-wl-compositor" title="gdk_wayland_display_get_wl_compositor ()">gdk_wayland_display_get_wl_compositor</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">struct <span class="returnvalue">wl_display</span> *
+</td>
+<td class="function_name">
+<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-display-get-wl-display" title="gdk_wayland_display_get_wl_display ()">gdk_wayland_display_get_wl_display</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">struct <span class="returnvalue">wl_shell</span> *
+</td>
+<td class="function_name">
+<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-display-get-wl-shell" title="gdk_wayland_display_get_wl_shell ()">gdk_wayland_display_get_wl_shell</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">struct <span class="returnvalue">wl_shell_surface</span> *
+</td>
+<td class="function_name">
+<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-window-get-wl-shell-surface" title="gdk_wayland_window_get_wl_shell_surface ()">gdk_wayland_window_get_wl_shell_surface</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">struct <span class="returnvalue">wl_surface</span> *
+</td>
+<td class="function_name">
+<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-window-get-wl-surface" title="gdk_wayland_window_get_wl_surface ()">gdk_wayland_window_get_wl_surface</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-window-set-use-custom-surface" title="gdk_wayland_window_set_use_custom_surface ()">gdk_wayland_window_set_use_custom_surface</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect1">
+<a name="gdk3-Wayland-Interaction.includes"></a><h2>Includes</h2>
+<pre class="synopsis">#include &lt;gdk/gdkwayland.h&gt;
+</pre>
+</div>
+<div class="refsect1">
+<a name="gdk3-Wayland-Interaction.description"></a><h2>Description</h2>
+<p>The functions in this section are specific to the GDK Wayland backend.
+To use them, you need to include the <code class="literal">&lt;gdk/gdkwayland.h&gt;</code>
+header and use the Wayland-specific pkg-config files to build your
+application (either <code class="literal">gdk-wayland-3.0</code> or
+<code class="literal">gtk+-wayland-3.0</code>).</p>
+<p>To make your code compile with other GDK backends, guard backend-specific
+calls by an ifdef as follows. Since GDK may be built with multiple
+backends, you should also check for the backend that is in use (e.g. by
+using the <code class="function">GDK_IS_WAYLAND_DISPLAY()</code> macro).</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="preproc">#ifdef</span><span class="normal"> <a href="gdk3-General.html#GDK-WINDOWING-WAYLAND:CAPS">GDK_WINDOWING_WAYLAND</a></span>
+<span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="function">GDK_IS_WAYLAND_DISPLAY</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">display</span><span class="symbol">))</span>
+<span class="normal">    </span><span class="cbracket">{</span>
+<span class="normal">      </span><span class="comment">/* make Wayland-specific calls here */</span>
+<span class="normal">    </span><span class="cbracket">}</span>
+<span class="normal">  </span><span class="keyword">else</span>
+<span class="preproc">#endif</span>
+<span class="preproc">#ifdef</span><span class="normal"> <a href="gdk3-General.html#GDK-WINDOWING-X11:CAPS">GDK_WINDOWING_X11</a></span>
+<span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="function">GDK_IS_X11_DISPLAY</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">display</span><span class="symbol">))</span>
+<span class="normal">    </span><span class="cbracket">{</span>
+<span class="normal">      </span><span class="comment">/* make X11-specific calls here */</span>
+<span class="normal">    </span><span class="cbracket">}</span>
+<span class="normal">  </span><span class="keyword">else</span>
+<span class="preproc">#endif</span>
+<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Message-Logging.html#g-error">g_error</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Unsupported GDK backend"</span><span class="symbol">);</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+</div>
+<div class="refsect1">
+<a name="gdk3-Wayland-Interaction.functions_details"></a><h2>Functions</h2>
+<div class="refsect2">
+<a name="gdk-wayland-device-get-wl-keyboard"></a><h3>gdk_wayland_device_get_wl_keyboard ()</h3>
+<pre class="programlisting">struct <span class="returnvalue">wl_keyboard</span> *
+gdk_wayland_device_get_wl_keyboard (<em class="parameter"><code><a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a> *device</code></em>);</pre>
+<p>Returns the Wayland wl_keyboard of a <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a></p>
+<div class="refsect3">
+<a name="id-1.2.27.6.2.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>device</p></td>
+<td class="parameter_description"><p> a <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> GdkWaylandDevice]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.27.6.2.6"></a><h4>Returns</h4>
+<p> a Wayland wl_keyboard. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since 3.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gdk-wayland-device-get-wl-pointer"></a><h3>gdk_wayland_device_get_wl_pointer ()</h3>
+<pre class="programlisting">struct <span class="returnvalue">wl_pointer</span> *
+gdk_wayland_device_get_wl_pointer (<em class="parameter"><code><a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a> *device</code></em>);</pre>
+<p>Returns the Wayland wl_pointer of a <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a></p>
+<div class="refsect3">
+<a name="id-1.2.27.6.3.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>device</p></td>
+<td class="parameter_description"><p> a <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> GdkWaylandDevice]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.27.6.3.6"></a><h4>Returns</h4>
+<p> a Wayland wl_pointer. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since 3.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gdk-wayland-device-get-wl-seat"></a><h3>gdk_wayland_device_get_wl_seat ()</h3>
+<pre class="programlisting">struct <span class="returnvalue">wl_seat</span> *
+gdk_wayland_device_get_wl_seat (<em class="parameter"><code><a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a> *device</code></em>);</pre>
+<p>Returns the Wayland wl_seat of a <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a></p>
+<div class="refsect3">
+<a name="id-1.2.27.6.4.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>device</p></td>
+<td class="parameter_description"><p> a <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> GdkWaylandDevice]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.27.6.4.6"></a><h4>Returns</h4>
+<p> a Wayland wl_seat. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since 3.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gdk-wayland-display-get-wl-compositor"></a><h3>gdk_wayland_display_get_wl_compositor ()</h3>
+<pre class="programlisting">struct <span class="returnvalue">wl_compositor</span> *
+gdk_wayland_display_get_wl_compositor (<em class="parameter"><code><a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> *display</code></em>);</pre>
+<p>Returns the Wayland global singleton compositor of a <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a></p>
+<div class="refsect3">
+<a name="id-1.2.27.6.5.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>display</p></td>
+<td class="parameter_description"><p> a <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> GdkWaylandDisplay]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.27.6.5.6"></a><h4>Returns</h4>
+<p> a Wayland wl_compositor. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since 3.8</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gdk-wayland-display-get-wl-display"></a><h3>gdk_wayland_display_get_wl_display ()</h3>
+<pre class="programlisting">struct <span class="returnvalue">wl_display</span> *
+gdk_wayland_display_get_wl_display (<em class="parameter"><code><a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> *display</code></em>);</pre>
+<p>Returns the Wayland wl_display of a <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a></p>
+<div class="refsect3">
+<a name="id-1.2.27.6.6.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>display</p></td>
+<td class="parameter_description"><p> a <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> GdkWaylandDisplay]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.27.6.6.6"></a><h4>Returns</h4>
+<p> a Wayland wl_display. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since 3.8</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gdk-wayland-display-get-wl-shell"></a><h3>gdk_wayland_display_get_wl_shell ()</h3>
+<pre class="programlisting">struct <span class="returnvalue">wl_shell</span> *
+gdk_wayland_display_get_wl_shell (<em class="parameter"><code><a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> *display</code></em>);</pre>
+<p>Returns the Wayland global singleton shell of a <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a></p>
+<div class="refsect3">
+<a name="id-1.2.27.6.7.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>display</p></td>
+<td class="parameter_description"><p> a <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> GdkWaylandDisplay]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.27.6.7.6"></a><h4>Returns</h4>
+<p> a Wayland wl_shell. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since 3.8</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gdk-wayland-window-get-wl-shell-surface"></a><h3>gdk_wayland_window_get_wl_shell_surface ()</h3>
+<pre class="programlisting">struct <span class="returnvalue">wl_shell_surface</span> *
+gdk_wayland_window_get_wl_shell_surface
+                               (<em class="parameter"><code><a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>);</pre>
+<p>Returns the Wayland shell surface of a <a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a></p>
+<div class="refsect3">
+<a name="id-1.2.27.6.8.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>window</p></td>
+<td class="parameter_description"><p> a <a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> GdkWaylandWindow]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.27.6.8.6"></a><h4>Returns</h4>
+<p> a Wayland wl_shell_surface. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since 3.8</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gdk-wayland-window-get-wl-surface"></a><h3>gdk_wayland_window_get_wl_surface ()</h3>
+<pre class="programlisting">struct <span class="returnvalue">wl_surface</span> *
+gdk_wayland_window_get_wl_surface (<em class="parameter"><code><a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>);</pre>
+<p>Returns the Wayland surface of a <a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a></p>
+<div class="refsect3">
+<a name="id-1.2.27.6.9.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>window</p></td>
+<td class="parameter_description"><p> a <a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> GdkWaylandWindow]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.27.6.9.6"></a><h4>Returns</h4>
+<p> a Wayland wl_surface. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since 3.8</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gdk-wayland-window-set-use-custom-surface"></a><h3>gdk_wayland_window_set_use_custom_surface ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gdk_wayland_window_set_use_custom_surface
+                               (<em class="parameter"><code><a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>);</pre>
+<p>Marks a <a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> as a custom Wayland surface. The application is
+expected to register the surface as some type of surface using
+some Wayland interface.</p>
+<p>A good example would be writing a panel or on-screen-keyboard as an
+out-of-process helper - as opposed to having those in the compositor
+process. In this case the underlying surface isn't a wl_shell
+surface and the panel or OSK client need to identify the wl_surface
+as a panel or OSK to the compositor. The assumption is that the
+compositor will expose a private interface to the special client
+that lets the client identify the wl_surface as a panel or such.</p>
+<p>This function should be called before a <a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> is shown. This is
+best done by connecting to the <span class="type">“realized”</span> signal:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
+<span class="function">widget_realize_cb</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GtkWidget</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">widget</span><span class="symbol">)</span>
+<span class="cbracket">{</span>
+<span class="normal">  </span><span class="usertype">GdkWindow</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">window</span><span class="symbol">;</span>
+<span class="normal">  </span><span class="keyword">struct</span><span class="normal"> </span><span class="classname">wl_surface</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">surface</span><span class="symbol">;</span>
+<span class="normal">  </span><span class="keyword">struct</span><span class="normal"> </span><span class="classname">input_panel_surface</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">ip_surface</span><span class="symbol">;</span>
+
+<span class="normal">  window </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="http://developer.gnome.org/gtk2/GtkWidget.html#gtk-widget-get-window">gtk_widget_get_window</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">widget</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">gdk_wayland_window_set_custom_surface</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">);</span>
+
+<span class="normal">  surface </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="gdk3-Wayland-Interaction.html#gdk-wayland-window-get-wl-surface">gdk_wayland_window_get_wl_surface</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">);</span>
+<span class="normal">  ip_surface </span><span class="symbol">=</span><span class="normal"> </span><span class="function">input_panel_get_input_panel_surface</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">input_panel</span><span class="symbol">,</span><span class="normal"> surface</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">input_panel_surface_set_panel</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">ip_surface</span><span class="symbol">);</span>
+<span class="cbracket">}</span>
+
+<span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
+<span class="function">setup_window</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GtkWindow</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">window</span><span class="symbol">)</span>
+<span class="cbracket">{</span>
+<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#g-signal-connect">g_signal_connect</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"realize"</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Closures.html#G-CALLBACK:CAPS">G_CALLBACK</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">widget_realize_cb</span><span class="symbol">),</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="cbracket">}</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="refsect3">
+<a name="id-1.2.27.6.10.8"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>window</p></td>
+<td class="parameter_description"><p> a <a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> GdkWaylandWindow]</span></td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since 3.10</p>
+</div>
+</div>
+<div class="refsect1">
+<a name="gdk3-Wayland-Interaction.other_details"></a><h2>Types and Values</h2>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.20.1</div>
+</body>
+</html>
