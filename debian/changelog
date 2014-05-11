@@ -1,3 +1,9 @@
+gtk+3.0 (3.10.8~2) qiana; urgency=medium
+
+  * Make GtkTreeView honor GtkScrollable policies
+
+ -- Clement Lefebvre <root@linuxmint.com>  Sun, 11 May 2014 09:18:25 +0100
+
 gtk+3.0 (3.10.8~1) qiana; urgency=medium
 
   * Fixed tooltips temporarily drawing at 0x0
