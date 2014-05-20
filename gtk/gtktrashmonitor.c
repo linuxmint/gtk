@@ -53,8 +53,8 @@ G_DEFINE_TYPE (GtkTrashMonitor, _gtk_trash_monitor, G_TYPE_OBJECT)
 
 static GtkTrashMonitor *the_trash_monitor;
 
-#define ICON_NAME_TRASH_EMPTY "user-trash-symbolic"
-#define ICON_NAME_TRASH_FULL  "user-trash-full-symbolic"
+#define ICON_NAME_TRASH_EMPTY "user-trash"
+#define ICON_NAME_TRASH_FULL  "user-trash-full"
 
 static void
 gtk_trash_monitor_dispose (GObject *object)
