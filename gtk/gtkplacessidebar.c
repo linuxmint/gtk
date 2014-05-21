@@ -250,24 +250,24 @@ enum {
 };
 
 /* Names for themed icons */
-#define ICON_NAME_HOME     "user-home-symbolic"
-#define ICON_NAME_DESKTOP  "user-desktop-symbolic"
-#define ICON_NAME_FILESYSTEM     "drive-harddisk-symbolic"
-#define ICON_NAME_EJECT    "media-eject-symbolic"
-#define ICON_NAME_NETWORK  "network-workgroup-symbolic"
-#define ICON_NAME_NETWORK_SERVER "network-server-symbolic"
-#define ICON_NAME_FOLDER_NETWORK "folder-remote-symbolic"
+#define ICON_NAME_HOME     "user-home"
+#define ICON_NAME_DESKTOP  "user-desktop"
+#define ICON_NAME_FILESYSTEM     "drive-harddisk"
+#define ICON_NAME_EJECT    "media-eject"
+#define ICON_NAME_NETWORK  "network-workgroup"
+#define ICON_NAME_NETWORK_SERVER "network-server"
+#define ICON_NAME_FOLDER_NETWORK "folder-remote"
 
-#define ICON_NAME_FOLDER                "folder-symbolic"
-#define ICON_NAME_FOLDER_DESKTOP  "user-desktop-symbolic"
-#define ICON_NAME_FOLDER_DOCUMENTS      "folder-documents-symbolic"
-#define ICON_NAME_FOLDER_DOWNLOAD       "folder-download-symbolic"
-#define ICON_NAME_FOLDER_MUSIC    "folder-music-symbolic"
-#define ICON_NAME_FOLDER_PICTURES       "folder-pictures-symbolic"
-#define ICON_NAME_FOLDER_PUBLIC_SHARE   "folder-publicshare-symbolic"
-#define ICON_NAME_FOLDER_TEMPLATES      "folder-templates-symbolic"
-#define ICON_NAME_FOLDER_VIDEOS   "folder-videos-symbolic"
-#define ICON_NAME_FOLDER_SAVED_SEARCH   "folder-saved-search-symbolic"
+#define ICON_NAME_FOLDER                "folder"
+#define ICON_NAME_FOLDER_DESKTOP  "user-desktop"
+#define ICON_NAME_FOLDER_DOCUMENTS      "folder-documents"
+#define ICON_NAME_FOLDER_DOWNLOAD       "folder-download"
+#define ICON_NAME_FOLDER_MUSIC    "folder-music"
+#define ICON_NAME_FOLDER_PICTURES       "folder-pictures"
+#define ICON_NAME_FOLDER_PUBLIC_SHARE   "folder-publicshare"
+#define ICON_NAME_FOLDER_TEMPLATES      "folder-templates"
+#define ICON_NAME_FOLDER_VIDEOS   "folder-videos"
+#define ICON_NAME_FOLDER_SAVED_SEARCH   "folder-saved-search"
 
 static guint places_sidebar_signals [LAST_SIGNAL] = { 0 };
 static GParamSpec *properties[NUM_PROPERTIES] = { NULL, };
@@ -527,7 +527,7 @@ special_directory_get_gicon (GUserDirectory directory)
     ICON_CASE (VIDEOS);
 
     default:
-      return g_themed_icon_new_with_default_fallbacks ("folder-symbolic");
+      return g_themed_icon_new_with_default_fallbacks ("folder");
     }
 
 #undef ICON_CASE
@@ -731,7 +731,7 @@ add_application_shortcuts (GtkPlacesSidebar *sidebar)
 
       /* FIXME: we are getting file info synchronously.  We may want to do it async at some point. */
       info = g_file_query_info (file,
-                                "standard::display-name,standard::symbolic-icon",
+                                "standard::display-name,standard::icon",
                                 G_FILE_QUERY_INFO_NONE,
                                 NULL,
                                 NULL); /* NULL-GError */
@@ -744,7 +744,7 @@ add_application_shortcuts (GtkPlacesSidebar *sidebar)
           GIcon *icon;
 
           name = g_file_info_get_display_name (info);
-          icon = g_file_info_get_symbolic_icon (info);
+          icon = g_file_info_get_icon (info);
           uri = g_file_get_uri (file);
           tooltip = g_file_get_parse_name (file);
 
@@ -817,7 +817,7 @@ update_places (GtkPlacesSidebar *sidebar)
   if (should_show_recent (sidebar))
     {
       mount_uri = "recent:///";
-      icon = g_themed_icon_new_with_default_fallbacks ("document-open-recent-symbolic");
+      icon = g_themed_icon_new_with_default_fallbacks ("document-open-recent");
       add_place (sidebar, PLACES_BUILT_IN,
                  SECTION_COMPUTER,
                  _("Recent"), icon, mount_uri,
@@ -897,7 +897,7 @@ update_places (GtkPlacesSidebar *sidebar)
               if (mount != NULL)
                 {
                   /* Show mounted volume in the sidebar */
-                  icon = g_mount_get_symbolic_icon (mount);
+                  icon = g_mount_get_icon (mount);
                   root = g_mount_get_default_location (mount);
                   mount_uri = g_file_get_uri (root);
                   name = g_mount_get_name (mount);
@@ -924,7 +924,7 @@ update_places (GtkPlacesSidebar *sidebar)
                    * cue that the user should remember to yank out the media if
                    * he just unmounted it.
                    */
-                  icon = g_volume_get_symbolic_icon (volume);
+                  icon = g_volume_get_icon (volume);
                   name = g_volume_get_name (volume);
                   tooltip = g_strdup_printf (_("Mount and open %s"), name);
 
@@ -952,7 +952,7 @@ update_places (GtkPlacesSidebar *sidebar)
                * work.. but it's also for human beings who like to turn off media detection
                * in the OS to save battery juice.
                */
-              icon = g_drive_get_symbolic_icon (drive);
+              icon = g_drive_get_icon (drive);
               name = g_drive_get_name (drive);
               tooltip = g_strdup_printf (_("Mount and open %s"), name);
 
@@ -995,7 +995,7 @@ update_places (GtkPlacesSidebar *sidebar)
       mount = g_volume_get_mount (volume);
       if (mount != NULL)
         {
-          icon = g_mount_get_symbolic_icon (mount);
+          icon = g_mount_get_icon (mount);
           root = g_mount_get_default_location (mount);
           mount_uri = g_file_get_uri (root);
           tooltip = g_file_get_parse_name (root);
@@ -1014,7 +1014,7 @@ update_places (GtkPlacesSidebar *sidebar)
       else
         {
           /* see comment above in why we add an icon for an unmounted mountable volume */
-          icon = g_volume_get_symbolic_icon (volume);
+          icon = g_volume_get_icon (volume);
           name = g_volume_get_name (volume);
           add_place (sidebar, PLACES_MOUNTED_VOLUME,
                      SECTION_DEVICES,
@@ -1065,7 +1065,7 @@ update_places (GtkPlacesSidebar *sidebar)
           continue;
         }
 
-      icon = g_mount_get_symbolic_icon (mount);
+      icon = g_mount_get_icon (mount);
       mount_uri = g_file_get_uri (root);
       name = g_mount_get_name (mount);
       tooltip = g_file_get_parse_name (root);
@@ -1108,7 +1108,7 @@ update_places (GtkPlacesSidebar *sidebar)
 
       /* FIXME: we are getting file info synchronously.  We may want to do it async at some point. */
       info = g_file_query_info (root,
-                                "standard::display-name,standard::symbolic-icon",
+                                "standard::display-name,standard::icon",
                                 G_FILE_QUERY_INFO_NONE,
                                 NULL,
                                 NULL); /* NULL-GError */
@@ -1128,7 +1128,7 @@ update_places (GtkPlacesSidebar *sidebar)
         }
 
       if (info)
-        icon = g_object_ref (g_file_info_get_symbolic_icon (info));
+        icon = g_object_ref (g_file_info_get_icon (info));
       else
         icon = g_themed_icon_new_with_default_fallbacks (is_native ? ICON_NAME_FOLDER : ICON_NAME_FOLDER_NETWORK);
 
@@ -1190,7 +1190,7 @@ update_places (GtkPlacesSidebar *sidebar)
             }
           else
             {
-              icon = g_volume_get_symbolic_icon (volume);
+              icon = g_volume_get_icon (volume);
               name = g_volume_get_name (volume);
               tooltip = g_strdup_printf (_("Mount and open %s"), name);
 
@@ -1209,7 +1209,7 @@ update_places (GtkPlacesSidebar *sidebar)
         {
           mount = l->data;
           root = g_mount_get_default_location (mount);
-          icon = g_mount_get_symbolic_icon (mount);
+          icon = g_mount_get_icon (mount);
           mount_uri = g_file_get_uri (root);
           name = g_mount_get_name (mount);
           tooltip = g_file_get_parse_name (root);
