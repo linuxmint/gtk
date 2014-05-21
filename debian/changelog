@@ -1,3 +1,10 @@
+gtk+3.0 (3.10.8~3) qiana; urgency=medium
+
+  * Full color icons in Gtk file browser dialogs
+  * No warp when clicking on scrollbars
+
+ -- Clement Lefebvre <root@linuxmint.com>  Wed, 21 May 2014 10:50:55 +0100
+
 gtk+3.0 (3.10.8~2) qiana; urgency=medium
 
   * Make GtkTreeView honor GtkScrollable policies
