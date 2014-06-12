@@ -1,3 +1,9 @@
+gtk+3.0 (3.10.8~4) qiana; urgency=medium
+
+  * Fix for "GtkMenu has unnecessary scroll handles" https://bugzilla.gnome.org/show_bug.cgi?id=726030
+
+ -- Clement Lefebvre <root@linuxmint.com>  Thu, 12 Jun 2014 11:11:01 +0100
+
 gtk+3.0 (3.10.8~3) qiana; urgency=medium
 
   * Full color icons in Gtk file browser dialogs
