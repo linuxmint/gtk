@@ -2827,6 +2827,9 @@ gtk_menu_size_allocate (GtkWidget     *widget,
   for (i = 0; i < priv->heights_length; i++)
     priv->requested_height += priv->heights[i];
 
+  /* the height might have changed if new menu items were inserted */
+  allocation->height = priv->requested_height;
+
   x = border_width + padding.left;
   y = border_width + padding.top;
   width = allocation->width - (2 * border_width) -
@@ -2834,8 +2837,8 @@ gtk_menu_size_allocate (GtkWidget     *widget,
   height = allocation->height - (2 * border_width) -
     padding.top - padding.bottom;
 
-  if (menu_shell->priv->active)
-    gtk_menu_scroll_to (menu, priv->scroll_offset);
+  // if (menu_shell->priv->active)
+  //   gtk_menu_scroll_to (menu, priv->scroll_offset);
 
   if (!priv->tearoff_active)
     {
@@ -2852,6 +2855,8 @@ gtk_menu_size_allocate (GtkWidget     *widget,
 
   if (gtk_widget_get_realized (widget))
     {
+      /* Reposition the menu in case its size has changed. */
+      gtk_menu_position(menu, FALSE);
       gdk_window_move_resize (gtk_widget_get_window (widget),
                               allocation->x, allocation->y,
                               allocation->width, allocation->height);
