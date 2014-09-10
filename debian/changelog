@@ -1,3 +1,10 @@
+gtk+3.0 (3.10.8~5) qiana; urgency=medium
+
+  * Fixed a memory leak in GdkCursor
+  * Fixed keyboard Property key breaking keyboard grabs and leading to freezes, cascades of menus when held down
+
+ -- Clement Lefebvre <root@linuxmint.com>  Wed, 10 Sep 2014 12:35:00 +0200
+
 gtk+3.0 (3.10.8~4) qiana; urgency=medium
 
   * Fix for "GtkMenu has unnecessary scroll handles" https://bugzilla.gnome.org/show_bug.cgi?id=726030
