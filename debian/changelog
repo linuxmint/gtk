@@ -1,3 +1,9 @@
+gtk+3.0 (3.10.8~6) qiana; urgency=medium
+
+  * Fixed crash in GtkLockButton if a button with permission set to NULL is clicked.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Wed, 10 Sep 2014 12:41:30 +0200
+
 gtk+3.0 (3.10.8~5) qiana; urgency=medium
 
   * Fixed a memory leak in GdkCursor
