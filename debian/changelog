@@ -1,3 +1,10 @@
+gtk+3.0 (3.10.8~7) qiana; urgency=medium
+
+  * gtkrange: Disable drag-and-hold zoom mode (still works with shift-drag)
+  * Brought back ability to warp to mouse pointer in sliders
+
+ -- Clement Lefebvre <root@linuxmint.com>  Wed, 22 Oct 2014 11:09:39 +0200
+
 gtk+3.0 (3.10.8~6) qiana; urgency=medium
 
   * Fixed crash in GtkLockButton if a button with permission set to NULL is clicked.
