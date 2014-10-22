@@ -1249,7 +1249,7 @@ gtk_settings_class_init (GtkSettingsClass *class)
                                              g_param_spec_boolean ("gtk-primary-button-warps-slider",
                                                                    P_("Primary button warps slider"),
                                                                    P_("Whether a primary click on the trough should warp the slider into position"),
-                                                                   FALSE,
+                                                                   TRUE,
                                                                    GTK_PARAM_READWRITE),
                                              NULL);
   g_assert (result == PROP_PRIMARY_BUTTON_WARPS_SLIDER);

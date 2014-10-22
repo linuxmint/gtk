@@ -336,6 +336,7 @@ gtk_range_class_init (GtkRangeClass *class)
 
   class->slider_detail = "slider";
   class->stepper_detail = "stepper";
+  class->no_warp = FALSE;
 
   /**
    * GtkRange::value-changed:
@@ -2549,16 +2550,6 @@ gtk_range_key_press (GtkWidget   *widget,
   return GTK_WIDGET_CLASS (gtk_range_parent_class)->key_press_event (widget, event);
 }
 
-static void
-hold_action (GtkPressAndHold *pah,
-             gint             x,
-             gint             y,
-             GtkRange        *range)
-{
-  update_zoom_state (range, TRUE);
-  update_zoom_set (range, TRUE);
-}
-
 static gint
 gtk_range_button_press (GtkWidget      *widget,
 			GdkEventButton *event)
@@ -2590,7 +2581,7 @@ gtk_range_button_press (GtkWidget      *widget,
   g_object_get (gtk_widget_get_settings (widget),
                 "gtk-primary-button-warps-slider", &primary_warps,
                 NULL);
-  if (primary_warps)
+  if (primary_warps && !GTK_RANGE_GET_CLASS (range)->no_warp)
     {
       warp_button = GDK_BUTTON_PRIMARY;
       page_increment_button = GDK_BUTTON_SECONDARY;
@@ -2708,28 +2699,6 @@ gtk_range_button_press (GtkWidget      *widget,
             {
               update_zoom_state (range, TRUE);
               update_zoom_set (range, TRUE);
-            }
-          else
-            {
-              if (!priv->press_and_hold)
-                {
-                  gint drag_threshold;
-
-                  g_object_get (gtk_widget_get_settings (widget),
-                                "gtk-dnd-drag-threshold", &drag_threshold,
-                                NULL);
-                  priv->press_and_hold = gtk_press_and_hold_new ();
-
-                  g_object_set (priv->press_and_hold,
-                                "drag-threshold", drag_threshold,
-                                "hold-time", ZOOM_HOLD_TIME,
-                                NULL);
-
-                  g_signal_connect (priv->press_and_hold, "hold",
-                                    G_CALLBACK (hold_action), range);
-                }
-
-              gtk_press_and_hold_process_event (priv->press_and_hold, (GdkEvent *)event);
             }
         }
 
