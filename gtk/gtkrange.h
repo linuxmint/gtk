@@ -62,8 +62,6 @@ struct _GtkRangeClass
   gchar *slider_detail;
   gchar *stepper_detail;
 
-  gboolean no_warp;
-
   void (* value_changed)    (GtkRange     *range);
   void (* adjust_bounds)    (GtkRange     *range,
                              gdouble	   new_value);
@@ -79,6 +77,8 @@ struct _GtkRangeClass
   gboolean (* change_value) (GtkRange     *range,
                              GtkScrollType scroll,
                              gdouble       new_value);
+
+  gboolean no_warp;
 
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);
