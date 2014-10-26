@@ -1,3 +1,9 @@
+gtk+3.0 (3.10.8~8) qiana; urgency=medium
+
+  * Fixed regression in 3.10.8~7, causing segfaults in pavucontrol, easystroke and a few other programs.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Sun, 26 Oct 2014 02:16:41 +0100
+
 gtk+3.0 (3.10.8~7) qiana; urgency=medium
 
   * gtkrange: Disable drag-and-hold zoom mode (still works with shift-drag)
