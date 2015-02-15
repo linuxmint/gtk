@@ -1109,7 +1109,10 @@ gtk_css_selector_pseudoclass_state_print (const GtkCssSelector *selector,
     "focus",
     "backdrop",
     "dir(ltr)",
-    "dir(rtl)"
+    "dir(rtl)",
+    "link",
+    "visited",
+    "checked"
   };
   guint i, state;
 
@@ -1827,7 +1830,10 @@ parse_selector_pseudo_class (GtkCssParser   *parser,
     { "focus",        GTK_STATE_FLAG_FOCUSED, },
     { "backdrop",     GTK_STATE_FLAG_BACKDROP, },
     { "dir(ltr)",     GTK_STATE_FLAG_DIR_LTR, },
-    { "dir(rtl)",     GTK_STATE_FLAG_DIR_RTL, }
+    { "dir(rtl)",     GTK_STATE_FLAG_DIR_RTL, },
+    { "link",         GTK_STATE_FLAG_LINK, },
+    { "visited",      GTK_STATE_FLAG_VISITED, },
+    { "checked",      GTK_STATE_FLAG_CHECKED, }
   };
   guint i;
 
@@ -2195,26 +2201,26 @@ _gtk_css_selector_tree_get_change_all (const GtkCssSelectorTree *tree,
 
 #ifdef PRINT_TREE
 static void
-_gtk_css_selector_tree_print (GtkCssSelectorTree *tree, GString *str, char *prefix)
+_gtk_css_selector_tree_print (const GtkCssSelectorTree *tree, GString *str, char *prefix)
 {
   gboolean first = TRUE;
   int len, i;
 
-  for (; tree != NULL; tree = tree->siblings, first = FALSE)
+  for (; tree != NULL; tree = gtk_css_selector_tree_get_sibling (tree), first = FALSE)
     {
       if (!first)
 	g_string_append (str, prefix);
 
       if (first)
 	{
-	  if (tree->siblings)
+	  if (gtk_css_selector_tree_get_sibling (tree))
 	    g_string_append (str, "─┬─");
 	  else
 	    g_string_append (str, "───");
 	}
       else
 	{
-	  if (tree->siblings)
+	  if (gtk_css_selector_tree_get_sibling (tree))
 	    g_string_append (str, " ├─");
 	  else
 	    g_string_append (str, " └─");
@@ -2228,7 +2234,7 @@ _gtk_css_selector_tree_print (GtkCssSelectorTree *tree, GString *str, char *pref
 	{
 	  GString *prefix2 = g_string_new (prefix);
 
-	  if (tree->siblings)
+	  if (gtk_css_selector_tree_get_sibling (tree))
 	    g_string_append (prefix2, " │ ");
 	  else
 	    g_string_append (prefix2, "   ");

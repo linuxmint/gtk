@@ -8,7 +8,7 @@
 <link rel="up" href="gtkbase.html" title="Part III. GTK+ Core Reference">
 <link rel="prev" href="gtk3-Clipboards.html" title="Clipboards">
 <link rel="next" href="GtkSettings.html" title="Settings">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -121,7 +121,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-dest-get-track-motion" title="gtk_drag_dest_get_track_motion ()">gtk_drag_dest_get_track_motion</a> <span class="c_punctuation">()</span>
@@ -173,6 +173,14 @@
 </td>
 <td class="function_name">
 <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-begin" title="gtk_drag_begin ()">gtk_drag_begin</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragContext"><span class="returnvalue">GdkDragContext</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-begin-with-coordinates" title="gtk_drag_begin_with_coordinates ()">gtk_drag_begin_with_coordinates</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -233,7 +241,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-check-threshold" title="gtk_drag_check_threshold ()">gtk_drag_check_threshold</a> <span class="c_punctuation">()</span>
@@ -346,6 +354,10 @@
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="gtk3-Drag-and-Drop.html#GtkTargetFlags" title="enum GtkTargetFlags">GtkTargetFlags</a></td>
 </tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gtk3-Drag-and-Drop.html#GtkDragResult" title="enum GtkDragResult">GtkDragResult</a></td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -356,13 +368,11 @@
 </div>
 <div class="refsect1">
 <a name="gtk3-Drag-and-Drop.description"></a><h2>Description</h2>
-<p>GTK+ has a rich set of functions for doing inter-process
-communication via the drag-and-drop metaphor.</p>
-<p>As well as the functions listed here, applications
-may need to use some facilities provided for</p>
-Selections.
-<p>Also, the Drag and Drop API makes use of signals
-in the <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> class.</p>
+<p>GTK+ has a rich set of functions for doing inter-process communication
+via the drag-and-drop metaphor.</p>
+<p>As well as the functions listed here, applications may need to use some
+facilities provided for <a class="link" href="gtk3-Selections.html" title="Selections">Selections</a>. Also, the Drag and
+Drop API makes use of signals in the <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> class.</p>
 </div>
 <div class="refsect1">
 <a name="gtk3-Drag-and-Drop.functions_details"></a><h2>Functions</h2>
@@ -372,7 +382,7 @@ in the <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type
 gtk_drag_dest_set (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
                    <em class="parameter"><code><a class="link" href="gtk3-Drag-and-Drop.html#GtkDestDefaults" title="enum GtkDestDefaults"><span class="type">GtkDestDefaults</span></a> flags</code></em>,
                    <em class="parameter"><code>const <a class="link" href="gtk3-Selections.html#GtkTargetEntry" title="struct GtkTargetEntry"><span class="type">GtkTargetEntry</span></a> *targets</code></em>,
-                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_targets</code></em>,
+                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_targets</code></em>,
                    <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragAction"><span class="type">GdkDragAction</span></a> actions</code></em>);</pre>
 <div class="refsect3">
 <a name="id-1.4.7.7.2.4"></a><h4>Parameters</h4>
@@ -395,12 +405,12 @@ gtk_drag_dest_set (<em class="parameter"><code><a class="link" href="GtkWidget.h
 </tr>
 <tr>
 <td class="parameter_name"><p>targets</p></td>
-<td class="parameter_description"><p> a pointer to an array of <a class="link" href="gtk3-Selections.html#GtkTargetEntry" title="struct GtkTargetEntry"><span class="type">GtkTargetEntry</span></a>s
+<td class="parameter_description"><p> a pointer to an array of <a href="gtk3-Selections.html#GtkTargetEntry"><span class="type">GtkTargetEntrys</span></a>
 indicating the drop types that this <em class="parameter"><code>widget</code></em>
-will accept, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
+will accept, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.
 Later you can access the list with <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-dest-get-target-list" title="gtk_drag_dest_get_target_list ()"><code class="function">gtk_drag_dest_get_target_list()</code></a>
 and <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-dest-find-target" title="gtk_drag_dest_find_target ()"><code class="function">gtk_drag_dest_find_target()</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_targets]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_targets]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>n_targets</p></td>
@@ -425,7 +435,7 @@ and <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-dest-find-target" tit
 gtk_drag_dest_set_proxy (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
                          <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *proxy_window</code></em>,
                          <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragProtocol"><span class="type">GdkDragProtocol</span></a> protocol</code></em>,
-                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> use_coordinates</code></em>);</pre>
+                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> use_coordinates</code></em>);</pre>
 <div class="refsect3">
 <a name="id-1.4.7.7.3.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -454,7 +464,7 @@ accepts
 </tr>
 <tr>
 <td class="parameter_name"><p>use_coordinates</p></td>
-<td class="parameter_description"><p>If <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, send the same coordinates to the
+<td class="parameter_description"><p>If <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, send the same coordinates to the
 destination, because it is an embedded
 subwindow.</p></td>
 <td class="parameter_annotations"> </td>
@@ -512,10 +522,10 @@ gtk_drag_dest_find_target (<em class="parameter"><code><a class="link" href="Gtk
 </tr>
 <tr>
 <td class="parameter_name"><p>target_list</p></td>
-<td class="parameter_description"><p> list of droppable targets, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to use
+<td class="parameter_description"><p> list of droppable targets, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to use
 gtk_drag_dest_get_target_list (<em class="parameter"><code>widget</code></em>
 ). </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -559,13 +569,13 @@ gtk_drag_dest_set_target_list (<em class="parameter"><code><a class="link" href=
 <tbody>
 <tr>
 <td class="parameter_name"><p>widget</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that's a drag destination</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that’s a drag destination</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>target_list</p></td>
-<td class="parameter_description"><p> list of droppable targets, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for none. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> list of droppable targets, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for none. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -586,7 +596,7 @@ gtk_drag_dest_add_text_targets (<em class="parameter"><code><a class="link" href
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>widget</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that's a drag destination</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that’s a drag destination</p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -608,7 +618,7 @@ gtk_drag_dest_add_image_targets (<em class="parameter"><code><a class="link" hre
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>widget</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that's a drag destination</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that’s a drag destination</p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -630,7 +640,7 @@ gtk_drag_dest_add_uri_targets (<em class="parameter"><code><a class="link" href=
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>widget</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that's a drag destination</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that’s a drag destination</p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -642,7 +652,7 @@ gtk_drag_dest_add_uri_targets (<em class="parameter"><code><a class="link" href=
 <a name="gtk-drag-dest-set-track-motion"></a><h3>gtk_drag_dest_set_track_motion ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_dest_set_track_motion (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> track_motion</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> track_motion</code></em>);</pre>
 <div class="refsect3">
 <a name="id-1.4.7.7.11.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -654,7 +664,7 @@ gtk_drag_dest_set_track_motion (<em class="parameter"><code><a class="link" href
 <tbody>
 <tr>
 <td class="parameter_name"><p>widget</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that's a drag destination</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that’s a drag destination</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -670,7 +680,7 @@ gtk_drag_dest_set_track_motion (<em class="parameter"><code><a class="link" href
 <hr>
 <div class="refsect2">
 <a name="gtk-drag-dest-get-track-motion"></a><h3>gtk_drag_dest_get_track_motion ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_drag_dest_get_track_motion (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>);</pre>
 <div class="refsect3">
 <a name="id-1.4.7.7.12.4"></a><h4>Parameters</h4>
@@ -682,7 +692,7 @@ gtk_drag_dest_get_track_motion (<em class="parameter"><code><a class="link" href
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>widget</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that's a drag destination</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that’s a drag destination</p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -694,9 +704,9 @@ gtk_drag_dest_get_track_motion (<em class="parameter"><code><a class="link" href
 <a name="gtk-drag-finish"></a><h3>gtk_drag_finish ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_finish (<em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *context</code></em>,
-                 <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> success</code></em>,
-                 <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> del</code></em>,
-                 <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> time_</code></em>);</pre>
+                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> success</code></em>,
+                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> del</code></em>,
+                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> time_</code></em>);</pre>
 <div class="refsect3">
 <a name="id-1.4.7.7.13.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -719,7 +729,7 @@ gtk_drag_finish (<em class="parameter"><code><a href="http://developer.gnome.org
 <tr>
 <td class="parameter_name"><p>del</p></td>
 <td class="parameter_description"><p>a flag indicating whether the source should delete the
-original data. (This should be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for a move)</p></td>
+original data. (This should be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for a move)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -738,7 +748,7 @@ original data. (This should be <a href="http://library.gnome.org/devel/glib/unst
 gtk_drag_get_data (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
                    <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *context</code></em>,
                    <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Properties-and-Atoms.html#GdkAtom"><span class="type">GdkAtom</span></a> target</code></em>,
-                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> time_</code></em>);</pre>
+                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> time_</code></em>);</pre>
 <div class="refsect3">
 <a name="id-1.4.7.7.14.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -845,11 +855,11 @@ gtk_drag_unhighlight (<em class="parameter"><code><a class="link" href="GtkWidge
 gtk_drag_begin (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
                 <em class="parameter"><code><a class="link" href="gtk3-Selections.html#GtkTargetList"><span class="type">GtkTargetList</span></a> *targets</code></em>,
                 <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragAction"><span class="type">GdkDragAction</span></a> actions</code></em>,
-                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> button</code></em>,
+                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> button</code></em>,
                 <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Event-Structures.html#GdkEvent"><span class="type">GdkEvent</span></a> *event</code></em>);</pre>
 <div class="warning">
 <p><code class="literal">gtk_drag_begin</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
-<p>Use <a href="gtk3-Drag-and-Drop.html#gtk-drag-begin-with-coordinates"><code class="function">gtk_drag_begin_with_coordinates()</code></a> instead.</p>
+<p>Use <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-begin-with-coordinates" title="gtk_drag_begin_with_coordinates ()"><code class="function">gtk_drag_begin_with_coordinates()</code></a> instead</p>
 </div>
 <div class="refsect3">
 <a name="id-1.4.7.7.18.5"></a><h4>Parameters</h4>
@@ -892,18 +902,118 @@ source can provide the data.</p></td>
 </div>
 <hr>
 <div class="refsect2">
+<a name="gtk-drag-begin-with-coordinates"></a><h3>gtk_drag_begin_with_coordinates ()</h3>
+<pre class="programlisting"><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragContext"><span class="returnvalue">GdkDragContext</span></a> *
+gtk_drag_begin_with_coordinates (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
+                                 <em class="parameter"><code><a class="link" href="gtk3-Selections.html#GtkTargetList"><span class="type">GtkTargetList</span></a> *targets</code></em>,
+                                 <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragAction"><span class="type">GdkDragAction</span></a> actions</code></em>,
+                                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> button</code></em>,
+                                 <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Event-Structures.html#GdkEvent"><span class="type">GdkEvent</span></a> *event</code></em>,
+                                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> x</code></em>,
+                                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y</code></em>);</pre>
+<p>Initiates a drag on the source side. The function only needs to be used
+when the application is starting drags itself, and is not needed when
+<a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-source-set" title="gtk_drag_source_set ()"><code class="function">gtk_drag_source_set()</code></a> is used.</p>
+<p>The <em class="parameter"><code>event</code></em>
+ is used to retrieve the timestamp that will be used internally to
+grab the pointer.  If <em class="parameter"><code>event</code></em>
+ is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then <a href="http://developer.gnome.org/gdk2/gdk3-Events.html#GDK-CURRENT-TIME:CAPS"><code class="literal">GDK_CURRENT_TIME</code></a> will be used.
+However, you should try to pass a real event in all cases, since that can be
+used to get information about the drag.</p>
+<p>Generally there are three cases when you want to start a drag by hand by
+calling this function:</p>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem"><p>During a <a class="link" href="GtkWidget.html#GtkWidget-button-press-event" title="The “button-press-event” signal"><span class="type">“button-press-event”</span></a> handler, if you want to start a drag
+immediately when the user presses the mouse button.  Pass the <em class="parameter"><code>event</code></em>
+
+that you have in your <a class="link" href="GtkWidget.html#GtkWidget-button-press-event" title="The “button-press-event” signal"><span class="type">“button-press-event”</span></a> handler.</p></li>
+<li class="listitem"><p>During a <a class="link" href="GtkWidget.html#GtkWidget-motion-notify-event" title="The “motion-notify-event” signal"><span class="type">“motion-notify-event”</span></a> handler, if you want to start a drag
+when the mouse moves past a certain threshold distance after a button-press.
+Pass the <em class="parameter"><code>event</code></em>
+ that you have in your <a class="link" href="GtkWidget.html#GtkWidget-motion-notify-event" title="The “motion-notify-event” signal"><span class="type">“motion-notify-event”</span></a> handler.</p></li>
+<li class="listitem"><p>During a timeout handler, if you want to start a drag after the mouse
+button is held down for some time.  Try to save the last event that you got
+from the mouse, using <a href="http://developer.gnome.org/gdk2/gdk3-Events.html#gdk-event-copy"><code class="function">gdk_event_copy()</code></a>, and pass it to this function
+(remember to free the event with <a href="http://developer.gnome.org/gdk2/gdk3-Events.html#gdk-event-free"><code class="function">gdk_event_free()</code></a> when you are done).
+If you can really not pass a real event, pass <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> instead.</p></li>
+</ol></div>
+<div class="refsect3">
+<a name="id-1.4.7.7.19.8"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>widget</p></td>
+<td class="parameter_description"><p>the source widget</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>targets</p></td>
+<td class="parameter_description"><p>The targets (data formats) in which the
+source can provide the data</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>actions</p></td>
+<td class="parameter_description"><p>A bitmask of the allowed drag actions for this drag</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>button</p></td>
+<td class="parameter_description"><p>The button the user clicked to start the drag</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>event</p></td>
+<td class="parameter_description"><p>The event that triggered the start of the drag</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>x</p></td>
+<td class="parameter_description"><p>The initial x coordinate to start dragging from, in the coordinate space
+of <em class="parameter"><code>widget</code></em>
+. If -1 is passed, the coordinates are retrieved from <em class="parameter"><code>event</code></em>
+or
+the current pointer position</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>y</p></td>
+<td class="parameter_description"><p>The initial y coordinate to start dragging from, in the coordinate space
+of <em class="parameter"><code>widget</code></em>
+. If -1 is passed, the coordinates are retrieved from <em class="parameter"><code>event</code></em>
+or
+the current pointer position</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.4.7.7.19.9"></a><h4>Returns</h4>
+<p> the context for this drag. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since 3.10</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gtk-drag-set-icon-widget"></a><h3>gtk_drag_set_icon_widget ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_set_icon_widget (<em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *context</code></em>,
                           <em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_x</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_y</code></em>);</pre>
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_x</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_y</code></em>);</pre>
 <p>Changes the icon for a widget to a given widget. GTK+
-will not destroy the icon, so if you don't want
-it to persist, you should connect to the "drag-end" 
+will not destroy the icon, so if you don’t want
+it to persist, you should connect to the “drag-end” 
 signal and destroy it yourself.</p>
 <div class="refsect3">
-<a name="id-1.4.7.7.19.5"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.20.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -943,13 +1053,13 @@ of the hotspot.</p></td>
 <a name="gtk-drag-set-icon-pixbuf"></a><h3>gtk_drag_set_icon_pixbuf ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_set_icon_pixbuf (<em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *context</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> *pixbuf</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_x</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_y</code></em>);</pre>
+                          <em class="parameter"><code><span class="type">GdkPixbuf</span> *pixbuf</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_x</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_y</code></em>);</pre>
 <p>Sets <em class="parameter"><code>pixbuf</code></em>
  as the icon for a given drag.</p>
 <div class="refsect3">
-<a name="id-1.4.7.7.20.5"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.21.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -965,7 +1075,7 @@ with a  context for the source side of a drag)</p></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>pixbuf</p></td>
-<td class="parameter_description"><p>the <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> to use as the drag icon.</p></td>
+<td class="parameter_description"><p>the <span class="type">GdkPixbuf</span> to use as the drag icon.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -989,16 +1099,16 @@ of the hotspot.</p></td>
 <a name="gtk-drag-set-icon-stock"></a><h3>gtk_drag_set_icon_stock ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_set_icon_stock (<em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *context</code></em>,
-                         <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stock_id</code></em>,
-                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_x</code></em>,
-                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_y</code></em>);</pre>
+                         <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stock_id</code></em>,
+                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_x</code></em>,
+                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_y</code></em>);</pre>
 <div class="warning">
 <p><code class="literal">gtk_drag_set_icon_stock</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-set-icon-name" title="gtk_drag_set_icon_name ()"><code class="function">gtk_drag_set_icon_name()</code></a> instead.</p>
 </div>
 <p>Sets the icon for a given drag from a stock ID.</p>
 <div class="refsect3">
-<a name="id-1.4.7.7.21.6"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.22.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1047,7 +1157,7 @@ they are no longer needed.</p>
 cursor will be positioned at the (0,0) coordinate of the
 surface.</p>
 <div class="refsect3">
-<a name="id-1.4.7.7.22.6"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.23.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1075,9 +1185,9 @@ with a context for the source side of a drag)</p></td>
 <a name="gtk-drag-set-icon-name"></a><h3>gtk_drag_set_icon_name ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_set_icon_name (<em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *context</code></em>,
-                        <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *icon_name</code></em>,
-                        <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_x</code></em>,
-                        <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_y</code></em>);</pre>
+                        <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *icon_name</code></em>,
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_x</code></em>,
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_y</code></em>);</pre>
 <p>Sets the icon for a given drag from a named themed icon. See
 the docs for <a class="link" href="GtkIconTheme.html" title="GtkIconTheme"><span class="type">GtkIconTheme</span></a> for more details. Note that the
 size of the icon depends on the icon theme (the icon is
@@ -1086,7 +1196,7 @@ loaded at the symbolic size <a class="link" href="gtk3-Themeable-Stock-Images.ht
  and <em class="parameter"><code>hot_y</code></em>
  have to be used with care.</p>
 <div class="refsect3">
-<a name="id-1.4.7.7.23.5"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.24.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1125,15 +1235,15 @@ with a context for the source side of a drag)</p></td>
 <a name="gtk-drag-set-icon-gicon"></a><h3>gtk_drag_set_icon_gicon ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_set_icon_gicon (<em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *context</code></em>,
-                         <em class="parameter"><code><a href="http://library.gnome.org/devel/gio/unstable/GIcon.html"><span class="type">GIcon</span></a> *icon</code></em>,
-                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_x</code></em>,
-                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_y</code></em>);</pre>
+                         <em class="parameter"><code><a href="https://developer.gnome.org/gio/unstable/GIcon.html"><span class="type">GIcon</span></a> *icon</code></em>,
+                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_x</code></em>,
+                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> hot_y</code></em>);</pre>
 <p>Sets the icon for a given drag from the given <em class="parameter"><code>icon</code></em>
-.  See the
-documentation for <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-set-icon-name" title="gtk_drag_set_icon_name ()"><code class="function">gtk_drag_set_icon_name()</code></a> for more details about
-using icons in drag and drop.</p>
+.
+See the documentation for <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-set-icon-name" title="gtk_drag_set_icon_name ()"><code class="function">gtk_drag_set_icon_name()</code></a>
+for more details about using icons in drag and drop.</p>
 <div class="refsect3">
-<a name="id-1.4.7.7.24.5"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.25.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1143,13 +1253,13 @@ using icons in drag and drop.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>context</p></td>
-<td class="parameter_description"><p>the context for a drag. (This must be called
+<td class="parameter_description"><p>the context for a drag (This must be called
 with a context for the source side of a drag)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>icon</p></td>
-<td class="parameter_description"><p>a <a href="http://library.gnome.org/devel/gio/unstable/GIcon.html"><span class="type">GIcon</span></a></p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/gio/unstable/GIcon.html"><span class="type">GIcon</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1175,7 +1285,7 @@ gtk_drag_set_icon_default (<em class="parameter"><code><a href="http://developer
 <p>Sets the icon for a particular drag to the default
 icon.</p>
 <div class="refsect3">
-<a name="id-1.4.7.7.25.5"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.26.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1194,14 +1304,14 @@ with a  context for the source side of a drag)</p></td>
 <hr>
 <div class="refsect2">
 <a name="gtk-drag-check-threshold"></a><h3>gtk_drag_check_threshold ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_drag_check_threshold (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> start_x</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> start_y</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> current_x</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> current_y</code></em>);</pre>
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> start_x</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> start_y</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> current_x</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> current_y</code></em>);</pre>
 <div class="refsect3">
-<a name="id-1.4.7.7.26.4"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.27.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1245,10 +1355,10 @@ gtk_drag_check_threshold (<em class="parameter"><code><a class="link" href="GtkW
 gtk_drag_source_set (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
                      <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Windows.html#GdkModifierType"><span class="type">GdkModifierType</span></a> start_button_mask</code></em>,
                      <em class="parameter"><code>const <a class="link" href="gtk3-Selections.html#GtkTargetEntry" title="struct GtkTargetEntry"><span class="type">GtkTargetEntry</span></a> *targets</code></em>,
-                     <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_targets</code></em>,
+                     <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_targets</code></em>,
                      <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragAction"><span class="type">GdkDragAction</span></a> actions</code></em>);</pre>
 <div class="refsect3">
-<a name="id-1.4.7.7.27.4"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.28.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1269,8 +1379,8 @@ gtk_drag_source_set (<em class="parameter"><code><a class="link" href="GtkWidget
 <tr>
 <td class="parameter_name"><p>targets</p></td>
 <td class="parameter_description"><p> the table of targets that the drag will support,
-may be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_targets]</span></td>
+may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_targets]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>n_targets</p></td>
@@ -1292,9 +1402,9 @@ may be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macro
 <a name="gtk-drag-source-set-icon-pixbuf"></a><h3>gtk_drag_source_set_icon_pixbuf ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_source_set_icon_pixbuf (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
-                                 <em class="parameter"><code><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> *pixbuf</code></em>);</pre>
+                                 <em class="parameter"><code><span class="type">GdkPixbuf</span> *pixbuf</code></em>);</pre>
 <div class="refsect3">
-<a name="id-1.4.7.7.28.4"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.29.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1309,7 +1419,7 @@ gtk_drag_source_set_icon_pixbuf (<em class="parameter"><code><a class="link" hre
 </tr>
 <tr>
 <td class="parameter_name"><p>pixbuf</p></td>
-<td class="parameter_description"><p>the <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> for the drag icon</p></td>
+<td class="parameter_description"><p>the <span class="type">GdkPixbuf</span> for the drag icon</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1321,7 +1431,7 @@ gtk_drag_source_set_icon_pixbuf (<em class="parameter"><code><a class="link" hre
 <a name="gtk-drag-source-set-icon-stock"></a><h3>gtk_drag_source_set_icon_stock ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_source_set_icon_stock (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
-                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stock_id</code></em>);</pre>
+                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stock_id</code></em>);</pre>
 <div class="warning">
 <p><code class="literal">gtk_drag_source_set_icon_stock</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-source-set-icon-name" title="gtk_drag_source_set_icon_name ()"><code class="function">gtk_drag_source_set_icon_name()</code></a> instead.</p>
@@ -1329,7 +1439,7 @@ gtk_drag_source_set_icon_stock (<em class="parameter"><code><a class="link" href
 <p>Sets the icon that will be used for drags from a particular source
 to a stock icon.</p>
 <div class="refsect3">
-<a name="id-1.4.7.7.29.6"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.30.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1356,11 +1466,11 @@ to a stock icon.</p>
 <a name="gtk-drag-source-set-icon-name"></a><h3>gtk_drag_source_set_icon_name ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_source_set_icon_name (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
-                               <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *icon_name</code></em>);</pre>
+                               <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *icon_name</code></em>);</pre>
 <p>Sets the icon that will be used for drags from a particular source
 to a themed icon. See the docs for <a class="link" href="GtkIconTheme.html" title="GtkIconTheme"><span class="type">GtkIconTheme</span></a> for more details.</p>
 <div class="refsect3">
-<a name="id-1.4.7.7.30.5"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.31.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1388,12 +1498,12 @@ to a themed icon. See the docs for <a class="link" href="GtkIconTheme.html" titl
 <a name="gtk-drag-source-set-icon-gicon"></a><h3>gtk_drag_source_set_icon_gicon ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_source_set_icon_gicon (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/gio/unstable/GIcon.html"><span class="type">GIcon</span></a> *icon</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/gio/unstable/GIcon.html"><span class="type">GIcon</span></a> *icon</code></em>);</pre>
 <p>Sets the icon that will be used for drags from a particular source
 to <em class="parameter"><code>icon</code></em>
 . See the docs for <a class="link" href="GtkIconTheme.html" title="GtkIconTheme"><span class="type">GtkIconTheme</span></a> for more details.</p>
 <div class="refsect3">
-<a name="id-1.4.7.7.31.5"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.32.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1408,7 +1518,7 @@ to <em class="parameter"><code>icon</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>icon</p></td>
-<td class="parameter_description"><p>A <a href="http://library.gnome.org/devel/gio/unstable/GIcon.html"><span class="type">GIcon</span></a></p></td>
+<td class="parameter_description"><p>A <a href="https://developer.gnome.org/gio/unstable/GIcon.html"><span class="type">GIcon</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1422,7 +1532,7 @@ to <em class="parameter"><code>icon</code></em>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_source_unset (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>);</pre>
 <div class="refsect3">
-<a name="id-1.4.7.7.32.4"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.33.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1444,7 +1554,7 @@ gtk_drag_source_unset (<em class="parameter"><code><a class="link" href="GtkWidg
 gtk_drag_source_set_target_list (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>,
                                  <em class="parameter"><code><a class="link" href="gtk3-Selections.html#GtkTargetList"><span class="type">GtkTargetList</span></a> *target_list</code></em>);</pre>
 <div class="refsect3">
-<a name="id-1.4.7.7.33.4"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.34.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1454,13 +1564,13 @@ gtk_drag_source_set_target_list (<em class="parameter"><code><a class="link" hre
 <tbody>
 <tr>
 <td class="parameter_name"><p>widget</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that's a drag source</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that’s a drag source</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>target_list</p></td>
-<td class="parameter_description"><p> list of draggable targets, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for none. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> list of draggable targets, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for none. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1473,7 +1583,7 @@ gtk_drag_source_set_target_list (<em class="parameter"><code><a class="link" hre
 <pre class="programlisting"><a class="link" href="gtk3-Selections.html#GtkTargetList"><span class="returnvalue">GtkTargetList</span></a> *
 gtk_drag_source_get_target_list (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>);</pre>
 <div class="refsect3">
-<a name="id-1.4.7.7.34.4"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.35.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1501,7 +1611,7 @@ are added with <em class="parameter"><code>info</code></em>
 use <a class="link" href="gtk3-Selections.html#gtk-target-list-add-text-targets" title="gtk_target_list_add_text_targets ()"><code class="function">gtk_target_list_add_text_targets()</code></a> and
 <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-source-set-target-list" title="gtk_drag_source_set_target_list ()"><code class="function">gtk_drag_source_set_target_list()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.4.7.7.35.5"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.36.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1510,7 +1620,7 @@ use <a class="link" href="gtk3-Selections.html#gtk-target-list-add-text-targets"
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>widget</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that's is a drag source</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that’s is a drag source</p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -1523,7 +1633,7 @@ use <a class="link" href="gtk3-Selections.html#gtk-target-list-add-text-targets"
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_source_add_image_targets (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>);</pre>
 <div class="refsect3">
-<a name="id-1.4.7.7.36.4"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.37.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1532,7 +1642,7 @@ gtk_drag_source_add_image_targets (<em class="parameter"><code><a class="link" h
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>widget</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that's is a drag source</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that’s is a drag source</p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -1545,7 +1655,7 @@ gtk_drag_source_add_image_targets (<em class="parameter"><code><a class="link" h
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_drag_source_add_uri_targets (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *widget</code></em>);</pre>
 <div class="refsect3">
-<a name="id-1.4.7.7.37.4"></a><h4>Parameters</h4>
+<a name="id-1.4.7.7.38.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1554,7 +1664,7 @@ gtk_drag_source_add_uri_targets (<em class="parameter"><code><a class="link" hre
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>widget</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that's is a drag source</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> that’s is a drag source</p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -1582,7 +1692,7 @@ of the user for a drag destination site.</p>
 <td class="enum_member_name"><p><a name="GTK-DEST-DEFAULT-MOTION:CAPS"></a>GTK_DEST_DEFAULT_MOTION</p></td>
 <td class="enum_member_description">
 <p>If set for a widget, GTK+, during a drag over this
-  widget will check if the drag matches this widget's list of possible targets
+  widget will check if the drag matches this widget’s list of possible targets
   and actions.
   GTK+ will then call <a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#gdk-drag-status"><code class="function">gdk_drag_status()</code></a> as appropriate.</p>
 </td>
@@ -1601,10 +1711,10 @@ of the user for a drag destination site.</p>
 <td class="enum_member_name"><p><a name="GTK-DEST-DEFAULT-DROP:CAPS"></a>GTK_DEST_DEFAULT_DROP</p></td>
 <td class="enum_member_description">
 <p>If set for a widget, when a drop occurs, GTK+ will
-  will check if the drag matches this widget's list of possible targets and
+  will check if the drag matches this widget’s list of possible targets and
   actions. If so, GTK+ will call <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-get-data" title="gtk_drag_get_data ()"><code class="function">gtk_drag_get_data()</code></a> on behalf of the widget.
   Whether or not the drop is successful, GTK+ will call <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-finish" title="gtk_drag_finish ()"><code class="function">gtk_drag_finish()</code></a>. If
-  the action was a move, then if the drag was successful, then <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> will be
+  the action was a move, then if the drag was successful, then <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> will be
   passed for the <em class="parameter"><code>delete</code></em>
  parameter to <a class="link" href="gtk3-Drag-and-Drop.html#gtk-drag-finish" title="gtk_drag_finish ()"><code class="function">gtk_drag_finish()</code></a>.</p>
 </td>
@@ -1626,7 +1736,7 @@ of the user for a drag destination site.</p>
 <div class="refsect2">
 <a name="GtkTargetFlags"></a><h3>enum GtkTargetFlags</h3>
 <p>The <a class="link" href="gtk3-Drag-and-Drop.html#GtkTargetFlags" title="enum GtkTargetFlags"><span class="type">GtkTargetFlags</span></a> enumeration is used to specify
-constraints on an entry in a <span class="type">GtkTargetTable</span>.</p>
+constraints on a <a class="link" href="gtk3-Selections.html#GtkTargetEntry" title="struct GtkTargetEntry"><span class="type">GtkTargetEntry</span></a>.</p>
 <div class="refsect3">
 <a name="id-1.4.7.8.3.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1672,10 +1782,73 @@ constraints on an entry in a <span class="type">GtkTargetTable</span>.</p>
 </table></div>
 </div>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GtkDragResult"></a><h3>enum GtkDragResult</h3>
+<p>Gives an indication why a drag operation failed.
+The value can by obtained by connecting to the
+<a class="link" href="GtkWidget.html#GtkWidget-drag-failed" title="The “drag-failed” signal"><span class="type">“drag-failed”</span></a> signal.</p>
+<div class="refsect3">
+<a name="id-1.4.7.8.4.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-DRAG-RESULT-SUCCESS:CAPS"></a>GTK_DRAG_RESULT_SUCCESS</p></td>
+<td class="enum_member_description">
+<p>The drag operation was successful.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-DRAG-RESULT-NO-TARGET:CAPS"></a>GTK_DRAG_RESULT_NO_TARGET</p></td>
+<td class="enum_member_description">
+<p>No suitable drag target.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-DRAG-RESULT-USER-CANCELLED:CAPS"></a>GTK_DRAG_RESULT_USER_CANCELLED</p></td>
+<td class="enum_member_description">
+<p>The user cancelled the drag operation.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-DRAG-RESULT-TIMEOUT-EXPIRED:CAPS"></a>GTK_DRAG_RESULT_TIMEOUT_EXPIRED</p></td>
+<td class="enum_member_description">
+<p>The drag operation timed out.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-DRAG-RESULT-GRAB-BROKEN:CAPS"></a>GTK_DRAG_RESULT_GRAB_BROKEN</p></td>
+<td class="enum_member_description">
+<p>The pointer or keyboard grab used
+ for the drag operation was broken.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-DRAG-RESULT-ERROR:CAPS"></a>GTK_DRAG_RESULT_ERROR</p></td>
+<td class="enum_member_description">
+<p>The drag operation failed due to some
+ unspecified error.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

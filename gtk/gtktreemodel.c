@@ -32,7 +32,7 @@
  * @Title: GtkTreeModel
  * @Short_description: The tree interface used by GtkTreeView
  * @See_also: #GtkTreeView, #GtkTreeStore, #GtkListStore,
- *     <link linkend="gtk-GtkTreeView-drag-and-drop">GtkTreeDnd</link>,
+ *     [GtkTreeView drag-and-drop][gtk3-GtkTreeView-drag-and-drop]
  *     #GtkTreeSortable
  *
  * The #GtkTreeModel interface defines a generic tree interface for
@@ -53,7 +53,7 @@
  *
  * In order to make life simpler for programmers who do not need to
  * write their own specialized model, two generic models are provided
- * &mdash; the #GtkTreeStore and the #GtkListStore. To use these, the
+ * — the #GtkTreeStore and the #GtkListStore. To use these, the
  * developer simply pushes data into these models as necessary. These
  * models provide the data structure as well as all appropriate tree
  * interfaces. As a result, implementing drag and drop, sorting, and
@@ -62,22 +62,21 @@
  *
  * Models are accessed on a node/column level of granularity. One can
  * query for the value of a model at a certain node and a certain
- * column on that node. There are two structures used to reference
- * a particular node in a model. They are the #GtkTreePath and the
- * #GtkTreeIter<footnote><para>Here, <abbrev>iter</abbrev> is short
- * for <quote>iterator</quote></para></footnote>. Most of the interface
- * consists of operations on a #GtkTreeIter.
+ * column on that node. There are two structures used to reference a
+ * particular node in a model. They are the #GtkTreePath-struct and
+ * the #GtkTreeIter-struct (“iter” is short for iterator). Most of the
+ * interface consists of operations on a #GtkTreeIter-struct.
  *
  * A path is essentially a potential node. It is a location on a model
  * that may or may not actually correspond to a node on a specific
- * model. The #GtkTreePath struct can be converted into either an
+ * model. The #GtkTreePath-struct can be converted into either an
  * array of unsigned integers or a string. The string form is a list
  * of numbers separated by a colon. Each number refers to the offset
- * at that level. Thus, the path <quote>0</quote> refers to the root
- * node and the path <quote>2:4</quote> refers to the fifth child of
+ * at that level. Thus, the path `0` refers to the root
+ * node and the path `2:4` refers to the fifth child of
  * the third node.
  *
- * By contrast, a #GtkTreeIter is a reference to a specific node on
+ * By contrast, a #GtkTreeIter-struct is a reference to a specific node on
  * a specific model. It is a generic struct with an integer and three
  * generic pointers. These are filled in by the model in a model-specific
  * way. One can convert a path to an iterator by calling
@@ -97,9 +96,9 @@
  *
  * The lifecycle of an iterator can be a little confusing at first.
  * Iterators are expected to always be valid for as long as the model
- * is unchanged (and doesn't emit a signal). The model is considered
+ * is unchanged (and doesn’t emit a signal). The model is considered
  * to own all outstanding iterators and nothing needs to be done to
- * free them from the user's point of view. Additionally, some models
+ * free them from the user’s point of view. Additionally, some models
  * guarantee that an iterator is valid for as long as the node it refers
  * to is valid (most notably the #GtkTreeStore and #GtkListStore).
  * Although generally uninteresting, as one always has to allow for
@@ -110,44 +109,48 @@
  *
  * To help show some common operation of a model, some examples are
  * provided. The first example shows three ways of getting the iter at
- * the location <quote>3:2:5</quote>. While the first method shown is
+ * the location `3:2:5`. While the first method shown is
  * easier, the second is much more common, as you often get paths from
  * callbacks.
  *
- * <example>
- * <title>Acquiring a <structname>GtkTreeIter</structname></title>
- * <programlisting>
- *  /&ast; Three ways of getting the iter pointing to the location &ast;/
+ * ## Acquiring a #GtkTreeIter-struct
+ *
+ * |[<!-- language="C" -->
+ * // Three ways of getting the iter pointing to the location
  * GtkTreePath *path;
  * GtkTreeIter iter;
  * GtkTreeIter parent_iter;
  *
- * /&ast; get the iterator from a string &ast;/
- * gtk_tree_model_get_iter_from_string (model, &amp;iter, "3:2:5");
+ * // get the iterator from a string
+ * gtk_tree_model_get_iter_from_string (model,
+ *                                      &iter,
+ *                                      "3:2:5");
  *
- * /&ast; get the iterator from a path &ast;/
+ * // get the iterator from a path
  * path = gtk_tree_path_new_from_string ("3:2:5");
- * gtk_tree_model_get_iter (model, &amp;iter, path);
+ * gtk_tree_model_get_iter (model, &iter, path);
  * gtk_tree_path_free (path);
  *
- * /&ast; walk the tree to find the iterator &ast;/
- * gtk_tree_model_iter_nth_child (model, &amp;iter, NULL, 3);
+ * // walk the tree to find the iterator
+ * gtk_tree_model_iter_nth_child (model, &iter,
+ *                                NULL, 3);
  * parent_iter = iter;
- * gtk_tree_model_iter_nth_child (model, &amp;iter, &amp;parent_iter, 2);
+ * gtk_tree_model_iter_nth_child (model, &iter,
+ *                                &parent_iter, 2);
  * parent_iter = iter;
- * gtk_tree_model_iter_nth_child (model, &amp;iter, &amp;parent_iter, 5);
- * </programlisting>
- * </example>
+ * gtk_tree_model_iter_nth_child (model, &iter,
+ *                                &parent_iter, 5);
+ * ]|
  *
  * This second example shows a quick way of iterating through a list
  * and getting a string and an integer from each row. The
- * <function>populate_model</function> function used below is not
+ * populate_model() function used below is not
  * shown, as it is specific to the #GtkListStore. For information on
  * how to write such a function, see the #GtkListStore documentation.
  *
- * <example>
- * <title>Reading data from a <structname>GtkTreeModel</structname></title>
- * <programlisting>
+ * ## Reading data from a #GtkTreeModel
+ *
+ * |[<!-- language="C" -->
  * enum
  * {
  *   STRING_COLUMN,
@@ -162,37 +165,40 @@
  * gboolean valid;
  * gint row_count = 0;
  *
- * /&ast; make a new list_store &ast;/
- * list_store = gtk_list_store_new (N_COLUMNS, G_TYPE_STRING, G_TYPE_INT);
+ * // make a new list_store
+ * list_store = gtk_list_store_new (N_COLUMNS,
+ *                                  G_TYPE_STRING,
+ *                                  G_TYPE_INT);
  *
- * /&ast; Fill the list store with data &ast;/
+ * // Fill the list store with data
  * populate_model (list_store);
  *
- * /&ast; Get the first iter in the list, check it is valid and walk
- *  &ast; through the list, reading each row. &ast;/
- * for (valid = gtk_tree_model_get_iter_first (list_store, &amp;iter);
- *      valid;
- *      valid = gtk_tree_model_iter_next (list_store, &amp;iter))
+ * // Get the first iter in the list, check it is valid and walk
+ * // through the list, reading each row.
+ *
+ * valid = gtk_tree_model_get_iter_first (list_store,
+ *                                        &iter);
+ * while (valid)
  *  {
  *    gchar *str_data;
  *    gint   int_data;
  *
- *    /&ast; Make sure you terminate calls to gtk_tree_model_get()
- *     &ast; with a '-1' value
- *     &ast;/
- *    gtk_tree_model_get (list_store, &amp;iter,
- *                        STRING_COLUMN, &amp;str_data,
- *                        INT_COLUMN, &amp;int_data,
+ *    // Make sure you terminate calls to gtk_tree_model_get() with a “-1” value
+ *    gtk_tree_model_get (list_store, &iter,
+ *                        STRING_COLUMN, &str_data,
+ *                        INT_COLUMN, &int_data,
  *                        -1);
  *
- *    /&ast; Do something with the data &ast;/
- *    g_print ("Row &percnt;d: (&percnt;s,&percnt;d)\n", row_count, str_data, int_data);
+ *    // Do something with the data
+ *    g_print ("Row %d: (%s,%d)\n",
+ *             row_count, str_data, int_data);
  *    g_free (str_data);
  *
+ *    valid = gtk_tree_model_iter_next (list_store,
+ *                                      &iter);
  *    row_count++;
  *  }
- * </programlisting>
- * </example>
+ * ]|
  *
  * The #GtkTreeModel interface contains two methods for reference
  * counting: gtk_tree_model_ref_node() and gtk_tree_model_unref_node().
@@ -209,21 +215,20 @@
  *
  * When working with reference counting, the following rules must be taken
  * into account:
- * <itemizedlist>
- * <listitem><para>Never take a reference on a node without owning a
- * reference on its parent. This means that all parent nodes of a referenced
- * node must be referenced as well.</para></listitem>
- * <listitem><para>Outstanding references on a deleted node are not released.
- * This is not possible because the node has already been deleted by the
- * time the row-deleted signal is received.
- * </para></listitem>
- * <listitem><para>Models are not obligated to emit a signal on rows of
- * which none of its siblings are referenced. To phrase this differently,
- * signals are only required for levels in which nodes are referenced. For
- * the root level however, signals must be emitted at all times (however the
- * root level is always referenced when any view is attached).
- * </para></listitem>
- * </itemizedlist>
+ *
+ * - Never take a reference on a node without owning a reference on its parent.
+ *   This means that all parent nodes of a referenced node must be referenced
+ *   as well.
+ *
+ * - Outstanding references on a deleted node are not released. This is not
+ *   possible because the node has already been deleted by the time the
+ *   row-deleted signal is received.
+ *
+ * - Models are not obligated to emit a signal on rows of which none of its
+ *   siblings are referenced. To phrase this differently, signals are only
+ *   required for levels in which nodes are referenced. For the root level
+ *   however, signals must be emitted at all times (however the root level
+ *   is always referenced when any view is attached).
  */
 
 #define INITIALIZE_TREE_ITER(Iter) \
@@ -345,8 +350,8 @@ gtk_tree_model_base_init (gpointer g_class)
       /**
        * GtkTreeModel::row-changed:
        * @tree_model: the #GtkTreeModel on which the signal is emitted
-       * @path: a #GtkTreePath identifying the changed row
-       * @iter: a valid #GtkTreeIter pointing to the changed row
+       * @path: a #GtkTreePath-struct identifying the changed row
+       * @iter: a valid #GtkTreeIter-struct pointing to the changed row
        *
        * This signal is emitted when a row in the model has changed.
        */
@@ -377,8 +382,8 @@ gtk_tree_model_base_init (gpointer g_class)
       /**
        * GtkTreeModel::row-inserted:
        * @tree_model: the #GtkTreeModel on which the signal is emitted
-       * @path: a #GtkTreePath identifying the new row
-       * @iter: a valid #GtkTreeIter pointing to the new row
+       * @path: a #GtkTreePath-struct identifying the new row
+       * @iter: a valid #GtkTreeIter-struct pointing to the new row
        *
        * This signal is emitted when a new row has been inserted in
        * the model.
@@ -402,8 +407,8 @@ gtk_tree_model_base_init (gpointer g_class)
       /**
        * GtkTreeModel::row-has-child-toggled:
        * @tree_model: the #GtkTreeModel on which the signal is emitted
-       * @path: a #GtkTreePath identifying the row
-       * @iter: a valid #GtkTreeIter pointing to the row
+       * @path: a #GtkTreePath-struct identifying the row
+       * @iter: a valid #GtkTreeIter-struct pointing to the row
        *
        * This signal is emitted when a row has gotten the first child
        * row or lost its last child row.
@@ -422,7 +427,7 @@ gtk_tree_model_base_init (gpointer g_class)
       /**
        * GtkTreeModel::row-deleted:
        * @tree_model: the #GtkTreeModel on which the signal is emitted
-       * @path: a #GtkTreePath identifying the row
+       * @path: a #GtkTreePath-struct identifying the row
        *
        * This signal is emitted when a row has been deleted.
        *
@@ -448,17 +453,18 @@ gtk_tree_model_base_init (gpointer g_class)
       /**
        * GtkTreeModel::rows-reordered: (skip)
        * @tree_model: the #GtkTreeModel on which the signal is emitted
-       * @path: a #GtkTreePath identifying the tree node whose children
+       * @path: a #GtkTreePath-struct identifying the tree node whose children
        *     have been reordered
-       * @iter: a valid #GtkTreeIter pointing to the node whose
+       * @iter: a valid #GtkTreeIter-struct pointing to the node whose children
+       *     have been reordered, or %NULL if the depth of @path is 0
        * @new_order: an array of integers mapping the current position
        *     of each child to its old position before the re-ordering,
-       *     i.e. @new_order<literal>[newpos] = oldpos</literal>
+       *     i.e. @new_order`[newpos] = oldpos`
        *
        * This signal is emitted when the children of a node in the
        * #GtkTreeModel have been reordered.
        *
-       * Note that this signal is <emphasis>not</emphasis> emitted
+       * Note that this signal is not emitted
        * when rows are reordered by DND, since this is implemented
        * by removing and then reinserting the row.
        */
@@ -576,10 +582,10 @@ rows_reordered_marshal (GClosure          *closure,
 /**
  * gtk_tree_path_new:
  *
- * Creates a new #GtkTreePath.
- * This structure refers to a row.
+ * Creates a new #GtkTreePath-struct.
+ * This refers to a row.
  *
- * Return value: A newly created #GtkTreePath.
+ * Returns: A newly created #GtkTreePath-struct.
  */
 GtkTreePath *
 gtk_tree_path_new (void)
@@ -597,15 +603,15 @@ gtk_tree_path_new (void)
  * gtk_tree_path_new_from_string:
  * @path: The string representation of a path
  *
- * Creates a new #GtkTreePath initialized to @path.
+ * Creates a new #GtkTreePath-struct initialized to @path.
  *
  * @path is expected to be a colon separated list of numbers.
- * For example, the string "10:4:0" would create a path of depth
+ * For example, the string “10:4:0” would create a path of depth
  * 3 pointing to the 11th child of the root node, the 5th
  * child of that 11th child, and the 1st child of that 5th child.
  * If an invalid path string is passed in, %NULL is returned.
  *
- * Return value: A newly-created #GtkTreePath, or %NULL
+ * Returns: A newly-created #GtkTreePath-struct, or %NULL
  */
 GtkTreePath *
 gtk_tree_path_new_from_string (const gchar *path)
@@ -653,7 +659,7 @@ gtk_tree_path_new_from_string (const gchar *path)
  *
  * Creates a new path with @first_index and @varargs as indices.
  *
- * Return value: A newly created #GtkTreePath
+ * Returns: A newly created #GtkTreePath-struct
  *
  * Since: 2.2
  */
@@ -682,16 +688,44 @@ gtk_tree_path_new_from_indices (gint first_index,
 }
 
 /**
+ * gtk_tree_path_new_from_indicesv: (rename-to gtk_tree_path_new_from_indices)
+ * @indices: (array length=length): array of indices
+ * @length: length of @indices array
+ *
+ * Creates a new path with the given @indices array of @length.
+ *
+ * Returns: A newly created #GtkTreePath-struct
+ *
+ * Since: 3.12
+ */
+GtkTreePath *
+gtk_tree_path_new_from_indicesv (gint *indices,
+                                 gsize length)
+{
+  GtkTreePath *path;
+
+  g_return_val_if_fail (indices != NULL && length != 0, NULL);
+
+  path = gtk_tree_path_new ();
+  path->alloc = length;
+  path->depth = length;
+  path->indices = g_new (gint, length);
+  memcpy (path->indices, indices, length * sizeof (gint));
+
+  return path;
+}
+
+/**
  * gtk_tree_path_to_string:
- * @path: A #GtkTreePath
+ * @path: A #GtkTreePath-struct
  *
  * Generates a string representation of the path.
  *
- * This string is a ':' separated list of numbers.
- * For example, "4:10:0:3" would be an acceptable
+ * This string is a “:” separated list of numbers.
+ * For example, “4:10:0:3” would be an acceptable
  * return value for this string.
  *
- * Return value: A newly-allocated string.
+ * Returns: A newly-allocated string.
  *     Must be freed with g_free().
  */
 gchar *
@@ -725,11 +759,11 @@ gtk_tree_path_to_string (GtkTreePath *path)
 /**
  * gtk_tree_path_new_first:
  *
- * Creates a new #GtkTreePath.
+ * Creates a new #GtkTreePath-struct.
  *
- * The string representation of this path is "0".
+ * The string representation of this path is “0”.
  *
- * Return value: A new #GtkTreePath
+ * Returns: A new #GtkTreePath-struct
  */
 GtkTreePath *
 gtk_tree_path_new_first (void)
@@ -744,7 +778,7 @@ gtk_tree_path_new_first (void)
 
 /**
  * gtk_tree_path_append_index:
- * @path: a #GtkTreePath
+ * @path: a #GtkTreePath-struct
  * @index_: the index
  *
  * Appends a new index to a path.
@@ -774,7 +808,7 @@ gtk_tree_path_append_index (GtkTreePath *path,
 
 /**
  * gtk_tree_path_prepend_index:
- * @path: a #GtkTreePath
+ * @path: a #GtkTreePath-struct
  * @index_: the index
  *
  * Prepends a new index to a path.
@@ -803,11 +837,11 @@ gtk_tree_path_prepend_index (GtkTreePath *path,
 
 /**
  * gtk_tree_path_get_depth:
- * @path: a #GtkTreePath
+ * @path: a #GtkTreePath-struct
  *
  * Returns the current depth of @path.
  *
- * Return value: The depth of @path
+ * Returns: The depth of @path
  */
 gint
 gtk_tree_path_get_depth (GtkTreePath *path)
@@ -819,7 +853,7 @@ gtk_tree_path_get_depth (GtkTreePath *path)
 
 /**
  * gtk_tree_path_get_indices: (skip)
- * @path: a #GtkTreePath
+ * @path: a #GtkTreePath-struct
  *
  * Returns the current indices of @path.
  *
@@ -828,7 +862,7 @@ gtk_tree_path_get_depth (GtkTreePath *path)
  *
  * The length of the array can be obtained with gtk_tree_path_get_depth().
  *
- * Return value: The current indices, or %NULL
+ * Returns: The current indices, or %NULL
  */
 gint *
 gtk_tree_path_get_indices (GtkTreePath *path)
@@ -839,8 +873,8 @@ gtk_tree_path_get_indices (GtkTreePath *path)
 }
 
 /**
- * gtk_tree_path_get_indices_with_depth:
- * @path: a #GtkTreePath
+ * gtk_tree_path_get_indices_with_depth: (rename-to gtk_tree_path_get_indices)
+ * @path: a #GtkTreePath-struct
  * @depth: (out) (allow-none): return location for number of elements
  *     returned in the integer array, or %NULL
  *
@@ -850,12 +884,10 @@ gtk_tree_path_get_indices (GtkTreePath *path)
  * It also returns the number of elements in the array.
  * The array should not be freed.
  *
- * Return value: (array length=depth) (transfer none): The current
+ * Returns: (array length=depth) (transfer none): The current
  *     indices, or %NULL
  *
  * Since: 3.0
- *
- * Rename to: gtk_tree_path_get_indices
  */
 gint *
 gtk_tree_path_get_indices_with_depth (GtkTreePath *path,
@@ -871,7 +903,7 @@ gtk_tree_path_get_indices_with_depth (GtkTreePath *path,
 
 /**
  * gtk_tree_path_free:
- * @path: (allow-none): a #GtkTreePath
+ * @path: (allow-none): a #GtkTreePath-struct
  *
  * Frees @path. If @path is %NULL, it simply returns.
  */
@@ -887,11 +919,11 @@ gtk_tree_path_free (GtkTreePath *path)
 
 /**
  * gtk_tree_path_copy:
- * @path: a #GtkTreePath
+ * @path: a #GtkTreePath-struct
  *
- * Creates a new #GtkTreePath as a copy of @path.
+ * Creates a new #GtkTreePath-struct as a copy of @path.
  *
- * Return value: a new #GtkTreePath
+ * Returns: a new #GtkTreePath-struct
  */
 GtkTreePath *
 gtk_tree_path_copy (const GtkTreePath *path)
@@ -914,8 +946,8 @@ G_DEFINE_BOXED_TYPE (GtkTreePath, gtk_tree_path,
 
 /**
  * gtk_tree_path_compare:
- * @a: a #GtkTreePath
- * @b: a #GtkTreePath to compare with
+ * @a: a #GtkTreePath-struct
+ * @b: a #GtkTreePath-struct to compare with
  *
  * Compares two paths.
  *
@@ -923,7 +955,7 @@ G_DEFINE_BOXED_TYPE (GtkTreePath, gtk_tree_path,
  * If @b appears before @a, then 1 is returned.
  * If the two nodes are equal, then 0 is returned.
  *
- * Return value: the relative positions of @a and @b
+ * Returns: the relative positions of @a and @b
  */
 gint
 gtk_tree_path_compare (const GtkTreePath *a,
@@ -950,12 +982,12 @@ gtk_tree_path_compare (const GtkTreePath *a,
 
 /**
  * gtk_tree_path_is_ancestor:
- * @path: a #GtkTreePath
- * @descendant: another #GtkTreePath
+ * @path: a #GtkTreePath-struct
+ * @descendant: another #GtkTreePath-struct
  *
  * Returns %TRUE if @descendant is a descendant of @path.
  *
- * Return value: %TRUE if @descendant is contained inside @path
+ * Returns: %TRUE if @descendant is contained inside @path
  */
 gboolean
 gtk_tree_path_is_ancestor (GtkTreePath *path,
@@ -983,12 +1015,12 @@ gtk_tree_path_is_ancestor (GtkTreePath *path,
 
 /**
  * gtk_tree_path_is_descendant:
- * @path: a #GtkTreePath
- * @ancestor: another #GtkTreePath
+ * @path: a #GtkTreePath-struct
+ * @ancestor: another #GtkTreePath-struct
  *
  * Returns %TRUE if @path is a descendant of @ancestor.
  *
- * Return value: %TRUE if @ancestor contains @path somewhere below it
+ * Returns: %TRUE if @ancestor contains @path somewhere below it
  */
 gboolean
 gtk_tree_path_is_descendant (GtkTreePath *path,
@@ -1017,7 +1049,7 @@ gtk_tree_path_is_descendant (GtkTreePath *path,
 
 /**
  * gtk_tree_path_next:
- * @path: a #GtkTreePath
+ * @path: a #GtkTreePath-struct
  *
  * Moves the @path to point to the next node at the current depth.
  */
@@ -1032,12 +1064,12 @@ gtk_tree_path_next (GtkTreePath *path)
 
 /**
  * gtk_tree_path_prev:
- * @path: a #GtkTreePath
+ * @path: a #GtkTreePath-struct
  *
  * Moves the @path to point to the previous node at the
  * current depth, if it exists.
  *
- * Return value: %TRUE if @path has a previous node, and
+ * Returns: %TRUE if @path has a previous node, and
  *     the move was made
  */
 gboolean
@@ -1058,11 +1090,11 @@ gtk_tree_path_prev (GtkTreePath *path)
 
 /**
  * gtk_tree_path_up:
- * @path: a #GtkTreePath
+ * @path: a #GtkTreePath-struct
  *
  * Moves the @path to point to its parent node, if it has a parent.
  *
- * Return value: %TRUE if @path has a parent, and the move was made
+ * Returns: %TRUE if @path has a parent, and the move was made
  */
 gboolean
 gtk_tree_path_up (GtkTreePath *path)
@@ -1079,7 +1111,7 @@ gtk_tree_path_up (GtkTreePath *path)
 
 /**
  * gtk_tree_path_down:
- * @path: a #GtkTreePath
+ * @path: a #GtkTreePath-struct
  *
  * Moves @path to point to the first child of the current path.
  */
@@ -1093,16 +1125,16 @@ gtk_tree_path_down (GtkTreePath *path)
 
 /**
  * gtk_tree_iter_copy:
- * @iter: a #GtkTreeIter
+ * @iter: a #GtkTreeIter-struct
  *
  * Creates a dynamically allocated tree iterator as a copy of @iter.
  *
  * This function is not intended for use in applications,
  * because you can just copy the structs by value
- * (<literal>GtkTreeIter new_iter = iter;</literal>).
+ * (`GtkTreeIter new_iter = iter;`).
  * You must free this iter with gtk_tree_iter_free().
  *
- * Return value: a newly-allocated copy of @iter
+ * Returns: a newly-allocated copy of @iter
  */
 GtkTreeIter *
 gtk_tree_iter_copy (GtkTreeIter *iter)
@@ -1147,7 +1179,7 @@ G_DEFINE_BOXED_TYPE (GtkTreeIter,  gtk_tree_iter,
  * The flags supported should not change during the lifetime
  * of the @tree_model.
  *
- * Return value: the flags supported by this interface
+ * Returns: the flags supported by this interface
  */
 GtkTreeModelFlags
 gtk_tree_model_get_flags (GtkTreeModel *tree_model)
@@ -1169,7 +1201,7 @@ gtk_tree_model_get_flags (GtkTreeModel *tree_model)
  *
  * Returns the number of columns supported by @tree_model.
  *
- * Return value: the number of columns
+ * Returns: the number of columns
  */
 gint
 gtk_tree_model_get_n_columns (GtkTreeModel *tree_model)
@@ -1190,7 +1222,7 @@ gtk_tree_model_get_n_columns (GtkTreeModel *tree_model)
  *
  * Returns the type of the column.
  *
- * Return value: (transfer none): the type of the column
+ * Returns: (transfer none): the type of the column
  */
 GType
 gtk_tree_model_get_column_type (GtkTreeModel *tree_model,
@@ -1210,13 +1242,13 @@ gtk_tree_model_get_column_type (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_get_iter:
  * @tree_model: a #GtkTreeModel
- * @iter: (out): the uninitialized #GtkTreeIter
- * @path: the #GtkTreePath
+ * @iter: (out): the uninitialized #GtkTreeIter-struct
+ * @path: the #GtkTreePath-struct
  *
  * Sets @iter to a valid iterator pointing to @path.  If @path does
  * not exist, @iter is set to an invalid iterator and %FALSE is returned.
  *
- * Return value: %TRUE, if @iter was set
+ * Returns: %TRUE, if @iter was set
  */
 gboolean
 gtk_tree_model_get_iter (GtkTreeModel *tree_model,
@@ -1241,13 +1273,13 @@ gtk_tree_model_get_iter (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_get_iter_from_string:
  * @tree_model: a #GtkTreeModel
- * @iter: (out): an uninitialized #GtkTreeIter
- * @path_string: a string representation of a #GtkTreePath
+ * @iter: (out): an uninitialized #GtkTreeIter-struct
+ * @path_string: a string representation of a #GtkTreePath-struct
  *
  * Sets @iter to a valid iterator pointing to @path_string, if it
  * exists. Otherwise, @iter is left invalid and %FALSE is returned.
  *
- * Return value: %TRUE, if @iter was set
+ * Returns: %TRUE, if @iter was set
  */
 gboolean
 gtk_tree_model_get_iter_from_string (GtkTreeModel *tree_model,
@@ -1274,15 +1306,15 @@ gtk_tree_model_get_iter_from_string (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_get_string_from_iter:
  * @tree_model: a #GtkTreeModel
- * @iter: a #GtkTreeIter
+ * @iter: a #GtkTreeIter-struct
  *
  * Generates a string representation of the iter.
  *
- * This string is a ':' separated list of numbers.
- * For example, "4:10:0:3" would be an acceptable
+ * This string is a “:” separated list of numbers.
+ * For example, “4:10:0:3” would be an acceptable
  * return value for this string.
  *
- * Return value: a newly-allocated string.
+ * Returns: a newly-allocated string.
  *     Must be freed with g_free().
  *
  * Since: 2.2
@@ -1310,13 +1342,13 @@ gtk_tree_model_get_string_from_iter (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_get_iter_first:
  * @tree_model: a #GtkTreeModel
- * @iter: (out): the uninitialized #GtkTreeIter
+ * @iter: (out): the uninitialized #GtkTreeIter-struct
  *
  * Initializes @iter with the first iterator in the tree
  * (the one at the path "0") and returns %TRUE. Returns
  * %FALSE if the tree is empty.
  *
- * Return value: %TRUE, if @iter was set
+ * Returns: %TRUE, if @iter was set
  */
 gboolean
 gtk_tree_model_get_iter_first (GtkTreeModel *tree_model,
@@ -1338,13 +1370,13 @@ gtk_tree_model_get_iter_first (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_get_path:
  * @tree_model: a #GtkTreeModel
- * @iter: the #GtkTreeIter
+ * @iter: the #GtkTreeIter-struct
  *
- * Returns a newly-created #GtkTreePath referenced by @iter.
+ * Returns a newly-created #GtkTreePath-struct referenced by @iter.
  *
  * This path should be freed with gtk_tree_path_free().
  *
- * Return value: a newly-created #GtkTreePath
+ * Returns: a newly-created #GtkTreePath-struct
  */
 GtkTreePath *
 gtk_tree_model_get_path (GtkTreeModel *tree_model,
@@ -1364,7 +1396,7 @@ gtk_tree_model_get_path (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_get_value:
  * @tree_model: a #GtkTreeModel
- * @iter: the #GtkTreeIter
+ * @iter: the #GtkTreeIter-struct
  * @column: the column to lookup the value at
  * @value: (out) (transfer none): an empty #GValue to set
  *
@@ -1394,14 +1426,14 @@ gtk_tree_model_get_value (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_iter_next:
  * @tree_model: a #GtkTreeModel
- * @iter: (in): the #GtkTreeIter
+ * @iter: (in): the #GtkTreeIter-struct
  *
  * Sets @iter to point to the node following it at the current level.
  *
  * If there is no next @iter, %FALSE is returned and @iter is set
  * to be invalid.
  *
- * Return value: %TRUE if @iter has been changed to the next node
+ * Returns: %TRUE if @iter has been changed to the next node
  */
 gboolean
 gtk_tree_model_iter_next (GtkTreeModel  *tree_model,
@@ -1442,14 +1474,14 @@ gtk_tree_model_iter_previous_default (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_iter_previous:
  * @tree_model: a #GtkTreeModel
- * @iter: (in): the #GtkTreeIter
+ * @iter: (in): the #GtkTreeIter-struct
  *
  * Sets @iter to point to the previous node at the current level.
  *
  * If there is no previous @iter, %FALSE is returned and @iter is
  * set to be invalid.
  *
- * Return value: %TRUE if @iter has been changed to the previous node
+ * Returns: %TRUE if @iter has been changed to the previous node
  *
  * Since: 3.0
  */
@@ -1476,8 +1508,8 @@ gtk_tree_model_iter_previous (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_iter_children:
  * @tree_model: a #GtkTreeModel
- * @iter: (out): the new #GtkTreeIter to be set to the child
- * @parent: (allow-none): the #GtkTreeIter, or %NULL
+ * @iter: (out): the new #GtkTreeIter-struct to be set to the child
+ * @parent: (allow-none): the #GtkTreeIter-struct, or %NULL
  *
  * Sets @iter to point to the first child of @parent.
  *
@@ -1486,9 +1518,9 @@ gtk_tree_model_iter_previous (GtkTreeModel *tree_model,
  * function has been called.
  *
  * If @parent is %NULL returns the first node, equivalent to
- * <literal>gtk_tree_model_get_iter_first (tree_model, iter);</literal>
+ * `gtk_tree_model_get_iter_first (tree_model, iter);`
  *
- * Return value: %TRUE, if @child has been set to the first child
+ * Returns: %TRUE, if @child has been set to the first child
  */
 gboolean
 gtk_tree_model_iter_children (GtkTreeModel *tree_model,
@@ -1511,11 +1543,11 @@ gtk_tree_model_iter_children (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_iter_has_child:
  * @tree_model: a #GtkTreeModel
- * @iter: the #GtkTreeIter to test for children
+ * @iter: the #GtkTreeIter-struct to test for children
  *
  * Returns %TRUE if @iter has children, %FALSE otherwise.
  *
- * Return value: %TRUE if @iter has children
+ * Returns: %TRUE if @iter has children
  */
 gboolean
 gtk_tree_model_iter_has_child (GtkTreeModel *tree_model,
@@ -1535,14 +1567,14 @@ gtk_tree_model_iter_has_child (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_iter_n_children:
  * @tree_model: a #GtkTreeModel
- * @iter: (allow-none): the #GtkTreeIter, or %NULL
+ * @iter: (allow-none): the #GtkTreeIter-struct, or %NULL
  *
  * Returns the number of children that @iter has.
  *
  * As a special case, if @iter is %NULL, then the number
  * of toplevel nodes is returned.
  *
- * Return value: the number of children of @iter
+ * Returns: the number of children of @iter
  */
 gint
 gtk_tree_model_iter_n_children (GtkTreeModel *tree_model,
@@ -1561,8 +1593,8 @@ gtk_tree_model_iter_n_children (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_iter_nth_child:
  * @tree_model: a #GtkTreeModel
- * @iter: (out): the #GtkTreeIter to set to the nth child
- * @parent: (allow-none): the #GtkTreeIter to get the child from, or %NULL.
+ * @iter: (out): the #GtkTreeIter-struct to set to the nth child
+ * @parent: (allow-none): the #GtkTreeIter-struct to get the child from, or %NULL.
  * @n: the index of the desired child
  *
  * Sets @iter to be the child of @parent, using the given index.
@@ -1570,10 +1602,10 @@ gtk_tree_model_iter_n_children (GtkTreeModel *tree_model,
  * The first index is 0. If @n is too big, or @parent has no children,
  * @iter is set to an invalid iterator and %FALSE is returned. @parent
  * will remain a valid node after this function has been called. As a
- * special case, if @parent is %NULL, then the @n<!-- -->th root node
+ * special case, if @parent is %NULL, then the @n-th root node
  * is set.
  *
- * Return value: %TRUE, if @parent has an @n<!-- -->th child
+ * Returns: %TRUE, if @parent has an @n-th child
  */
 gboolean
 gtk_tree_model_iter_nth_child (GtkTreeModel *tree_model,
@@ -1598,17 +1630,17 @@ gtk_tree_model_iter_nth_child (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_iter_parent:
  * @tree_model: a #GtkTreeModel
- * @iter: (out): the new #GtkTreeIter to set to the parent
- * @child: the #GtkTreeIter
+ * @iter: (out): the new #GtkTreeIter-struct to set to the parent
+ * @child: the #GtkTreeIter-struct
  *
  * Sets @iter to be the parent of @child.
  *
- * If @child is at the toplevel, and doesn't have a parent, then
+ * If @child is at the toplevel, and doesn’t have a parent, then
  * @iter is set to an invalid iterator and %FALSE is returned.
  * @child will remain a valid node after this function has been
  * called.
  *
- * Return value: %TRUE, if @iter is set to the parent of @child
+ * Returns: %TRUE, if @iter is set to the parent of @child
  */
 gboolean
 gtk_tree_model_iter_parent (GtkTreeModel *tree_model,
@@ -1632,7 +1664,7 @@ gtk_tree_model_iter_parent (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_ref_node:
  * @tree_model: a #GtkTreeModel
- * @iter: the #GtkTreeIter
+ * @iter: the #GtkTreeIter-struct
  *
  * Lets the tree ref the node.
  *
@@ -1668,7 +1700,7 @@ gtk_tree_model_ref_node (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_unref_node:
  * @tree_model: a #GtkTreeModel
- * @iter: the #GtkTreeIter
+ * @iter: the #GtkTreeIter-struct
  *
  * Lets the tree unref the node.
  *
@@ -1705,8 +1737,8 @@ gtk_tree_model_unref_node (GtkTreeModel *tree_model,
  * each column number followed by a place to store the value being
  * retrieved.  The list is terminated by a -1. For example, to get a
  * value from column 0 with type %G_TYPE_STRING, you would
- * write: <literal>gtk_tree_model_get (model, iter, 0, &amp;place_string_here, -1)</literal>,
- * where <literal>place_string_here</literal> is a <type>gchar*</type>
+ * write: `gtk_tree_model_get (model, iter, 0, &place_string_here, -1)`,
+ * where `place_string_here` is a #gchararray
  * to be filled with the string.
  *
  * Returned values with type %G_TYPE_OBJECT have to be unreferenced,
@@ -1732,9 +1764,9 @@ gtk_tree_model_get (GtkTreeModel *tree_model,
  * gtk_tree_model_get_valist:
  * @tree_model: a #GtkTreeModel
  * @iter: a row in @tree_model
- * @var_args: <type>va_list</type> of column/return location pairs
+ * @var_args: va_list of column/return location pairs
  *
- * See gtk_tree_model_get(), this version takes a <type>va_list</type>
+ * See gtk_tree_model_get(), this version takes a va_list
  * for language bindings to use.
  */
 void
@@ -1783,8 +1815,8 @@ gtk_tree_model_get_valist (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_row_changed:
  * @tree_model: a #GtkTreeModel
- * @path: a #GtkTreePath pointing to the changed row
- * @iter: a valid #GtkTreeIter pointing to the changed row
+ * @path: a #GtkTreePath-struct pointing to the changed row
+ * @iter: a valid #GtkTreeIter-struct pointing to the changed row
  *
  * Emits the #GtkTreeModel::row-changed signal on @tree_model.
  */
@@ -1803,8 +1835,8 @@ gtk_tree_model_row_changed (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_row_inserted:
  * @tree_model: a #GtkTreeModel
- * @path: a #GtkTreePath pointing to the inserted row
- * @iter: a valid #GtkTreeIter pointing to the inserted row
+ * @path: a #GtkTreePath-struct pointing to the inserted row
+ * @iter: a valid #GtkTreeIter-struct pointing to the inserted row
  *
  * Emits the #GtkTreeModel::row-inserted signal on @tree_model.
  */
@@ -1823,8 +1855,8 @@ gtk_tree_model_row_inserted (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_row_has_child_toggled:
  * @tree_model: a #GtkTreeModel
- * @path: a #GtkTreePath pointing to the changed row
- * @iter: a valid #GtkTreeIter pointing to the changed row
+ * @path: a #GtkTreePath-struct pointing to the changed row
+ * @iter: a valid #GtkTreeIter-struct pointing to the changed row
  *
  * Emits the #GtkTreeModel::row-has-child-toggled signal on
  * @tree_model. This should be called by models after the child
@@ -1845,7 +1877,7 @@ gtk_tree_model_row_has_child_toggled (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_row_deleted:
  * @tree_model: a #GtkTreeModel
- * @path: a #GtkTreePath pointing to the previous location of
+ * @path: a #GtkTreePath-struct pointing to the previous location of
  *     the deleted row
  *
  * Emits the #GtkTreeModel::row-deleted signal on @tree_model.
@@ -1870,13 +1902,13 @@ gtk_tree_model_row_deleted (GtkTreeModel *tree_model,
 /**
  * gtk_tree_model_rows_reordered: (skip)
  * @tree_model: a #GtkTreeModel
- * @path: a #GtkTreePath pointing to the tree node whose children
+ * @path: a #GtkTreePath-struct pointing to the tree node whose children
  *     have been reordered
- * @iter: a valid #GtkTreeIter pointing to the node whose children
+ * @iter: a valid #GtkTreeIter-struct pointing to the node whose children
  *     have been reordered, or %NULL if the depth of @path is 0
  * @new_order: an array of integers mapping the current position of
  *     each child to its old position before the re-ordering,
- *     i.e. @new_order<literal>[newpos] = oldpos</literal>
+ *     i.e. @new_order`[newpos] = oldpos`
  *
  * Emits the #GtkTreeModel::rows-reordered signal on @tree_model.
  *
@@ -1896,25 +1928,23 @@ gtk_tree_model_rows_reordered (GtkTreeModel *tree_model,
 }
 
 /**
- * gtk_tree_model_rows_reordered_with_length:
+ * gtk_tree_model_rows_reordered_with_length: (rename-to gtk_tree_model_rows_reordered)
  * @tree_model: a #GtkTreeModel
- * @path: a #GtkTreePath pointing to the tree node whose children
+ * @path: a #GtkTreePath-struct pointing to the tree node whose children
  *     have been reordered
- * @iter: (allow-none): a valid #GtkTreeIter pointing to the node
+ * @iter: (allow-none): a valid #GtkTreeIter-struct pointing to the node
  *     whose children have been reordered, or %NULL if the depth
  *     of @path is 0
  * @new_order: (array length=length): an array of integers
  *     mapping the current position of each child to its old
  *     position before the re-ordering,
- *     i.e. @new_order<literal>[newpos] = oldpos</literal>
+ *     i.e. @new_order`[newpos] = oldpos`
  * @length: length of @new_order array
  *
  * Emits the #GtkTreeModel::rows-reordered signal on @tree_model.
  *
  * This should be called by models when their rows have been
  * reordered.
- *
- * Rename to: gtk_tree_model_rows_reordered
  *
  * Since: 3.10
  */
@@ -2238,16 +2268,16 @@ gtk_tree_row_reference_unref_path (GtkTreePath  *path,
 /**
  * gtk_tree_row_reference_new:
  * @model: a #GtkTreeModel
- * @path: a valid #GtkTreePath to monitor
+ * @path: a valid #GtkTreePath-struct to monitor
  *
  * Creates a row reference based on @path.
  *
  * This reference will keep pointing to the node pointed to
  * by @path, so long as it exists. Any changes that occur on @model are
  * propagated, and the path is updated appropriately. If
- * @path isn't a valid path in @model, then %NULL is returned.
+ * @path isn’t a valid path in @model, then %NULL is returned.
  *
- * Return value: a newly allocated #GtkTreeRowReference, or %NULL
+ * Returns: a newly allocated #GtkTreeRowReference, or %NULL
  */
 GtkTreeRowReference *
 gtk_tree_row_reference_new (GtkTreeModel *model,
@@ -2267,14 +2297,14 @@ gtk_tree_row_reference_new (GtkTreeModel *model,
  * gtk_tree_row_reference_new_proxy:
  * @proxy: a proxy #GObject
  * @model: a #GtkTreeModel
- * @path: a valid #GtkTreePath to monitor
+ * @path: a valid #GtkTreePath-struct to monitor
  *
  * You do not need to use this function.
  *
  * Creates a row reference based on @path.
  *
  * This reference will keep pointing to the node pointed to
- * by @path, so long as it exists. If @path isn't a valid
+ * by @path, so long as it exists. If @path isn’t a valid
  * path in @model, then %NULL is returned. However, unlike
  * references created with gtk_tree_row_reference_new(), it
  * does not listen to the model for changes. The creator of
@@ -2288,13 +2318,13 @@ gtk_tree_row_reference_new (GtkTreeModel *model,
  * objects like #GtkTreeView already use this mechanism internally,
  * using them as the proxy object will produce unpredictable results.
  * Further more, passing the same object as @model and @proxy
- * doesn't work for reasons of internal implementation.
+ * doesn’t work for reasons of internal implementation.
  *
  * This type of row reference is primarily meant by structures that
  * need to carefully monitor exactly when a row reference updates
  * itself, and is not generally needed by most applications.
  *
- * Return value: a newly allocated #GtkTreeRowReference, or %NULL
+ * Returns: a newly allocated #GtkTreeRowReference, or %NULL
  */
 GtkTreeRowReference *
 gtk_tree_row_reference_new_proxy (GObject      *proxy,
@@ -2360,7 +2390,7 @@ gtk_tree_row_reference_new_proxy (GObject      *proxy,
  * Returns a path that the row reference currently points to,
  * or %NULL if the path pointed to is no longer valid.
  *
- * Return value: a current path, or %NULL
+ * Returns: a current path, or %NULL
  */
 GtkTreePath *
 gtk_tree_row_reference_get_path (GtkTreeRowReference *reference)
@@ -2382,7 +2412,7 @@ gtk_tree_row_reference_get_path (GtkTreeRowReference *reference)
  *
  * Returns the model that the row reference is monitoring.
  *
- * Return value: (transfer none): the model
+ * Returns: (transfer none): the model
  *
  * Since: 2.8
  */
@@ -2401,7 +2431,7 @@ gtk_tree_row_reference_get_model (GtkTreeRowReference *reference)
  * Returns %TRUE if the @reference is non-%NULL and refers to
  * a current valid path.
  *
- * Return value: %TRUE if @reference points to a valid path
+ * Returns: %TRUE if @reference points to a valid path
  */
 gboolean
 gtk_tree_row_reference_valid (GtkTreeRowReference *reference)
@@ -2419,7 +2449,7 @@ gtk_tree_row_reference_valid (GtkTreeRowReference *reference)
  *
  * Copies a #GtkTreeRowReference.
  *
- * Return value: a copy of @reference
+ * Returns: a copy of @reference
  *
  * Since: 2.2
  */
@@ -2435,7 +2465,7 @@ gtk_tree_row_reference_copy (GtkTreeRowReference *reference)
  * gtk_tree_row_reference_free:
  * @reference: (allow-none): a #GtkTreeRowReference, or %NULL
  *
- * Free's @reference. @reference may be %NULL
+ * Free’s @reference. @reference may be %NULL
  */
 void
 gtk_tree_row_reference_free (GtkTreeRowReference *reference)
@@ -2514,7 +2544,7 @@ gtk_tree_row_reference_deleted (GObject     *proxy,
  * @proxy: a #GObject
  * @path: the parent path of the reordered signal
  * @iter: the iter pointing to the parent of the reordered
- * @new_order: the new order of rows
+ * @new_order: (array): the new order of rows
  *
  * Lets a set of row reference created by
  * gtk_tree_row_reference_new_proxy() know that the

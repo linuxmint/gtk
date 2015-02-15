@@ -42,7 +42,7 @@ response_cb (GtkDialog *dialog,
       gtk_widget_override_background_color (da, 0, &color);
     }
 
-  gtk_widget_hide (GTK_WIDGET (dialog));
+  gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
 static void
@@ -52,6 +52,7 @@ change_color_callback (GtkWidget *button,
   GtkWidget *dialog;
 
   dialog = gtk_color_chooser_dialog_new ("Changing color", GTK_WINDOW (window));
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
   gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (dialog), &color);
 
   g_signal_connect (dialog,

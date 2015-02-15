@@ -48,16 +48,15 @@
  * #GtkColorSelection widget contained within the dialog. Use this widget
  * and its gtk_color_selection_get_current_color()
  * function to gain access to the selected color.  Connect a handler
- * for this widget's #GtkColorSelection::color-changed signal to be notified
+ * for this widget’s #GtkColorSelection::color-changed signal to be notified
  * when the color changes.
  *
- * <refsect2 id="GtkColorSelectionDialog-BUILDER-UI">
- * <title>GtkColorSelectionDialog as GtkBuildable</title>
+ * # GtkColorSelectionDialog as GtkBuildable # {#GtkColorSelectionDialog-BUILDER-UI}
+ *
  * The GtkColorSelectionDialog implementation of the GtkBuildable interface
  * exposes the embedded #GtkColorSelection as internal child with the
- * name "color_selection". It also exposes the buttons with the names
- * "ok_button", "cancel_button" and "help_button".
- * </refsect2>
+ * name “color_selection”. It also exposes the buttons with the names
+ * “ok_button”, “cancel_button” and “help_button”.
  */
 
 

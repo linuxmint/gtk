@@ -30,7 +30,8 @@
 #include "gtkprintoperation.h"  /* for GtkPrintError */
 #include "gtkintl.h"
 
-#ifdef G_OS_UNIX                /* _gtk_load_custom_papers() only on Unix so far  */
+/* _gtk_load_custom_papers() only on Unix so far  */
+#ifdef G_OS_UNIX
 #include "gtkcustompaperunixdialog.h"
 #endif
 
@@ -44,14 +45,14 @@
  * @See_also:#GtkPageSetup
  *
  * GtkPaperSize handles paper sizes. It uses the standard called
- * <ulink url="http://www.pwg.org/standards.html">"PWG 5101.1-2002 PWG: Standard for Media Standardized Names"</ulink>
+ * [PWG 5101.1-2002 PWG: Standard for Media Standardized Names](http://www.pwg.org/standards.html)
  * to name the paper sizes (and to get the data for the page sizes).
  * In addition to standard paper sizes, GtkPaperSize allows to
  * construct custom paper sizes with arbitrary dimensions.
  *
  * The #GtkPaperSize object stores not only the dimensions (width
  * and height) of a paper size and its name, it also provides
- * default <link linkend="print-margins">print margins</link>.
+ * default [print margins][print-margins].
  *
  * Printing support has been added in GTK+ 2.10.
  */
@@ -208,13 +209,13 @@ gtk_paper_size_new_from_info (const PaperInfo *info)
  * @name: (allow-none): a paper size name, or %NULL
  *
  * Creates a new #GtkPaperSize object by parsing a
- * <ulink url="ftp://ftp.pwg.org/pub/pwg/candidates/cs-pwgmsn10-20020226-5101.1.pdf">PWG 5101.1-2002</ulink>
+ * [PWG 5101.1-2002](ftp://ftp.pwg.org/pub/pwg/candidates/cs-pwgmsn10-20020226-5101.1.pdf)
  * paper name.
  *
  * If @name is %NULL, the default paper size is returned,
  * see gtk_paper_size_get_default().
  *
- * Return value: a new #GtkPaperSize, use gtk_paper_size_free()
+ * Returns: a new #GtkPaperSize, use gtk_paper_size_free()
  * to free it
  *
  * Since: 2.10
@@ -284,7 +285,7 @@ gtk_paper_size_new (const gchar *name)
  * @ppd_display_name, @width and @height are used to
  * construct a custom #GtkPaperSize object.
  *
- * Return value: a new #GtkPaperSize, use gtk_paper_size_free()
+ * Returns: a new #GtkPaperSize, use gtk_paper_size_free()
  * to free it
  *
  * Since: 2.10
@@ -357,7 +358,7 @@ gtk_paper_size_new_from_ppd (const gchar *ppd_name,
  * Creates a new #GtkPaperSize object with the
  * given parameters.
  *
- * Return value: a new #GtkPaperSize object, use gtk_paper_size_free()
+ * Returns: a new #GtkPaperSize object, use gtk_paper_size_free()
  * to free it
  *
  * Since: 2.10
@@ -391,7 +392,7 @@ gtk_paper_size_new_custom (const gchar *name,
  *
  * Copies an existing #GtkPaperSize.
  *
- * Return value: a copy of @other
+ * Returns: a copy of @other
  *
  * Since: 2.10
  */
@@ -442,7 +443,7 @@ gtk_paper_size_free (GtkPaperSize *size)
  *
  * Compares two #GtkPaperSize objects.
  *
- * Return value: %TRUE, if @size1 and @size2
+ * Returns: %TRUE, if @size1 and @size2
  * represent the same paper size
  *
  * Since: 2.10
@@ -465,7 +466,7 @@ gtk_paper_size_is_equal (GtkPaperSize *size1,
  *
  * Creates a list of known paper sizes.
  *
- * Return value:  (element-type GtkPaperSize) (transfer full): a newly allocated list of newly
+ * Returns:  (element-type GtkPaperSize) (transfer full): a newly allocated list of newly
  *    allocated #GtkPaperSize objects
  *
  * Since: 2.12
@@ -475,7 +476,8 @@ gtk_paper_size_get_paper_sizes (gboolean include_custom)
 {
   GList *list = NULL;
   guint i;
-#ifdef G_OS_UNIX                /* _gtk_load_custom_papers() only on Unix so far  */
+/* _gtk_load_custom_papers() only on Unix so far  */
+#ifdef G_OS_UNIX
   if (include_custom)
     {
       GList *page_setups, *l;
@@ -511,7 +513,7 @@ gtk_paper_size_get_paper_sizes (gboolean include_custom)
  *
  * Gets the name of the #GtkPaperSize.
  *
- * Return value: the name of @size
+ * Returns: the name of @size
  *
  * Since: 2.10
  */
@@ -530,7 +532,7 @@ gtk_paper_size_get_name (GtkPaperSize *size)
  *
  * Gets the human-readable name of the #GtkPaperSize.
  *
- * Return value: the human-readable name of @size
+ * Returns: the human-readable name of @size
  *
  * Since: 2.10
  */
@@ -555,7 +557,7 @@ gtk_paper_size_get_display_name (GtkPaperSize *size)
  * Gets the PPD name of the #GtkPaperSize, which
  * may be %NULL.
  *
- * Return value: the PPD name of @size
+ * Returns: the PPD name of @size
  *
  * Since: 2.10
  */
@@ -577,7 +579,7 @@ gtk_paper_size_get_ppd_name (GtkPaperSize *size)
  * Gets the paper width of the #GtkPaperSize, in
  * units of @unit.
  *
- * Return value: the paper width
+ * Returns: the paper width
  *
  * Since: 2.10
  */
@@ -596,7 +598,7 @@ gtk_paper_size_get_width (GtkPaperSize *size,
  * Gets the paper height of the #GtkPaperSize, in
  * units of @unit.
  *
- * Return value: the paper height
+ * Returns: the paper height
  *
  * Since: 2.10
  */
@@ -613,7 +615,7 @@ gtk_paper_size_get_height (GtkPaperSize *size,
  *
  * Returns %TRUE if @size is not a standard paper size.
  *
- * Return value: whether @size is a custom paper size.
+ * Returns: whether @size is a custom paper size.
  **/
 gboolean
 gtk_paper_size_is_custom (GtkPaperSize *size)
@@ -654,7 +656,7 @@ gtk_paper_size_set_size (GtkPaperSize *size,
  * Returns the name of the default paper size, which
  * depends on the current locale.
  *
- * Return value: the name of the default paper size. The string
+ * Returns: the name of the default paper size. The string
  * is owned by GTK+ and should not be modified.
  *
  * Since: 2.10
@@ -706,8 +708,8 @@ gtk_paper_size_get_default (void)
  * larger than most printers margins, so that it will be within
  * the imageble area on any printer.
  *
- * I've taken the actual values used from the OSX page setup dialog.
- * I'm not sure exactly where they got these values for, but might
+ * I’ve taken the actual values used from the OSX page setup dialog.
+ * I’m not sure exactly where they got these values for, but might
  * correspond to this (from ghostscript docs):
  *
  * All DeskJets have 0.5 inches (1.27cm) of unprintable bottom margin,
@@ -723,7 +725,7 @@ gtk_paper_size_get_default (void)
  *
  * Gets the default top margin for the #GtkPaperSize.
  *
- * Return value: the default top margin
+ * Returns: the default top margin
  *
  * Since: 2.10
  */
@@ -744,7 +746,7 @@ gtk_paper_size_get_default_top_margin (GtkPaperSize *size,
  *
  * Gets the default bottom margin for the #GtkPaperSize.
  *
- * Return value: the default bottom margin
+ * Returns: the default bottom margin
  *
  * Since: 2.10
  */
@@ -773,7 +775,7 @@ gtk_paper_size_get_default_bottom_margin (GtkPaperSize *size,
  *
  * Gets the default left margin for the #GtkPaperSize.
  *
- * Return value: the default left margin
+ * Returns: the default left margin
  *
  * Since: 2.10
  */
@@ -794,7 +796,7 @@ gtk_paper_size_get_default_left_margin (GtkPaperSize *size,
  *
  * Gets the default right margin for the #GtkPaperSize.
  *
- * Return value: the default right margin
+ * Returns: the default right margin
  *
  * Since: 2.10
  */

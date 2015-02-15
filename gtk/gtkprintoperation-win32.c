@@ -17,8 +17,12 @@
  */
 
 #ifndef _MSC_VER
+#ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0500
+#endif
+#ifndef WINVER
 #define WINVER _WIN32_WINNT
+#endif
 #endif
 
 #define COBJMACROS
@@ -40,6 +44,7 @@
 #include "gtkplug.h"
 #include "gtk.h"
 #include "gtkwin32embedwidget.h"
+#include "gtkprivate.h"
 
 #define MAX_PAGE_RANGES 20
 #define STATUS_POLLING_TIME 2000
@@ -512,10 +517,12 @@ win32_poll_status_timeout (GtkPrintOperation *op)
   g_object_ref (op);
   win32_poll_status (op);
 
-  if (!gtk_print_operation_is_finished (op))
+  if (!gtk_print_operation_is_finished (op)) {
     op_win32->timeout_id = gdk_threads_add_timeout (STATUS_POLLING_TIME,
 					  (GSourceFunc)win32_poll_status_timeout,
 					  op);
+    g_source_set_name_by_id (op_win32->timeout_id, "[gtk+] win32_poll_status_timeout");
+  }
   g_object_unref (op);
   return FALSE;
 }
@@ -558,6 +565,7 @@ win32_end_run (GtkPrintOperation *op,
       op_win32->timeout_id = gdk_threads_add_timeout (STATUS_POLLING_TIME,
 					    (GSourceFunc)win32_poll_status_timeout,
 					    op);
+      g_source_set_name_by_id (op_win32->timeout_id, "[gtk+] win32_poll_status_timeout");
     }
   else
     /* Dunno what happened, pretend its finished */
@@ -676,7 +684,7 @@ devmode_to_settings (GtkPrintSettings *settings,
 			      devmode->dmDriverVersion);
   if (devmode->dmDriverExtra != 0)
     {
-      char *extra = g_base64_encode (((char *)devmode) + sizeof (DEVMODEW),
+      char *extra = g_base64_encode (((const guchar *)devmode) + sizeof (DEVMODEW),
 				     devmode->dmDriverExtra);
       gtk_print_settings_set (settings,
 			      GTK_PRINT_SETTINGS_WIN32_DRIVER_EXTRA,
@@ -931,10 +939,10 @@ devmode_from_settings (GtkPrintSettings *settings,
 {
   HANDLE hDevMode;
   LPDEVMODEW devmode;
-  char *extras;
+  guchar *extras;
   GtkPaperSize *paper_size;
   const char *extras_base64;
-  int extras_len;
+  gsize extras_len;
   const char *val;
 
   extras = NULL;
@@ -1654,6 +1662,25 @@ gtk_print_operation_run_with_dialog (GtkPrintOperation *op,
   GtkPrintOperationPrivate *priv;
   IPrintDialogCallback *callback;
   HPROPSHEETPAGE prop_page;
+  static volatile gsize common_controls_initialized = 0;
+
+  if (g_once_init_enter (&common_controls_initialized))
+    {
+      BOOL initialized;
+      INITCOMMONCONTROLSEX icc;
+
+      memset (&icc, 0, sizeof (icc));
+      icc.dwSize = sizeof (icc);
+      icc.dwICC = ICC_WIN95_CLASSES;
+
+      initialized = InitCommonControlsEx (&icc);
+      if (!initialized)
+        g_warning ("Failed to InitCommonControlsEx: %lu\n", GetLastError ());
+
+      _gtk_load_dll_with_libgtk3_manifest ("comdlg32.dll");
+
+      g_once_init_leave (&common_controls_initialized, initialized ? 1 : 0);
+    }
   
   *do_print = FALSE;
 

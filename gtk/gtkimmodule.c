@@ -45,6 +45,10 @@
 #include "wayland/gdkwayland.h"
 #endif
 
+#ifdef GDK_WINDOWING_BROADWAY
+#include "broadway/gdkbroadway.h"
+#endif
+
 #ifdef GDK_WINDOWING_WIN32
 #include "win32/gdkwin32.h"
 #endif
@@ -69,7 +73,7 @@
  * @domain: Translation domain to be used with dgettext()
  * @domain_dirname: Name of locale directory for use with bindtextdomain()
  * @default_locales: A colon-separated list of locales where this input method
- *   should be the default. The asterisk "*" sets the default for all locales.
+ *   should be the default. The asterisk “*” sets the default for all locales.
  *
  * Bookkeeping information about a loadable input method.
  */
@@ -381,6 +385,9 @@ gtk_im_module_initialize (void)
 #ifdef INCLUDE_IM_xim
   do_builtin (xim);
 #endif
+#ifdef INCLUDE_IM_broadway
+  do_builtin (broadway);
+#endif
 
 #undef do_builtin
 
@@ -592,7 +599,7 @@ _gtk_im_module_list (const GtkIMContextInfo ***contexts,
  * Create an IM context of a type specified by the string
  * ID @context_id.
  * 
- * Return value: a newly created input context of or @context_id, or
+ * Returns: a newly created input context of or @context_id, or
  *     if that could not be created, a newly created GtkIMContextSimple.
  */
 GtkIMContext *
@@ -632,10 +639,10 @@ _gtk_im_module_create (const gchar *context_id)
 
 /* Match @locale against @against.
  * 
- * 'en_US' against 'en_US'       => 4
- * 'en_US' against 'en'          => 3
- * 'en', 'en_UK' against 'en_US' => 2
- *  all locales, against '*' 	 => 1
+ * 'en_US' against “en_US”       => 4
+ * 'en_US' against “en”          => 3
+ * 'en', “en_UK” against “en_US” => 2
+ *  all locales, against “*” 	 => 1
  */
 static gint
 match_locale (const gchar *locale,
@@ -660,6 +667,11 @@ match_backend (GtkIMContextInfo *context)
 #ifdef GDK_WINDOWING_WAYLAND
   if (g_strcmp0 (context->context_id, "wayland") == 0)
     return GDK_IS_WAYLAND_DISPLAY (gdk_display_get_default ());
+#endif
+
+#ifdef GDK_WINDOWING_BROADWAY
+  if (g_strcmp0 (context->context_id, "broadway") == 0)
+    return GDK_IS_BROADWAY_DISPLAY (gdk_display_get_default ());
 #endif
 
 #ifdef GDK_WINDOWING_X11
@@ -765,7 +777,7 @@ get_current_input_language (void)
  * Return the context_id of the best IM context type 
  * for the given window.
  * 
- * Return value: the context ID (will never be %NULL)
+ * Returns: the context ID (will never be %NULL)
  */
 const gchar *
 _gtk_im_module_get_default_context_id (GdkWindow *client_window)

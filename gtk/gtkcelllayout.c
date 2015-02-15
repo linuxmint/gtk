@@ -21,34 +21,32 @@
  * @Title: GtkCellLayout
  *
  * #GtkCellLayout is an interface to be implemented by all objects which
- * want to provide a #GtkTreeViewColumn<!-- -->-like API for packing cells, setting
- * attributes and data funcs.
+ * want to provide a #GtkTreeViewColumn like API for packing cells,
+ * setting attributes and data funcs.
  *
- * One of the notable features provided by implementations of GtkCellLayout
- * are <emphasis>attributes</emphasis>. Attributes let you set the properties
+ * One of the notable features provided by implementations of 
+ * GtkCellLayout are attributes. Attributes let you set the properties
  * in flexible ways. They can just be set to constant values like regular
  * properties. But they can also be mapped to a column of the underlying
  * tree model with gtk_cell_layout_set_attributes(), which means that the value
- * of the attribute can change from cell to cell as they are rendered by the
- * cell renderer. Finally, it is possible to specify a function with
- * gtk_cell_layout_set_cell_data_func() that is called to determine the value
- * of the attribute for each cell that is rendered.
+ * of the attribute can change from cell to cell as they are rendered by
+ * the cell renderer. Finally, it is possible to specify a function with
+ * gtk_cell_layout_set_cell_data_func() that is called to determine the
+ * value of the attribute for each cell that is rendered.
  *
- * <refsect2 id="GtkCellLayout-BUILDER-UI">
- * <title>GtkCellLayouts as GtkBuildable</title>
- * <para>
+ * # GtkCellLayouts as GtkBuildable
+ *
  * Implementations of GtkCellLayout which also implement the GtkBuildable
  * interface (#GtkCellView, #GtkIconView, #GtkComboBox,
  * #GtkEntryCompletion, #GtkTreeViewColumn) accept GtkCellRenderer objects
- * as &lt;child&gt; elements in UI definitions. They support a custom
- * &lt;attributes&gt; element for their children, which can contain
- * multiple &lt;attribute&gt; elements. Each &lt;attribute&gt; element has
- * a name attribute which specifies a property of the cell renderer; the
- * content of the element is the attribute value.
+ * as <child> elements in UI definitions. They support a custom <attributes>
+ * element for their children, which can contain multiple <attribute>
+ * elements. Each <attribute> element has a name attribute which specifies
+ * a property of the cell renderer; the content of the element is the
+ * attribute value.
  *
- * <example>
- * <title>A UI definition fragment specifying attributes</title>
- * <programlisting><![CDATA[
+ * This is an example of a UI definition fragment specifying attributes:
+ * |[
  * <object class="GtkCellView">
  *   <child>
  *     <object class="GtkCellRendererText"/>
@@ -57,17 +55,17 @@
  *     </attributes>
  *   </child>"
  * </object>
- * ]]></programlisting>
- * </example>
+ * ]|
  *
  * Furthermore for implementations of GtkCellLayout that use a #GtkCellArea
  * to lay out cells (all GtkCellLayouts in GTK+ use a GtkCellArea)
- * <link linkend="cell-properties">cell properties</link> can also be defined
- * in the format by specifying the custom &lt;cell-packing&gt; attribute which
- * can contain multiple &lt;property&gt; elements defined in the normal way.
- * <example>
- * <title>A UI definition fragment specifying cell properties</title>
- * <programlisting><![CDATA[
+ * [cell properties][cell-properties] can also be defined in the format by
+ * specifying the custom <cell-packing> attribute which can contain multiple
+ * <property> elements defined in the normal way.
+ *
+ * Here is a UI definition fragment specifying cell properties:
+ *
+ * |[
  * <object class="GtkTreeViewColumn">
  *   <child>
  *     <object class="GtkCellRendererText"/>
@@ -77,39 +75,37 @@
  *     </cell-packing>
  *   </child>"
  * </object>
- * ]]></programlisting>
- * </example>
- * </para>
- * </refsect2>
+ * ]|
  *
- * <refsect2>
- * <title>Subclassing GtkCellLayout implementations</title>
- * <para>
+ * # Subclassing GtkCellLayout implementations
+ *
  * When subclassing a widget that implements #GtkCellLayout like
  * #GtkIconView or #GtkComboBox, there are some considerations related
  * to the fact that these widgets internally use a #GtkCellArea.
  * The cell area is exposed as a construct-only property by these
  * widgets. This means that it is possible to e.g. do
- * <informalexample><programlisting>
+ *
+ * |[<!-- language="C" -->
  * combo = g_object_new (GTK_TYPE_COMBO_BOX, "cell-area", my_cell_area, NULL);
- * </programlisting></informalexample>
+ * ]|
+ *
  * to use a custom cell area with a combo box. But construct properties
- * are only initialized <emphasis>after</emphasis> instance init()
+ * are only initialized after instance init()
  * functions have run, which means that using functions which rely on
- * the existence of the cell area in your subclass' init() function will
+ * the existence of the cell area in your subclass’ init() function will
  * cause the default cell area to be instantiated. In this case, a provided
  * construct property value will be ignored (with a warning, to alert
  * you to the problem).
- * <informalexample><programlisting>
+ *
+ * |[<!-- language="C" -->
  * static void
  * my_combo_box_init (MyComboBox *b)
  * {
  *   GtkCellRenderer *cell;
  *
  *   cell = gtk_cell_renderer_pixbuf_new ();
- *   /&ast; The following call causes the default cell area for combo boxes,
- *    &ast; a GtkCellAreaBox, to be instantiated
- *    &ast;/
+ *   // The following call causes the default cell area for combo boxes,
+ *   // a GtkCellAreaBox, to be instantiated
  *   gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (b), cell, FALSE);
  *   ...
  * }
@@ -117,19 +113,16 @@
  * GtkWidget *
  * my_combo_box_new (GtkCellArea *area)
  * {
- *   /&ast; This call is going to cause a warning
- *    &ast; about area being ignored
- *    &ast;/
+ *   // This call is going to cause a warning about area being ignored
  *   return g_object_new (MY_TYPE_COMBO_BOX, "cell-area", area, NULL);
  * }
- * </programlisting></informalexample>
+ * ]|
+ *
  * If supporting alternative cell areas with your derived widget is
  * not important, then this does not have to concern you. If you want
  * to support alternative cell areas, you can do so by moving the
  * problematic calls out of init() and into a constructor()
  * for your class.
- * </para>
- * </refsect2>
  */
 
 #include "config.h"
@@ -484,7 +477,7 @@ gtk_cell_layout_set_attributes (GtkCellLayout   *cell_layout,
  * The @column is the column of the model to get a value from, and the
  * @attribute is the parameter on @cell to be set from the value. So for
  * example if column 2 of the model contains strings, you could have the
- * "text" attribute of a #GtkCellRendererText get its values from column 2.
+ * “text” attribute of a #GtkCellRendererText get its values from column 2.
  *
  * Since: 2.4
  */
@@ -507,13 +500,13 @@ gtk_cell_layout_add_attribute (GtkCellLayout   *cell_layout,
  * @cell_layout: a #GtkCellLayout
  * @cell: a #GtkCellRenderer
  * @func: (allow-none): the #GtkCellLayoutDataFunc to use, or %NULL
- * @func_data: user data for @func
+ * @func_data: (closure): user data for @func
  * @destroy: destroy notify for @func_data
  *
  * Sets the #GtkCellLayoutDataFunc to use for @cell_layout.
  *
  * This function is used instead of the standard attributes mapping
- * for setting the column value, and should set the value of @cell_layout's
+ * for setting the column value, and should set the value of @cell_layout’s
  * cell renderer(s) as appropriate.
  *
  * @func may be %NULL to remove a previously set function.
@@ -584,7 +577,7 @@ gtk_cell_layout_reorder (GtkCellLayout   *cell_layout,
  *
  * Returns the cell renderers which have been added to @cell_layout.
  *
- * Return value: (element-type GtkCellRenderer) (transfer container):
+ * Returns: (element-type GtkCellRenderer) (transfer container):
  *     a list of cell renderers. The list, but not the renderers has
  *     been newly allocated and should be freed with g_list_free()
  *     when no longer needed.
@@ -607,7 +600,7 @@ gtk_cell_layout_get_cells (GtkCellLayout *cell_layout)
  * if called on a #GtkCellArea or might be %NULL if no #GtkCellArea
  * is used by @cell_layout.
  *
- * Return value: (transfer none): the cell area used by @cell_layout.
+ * Returns: (transfer none): the cell area used by @cell_layout.
  *
  * Since: 3.0
  */

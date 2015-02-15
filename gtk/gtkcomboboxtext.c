@@ -44,7 +44,7 @@
  * or gtk_combo_box_text_prepend_text() and remove options with
  * gtk_combo_box_text_remove().
  *
- * If the GtkComboBoxText contains an entry (via the 'has-entry' property),
+ * If the GtkComboBoxText contains an entry (via the “has-entry” property),
  * its contents can be retrieved using gtk_combo_box_text_get_active_text().
  * The entry itself can be accessed by calling gtk_bin_get_child() on the
  * combo box.
@@ -52,19 +52,16 @@
  * You should not call gtk_combo_box_set_model() or attempt to pack more cells
  * into this combo box via its GtkCellLayout interface.
  *
- * <refsect2 id="GtkComboBoxText-BUILDER-UI">
- * <title>GtkComboBoxText as GtkBuildable</title>
- * <para>
- * The GtkComboBoxText implementation of the GtkBuildable interface
- * supports adding items directly using the &lt;items&gt; element
- * and specifying &lt;item&gt; elements for each item. Each &lt;item&gt;
- * element can specify the "id" corresponding to the appended text and
- * also supports the regular translation attributes "translatable",
- * "context" and "comments".
+ * # GtkComboBoxText as GtkBuildable
  *
- * <example>
- * <title>A UI definition fragment specifying GtkComboBoxText items</title>
- * <programlisting><![CDATA[
+ * The GtkComboBoxText implementation of the GtkBuildable interface supports
+ * adding items directly using the <items> element and specifying <item>
+ * elements for each item. Each <item> element can specify the “id”
+ * corresponding to the appended text and also supports the regular
+ * translation attributes “translatable”, “context” and “comments”.
+ *
+ * Here is a UI definition fragment specifying GtkComboBoxText items:
+ * |[
  * <object class="GtkComboBoxText">
  *   <items>
  *     <item translatable="yes" id="factory">Factory</item>
@@ -72,10 +69,7 @@
  *     <item translatable="yes" id="subway">Subway</item>
  *   </items>
  * </object>
- * ]]></programlisting>
- * </example>
- * </para>
- * </refsect2>
+ * ]|
  */
 
 static void     gtk_combo_box_text_buildable_interface_init     (GtkBuildableIface *iface);
@@ -98,16 +92,12 @@ G_DEFINE_TYPE_WITH_CODE (GtkComboBoxText, gtk_combo_box_text, GTK_TYPE_COMBO_BOX
 			 G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE,
 						gtk_combo_box_text_buildable_interface_init));
 
-static GObject *
-gtk_combo_box_text_constructor (GType                  type,
-                                guint                  n_construct_properties,
-                                GObjectConstructParam *construct_properties)
+static void
+gtk_combo_box_text_constructed (GObject *object)
 {
-  GObject    *object;
   const gint text_column = 0;
 
-  object = G_OBJECT_CLASS (gtk_combo_box_text_parent_class)->constructor
-    (type, n_construct_properties, construct_properties);
+  G_OBJECT_CLASS (gtk_combo_box_text_parent_class)->constructed (object);
 
   gtk_combo_box_set_entry_text_column (GTK_COMBO_BOX (object), text_column);
   gtk_combo_box_set_id_column (GTK_COMBO_BOX (object), 1);
@@ -122,8 +112,6 @@ gtk_combo_box_text_constructor (GType                  type,
                                       "text", text_column,
                                       NULL);
     }
-
-  return object;
 }
 
 static void
@@ -142,7 +130,7 @@ gtk_combo_box_text_class_init (GtkComboBoxTextClass *klass)
   GObjectClass *object_class;
 
   object_class = (GObjectClass *)klass;
-  object_class->constructor = gtk_combo_box_text_constructor;
+  object_class->constructed = gtk_combo_box_text_constructed;
 }
 
 static void
@@ -319,7 +307,7 @@ gtk_combo_box_text_buildable_custom_finished (GtkBuildable *buildable,
  * Creates a new #GtkComboBoxText, which is a #GtkComboBox just displaying
  * strings.
  *
- * Return value: A new #GtkComboBoxText
+ * Returns: A new #GtkComboBoxText
  *
  * Since: 2.24
  */
@@ -336,7 +324,7 @@ gtk_combo_box_text_new (void)
  * Creates a new #GtkComboBoxText, which is a #GtkComboBox just displaying
  * strings. The combo box created by this function has an entry.
  *
- * Return value: a new #GtkComboBoxText
+ * Returns: a new #GtkComboBoxText
  *
  * Since: 2.24
  */

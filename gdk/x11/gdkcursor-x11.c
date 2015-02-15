@@ -64,7 +64,7 @@ static guint theme_serial = 0;
 /* cursor_cache holds a cache of non-pixmap cursors to avoid expensive 
  * libXcursor searches, cursors are added to it but only removed when
  * their display is closed. We make the assumption that since there are 
- * a small number of display's and a small number of cursor's that this 
+ * a small number of display’s and a small number of cursor’s that this 
  * list will stay small enough not to be a problem.
  */
 static GSList* cursor_cache = NULL;
@@ -291,7 +291,7 @@ _gdk_x11_display_get_cursor_for_type (GdkDisplay    *display,
  * 
  * Returns the display of a #GdkCursor.
  * 
- * Return value: (transfer none): an Xlib <type>Display*</type>.
+ * Returns: (transfer none): an Xlib Display*.
  **/
 Display *
 gdk_x11_cursor_get_xdisplay (GdkCursor *cursor)
@@ -307,7 +307,7 @@ gdk_x11_cursor_get_xdisplay (GdkCursor *cursor)
  * 
  * Returns the X cursor belonging to a #GdkCursor.
  * 
- * Return value: an Xlib <type>Cursor</type>.
+ * Returns: an Xlib Cursor.
  **/
 Cursor
 gdk_x11_cursor_get_xcursor (GdkCursor *cursor)
@@ -448,7 +448,7 @@ update_cursor (gpointer data,
  *
  * If the windowing system supports it, existing cursors created
  * with gdk_cursor_new(), gdk_cursor_new_for_display() and
- * gdk_cursor_new_for_name() are updated to reflect the theme
+ * gdk_cursor_new_from_name() are updated to reflect the theme
  * change. Custom cursors constructed with
  * gdk_cursor_new_from_pixbuf() will have to be handled
  * by the application (GTK+ applications can learn about

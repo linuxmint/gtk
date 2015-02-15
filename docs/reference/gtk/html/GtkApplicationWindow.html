@@ -8,7 +8,7 @@
 <link rel="up" href="Application.html" title="Application support">
 <link rel="prev" href="GtkApplication.html" title="GtkApplication">
 <link rel="next" href="GtkActionable.html" title="GtkActionable">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -60,7 +60,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkApplicationWindow.html#gtk-application-window-get-show-menubar" title="gtk_application_window_get_show_menubar ()">gtk_application_window_get_show_menubar</a> <span class="c_punctuation">()</span>
@@ -68,7 +68,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkApplicationWindow.html#gtk-application-window-get-id" title="gtk_application_window_get_id ()">gtk_application_window_get_id</a> <span class="c_punctuation">()</span>
@@ -86,7 +86,7 @@
 <col width="200px" class="properties_flags">
 </colgroup>
 <tbody><tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkApplicationWindow.html#GtkApplicationWindow--show-menubar" title="The “show-menubar” property">show-menubar</a></td>
 <td class="property_flags">Read / Write / Construct</td>
 </tr></tbody>
@@ -99,16 +99,22 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GtkApplicationWindow.html#GtkApplicationWindow-struct" title="struct GtkApplicationWindow">GtkApplicationWindow</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkApplicationWindow.html#GtkApplicationWindowClass" title="struct GtkApplicationWindowClass">GtkApplicationWindowClass</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="GtkApplicationWindow.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBin.html" title="GtkBin">GtkBin</a>
@@ -120,7 +126,7 @@
 <a name="GtkApplicationWindow.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 GtkApplicationWindow implements
- AtkImplementorIface,  <a class="link" href="GtkBuildable.html" title="GtkBuildable">GtkBuildable</a>,  <a href="http://library.gnome.org/devel/gio/unstable/GActionGroup.html">GActionGroup</a> and  <a href="http://library.gnome.org/devel/gio/unstable/GActionMap.html">GActionMap</a>.</p>
+ AtkImplementorIface,  <a class="link" href="GtkBuildable.html" title="GtkBuildable">GtkBuildable</a>,  <a href="https://developer.gnome.org/gio/unstable/GActionGroup.html">GActionGroup</a> and  <a href="https://developer.gnome.org/gio/unstable/GActionMap.html">GActionMap</a>.</p>
 </div>
 <div class="refsect1">
 <a name="GtkApplicationWindow.includes"></a><h2>Includes</h2>
@@ -134,13 +140,13 @@ extra functionality for better integration with <a class="link" href="GtkApplica
 features.  Notably, it can handle both the application menu as well
 as the menubar. See <a class="link" href="GtkApplication.html#gtk-application-set-app-menu" title="gtk_application_set_app_menu ()"><code class="function">gtk_application_set_app_menu()</code></a> and
 <a class="link" href="GtkApplication.html#gtk-application-set-menubar" title="gtk_application_set_menubar ()"><code class="function">gtk_application_set_menubar()</code></a>.</p>
-<p>This class implements the <a href="http://library.gnome.org/devel/gio/unstable/GActionGroup.html"><span class="type">GActionGroup</span></a> and <a href="http://library.gnome.org/devel/gio/unstable/GActionMap.html"><span class="type">GActionMap</span></a> interfaces,
+<p>This class implements the <a href="https://developer.gnome.org/gio/unstable/GActionGroup.html"><span class="type">GActionGroup</span></a> and <a href="https://developer.gnome.org/gio/unstable/GActionMap.html"><span class="type">GActionMap</span></a> interfaces,
 to let you add window-specific actions that will be exported by the
 associated <a class="link" href="GtkApplication.html" title="GtkApplication"><span class="type">GtkApplication</span></a>, together with its application-wide
-actions.  Window-specific actions are prefixed with the "win."
-prefix and application-wide actions are prefixed with the "app."
+actions.  Window-specific actions are prefixed with the “win.”
+prefix and application-wide actions are prefixed with the “app.”
 prefix.  Actions must be addressed with the prefixed name when
-referring to them from a <a href="http://library.gnome.org/devel/gio/unstable/GMenuModel.html"><span class="type">GMenuModel</span></a>.</p>
+referring to them from a <a href="https://developer.gnome.org/gio/unstable/GMenuModel.html"><span class="type">GMenuModel</span></a>.</p>
 <p>Note that widgets that are placed inside a GtkApplicationWindow
 can also activate these actions, if they implement the
 GtkActionable interface.</p>
@@ -160,60 +166,12 @@ will display the application menu, but not the menubar.</p>
 looks on different platforms).
 This behaviour can be overridden with the <a class="link" href="GtkApplicationWindow.html#GtkApplicationWindow--show-menubar" title="The “show-menubar” property"><span class="type">“show-menubar”</span></a>
 property. If the desktop environment does not display the application
-menu, then it will automatically be included in the menubar.</p>
-<div class="example">
-<a name="id-1.3.4.3.9.8"></a><p class="title"><b>Example 7. A GtkApplicationWindow with a menubar</b></p>
-<div class="example-contents">
-  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-      <tr>
-        <td class="listing_lines" align="right"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="normal">app </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkApplication.html#gtk-application-new">gtk_application_new</a></span><span class="normal"> </span><span class="symbol">();</span>
-
-<span class="normal">builder </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkBuilder.html#gtk-builder-new">gtk_builder_new</a></span><span class="normal"> </span><span class="symbol">();</span>
-<span class="function"><a href="GtkBuilder.html#gtk-builder-add-from-string">gtk_builder_add_from_string</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">builder</span><span class="symbol">,</span>
-<span class="normal">    </span><span class="string">"&lt;interface&gt;"</span>
-<span class="normal">    </span><span class="string">"  &lt;menu id='menubar'&gt;"</span>
-<span class="normal">    </span><span class="string">"    &lt;submenu label='_Edit'&gt;"</span>
-<span class="normal">    </span><span class="string">"      &lt;item label='_Copy' action='win.copy'/&gt;"</span>
-<span class="normal">    </span><span class="string">"      &lt;item label='_Paste' action='win.paste'/&gt;"</span>
-<span class="normal">    </span><span class="string">"    &lt;/submenu&gt;"</span>
-<span class="normal">    </span><span class="string">"  &lt;/menu&gt;"</span>
-<span class="normal">    </span><span class="string">"&lt;/interface&gt;"</span><span class="symbol">);</span>
-<span class="function"><a href="GtkApplication.html#gtk-application-set-menubar">gtk_application_set_menubar</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">G_APPLICATION</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">app</span><span class="symbol">),</span>
-<span class="normal">                             </span><span class="function">G_MENU_MODEL</span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="GtkBuilder.html#gtk-builder-get-object">gtk_builder_get_object</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">builder</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"menubar"</span><span class="symbol">)));</span>
-<span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">builder</span><span class="symbol">);</span>
-
-<span class="symbol">...</span>
-
-<span class="normal">window </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkApplicationWindow.html#gtk-application-window-new">gtk_application_window_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">app</span><span class="symbol">);</span></pre></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-</div>
-<br class="example-break"><div class="example">
-<a name="id-1.3.4.3.9.9"></a><p class="title"><b>Example 8. Handling fallback yourself</b></p>
-<div class="example-contents">
+menu, then it will automatically be included in the menubar. It can
+also be shown as part of client-side window decorations, e.g. by
+using <a class="link" href="GtkHeaderBar.html#gtk-header-bar-set-show-close-button" title="gtk_header_bar_set_show_close_button ()"><code class="function">gtk_header_bar_set_show_close_button()</code></a>.</p>
+<div class="refsect3">
+<a name="id-1.3.4.3.9.8"></a><h4>A GtkApplicationWindow with a menubar</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -238,426 +196,51 @@ menu, then it will automatically be included in the menubar.</p>
 19
 20
 21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
-150
-151
-152
-153
-154
-155
-156
-157
-158
-159
-160
-161
-162
-163
-164
-165
-166
-167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-199
-200
-201
-202
-203
-204
-205
-206
-207
-208
-209
-210
-211</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="preproc">#include</span><span class="normal"> </span><span class="string">&lt;stdlib.h&gt;</span>
-<span class="preproc">#include</span><span class="normal"> </span><span class="string">&lt;gtk/gtk.h&gt;</span>
+22</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="normal">app </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkApplication.html#gtk-application-new">gtk_application_new</a></span><span class="normal"> </span><span class="symbol">();</span>
 
-<span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">new_window</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GApplication</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">app</span><span class="symbol">,</span>
-<span class="normal">            </span><span class="usertype">GFile</span><span class="normal">        </span><span class="symbol">*</span><span class="normal">file</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">  </span><span class="usertype">GtkWidget</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">window</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">scrolled</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">view</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">overlay</span><span class="symbol">;</span>
-<span class="normal">  </span><span class="usertype">GtkSettings</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">settings</span><span class="symbol">;</span>
-<span class="normal">  </span><span class="usertype">gboolean</span><span class="normal"> appmenu</span><span class="symbol">;</span>
+<span class="normal">builder </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkBuilder.html#gtk-builder-new">gtk_builder_new</a></span><span class="normal"> </span><span class="symbol">();</span>
+<span class="function"><a href="GtkBuilder.html#gtk-builder-add-from-string">gtk_builder_add_from_string</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">builder</span><span class="symbol">,</span>
+<span class="normal">    </span><span class="string">"&lt;interface&gt;"</span>
+<span class="normal">    </span><span class="string">"  &lt;menu id='menubar'&gt;"</span>
+<span class="normal">    </span><span class="string">"    &lt;submenu label='_Edit'&gt;"</span>
+<span class="normal">    </span><span class="string">"      &lt;item label='_Copy' action='win.copy'/&gt;"</span>
+<span class="normal">    </span><span class="string">"      &lt;item label='_Paste' action='win.paste'/&gt;"</span>
+<span class="normal">    </span><span class="string">"    &lt;/submenu&gt;"</span>
+<span class="normal">    </span><span class="string">"  &lt;/menu&gt;"</span>
+<span class="normal">    </span><span class="string">"&lt;/interface&gt;"</span><span class="symbol">);</span>
 
-<span class="normal">  window </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkApplicationWindow.html#gtk-application-window-new">gtk_application_window_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_APPLICATION</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">app</span><span class="symbol">));</span>
-<span class="normal">  </span><span class="function"><a href="GtkApplicationWindow.html#gtk-application-window-set-show-menubar">gtk_application_window_set_show_menubar</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_APPLICATION_WINDOW</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">),</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS">FALSE</a></span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="GtkWindow.html#gtk-window-set-default-size">gtk_window_set_default_size</a></span><span class="normal"> </span><span class="symbol">((</span><span class="normal"><a href="GtkWindow.html">GtkWindow</a></span><span class="symbol">*)</span><span class="normal">window</span><span class="symbol">,</span><span class="normal"> </span><span class="number">640</span><span class="symbol">,</span><span class="normal"> </span><span class="number">480</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="GtkWindow.html#gtk-window-set-title">gtk_window_set_title</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_WINDOW</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">),</span><span class="normal"> </span><span class="string">"Sunny"</span><span class="symbol">);</span>
+<span class="normal">menubar </span><span class="symbol">=</span><span class="normal"> </span><span class="function">G_MENU_MODEL</span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="GtkBuilder.html#gtk-builder-get-object">gtk_builder_get_object</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">builder</span><span class="symbol">,</span>
+<span class="normal">                                                </span><span class="string">"menubar"</span><span class="symbol">));</span>
+<span class="function"><a href="GtkApplication.html#gtk-application-set-menubar">gtk_application_set_menubar</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">G_APPLICATION</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">app</span><span class="symbol">),</span>
+<span class="normal">                             menubar</span><span class="symbol">);</span>
+<span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">builder</span><span class="symbol">);</span>
 
-<span class="normal">  overlay </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkOverlay.html#gtk-overlay-new">gtk_overlay_new</a></span><span class="normal"> </span><span class="symbol">();</span>
-<span class="normal">  </span><span class="function"><a href="GtkContainer.html#gtk-container-add">gtk_container_add</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_CONTAINER</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">),</span><span class="normal"> overlay</span><span class="symbol">);</span>
+<span class="symbol">...</span>
 
-<span class="normal">  settings </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkSettings.html#gtk-settings-get-default">gtk_settings_get_default</a></span><span class="normal"> </span><span class="symbol">();</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-get">g_object_get</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">settings</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"gtk-shell-shows-app-menu"</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">appmenu</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
-<span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(!</span><span class="normal">appmenu</span><span class="symbol">)</span>
-<span class="normal">    </span><span class="cbracket">{</span>
-<span class="normal">      </span><span class="usertype">GMenuModel</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">model</span><span class="symbol">;</span>
-<span class="normal">      </span><span class="usertype">GtkWidget</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">menu</span><span class="symbol">;</span>
-<span class="normal">      </span><span class="usertype">GtkWidget</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">image</span><span class="symbol">;</span>
-
-<span class="normal">      model </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkApplication.html#gtk-application-get-app-menu">gtk_application_get_app_menu</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_APPLICATION</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">app</span><span class="symbol">));</span>
-<span class="normal">      menu </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkMenuButton.html#gtk-menu-button-new">gtk_menu_button_new</a></span><span class="normal"> </span><span class="symbol">();</span>
-<span class="normal">      </span><span class="function"><a href="GtkMenuButton.html#gtk-menu-button-set-menu-model">gtk_menu_button_set_menu_model</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_MENU_BUTTON</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">menu</span><span class="symbol">),</span><span class="normal"> model</span><span class="symbol">);</span>
-<span class="normal">      </span><span class="function"><a href="GtkWidget.html#gtk-widget-set-halign">gtk_widget_set_halign</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">menu</span><span class="symbol">,</span><span class="normal"> GTK_ALIGN_END</span><span class="symbol">);</span>
-<span class="normal">      </span><span class="function"><a href="GtkWidget.html#gtk-widget-set-valign">gtk_widget_set_valign</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">menu</span><span class="symbol">,</span><span class="normal"> GTK_ALIGN_START</span><span class="symbol">);</span>
-<span class="normal">      image </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkImage.html#gtk-image-new">gtk_image_new</a></span><span class="normal"> </span><span class="symbol">();</span>
-<span class="normal">      </span><span class="function"><a href="GtkImage.html#gtk-image-set-from-icon-name">gtk_image_set_from_icon_name</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_IMAGE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">image</span><span class="symbol">),</span>
-<span class="normal">                                    </span><span class="string">"sunny"</span><span class="symbol">,</span>
-<span class="normal">                                    GTK_ICON_SIZE_MENU</span><span class="symbol">);</span>
-<span class="normal">      </span><span class="function"><a href="GtkButton.html#gtk-button-set-image">gtk_button_set_image</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_BUTTON</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">menu</span><span class="symbol">),</span><span class="normal"> image</span><span class="symbol">);</span>
-<span class="normal">      </span><span class="function"><a href="GtkOverlay.html#gtk-overlay-add-overlay">gtk_overlay_add_overlay</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_OVERLAY</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">overlay</span><span class="symbol">),</span><span class="normal"> menu</span><span class="symbol">);</span>
-<span class="normal">    </span><span class="cbracket">}</span>
-
-<span class="normal">  scrolled </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkScrolledWindow.html#gtk-scrolled-window-new">gtk_scrolled_window_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="GtkWidget.html#gtk-widget-set-hexpand">gtk_widget_set_hexpand</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">scrolled</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="GtkWidget.html#gtk-widget-set-vexpand">gtk_widget_set_vexpand</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">scrolled</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">);</span>
-<span class="normal">  view </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkTextView.html#gtk-text-view-new">gtk_text_view_new</a></span><span class="normal"> </span><span class="symbol">();</span>
-
-<span class="normal">  </span><span class="function"><a href="GtkContainer.html#gtk-container-add">gtk_container_add</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_CONTAINER</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">scrolled</span><span class="symbol">),</span><span class="normal"> view</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="GtkContainer.html#gtk-container-add">gtk_container_add</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_CONTAINER</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">overlay</span><span class="symbol">),</span><span class="normal"> scrolled</span><span class="symbol">);</span>
-
-<span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">file </span><span class="symbol">!=</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">)</span>
-<span class="normal">    </span><span class="cbracket">{</span>
-<span class="normal">      </span><span class="usertype">gchar</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">contents</span><span class="symbol">;</span>
-<span class="normal">      </span><span class="usertype">gsize</span><span class="normal"> length</span><span class="symbol">;</span>
-
-<span class="normal">      </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="http://library.gnome.org/devel/gio/unstable/GFile.html#g-file-load-contents">g_file_load_contents</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">file</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">contents</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">length</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">))</span>
-<span class="normal">        </span><span class="cbracket">{</span>
-<span class="normal">          </span><span class="usertype">GtkTextBuffer</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">buffer</span><span class="symbol">;</span>
-
-<span class="normal">          buffer </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkTextView.html#gtk-text-view-get-buffer">gtk_text_view_get_buffer</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_TEXT_VIEW</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">view</span><span class="symbol">));</span>
-<span class="normal">          </span><span class="function"><a href="GtkTextBuffer.html#gtk-text-buffer-set-text">gtk_text_buffer_set_text</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">buffer</span><span class="symbol">,</span><span class="normal"> contents</span><span class="symbol">,</span><span class="normal"> length</span><span class="symbol">);</span>
-<span class="normal">          </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free">g_free</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">contents</span><span class="symbol">);</span>
-<span class="normal">        </span><span class="cbracket">}</span>
-<span class="normal">    </span><span class="cbracket">}</span>
-
-<span class="normal">  </span><span class="function"><a href="GtkWidget.html#gtk-widget-show-all">gtk_widget_show_all</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_WIDGET</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">));</span>
-<span class="cbracket">}</span>
-
-<span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">activate</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GApplication</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">application</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">  </span><span class="function">new_window</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">application</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
-<span class="cbracket">}</span>
-
-<span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">open</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GApplication</span><span class="normal">  </span><span class="symbol">*</span><span class="normal">application</span><span class="symbol">,</span>
-<span class="normal">      </span><span class="usertype">GFile</span><span class="normal">        </span><span class="symbol">**</span><span class="normal">files</span><span class="symbol">,</span>
-<span class="normal">      </span><span class="usertype">gint</span><span class="normal">           n_files</span><span class="symbol">,</span>
-<span class="normal">      </span><span class="keyword">const</span><span class="normal"> </span><span class="usertype">gchar</span><span class="normal">   </span><span class="symbol">*</span><span class="normal">hint</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">  </span><span class="usertype">gint</span><span class="normal"> i</span><span class="symbol">;</span>
-
-<span class="normal">  </span><span class="keyword">for</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">i </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span><span class="normal"> i </span><span class="symbol">&lt;</span><span class="normal"> n_files</span><span class="symbol">;</span><span class="normal"> i</span><span class="symbol">++)</span>
-<span class="normal">    </span><span class="function">new_window</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">application</span><span class="symbol">,</span><span class="normal"> files</span><span class="symbol">[</span><span class="normal">i</span><span class="symbol">]);</span>
-<span class="cbracket">}</span>
-
-<span class="keyword">typedef</span><span class="normal"> </span><span class="usertype">GtkApplication</span><span class="normal"> MenuButton</span><span class="symbol">;</span>
-<span class="keyword">typedef</span><span class="normal"> </span><span class="usertype">GtkApplicationClass</span><span class="normal"> MenuButtonClass</span><span class="symbol">;</span>
-
-<span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#G-DEFINE-TYPE:CAPS">G_DEFINE_TYPE</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">MenuButton</span><span class="symbol">,</span><span class="normal"> menu_button</span><span class="symbol">,</span><span class="normal"> GTK_TYPE_APPLICATION</span><span class="symbol">)</span>
-
-<span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">show_about</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GSimpleAction</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">action</span><span class="symbol">,</span>
-<span class="normal">            </span><span class="usertype">GVariant</span><span class="normal">      </span><span class="symbol">*</span><span class="normal">parameter</span><span class="symbol">,</span>
-<span class="normal">            </span><span class="usertype">gpointer</span><span class="normal">       user_data</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">  </span><span class="function"><a href="GtkAboutDialog.html#gtk-show-about-dialog">gtk_show_about_dialog</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span>
-<span class="normal">                         </span><span class="string">"program-name"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"Sunny"</span><span class="symbol">,</span>
-<span class="normal">                         </span><span class="string">"title"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"About Sunny"</span><span class="symbol">,</span>
-<span class="normal">                         </span><span class="string">"logo-icon-name"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"sunny"</span><span class="symbol">,</span>
-<span class="normal">                         </span><span class="string">"comments"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"A cheap Bloatpad clone."</span><span class="symbol">,</span>
-<span class="normal">                         <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
-<span class="cbracket">}</span>
-
-
-<span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">quit_app</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GSimpleAction</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">action</span><span class="symbol">,</span>
-<span class="normal">          </span><span class="usertype">GVariant</span><span class="normal">      </span><span class="symbol">*</span><span class="normal">parameter</span><span class="symbol">,</span>
-<span class="normal">          </span><span class="usertype">gpointer</span><span class="normal">       user_data</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">  </span><span class="usertype">GList</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">list</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">next</span><span class="symbol">;</span>
-<span class="normal">  </span><span class="usertype">GtkWindow</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">win</span><span class="symbol">;</span>
-
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Warnings-and-Assertions.html#g-print">g_print</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Going down...</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">);</span>
-
-<span class="normal">  list </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkApplication.html#gtk-application-get-windows">gtk_application_get_windows</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_APPLICATION</span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="http://library.gnome.org/devel/gio/unstable/GApplication.html#g-application-get-default">g_application_get_default</a></span><span class="normal"> </span><span class="symbol">()));</span>
-<span class="normal">  </span><span class="keyword">while</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">list</span><span class="symbol">)</span>
-<span class="normal">    </span><span class="cbracket">{</span>
-<span class="normal">      win </span><span class="symbol">=</span><span class="normal"> list</span><span class="symbol">-&gt;</span><span class="normal">data</span><span class="symbol">;</span>
-<span class="normal">      next </span><span class="symbol">=</span><span class="normal"> list</span><span class="symbol">-&gt;</span><span class="normal">next</span><span class="symbol">;</span>
-
-<span class="normal">      </span><span class="function"><a href="GtkWidget.html#gtk-widget-destroy">gtk_widget_destroy</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_WIDGET</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">win</span><span class="symbol">));</span>
-
-<span class="normal">      list </span><span class="symbol">=</span><span class="normal"> next</span><span class="symbol">;</span>
-<span class="normal">    </span><span class="cbracket">}</span>
-<span class="cbracket">}</span>
-
-<span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">new_activated</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GSimpleAction</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">action</span><span class="symbol">,</span>
-<span class="normal">               </span><span class="usertype">GVariant</span><span class="normal">      </span><span class="symbol">*</span><span class="normal">parameter</span><span class="symbol">,</span>
-<span class="normal">               </span><span class="usertype">gpointer</span><span class="normal">       user_data</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">  </span><span class="usertype">GApplication</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">app </span><span class="symbol">=</span><span class="normal"> user_data</span><span class="symbol">;</span>
-
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gio/unstable/GApplication.html#g-application-activate">g_application_activate</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">app</span><span class="symbol">);</span>
-<span class="cbracket">}</span>
-
-<span class="keyword">static</span><span class="normal"> </span><span class="usertype">GActionEntry</span><span class="normal"> app_entries</span><span class="symbol">[]</span><span class="normal"> </span><span class="symbol">=</span><span class="normal"> </span><span class="cbracket">{</span>
-<span class="normal">  </span><span class="cbracket">{</span><span class="normal"> </span><span class="string">"about"</span><span class="symbol">,</span><span class="normal"> show_about</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a> </span><span class="cbracket">}</span><span class="symbol">,</span>
-<span class="normal">  </span><span class="cbracket">{</span><span class="normal"> </span><span class="string">"quit"</span><span class="symbol">,</span><span class="normal"> quit_app</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a> </span><span class="cbracket">}</span><span class="symbol">,</span>
-<span class="normal">  </span><span class="cbracket">{</span><span class="normal"> </span><span class="string">"new"</span><span class="symbol">,</span><span class="normal"> new_activated</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a> </span><span class="cbracket">}</span>
-<span class="cbracket">}</span><span class="symbol">;</span>
-
-<span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">startup</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GApplication</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">application</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">  </span><span class="usertype">GtkBuilder</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">builder</span><span class="symbol">;</span>
-
-<span class="normal">  </span><span class="function">G_APPLICATION_CLASS</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">menu_button_parent_class</span><span class="symbol">)-&gt;</span><span class="function">startup</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">application</span><span class="symbol">);</span>
-
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gio/unstable/GActionMap.html#g-action-map-add-action-entries">g_action_map_add_action_entries</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">G_ACTION_MAP</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">application</span><span class="symbol">),</span><span class="normal"> app_entries</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#G-N-ELEMENTS:CAPS">G_N_ELEMENTS</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">app_entries</span><span class="symbol">),</span><span class="normal"> application</span><span class="symbol">);</span>
-
-<span class="normal">  builder </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkBuilder.html#gtk-builder-new">gtk_builder_new</a></span><span class="normal"> </span><span class="symbol">();</span>
-<span class="normal">  </span><span class="function"><a href="GtkBuilder.html#gtk-builder-add-from-string">gtk_builder_add_from_string</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">builder</span><span class="symbol">,</span>
-<span class="normal">                               </span><span class="string">"&lt;interface&gt;"</span>
-<span class="normal">                               </span><span class="string">"  &lt;menu id='app-menu'&gt;"</span>
-<span class="normal">                               </span><span class="string">"    &lt;section&gt;"</span>
-<span class="normal">                               </span><span class="string">"      &lt;item&gt;"</span>
-<span class="normal">                               </span><span class="string">"        &lt;attribute name='label' translatable='yes'&gt;_New Window&lt;/attribute&gt;"</span>
-<span class="normal">                               </span><span class="string">"        &lt;attribute name='action'&gt;app.new&lt;/attribute&gt;"</span>
-<span class="normal">                               </span><span class="string">"      &lt;/item&gt;"</span>
-<span class="normal">                               </span><span class="string">"      &lt;item&gt;"</span>
-<span class="normal">                               </span><span class="string">"        &lt;attribute name='label' translatable='yes'&gt;_About Sunny&lt;/attribute&gt;"</span>
-<span class="normal">                               </span><span class="string">"        &lt;attribute name='action'&gt;app.about&lt;/attribute&gt;"</span>
-<span class="normal">                               </span><span class="string">"      &lt;/item&gt;"</span>
-<span class="normal">                               </span><span class="string">"      &lt;item&gt;"</span>
-<span class="normal">                               </span><span class="string">"        &lt;attribute name='label' translatable='yes'&gt;_Quit&lt;/attribute&gt;"</span>
-<span class="normal">                               </span><span class="string">"        &lt;attribute name='action'&gt;app.quit&lt;/attribute&gt;"</span>
-<span class="normal">                               </span><span class="string">"        &lt;attribute name='accel'&gt;&amp;lt;Primary&amp;gt;q&lt;/attribute&gt;"</span>
-<span class="normal">                               </span><span class="string">"      &lt;/item&gt;"</span>
-<span class="normal">                               </span><span class="string">"    &lt;/section&gt;"</span>
-<span class="normal">                               </span><span class="string">"  &lt;/menu&gt;"</span>
-<span class="normal">                               </span><span class="string">"&lt;/interface&gt;"</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">-</span><span class="number">1</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="GtkApplication.html#gtk-application-set-app-menu">gtk_application_set_app_menu</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_APPLICATION</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">application</span><span class="symbol">),</span><span class="normal"> </span><span class="function">G_MENU_MODEL</span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="GtkBuilder.html#gtk-builder-get-object">gtk_builder_get_object</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">builder</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"app-menu"</span><span class="symbol">)));</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">builder</span><span class="symbol">);</span>
-<span class="cbracket">}</span>
-
-<span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">menu_button_init</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">MenuButton</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">app</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="cbracket">}</span>
-
-<span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
-<span class="function">menu_button_class_init</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">MenuButtonClass</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">class</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">  </span><span class="usertype">GApplicationClass</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">application_class </span><span class="symbol">=</span><span class="normal"> </span><span class="function">G_APPLICATION_CLASS</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">class</span><span class="symbol">);</span>
-
-<span class="normal">  application_class</span><span class="symbol">-&gt;</span><span class="normal">startup </span><span class="symbol">=</span><span class="normal"> startup</span><span class="symbol">;</span>
-<span class="normal">  application_class</span><span class="symbol">-&gt;</span><span class="normal">activate </span><span class="symbol">=</span><span class="normal"> activate</span><span class="symbol">;</span>
-<span class="normal">  application_class</span><span class="symbol">-&gt;</span><span class="normal">open </span><span class="symbol">=</span><span class="normal"> open</span><span class="symbol">;</span>
-<span class="cbracket">}</span>
-
-<span class="normal">MenuButton </span><span class="symbol">*</span>
-<span class="function">menu_button_new</span><span class="normal"> </span><span class="symbol">(</span><span class="type">void</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">  </span><span class="keyword">return</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-new">g_object_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">menu_button_get_type</span><span class="normal"> </span><span class="symbol">(),</span>
-<span class="normal">                       </span><span class="string">"application-id"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"org.gtk.Test.Sunny"</span><span class="symbol">,</span>
-<span class="normal">                       </span><span class="string">"flags"</span><span class="symbol">,</span><span class="normal"> G_APPLICATION_HANDLES_OPEN</span><span class="symbol">,</span>
-<span class="normal">                       <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
-<span class="cbracket">}</span>
-
-<span class="type">int</span>
-<span class="function">main</span><span class="normal"> </span><span class="symbol">(</span><span class="type">int</span><span class="normal"> argc</span><span class="symbol">,</span><span class="normal"> </span><span class="type">char</span><span class="normal"> </span><span class="symbol">**</span><span class="normal">argv</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">  </span><span class="usertype">MenuButton</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">menu_button</span><span class="symbol">;</span>
-<span class="normal">  </span><span class="type">int</span><span class="normal"> status</span><span class="symbol">;</span>
-
-<span class="normal">  menu_button </span><span class="symbol">=</span><span class="normal"> </span><span class="function">menu_button_new</span><span class="normal"> </span><span class="symbol">();</span>
-<span class="normal">  status </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/gio/unstable/GApplication.html#g-application-run">g_application_run</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">G_APPLICATION</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">menu_button</span><span class="symbol">),</span><span class="normal"> argc</span><span class="symbol">,</span><span class="normal"> argv</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">menu_button</span><span class="symbol">);</span>
-
-<span class="normal">  </span><span class="keyword">return</span><span class="normal"> status</span><span class="symbol">;</span>
-<span class="cbracket">}</span></pre></td>
+<span class="normal">window </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkApplicationWindow.html#gtk-application-window-new">gtk_application_window_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">app</span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
+<p></p>
 </div>
-<br class="example-break"><p>The XML format understood by <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> for <a href="http://library.gnome.org/devel/gio/unstable/GMenuModel.html"><span class="type">GMenuModel</span></a> consists
-of a toplevel <code class="sgmltag-starttag">&lt;menu&gt;</code> element, which contains
-one or more <code class="sgmltag-starttag">&lt;item&gt;</code> elements. Each</p>
-<code class="sgmltag-starttag">&lt;item&gt;</code> element contains
-<code class="sgmltag-starttag">&lt;attribute&gt;</code> and <code class="sgmltag-starttag">&lt;link&gt;</code><p>elements with a mandatory name attribute.</p>
-<code class="sgmltag-starttag">&lt;link&gt;</code> elements have the same content
-<p>model as <code class="sgmltag-starttag">&lt;menu&gt;</code>.</p>
+<div class="refsect3">
+<a name="id-1.3.4.3.9.9"></a><h4>Handling fallback yourself</h4>
+<p><a class="ulink" href="https://git.gnome.org/browse/gtk+/tree/examples/sunny.c" target="_top">A simple example</a></p>
+<p>The XML format understood by <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> for <a href="https://developer.gnome.org/gio/unstable/GMenuModel.html"><span class="type">GMenuModel</span></a> consists
+of a toplevel <code class="literal">&lt;menu&gt;</code> element, which contains one or more <code class="literal">&lt;item&gt;</code>
+elements. Each <code class="literal">&lt;item&gt;</code> element contains <code class="literal">&lt;attribute&gt;</code> and <code class="literal">&lt;link&gt;</code>
+elements with a mandatory name attribute. <code class="literal">&lt;link&gt;</code> elements have the
+same content model as <code class="literal">&lt;menu&gt;</code>.</p>
 <p>Attribute values can be translated using gettext, like other <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a>
-content. <code class="sgmltag-starttag">&lt;attribute&gt;</code> elements can be marked for
-translation with a <code class="literal">translatable="yes"</code> attribute.
-It is also possible to specify message context and translator comments,
-using the context and comments attributes. To make use of this, the
-<a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> must have been given the gettext domain to use.</p>
+content. <code class="literal">&lt;attribute&gt;</code> elements can be marked for translation with a
+<code class="literal">translatable="yes"</code> attribute. It is also possible to specify message
+context and translator comments,using the context and comments attributes.
+To make use of this, the <a class="link" href="GtkBuilder.html" title="GtkBuilder"><span class="type">GtkBuilder</span></a> must have been given the gettext
+domain to use.</p>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkApplicationWindow.functions_details"></a><h2>Functions</h2>
@@ -694,7 +277,7 @@ gtk_application_window_new (<em class="parameter"><code><a class="link" href="Gt
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_application_window_set_show_menubar
                                (<em class="parameter"><code><a class="link" href="GtkApplicationWindow.html" title="GtkApplicationWindow"><span class="type">GtkApplicationWindow</span></a> *window</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> show_menubar</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> show_menubar</code></em>);</pre>
 <p>Sets whether the window will display a menubar for the app menu
 and menubar as needed.</p>
 <div class="refsect3">
@@ -724,7 +307,7 @@ and menubar as needed.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-application-window-get-show-menubar"></a><h3>gtk_application_window_get_show_menubar ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_application_window_get_show_menubar
                                (<em class="parameter"><code><a class="link" href="GtkApplicationWindow.html" title="GtkApplicationWindow"><span class="type">GtkApplicationWindow</span></a> *window</code></em>);</pre>
 <p>Returns whether the window will display a menubar for the app menu
@@ -746,7 +329,7 @@ and menubar as needed.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.4.3.10.4.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>window</code></em>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>window</code></em>
 will display a menubar when needed</p>
 <p></p>
 </div>
@@ -755,7 +338,7 @@ will display a menubar when needed</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-application-window-get-id"></a><h3>gtk_application_window_get_id ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 gtk_application_window_get_id (<em class="parameter"><code><a class="link" href="GtkApplicationWindow.html" title="GtkApplicationWindow"><span class="type">GtkApplicationWindow</span></a> *window</code></em>);</pre>
 <p>Returns the unique ID of the window. If the window has not yet been added to
 a <a class="link" href="GtkApplication.html" title="GtkApplication"><span class="type">GtkApplication</span></a>, returns <code class="literal">0</code>.</p>
@@ -790,17 +373,40 @@ has not yet been added to a <a class="link" href="GtkApplication.html" title="Gt
 <a name="GtkApplicationWindow-struct"></a><h3>struct GtkApplicationWindow</h3>
 <pre class="programlisting">struct GtkApplicationWindow;</pre>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GtkApplicationWindowClass"></a><h3>struct GtkApplicationWindowClass</h3>
+<pre class="programlisting">struct GtkApplicationWindowClass {
+  GtkWindowClass parent_class;
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.4.3.11.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody><tr>
+<td class="struct_member_name"><p><a class="link" href="GtkWindow.html#GtkWindowClass" title="struct GtkWindowClass"><span class="type">GtkWindowClass</span></a> <em class="structfield"><code><a name="GtkApplicationWindowClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkApplicationWindow.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GtkApplicationWindow--show-menubar"></a><h3>The <code class="literal">“show-menubar”</code> property</h3>
-<pre class="programlisting">  “show-menubar”             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
-<p>If this property is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the window will display a menubar
+<pre class="programlisting">  “show-menubar”             <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>If this property is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the window will display a menubar
 that includes the app menu and menubar, unless these are
 shown by the desktop shell. See <a class="link" href="GtkApplication.html#gtk-application-set-app-menu" title="gtk_application_set_app_menu ()"><code class="function">gtk_application_set_app_menu()</code></a>
 and <a class="link" href="GtkApplication.html#gtk-application-set-menubar" title="gtk_application_set_menubar ()"><code class="function">gtk_application_set_menubar()</code></a>.</p>
-<p>If <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>, the window will not display a menubar, regardless
+<p>If <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>, the window will not display a menubar, regardless
 of whether the desktop shell is showing the menus or not.</p>
 <p>Flags: Read / Write / Construct</p>
 <p>Default value: TRUE</p>
@@ -809,6 +415,6 @@ of whether the desktop shell is showing the menus or not.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

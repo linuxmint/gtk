@@ -35,14 +35,13 @@
  * user to perform application functions. A #GtkMenuItem can have a
  * submenu associated with it, allowing for nested hierarchical menus.
  *
- * <refsect2 id="GtkMenuShell-Terminology">
- * <title>Terminology</title>
- * <para>
- * A menu item can be "selected", this means that it is displayed
+ * # Terminology
+ *
+ * A menu item can be “selected”, this means that it is displayed
  * in the prelight state, and if it has a submenu, that submenu
  * will be popped up.
  *
- * A menu is "active" when it is visible onscreen and the user
+ * A menu is “active” when it is visible onscreen and the user
  * is selecting from it. A menubar is not active until the user
  * clicks on one of its menuitems. When a menu is active,
  * passing the mouse over a submenu will pop it up.
@@ -55,8 +54,6 @@
  * a selected menu item.) The current menu is the menu that
  * contains the current menu item. It will always have a GTK
  * grab and receive all key presses.
- * </para>
- * </refsect2>
  */
 #include "config.h"
 
@@ -70,18 +67,18 @@
 #include "gtkmenushellprivate.h"
 #include "gtkmnemonichash.h"
 #include "gtkwindow.h"
+#include "gtkwindowprivate.h"
 #include "gtkprivate.h"
 #include "gtkmain.h"
 #include "gtkintl.h"
 #include "gtktypebuiltins.h"
 #include "gtkmodelmenuitem.h"
 #include "gtkwidgetprivate.h"
+#include "gtklabelprivate.h"
 
 #include "deprecated/gtktearoffmenuitem.h"
 
 #include "a11y/gtkmenushellaccessible.h"
-
-#include "ubuntu-private.h"
 
 
 #define MENU_SHELL_TIMEOUT   500
@@ -418,7 +415,7 @@ gtk_menu_shell_class_init (GtkMenuShellClass *klass)
                                                          P_("Take Focus"),
                                                          P_("A boolean that determines whether the menu grabs the keyboard focus"),
                                                          TRUE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   gtk_widget_class_set_accessible_type (widget_class, GTK_TYPE_MENU_SHELL_ACCESSIBLE);
 }
@@ -503,7 +500,7 @@ gtk_menu_shell_dispose (GObject *object)
 /**
  * gtk_menu_shell_append:
  * @menu_shell: a #GtkMenuShell
- * @child: The #GtkMenuItem to add
+ * @child: (type Gtk.MenuItem): The #GtkMenuItem to add
  *
  * Adds a new #GtkMenuItem to the end of the menu shell's
  * item list.
@@ -537,7 +534,7 @@ gtk_menu_shell_prepend (GtkMenuShell *menu_shell,
  * @position: The position in the item list where @child
  *     is added. Positions are numbered from 0 to n-1
  *
- * Adds a new #GtkMenuItem to the menu shell's item list
+ * Adds a new #GtkMenuItem to the menu shell’s item list
  * at the position indicated by @position.
  */
 void
@@ -605,6 +602,7 @@ gtk_menu_shell_realize (GtkWidget *widget)
   attributes.event_mask |= (GDK_EXPOSURE_MASK |
                             GDK_BUTTON_PRESS_MASK |
                             GDK_BUTTON_RELEASE_MASK |
+                            GDK_POINTER_MOTION_MASK |
                             GDK_KEY_PRESS_MASK |
                             GDK_ENTER_NOTIFY_MASK |
                             GDK_LEAVE_NOTIFY_MASK);
@@ -703,21 +701,8 @@ gtk_menu_shell_button_press (GtkWidget      *widget,
         {
           if (!initially_active)
             {
-              gboolean window_drag = FALSE;
-
-              gtk_widget_style_get (widget,
-                                    "window-dragging", &window_drag,
-                                    NULL);
-
-              if (window_drag)
-                {
-                  gtk_menu_shell_deactivate (menu_shell);
-                  gtk_window_begin_move_drag (GTK_WINDOW (gtk_widget_get_toplevel (widget)),
-                                              event->button,
-                                              event->x_root,
-                                              event->y_root,
-                                              event->time);
-                }
+              gtk_menu_shell_deactivate (menu_shell);
+              return FALSE;
             }
         }
     }
@@ -832,7 +817,7 @@ gtk_menu_shell_button_release (GtkWidget      *widget,
                     }
 
                   /* Only close the submenu on click if we opened the
-                   * menu explicitely (usec_since_popup == 0) or
+                   * menu explicitly (usec_since_popup == 0) or
                    * enough time has passed since it was opened by
                    * GtkMenuItem's timeout (usec_since_popup > delay).
                    */
@@ -1375,6 +1360,8 @@ gtk_menu_shell_activate_item (GtkMenuShell *menu_shell,
 
       do
         {
+          parent_menu_shell->priv->selection_done_coming_soon = TRUE;
+
           g_object_ref (parent_menu_shell);
           shells = g_slist_prepend (shells, parent_menu_shell);
           parent_menu_shell = (GtkMenuShell*) parent_menu_shell->priv->parent_menu_shell;
@@ -1394,7 +1381,10 @@ gtk_menu_shell_activate_item (GtkMenuShell *menu_shell,
 
   for (slist = shells; slist; slist = slist->next)
     {
-      g_signal_emit (slist->data, menu_shell_signals[SELECTION_DONE], 0);
+      GtkMenuShell *parent_menu_shell = slist->data;
+
+      g_signal_emit (parent_menu_shell, menu_shell_signals[SELECTION_DONE], 0);
+      parent_menu_shell->priv->selection_done_coming_soon = FALSE;
       g_object_unref (slist->data);
     }
   g_slist_free (shells);
@@ -1463,12 +1453,12 @@ gtk_menu_shell_move_selected (GtkMenuShell  *menu_shell,
  * @menu_shell: a #GtkMenuShell
  * @search_sensitive: if %TRUE, search for the first selectable
  *                    menu item, otherwise select nothing if
- *                    the first item isn't sensitive. This
+ *                    the first item isn’t sensitive. This
  *                    should be %FALSE if the menu is being
  *                    popped up initially.
  *
  * Select the first visible or selectable child of the menu shell;
- * don't select tearoff items unless the only item is a tearoff
+ * don’t select tearoff items unless the only item is a tearoff
  * item.
  *
  * Since: 2.2
@@ -1572,7 +1562,7 @@ gtk_menu_shell_select_submenu_first (GtkMenuShell *menu_shell)
  * menubars working, if submenu_placement is different for
  * the menu and its MenuShell then the following apply:
  *
- * - For 'parent' the current menu is not just moved to
+ * - For “parent” the current menu is not just moved to
  *   the parent, but moved to the previous entry in the parent
  * - For 'child', if there is no child, then current is
  *   moved to the next item in the parent.
@@ -1928,15 +1918,15 @@ gtk_menu_shell_get_take_focus (GtkMenuShell *menu_shell)
  *
  * The @take_focus state of a menu or menu bar is automatically
  * propagated to submenus whenever a submenu is popped up, so you
- * don't have to worry about recursively setting it for your entire
+ * don’t have to worry about recursively setting it for your entire
  * menu hierarchy. Only when programmatically picking a submenu and
  * popping it up manually, the @take_focus property of the submenu
- * needs to be set explicitely.
+ * needs to be set explicitly.
  *
  * Note that setting it to %FALSE has side-effects:
  *
  * If the focus is in some other app, it keeps the focus and keynav in
- * the menu doesn't work. Consequently, keynav on the menu will only
+ * the menu doesn’t work. Consequently, keynav on the menu will only
  * work if the focus is on some toplevel owned by the onscreen keyboard.
  *
  * To avoid confusing the user, menus with @take_focus set to %FALSE
@@ -2025,7 +2015,18 @@ gtk_menu_shell_submenu_hidden (GtkWidget *submenu,
 {
   GtkMenuTrackerItem *item = user_data;
 
-  gtk_menu_tracker_item_request_submenu_shown (item, FALSE);
+  if (!GTK_MENU_SHELL (submenu)->priv->selection_done_coming_soon)
+    gtk_menu_tracker_item_request_submenu_shown (item, FALSE);
+}
+
+static void
+gtk_menu_shell_submenu_selection_done (GtkWidget *submenu,
+                                       gpointer   user_data)
+{
+  GtkMenuTrackerItem *item = user_data;
+
+  if (GTK_MENU_SHELL (submenu)->priv->selection_done_coming_soon)
+    gtk_menu_tracker_item_request_submenu_shown (item, FALSE);
 }
 
 static void
@@ -2043,58 +2044,6 @@ gtk_menu_shell_tracker_remove_func (gint     position,
   gtk_widget_destroy (child);
 }
 
-static GtkWidget *
-create_custom_menu_item (GMenuItem   *item,
-                         GtkWidget   *parent,
-                         const gchar *action_namespace)
-{
-  gchar *type;
-  GActionGroup *actions;
-  GtkMenuItem *widget = NULL;
-  GList *it;
-
-  g_menu_item_get_attribute (item, "x-canonical-type", "s", &type);
-
-  if (action_namespace)
-    {
-      gchar *action;
-
-      /* Rewrite the menu item to include the fully qualified action
-       * name to make writing widgets easier. This won't break, as
-       * we don't use the tracker item for custom items.
-       */
-      if (g_menu_item_get_attribute (item, "action", "s", &action))
-        {
-          gchar *fullname;
-
-          fullname = g_strconcat (action_namespace, ".", action, NULL);
-          g_menu_item_set_attribute (item, "action", "s", fullname);
-
-          g_free (fullname);
-          g_free (action);
-        }
-    }
-
-  /* Passing the parent muxer is wrong, but we'll only have access
-   * to the menuitem's muxer after the widget has been created.
-   * Thus we'd need some other form of passing the action group to
-   * the widget, which would complicate things for no practical
-   * reason: the panel service is the only consumer of this API and
-   * it will never call gtk_widget_insert_action_group() on the
-   * returned menu item.
-   */
-  actions = G_ACTION_GROUP (_gtk_widget_get_action_muxer (parent));
-
-  for (it = ubuntu_menu_item_factory_get_all (); it != NULL && widget == NULL; it = it->next)
-    widget = ubuntu_menu_item_factory_create_menu_item (it->data, type, item, actions);
-
-  if (widget == NULL)
-    g_warning ("Cannot create custom menu item of type '%s'", type);
-
-  g_free (type);
-  return GTK_WIDGET (widget);
-}
-
 static void
 gtk_menu_shell_tracker_insert_func (GtkMenuTrackerItem *item,
                                     gint                position,
@@ -2102,9 +2051,6 @@ gtk_menu_shell_tracker_insert_func (GtkMenuTrackerItem *item,
 {
   GtkMenuShell *menu_shell = user_data;
   GtkWidget *widget;
-  GMenuItem *menuitem;
-
-  menuitem = gtk_menu_tracker_item_get_menu_item (item);
 
   if (gtk_menu_tracker_item_get_is_separator (item))
     {
@@ -2127,7 +2073,7 @@ gtk_menu_shell_tracker_insert_func (GtkMenuTrackerItem *item,
 
       gtk_widget_show (widget);
     }
-  else if (gtk_menu_tracker_item_get_has_submenu (item))
+  else if (gtk_menu_tracker_item_get_has_link (item, G_MENU_LINK_SUBMENU))
     {
       GtkMenuShell *submenu;
 
@@ -2140,10 +2086,11 @@ gtk_menu_shell_tracker_insert_func (GtkMenuTrackerItem *item,
        * prevent arbitrary recursion depth.  We could also do it
        * lazy...
        */
-      submenu->priv->tracker = gtk_menu_tracker_new_for_item_submenu (item,
-                                                                      gtk_menu_shell_tracker_insert_func,
-                                                                      gtk_menu_shell_tracker_remove_func,
-                                                                      submenu);
+      submenu->priv->tracker = gtk_menu_tracker_new_for_item_link (item,
+                                                                   G_MENU_LINK_SUBMENU, TRUE,
+                                                                   gtk_menu_shell_tracker_insert_func,
+                                                                   gtk_menu_shell_tracker_remove_func,
+                                                                   submenu);
       gtk_menu_item_set_submenu (GTK_MENU_ITEM (widget), GTK_WIDGET (submenu));
 
       if (gtk_menu_tracker_item_get_should_request_show (item))
@@ -2160,19 +2107,8 @@ gtk_menu_shell_tracker_insert_func (GtkMenuTrackerItem *item,
            */
           g_signal_connect (submenu, "show", G_CALLBACK (gtk_menu_shell_submenu_shown), item);
           g_signal_connect (submenu, "hide", G_CALLBACK (gtk_menu_shell_submenu_hidden), item);
+          g_signal_connect (submenu, "selection-done", G_CALLBACK (gtk_menu_shell_submenu_selection_done), item);
         }
-
-      gtk_widget_show (widget);
-    }
-  else if (g_menu_item_get_attribute (menuitem, "x-canonical-type", "s", NULL))
-    {
-      const gchar *namespace;
-
-      namespace = gtk_menu_tracker_item_get_action_namespace (item);
-      widget = create_custom_menu_item (menuitem, GTK_WIDGET (menu_shell), namespace);
-
-      if (widget == NULL)
-        return;
 
       gtk_widget_show (widget);
     }
@@ -2188,13 +2124,12 @@ gtk_menu_shell_tracker_insert_func (GtkMenuTrackerItem *item,
       g_object_bind_property (item, "label", widget, "text", G_BINDING_SYNC_CREATE);
       g_object_bind_property (item, "icon", widget, "icon", G_BINDING_SYNC_CREATE);
       g_object_bind_property (item, "sensitive", widget, "sensitive", G_BINDING_SYNC_CREATE);
-      g_object_bind_property (item, "visible", widget, "visible", G_BINDING_SYNC_CREATE);
       g_object_bind_property (item, "role", widget, "action-role", G_BINDING_SYNC_CREATE);
       g_object_bind_property (item, "toggled", widget, "toggled", G_BINDING_SYNC_CREATE);
       g_object_bind_property (item, "accel", widget, "accel", G_BINDING_SYNC_CREATE);
-      g_object_bind_property (item, "accel-text", widget, "accel-text", G_BINDING_SYNC_CREATE);
 
       g_signal_connect (widget, "activate", G_CALLBACK (gtk_menu_shell_item_activate), item);
+      gtk_widget_show (widget);
     }
 
   /* TODO: drop this when we have bindings that ref the source */
@@ -2223,28 +2158,28 @@ gtk_menu_shell_tracker_insert_func (GtkMenuTrackerItem *item,
  *
  * @with_separators determines if toplevel items (eg: sections) have
  * separators inserted between them.  This is typically desired for
- * menus but doesn't make sense for menubars.
+ * menus but doesn’t make sense for menubars.
  *
  * If @action_namespace is non-%NULL then the effect is as if all
  * actions mentioned in the @model have their names prefixed with the
- * namespace, plus a dot.  For example, if the action "quit" is
- * mentioned and @action_namespace is "app" then the effective action
- * name is "app.quit".
+ * namespace, plus a dot.  For example, if the action “quit” is
+ * mentioned and @action_namespace is “app” then the effective action
+ * name is “app.quit”.
  *
  * This function uses #GtkActionable to define the action name and
  * target values on the created menu items.  If you want to use an
- * action group other than "app" and "win", or if you want to use a
+ * action group other than “app” and “win”, or if you want to use a
  * #GtkMenuShell outside of a #GtkApplicationWindow, then you will need
  * to attach your own action group to the widget hierarchy using
  * gtk_widget_insert_action_group().  As an example, if you created a
- * group with a "quit" action and inserted it with the name "mygroup"
- * then you would use the action name "mygroup.quit" in your
+ * group with a “quit” action and inserted it with the name “mygroup”
+ * then you would use the action name “mygroup.quit” in your
  * #GMenuModel.
  *
  * For most cases you are probably better off using
  * gtk_menu_new_from_model() or gtk_menu_bar_new_from_model() or just
  * directly passing the #GMenuModel to gtk_application_set_app_menu() or
- * gtk_application_set_menu_bar().
+ * gtk_application_set_menubar().
  *
  * Since: 3.6
  */
@@ -2268,7 +2203,7 @@ gtk_menu_shell_bind_model (GtkMenuShell *menu_shell,
 
   if (model)
     menu_shell->priv->tracker = gtk_menu_tracker_new (GTK_ACTION_OBSERVABLE (muxer),
-                                                      model, with_separators, action_namespace,
+                                                      model, with_separators, TRUE, action_namespace,
                                                       gtk_menu_shell_tracker_insert_func,
                                                       gtk_menu_shell_tracker_remove_func,
                                                       menu_shell);

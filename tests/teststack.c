@@ -108,6 +108,7 @@ main (gint argc,
   GtkWidget *scrolled_win;
   int i;
   GtkTreeIter iter;
+  GEnumClass *class;
 
   gtk_init (&argc, &argv);
 
@@ -123,7 +124,7 @@ main (gint argc,
   stack = gtk_stack_new ();
 
   /* Make transitions longer so we can see that they work */
-  gtk_stack_set_transition_duration (GTK_STACK (stack), 500);
+  gtk_stack_set_transition_duration (GTK_STACK (stack), 1500);
 
   gtk_widget_set_halign (stack, GTK_ALIGN_START);
   gtk_container_add (GTK_CONTAINER (box), stack);
@@ -144,6 +145,7 @@ main (gint argc,
   gtk_container_child_set (GTK_CONTAINER (stack), w2,
 			   "name", "2",
 			   "title", "2",
+                           "needs-attention", TRUE,
 			   NULL);
 
 
@@ -209,18 +211,14 @@ main (gint argc,
   gtk_container_add (GTK_CONTAINER (hbox), button);
 
   combo = gtk_combo_box_text_new ();
-  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "NONE");
-  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "CROSSFADE");
-  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "SLIDE_RIGHT");
-  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "SLIDE_LEFT");
-  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "SLIDE_UP");
-  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "SLIDE_DOWN");
-  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "SLIDE_LEFT_RIGHT");
-  gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), "SLIDE_UP_DOWN");
-  gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
+  class = g_type_class_ref (GTK_TYPE_STACK_TRANSITION_TYPE);
+  for (i = 0; i < class->n_values; i++)
+    gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (combo), class->values[i].value_nick);
+  g_type_class_unref (class);
 
   gtk_container_add (GTK_CONTAINER (hbox), combo);
   g_signal_connect (combo, "changed", (GCallback) toggle_transitions, NULL);
+  gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
 
   hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
   gtk_container_add (GTK_CONTAINER (box), hbox);

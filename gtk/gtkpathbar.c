@@ -22,7 +22,6 @@
 
 #include <string.h>
 
-#include "gtkarrow.h"
 #include "gtkbox.h"
 #include "gtkdnd.h"
 #include "gtkicontheme.h"
@@ -203,6 +202,7 @@ gtk_path_bar_init (GtkPathBar *path_bar)
   gtk_widget_set_redraw_on_allocate (GTK_WIDGET (path_bar), FALSE);
 
   context = gtk_widget_get_style_context (GTK_WIDGET (path_bar));
+  gtk_style_context_add_class (context, "path-bar");
   gtk_style_context_add_class (context, GTK_STYLE_CLASS_LINKED);
 
   path_bar->priv->get_info_cancellable = NULL;
@@ -259,7 +259,7 @@ gtk_path_bar_class_init (GtkPathBarClass *path_bar_class)
   /* Bind class to template
    */
   gtk_widget_class_set_template_from_resource (widget_class,
-					       "/org/gtk/libgtk/gtkpathbar.ui");
+					       "/org/gtk/libgtk/ui/gtkpathbar.ui");
 
   gtk_widget_class_bind_template_child_private (widget_class, GtkPathBar, up_slider_button);
   gtk_widget_class_bind_template_child_private (widget_class, GtkPathBar, down_slider_button);
@@ -371,7 +371,7 @@ gtk_path_bar_get_preferred_width (GtkWidget *widget,
         }
 
       *minimum = MAX (*minimum, child_min);
-      *natural = MAX (*natural, child_nat);
+      *natural = *natural + child_nat;
     }
 
   /* Add space for slider, if we have more than one path */
@@ -550,7 +550,11 @@ gtk_path_bar_size_allocate (GtkWidget     *widget,
 
   /* No path is set; we don't have to allocate anything. */
   if (path_bar->priv->button_list == NULL)
-    return;
+    {
+      _gtk_widget_set_simple_clip (widget, NULL);
+
+      return;
+    }
 
   direction = gtk_widget_get_direction (widget);
   allocation_width = allocation->width;
@@ -768,6 +772,8 @@ gtk_path_bar_size_allocate (GtkWidget     *widget,
 
   if (needs_reorder)
     child_ordering_changed (path_bar);
+
+  _gtk_widget_set_simple_clip (widget, NULL);
 }
 
 static void
@@ -1080,6 +1086,7 @@ gtk_path_bar_scroll_timeout (GtkPathBar *path_bar)
 	  path_bar->priv->timer = gdk_threads_add_timeout (TIMEOUT_REPEAT * SCROLL_DELAY_FACTOR,
 					   (GSourceFunc)gtk_path_bar_scroll_timeout,
 					   path_bar);
+          g_source_set_name_by_id (path_bar->priv->timer, "[gtk+] gtk_path_bar_scroll_timeout");
 	}
       else
 	retval = TRUE;
@@ -1184,6 +1191,7 @@ gtk_path_bar_slider_button_press (GtkWidget      *widget,
       path_bar->priv->timer = gdk_threads_add_timeout (TIMEOUT_INITIAL,
 				       (GSourceFunc)gtk_path_bar_scroll_timeout,
 				       path_bar);
+      g_source_set_name_by_id (path_bar->priv->timer, "[gtk+] gtk_path_bar_scroll_timeout");
     }
 
   return FALSE;
@@ -1269,6 +1277,7 @@ change_icon_theme (GtkPathBar *path_bar)
 
   reload_icons (path_bar);
 }
+
 /* Callback used when a GtkSettings value changes */
 static void
 settings_notify_cb (GObject    *object,
@@ -1286,13 +1295,14 @@ settings_notify_cb (GObject    *object,
 static void
 gtk_path_bar_check_icon_theme (GtkPathBar *path_bar)
 {
-  GtkSettings *settings;
+  if (path_bar->priv->settings_signal_id == 0)
+    {
+      GtkSettings *settings;
 
-  if (path_bar->priv->settings_signal_id)
-    return;
-
-  settings = gtk_settings_get_for_screen (gtk_widget_get_screen (GTK_WIDGET (path_bar)));
-  path_bar->priv->settings_signal_id = g_signal_connect (settings, "notify", G_CALLBACK (settings_notify_cb), path_bar);
+      settings = gtk_settings_get_for_screen (gtk_widget_get_screen (GTK_WIDGET (path_bar)));
+      path_bar->priv->settings_signal_id = g_signal_connect (settings, "notify",
+                                                             G_CALLBACK (settings_notify_cb), path_bar);
+    }
 
   change_icon_theme (path_bar);
 }
@@ -1382,8 +1392,9 @@ set_button_image_get_info_cb (GCancellable *cancellable,
   if (cancelled || error)
     goto out;
 
-  surface = _gtk_file_info_render_icon (info, GTK_WIDGET (data->path_bar),
-			 	       data->path_bar->priv->icon_size);
+  surface = _gtk_file_info_render_symbolic_icon (info,
+                                                 GTK_WIDGET (data->path_bar),
+			 	                 data->path_bar->priv->icon_size);
   gtk_image_set_from_surface (GTK_IMAGE (data->button_data->image), surface);
 
   switch (data->button_data->type)
@@ -1432,10 +1443,10 @@ set_button_image (GtkPathBar *path_bar,
       if (volume == NULL)
 	return;
 
-      path_bar->priv->root_icon = _gtk_file_system_volume_render_icon (volume,
-								       GTK_WIDGET (path_bar),
-								       path_bar->priv->icon_size,
-								       NULL);
+      path_bar->priv->root_icon = _gtk_file_system_volume_render_symbolic_icon (volume,
+								                GTK_WIDGET (path_bar),
+								                path_bar->priv->icon_size,
+								                NULL);
       _gtk_file_system_volume_unref (volume);
 
       gtk_image_set_from_surface (GTK_IMAGE (button_data->image), path_bar->priv->root_icon);
@@ -1458,7 +1469,7 @@ set_button_image (GtkPathBar *path_bar,
       button_data->cancellable =
         _gtk_file_system_get_info (path_bar->priv->file_system,
 				   path_bar->priv->home_file,
-				   "standard::icon",
+				   "standard::symbolic-icon",
 				   set_button_image_get_info_cb,
 				   data);
       break;
@@ -1480,7 +1491,7 @@ set_button_image (GtkPathBar *path_bar,
       button_data->cancellable =
         _gtk_file_system_get_info (path_bar->priv->file_system,
 				   path_bar->priv->desktop_file,
-				   "standard::icon",
+				   "standard::symbolic-icon",
 				   set_button_image_get_info_cb,
 				   data);
       break;
@@ -1519,15 +1530,25 @@ gtk_path_bar_update_button_appearance (GtkPathBar *path_bar,
 				       gboolean    current_dir)
 {
   const gchar *dir_name = get_dir_name (button_data);
+  GtkStyleContext *context;
+
+  context = gtk_widget_get_style_context (button_data->button);
+
+  gtk_style_context_remove_class (context, "text-button");
+  gtk_style_context_remove_class (context, "image-button");
 
   if (button_data->label != NULL)
     {
       gtk_label_set_text (GTK_LABEL (button_data->label), dir_name);
+      if (button_data->image == NULL)
+        gtk_style_context_add_class (context, "text-button");
     }
 
   if (button_data->image != NULL)
     {
       set_button_image (path_bar, button_data);
+      if (button_data->label == NULL)
+        gtk_style_context_add_class (context, "image-button");
     }
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button_data->button)) != current_dir)
@@ -1609,7 +1630,7 @@ make_directory_button (GtkPathBar  *path_bar,
     case DESKTOP_BUTTON:
       button_data->image = gtk_image_new ();
       button_data->label = gtk_label_new (NULL);
-      child = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 2);
+      child = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
       gtk_box_pack_start (GTK_BOX (child), button_data->image, FALSE, FALSE, 0);
       gtk_box_pack_start (GTK_BOX (child), button_data->label, FALSE, FALSE, 0);
       break;
@@ -1897,7 +1918,7 @@ _gtk_path_bar_set_file_system (GtkPathBar    *path_bar,
  * _gtk_path_bar_up:
  * @path_bar: a #GtkPathBar
  * 
- * If the selected button in the pathbar is not the furthest button "up" (in the
+ * If the selected button in the pathbar is not the furthest button “up” (in the
  * root direction), act as if the user clicked on the next button up.
  **/
 void
@@ -1924,7 +1945,7 @@ _gtk_path_bar_up (GtkPathBar *path_bar)
  * _gtk_path_bar_down:
  * @path_bar: a #GtkPathBar
  * 
- * If the selected button in the pathbar is not the furthest button "down" (in the
+ * If the selected button in the pathbar is not the furthest button “down” (in the
  * leaf direction), act as if the user clicked on the next button down.
  **/
 void

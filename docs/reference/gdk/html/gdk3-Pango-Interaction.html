@@ -8,7 +8,7 @@
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk3-Threads.html" title="Threads">
 <link rel="next" href="gdk3-Cairo-Interaction.html" title="Cairo Interaction">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -87,18 +87,19 @@ and types in this section are used to obtain clip regions for
 GDK.</p>
 <p>Creating a <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> object is the first step in rendering text,
 and requires getting a handle to a <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>. For GTK+ programs,
-you'll usually want to use <a href="http://developer.gnome.org/gtk2/GtkWidget.html#gtk-widget-get-pango-context"><code class="function">gtk_widget_get_pango_context()</code></a>, or
+you’ll usually want to use <a href="http://developer.gnome.org/gtk2/GtkWidget.html#gtk-widget-get-pango-context"><code class="function">gtk_widget_get_pango_context()</code></a>, or
 <a href="http://developer.gnome.org/gtk2/GtkWidget.html#gtk-widget-create-pango-layout"><code class="function">gtk_widget_create_pango_layout()</code></a>, rather than using the lowlevel
 <a class="link" href="gdk3-Pango-Interaction.html#gdk-pango-context-get-for-screen" title="gdk_pango_context_get_for_screen ()"><code class="function">gdk_pango_context_get_for_screen()</code></a>. Once you have a <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>, you
 can set the text and attributes of it with Pango functions like
 <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Layout-Objects.html#pango-layout-set-text"><code class="function">pango_layout_set_text()</code></a> and get its size with <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Layout-Objects.html#pango-layout-get-size"><code class="function">pango_layout_get_size()</code></a>.
 (Note that Pango uses a fixed point system internally, so converting
-between Pango units and pixels using PANGO_SCALE or the <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Glyph-Storage.html#PANGO-PIXELS:CAPS"><code class="function">PANGO_PIXELS()</code></a> macro.)</p>
+between Pango units and pixels using PANGO_SCALE
+or the <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Glyph-Storage.html#PANGO-PIXELS:CAPS"><code class="function">PANGO_PIXELS()</code></a> macro.)</p>
 <p>Rendering a Pango layout is done most simply with <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Cairo-Rendering.html#pango-cairo-show-layout"><code class="function">pango_cairo_show_layout()</code></a>;
 you can also draw pieces of the layout with <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Cairo-Rendering.html#pango-cairo-show-layout-line"><code class="function">pango_cairo_show_layout_line()</code></a>.</p>
-<div class="example">
-<a name="rotated-example"></a><p class="title"><b>Example 4. Draw transformed text with Pango and cairo</b></p>
-<div class="example-contents">
+<div class="refsect3">
+<a name="rotated-example"></a><h4>Draw transformed text with Pango and cairo</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -176,20 +177,20 @@ you can also draw pieces of the layout with <a href="/home/mclasen/gnome/share/g
 <span class="type">int</span><span class="normal"> width</span><span class="symbol">,</span><span class="normal"> height</span><span class="symbol">;</span>
 <span class="type">int</span><span class="normal"> i</span><span class="symbol">;</span>
 
-<span class="comment">/* Set up a transformation matrix so that the user space coordinates for</span>
-<span class="comment"> * where we are drawing are [-RADIUS, RADIUS], [-RADIUS, RADIUS]</span>
-<span class="comment"> * We first center, then change the scale */</span>
+<span class="comment">// Set up a transformation matrix so that the user space coordinates for</span>
+<span class="comment">// where we are drawing are [-RADIUS, RADIUS], [-RADIUS, RADIUS]</span>
+<span class="comment">// We first center, then change the scale</span>
 
 <span class="normal">width </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="gdk3-Windows.html#gdk-window-get-width">gdk_window_get_width</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">);</span>
 <span class="normal">height </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="gdk3-Windows.html#gdk-window-get-height">gdk_window_get_height</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">);</span>
-<span class="normal">radius </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#MIN:CAPS">MIN</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">width</span><span class="symbol">,</span><span class="normal"> height</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">/</span><span class="normal"> </span><span class="number">2</span><span class="symbol">.;</span>
+<span class="normal">radius </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#MIN:CAPS">MIN</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">width</span><span class="symbol">,</span><span class="normal"> height</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">/</span><span class="normal"> </span><span class="number">2</span><span class="symbol">.;</span>
 
 <span class="function">cairo_translate</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span>
 <span class="normal">                 radius </span><span class="symbol">+</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">width </span><span class="symbol">-</span><span class="normal"> </span><span class="number">2</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> radius</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">/</span><span class="normal"> </span><span class="number">2</span><span class="symbol">,</span>
 <span class="normal">                 radius </span><span class="symbol">+</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">height </span><span class="symbol">-</span><span class="normal"> </span><span class="number">2</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> radius</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">/</span><span class="normal"> </span><span class="number">2</span><span class="symbol">);</span>
 <span class="normal">                 </span><span class="function">cairo_scale</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> radius </span><span class="symbol">/</span><span class="normal"> RADIUS</span><span class="symbol">,</span><span class="normal"> radius </span><span class="symbol">/</span><span class="normal"> RADIUS</span><span class="symbol">);</span>
 
-<span class="comment">/* Create a PangoLayout, set the font and text */</span>
+<span class="comment">// Create a PangoLayout, set the font and text</span>
 <span class="normal">context </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="gdk3-Pango-Interaction.html#gdk-pango-context-get-for-screen">gdk_pango_context_get_for_screen</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">screen</span><span class="symbol">);</span>
 <span class="normal">layout </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Layout-Objects.html#pango-layout-new">pango_layout_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">context</span><span class="symbol">);</span>
 <span class="function"><a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Layout-Objects.html#pango-layout-set-text">pango_layout_set_text</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">layout</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"Text"</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">-</span><span class="number">1</span><span class="symbol">);</span>
@@ -197,15 +198,15 @@ you can also draw pieces of the layout with <a href="/home/mclasen/gnome/share/g
 <span class="function"><a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Layout-Objects.html#pango-layout-set-font-description">pango_layout_set_font_description</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">layout</span><span class="symbol">,</span><span class="normal"> desc</span><span class="symbol">);</span>
 <span class="function"><a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Fonts.html#pango-font-description-free">pango_font_description_free</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">desc</span><span class="symbol">);</span>
 
-<span class="comment">/* Draw the layout N_WORDS times in a circle */</span>
+<span class="comment">// Draw the layout N_WORDS times in a circle</span>
 <span class="keyword">for</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">i </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span><span class="normal"> i </span><span class="symbol">&lt;</span><span class="normal"> N_WORDS</span><span class="symbol">;</span><span class="normal"> i</span><span class="symbol">++)</span>
 <span class="normal">  </span><span class="cbracket">{</span>
 <span class="normal">    </span><span class="type">double</span><span class="normal"> red</span><span class="symbol">,</span><span class="normal"> green</span><span class="symbol">,</span><span class="normal"> blue</span><span class="symbol">;</span>
-<span class="normal">    </span><span class="type">double</span><span class="normal"> angle </span><span class="symbol">=</span><span class="normal"> </span><span class="number">2</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Numerical-Definitions.html#G-PI:CAPS">G_PI</a> </span><span class="symbol">*</span><span class="normal"> i </span><span class="symbol">/</span><span class="normal"> n_words</span><span class="symbol">;</span>
+<span class="normal">    </span><span class="type">double</span><span class="normal"> angle </span><span class="symbol">=</span><span class="normal"> </span><span class="number">2</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Numerical-Definitions.html#G-PI:CAPS">G_PI</a> </span><span class="symbol">*</span><span class="normal"> i </span><span class="symbol">/</span><span class="normal"> n_words</span><span class="symbol">;</span>
 
 <span class="normal">    </span><span class="function">cairo_save</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
 
-<span class="normal">    </span><span class="comment">/* Gradient from red at angle == 60 to blue at angle == 300 */</span>
+<span class="normal">    </span><span class="comment">// Gradient from red at angle == 60 to blue at angle == 300</span>
 <span class="normal">    red </span><span class="symbol">=</span><span class="normal"> </span><span class="symbol">(</span><span class="number">1</span><span class="normal"> </span><span class="symbol">+</span><span class="normal"> </span><span class="function">cos</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">angle </span><span class="symbol">-</span><span class="normal"> </span><span class="number">60</span><span class="symbol">))</span><span class="normal"> </span><span class="symbol">/</span><span class="normal"> </span><span class="number">2</span><span class="symbol">;</span>
 <span class="normal">    green </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
 <span class="normal">    blue </span><span class="symbol">=</span><span class="normal"> </span><span class="number">1</span><span class="normal"> </span><span class="symbol">-</span><span class="normal"> red</span><span class="symbol">;</span>
@@ -213,7 +214,7 @@ you can also draw pieces of the layout with <a href="/home/mclasen/gnome/share/g
 <span class="normal">    </span><span class="function">cairo_set_source_rgb</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> red</span><span class="symbol">,</span><span class="normal"> green</span><span class="symbol">,</span><span class="normal"> blue</span><span class="symbol">);</span>
 <span class="normal">    </span><span class="function">cairo_rotate</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> angle</span><span class="symbol">);</span>
 
-<span class="normal">    </span><span class="comment">/* Inform Pango to re-layout the text with the new transformation matrix */</span>
+<span class="normal">    </span><span class="comment">// Inform Pango to re-layout the text with the new transformation matrix</span>
 <span class="normal">    </span><span class="function"><a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Cairo-Rendering.html#pango-cairo-update-layout">pango_cairo_update_layout</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> layout</span><span class="symbol">);</span>
 
 <span class="normal">    </span><span class="function"><a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Layout-Objects.html#pango-layout-get-size">pango_layout_get_size</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">layout</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">width</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">height</span><span class="symbol">);</span>
@@ -224,19 +225,19 @@ you can also draw pieces of the layout with <a href="/home/mclasen/gnome/share/g
 <span class="normal">    </span><span class="function">cairo_restore</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="cbracket">}</span>
 
-<span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">layout</span><span class="symbol">);</span>
-<span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">context</span><span class="symbol">);</span></pre></td>
+<span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">layout</span><span class="symbol">);</span>
+<span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">context</span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
+<p></p>
 </div>
-<br class="example-break"><div class="figure">
-<a name="id-1.2.24.5.6"></a><p class="title"><b>Figure 1. Output of <a class="xref" href="gdk3-Pango-Interaction.html#rotated-example" title="Example 4. Draw transformed text with Pango and cairo">Example 4, “Draw transformed text with Pango and cairo”</a></b></p>
-<div class="figure-contents"><div><img src="rotated-text.png" alt="Output of Example 4, “Draw transformed text with Pango and cairo”"></div></div>
+<div class="refsect3">
+<a name="id-1.2.23.5.6"></a><h4>Output of the <a class="link" href="gdk3-Pango-Interaction.html#rotated-example" title="Draw transformed text with Pango and cairo">example</a> above.</h4>
+<p><span class="inlinemediaobject"><img src="rotated-text.png"></span></p>
 </div>
-<br class="figure-break">
 </div>
 <div class="refsect1">
 <a name="gdk3-Pango-Interaction.functions_details"></a><h2>Functions</h2>
@@ -244,23 +245,23 @@ you can also draw pieces of the layout with <a href="/home/mclasen/gnome/share/g
 <a name="gdk-pango-layout-get-clip-region"></a><h3>gdk_pango_layout_get_clip_region ()</h3>
 <pre class="programlisting"><span class="returnvalue">cairo_region_t</span> *
 gdk_pango_layout_get_clip_region (<em class="parameter"><code><a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> *layout</code></em>,
-                                  <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> x_origin</code></em>,
-                                  <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y_origin</code></em>,
-                                  <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index_ranges</code></em>,
-                                  <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_ranges</code></em>);</pre>
+                                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> x_origin</code></em>,
+                                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y_origin</code></em>,
+                                  <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index_ranges</code></em>,
+                                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_ranges</code></em>);</pre>
 <p>Obtains a clip region which contains the areas where the given ranges
 of text would be drawn. <em class="parameter"><code>x_origin</code></em>
  and <em class="parameter"><code>y_origin</code></em>
  are the top left point
 to center the layout. <em class="parameter"><code>index_ranges</code></em>
  should contain
-ranges of bytes in the layout's text.</p>
+ranges of bytes in the layout’s text.</p>
 <p>Note that the regions returned correspond to logical extents of the text
 ranges, not ink extents. So the drawn layout may in fact touch areas out of
 the clip region.  The clip region is mainly useful for highlightling parts
 of text, such as when text is selected.</p>
 <div class="refsect3">
-<a name="id-1.2.24.6.2.6"></a><h4>Parameters</h4>
+<a name="id-1.2.23.6.2.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -299,7 +300,7 @@ of text, such as when text is selected.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.24.6.2.7"></a><h4>Returns</h4>
+<a name="id-1.2.23.6.2.7"></a><h4>Returns</h4>
 <p> a clip region containing the given ranges</p>
 <p></p>
 </div>
@@ -309,17 +310,17 @@ of text, such as when text is selected.</p>
 <a name="gdk-pango-layout-line-get-clip-region"></a><h3>gdk_pango_layout_line_get_clip_region ()</h3>
 <pre class="programlisting"><span class="returnvalue">cairo_region_t</span> *
 gdk_pango_layout_line_get_clip_region (<em class="parameter"><code><a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> *line</code></em>,
-                                       <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> x_origin</code></em>,
-                                       <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y_origin</code></em>,
-                                       <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index_ranges</code></em>,
-                                       <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_ranges</code></em>);</pre>
+                                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> x_origin</code></em>,
+                                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y_origin</code></em>,
+                                       <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index_ranges</code></em>,
+                                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_ranges</code></em>);</pre>
 <p>Obtains a clip region which contains the areas where the given
 ranges of text would be drawn. <em class="parameter"><code>x_origin</code></em>
  and <em class="parameter"><code>y_origin</code></em>
  are the top left
 position of the layout. <em class="parameter"><code>index_ranges</code></em>
 
-should contain ranges of bytes in the layout's text. The clip
+should contain ranges of bytes in the layout’s text. The clip
 region will include space to the left or right of the line (to the
 layout bounding box) if you have indexes above or below the indexes
 contained inside the line. This is to draw the selection all the way
@@ -330,7 +331,7 @@ ranges, not ink extents. So the drawn line may in fact touch areas out of
 the clip region.  The clip region is mainly useful for highlightling parts
 of text, such as when text is selected.</p>
 <div class="refsect3">
-<a name="id-1.2.24.6.3.6"></a><h4>Parameters</h4>
+<a name="id-1.2.23.6.3.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -371,7 +372,7 @@ are end indexes. </p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.24.6.3.7"></a><h4>Returns</h4>
+<a name="id-1.2.23.6.3.7"></a><h4>Returns</h4>
 <p> a clip region containing the given ranges</p>
 <p></p>
 </div>
@@ -382,7 +383,7 @@ are end indexes. </p></td>
 <pre class="programlisting"><a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Text-Processing.html#PangoContext"><span class="returnvalue">PangoContext</span></a> *
 gdk_pango_context_get (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Creates a <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> for the default GDK screen.</p>
-<p>The context must be freed when you're finished with it.</p>
+<p>The context must be freed when you’re finished with it.</p>
 <p>When using GTK+, normally you should use <a href="http://developer.gnome.org/gtk2/GtkWidget.html#gtk-widget-get-pango-context"><code class="function">gtk_widget_get_pango_context()</code></a>
 instead of this function, to get the appropriate context for
 the widget you intend to render text onto.</p>
@@ -390,9 +391,9 @@ the widget you intend to render text onto.</p>
 <span class="type">cairo_font_options_t</span>) for the default screen; if these options
 change it will not be updated. Using <a href="http://developer.gnome.org/gtk2/GtkWidget.html#gtk-widget-get-pango-context"><code class="function">gtk_widget_get_pango_context()</code></a>
 is more convenient if you want to keep a context around and track
-changes to the screen's font rendering settings.</p>
+changes to the screen’s font rendering settings.</p>
 <div class="refsect3">
-<a name="id-1.2.24.6.4.8"></a><h4>Returns</h4>
+<a name="id-1.2.23.6.4.8"></a><h4>Returns</h4>
 <p> a new <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> for the default display. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -404,7 +405,7 @@ changes to the screen's font rendering settings.</p>
 gdk_pango_context_get_for_screen (<em class="parameter"><code><a class="link" href="GdkScreen.html" title="GdkScreen"><span class="type">GdkScreen</span></a> *screen</code></em>);</pre>
 <p>Creates a <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> for <em class="parameter"><code>screen</code></em>
 .</p>
-<p>The context must be freed when you're finished with it.</p>
+<p>The context must be freed when you’re finished with it.</p>
 <p>When using GTK+, normally you should use <a href="http://developer.gnome.org/gtk2/GtkWidget.html#gtk-widget-get-pango-context"><code class="function">gtk_widget_get_pango_context()</code></a>
 instead of this function, to get the appropriate context for
 the widget you intend to render text onto.</p>
@@ -412,9 +413,9 @@ the widget you intend to render text onto.</p>
 (see <span class="type">cairo_font_options_t</span>) for the screen; if these options
 change it will not be updated. Using <a href="http://developer.gnome.org/gtk2/GtkWidget.html#gtk-widget-get-pango-context"><code class="function">gtk_widget_get_pango_context()</code></a>
 is more convenient if you want to keep a context around and track
-changes to the screen's font rendering settings.</p>
+changes to the screen’s font rendering settings.</p>
 <div class="refsect3">
-<a name="id-1.2.24.6.5.8"></a><h4>Parameters</h4>
+<a name="id-1.2.23.6.5.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -429,7 +430,7 @@ changes to the screen's font rendering settings.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.24.6.5.9"></a><h4>Returns</h4>
+<a name="id-1.2.23.6.5.9"></a><h4>Returns</h4>
 <p> a new <a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> for <em class="parameter"><code>screen</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -443,6 +444,6 @@ changes to the screen's font rendering settings.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

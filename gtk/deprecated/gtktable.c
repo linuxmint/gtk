@@ -51,20 +51,18 @@
  *
  * To alter the space next to a specific row, use gtk_table_set_row_spacing(),
  * and for a column, gtk_table_set_col_spacing().
- * The gaps between <emphasis>all</emphasis> rows or columns can be changed by
+ * The gaps between all rows or columns can be changed by
  * calling gtk_table_set_row_spacings() or gtk_table_set_col_spacings()
- * respectively. Note that spacing is added <emphasis>between</emphasis> the
- * children, while padding added by gtk_table_attach() is added <emphasis>on
- * either side</emphasis> of the widget it belongs to.
+ * respectively. Note that spacing is added between the
+ * children, while padding added by gtk_table_attach() is added on
+ * either side of the widget it belongs to.
  *
  * gtk_table_set_homogeneous(), can be used to set whether all cells in the
  * table will resize themselves to the size of the largest widget in the table.
  *
- * <note>
- * #GtkTable has been deprecated. Use #GtkGrid instead. It provides the same
- * capabilities as GtkTable for arranging widgets in a rectangular grid, but
- * does support height-for-width geometry management.
- * </note>
+ * > #GtkTable has been deprecated. Use #GtkGrid instead. It provides the same
+ * > capabilities as GtkTable for arranging widgets in a rectangular grid, but
+ * > does support height-for-width geometry management.
  */
 
 
@@ -628,7 +626,7 @@ gtk_table_new (guint	rows,
  * @rows: The new number of rows.
  * @columns: The new number of columns.
  *
- * If you need to change a table's size <emphasis>after</emphasis>
+ * If you need to change a table’s size after
  * it has been created, this function allows you to do so.
  *
  * Deprecated: 3.4: #GtkGrid resizes automatically.
@@ -723,19 +721,19 @@ gtk_table_resize (GtkTable *table,
  * @xpadding: An integer value specifying the padding on the left and right of the widget being added to the table.
  * @ypadding: The amount of padding above and below the child widget.
  *
- * Adds a widget to a table. The number of 'cells' that a widget will occupy is
+ * Adds a widget to a table. The number of “cells” that a widget will occupy is
  * specified by @left_attach, @right_attach, @top_attach and @bottom_attach.
  * These each represent the leftmost, rightmost, uppermost and lowest column
  * and row numbers of the table. (Columns and rows are indexed from zero).
  *
  * To make a button occupy the lower right cell of a 2x2 table, use
- * <informalexample><programlisting>
+ * |[
  * gtk_table_attach (table, button,
  *                   1, 2, // left, right attach
  *                   1, 2, // top, bottom attach
  *                   xoptions, yoptions,
  *                   xpadding, ypadding);
- * </programlisting></informalexample>
+ * ]|
  * If you want to make the button span the entire bottom row, use @left_attach == 0 and @right_attach = 2 instead.
  *
  * Deprecated: 3.4: Use gtk_grid_attach() with #GtkGrid. Note that the attach
@@ -805,7 +803,7 @@ gtk_table_attach (GtkTable	  *table,
  * As there are many options associated with gtk_table_attach(), this convenience
  * function provides the programmer with a means to add children to a table with
  * identical padding and expansion options. The values used for the #GtkAttachOptions
- * are <literal>GTK_EXPAND | GTK_FILL</literal>, and the padding is set to 0.
+ * are `GTK_EXPAND | GTK_FILL`, and the padding is set to 0.
  *
  * Deprecated: 3.4: Use gtk_grid_attach() with #GtkGrid. Note that the attach
  *     arguments differ between those two functions.
@@ -868,7 +866,7 @@ gtk_table_set_row_spacing (GtkTable *table,
  * Gets the amount of space between row @row, and
  * row @row + 1. See gtk_table_set_row_spacing().
  *
- * Return value: the row spacing
+ * Returns: the row spacing
  *
  * Deprecated: 3.4: #GtkGrid does not offer a replacement for this
  *     functionality.
@@ -897,8 +895,8 @@ gtk_table_get_row_spacing (GtkTable *table,
  * Alters the amount of space between a given table column and the following
  * column.
  *
- * Deprecated: 3.4: Use gtk_widget_set_margin_left() and
- *     gtk_widget_set_margin_right() on the widgets contained in the row if
+ * Deprecated: 3.4: Use gtk_widget_set_margin_start() and
+ *     gtk_widget_set_margin_end() on the widgets contained in the row if
  *     you need this functionality. #GtkGrid does not support per-row spacing.
  */
 void
@@ -931,7 +929,7 @@ gtk_table_set_col_spacing (GtkTable *table,
  * Gets the amount of space between column @col, and
  * column @col + 1. See gtk_table_set_col_spacing().
  *
- * Return value: the column spacing
+ * Returns: the column spacing
  *
  * Deprecated: 3.4: #GtkGrid does not offer a replacement for this
  *     functionality.
@@ -989,7 +987,7 @@ gtk_table_set_row_spacings (GtkTable *table,
  * the spacing that will be used for newly added rows.
  * (See gtk_table_set_row_spacings())
  *
- * Return value: the default row spacing
+ * Returns: the default row spacing
  *
  * Deprecated: 3.4: Use gtk_grid_get_row_spacing() with #GtkGrid.
  **/
@@ -1040,7 +1038,7 @@ gtk_table_set_col_spacings (GtkTable *table,
  * the spacing that will be used for newly added columns.
  * (See gtk_table_set_col_spacings())
  *
- * Return value: the default column spacing
+ * Returns: the default column spacing
  *
  * Deprecated: 3.4: Use gtk_grid_get_column_spacing() with #GtkGrid.
  **/
@@ -1091,9 +1089,9 @@ gtk_table_set_homogeneous (GtkTable *table,
  * @table: a #GtkTable
  *
  * Returns whether the table cells are all constrained to the same
- * width and height. (See gtk_table_set_homogenous ())
+ * width and height. (See gtk_table_set_homogeneous ())
  *
- * Return value: %TRUE if the cells are all constrained to the same size
+ * Returns: %TRUE if the cells are all constrained to the same size
  *
  * Deprecated: 3.4: Use gtk_grid_get_row_homogeneous() and
  *     gtk_grid_get_column_homogeneous() with #GtkGrid.

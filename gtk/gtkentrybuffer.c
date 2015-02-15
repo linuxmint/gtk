@@ -42,7 +42,7 @@
  * #GtkEntryBuffer may be derived from. Such a derived class might allow
  * text to be stored in an alternate location, such as non-pageable memory,
  * useful in the case of important passwords. Or a derived class could 
- * integrate with an application's concept of undo/redo.
+ * integrate with an application’s concept of undo/redo.
  *
  * Since: 2.18
  */
@@ -166,7 +166,7 @@ gtk_entry_buffer_normal_insert_text (GtkEntryBuffer *buffer,
 
   /* Actual text insertion */
   at = g_utf8_offset_to_pointer (pv->normal_text, position) - pv->normal_text;
-  g_memmove (pv->normal_text + at + n_bytes, pv->normal_text + at, pv->normal_text_bytes - at);
+  memmove (pv->normal_text + at + n_bytes, pv->normal_text + at, pv->normal_text_bytes - at);
   memcpy (pv->normal_text + at, chars, n_bytes);
 
   /* Book keeping */
@@ -196,7 +196,7 @@ gtk_entry_buffer_normal_delete_text (GtkEntryBuffer *buffer,
       start = g_utf8_offset_to_pointer (pv->normal_text, position) - pv->normal_text;
       end = g_utf8_offset_to_pointer (pv->normal_text, position + n_chars) - pv->normal_text;
 
-      g_memmove (pv->normal_text + start, pv->normal_text + end, pv->normal_text_bytes + 1 - end);
+      memmove (pv->normal_text + start, pv->normal_text + end, pv->normal_text_bytes + 1 - end);
       pv->normal_text_chars -= n_chars;
       pv->normal_text_bytes -= (end - start);
 
@@ -378,7 +378,7 @@ gtk_entry_buffer_class_init (GtkEntryBufferClass *klass)
                                                      P_("Maximum length"),
                                                      P_("Maximum number of characters for this entry. Zero if no maximum"),
                                    0, GTK_ENTRY_BUFFER_MAX_SIZE, 0,
-                                   GTK_PARAM_READWRITE));
+                                   GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkEntryBuffer::inserted-text:
@@ -436,7 +436,7 @@ gtk_entry_buffer_class_init (GtkEntryBufferClass *klass)
  *
  * Optionally, specify initial text to set in the buffer.
  *
- * Return value: A new GtkEntryBuffer object.
+ * Returns: A new GtkEntryBuffer object.
  *
  * Since: 2.18
  **/
@@ -456,7 +456,7 @@ gtk_entry_buffer_new (const gchar *initial_chars,
  *
  * Retrieves the length in characters of the buffer.
  *
- * Return value: The number of characters in the buffer.
+ * Returns: The number of characters in the buffer.
  *
  * Since: 2.18
  **/
@@ -480,7 +480,7 @@ gtk_entry_buffer_get_length (GtkEntryBuffer *buffer)
  * Retrieves the length in bytes of the buffer.
  * See gtk_entry_buffer_get_length().
  *
- * Return value: The byte length of the buffer.
+ * Returns: The byte length of the buffer.
  *
  * Since: 2.18
  **/
@@ -508,7 +508,7 @@ gtk_entry_buffer_get_bytes (GtkEntryBuffer *buffer)
  * The memory pointer returned by this call will not change
  * unless this object emits a signal, or is finalized.
  *
- * Return value: a pointer to the contents of the widget as a
+ * Returns: a pointer to the contents of the widget as a
  *      string. This string points to internally allocated
  *      storage in the buffer and must not be freed, modified or
  *      stored.
@@ -578,6 +578,9 @@ gtk_entry_buffer_set_max_length (GtkEntryBuffer *buffer,
 
   max_length = CLAMP (max_length, 0, GTK_ENTRY_BUFFER_MAX_SIZE);
 
+  if (buffer->priv->max_length == max_length)
+    return;
+
   if (max_length > 0 && gtk_entry_buffer_get_length (buffer) > max_length)
     gtk_entry_buffer_delete_text (buffer, max_length, -1);
 
@@ -592,7 +595,7 @@ gtk_entry_buffer_set_max_length (GtkEntryBuffer *buffer,
  * Retrieves the maximum allowed length of the text in
  * @buffer. See gtk_entry_buffer_set_max_length().
  *
- * Return value: the maximum allowed number of characters
+ * Returns: the maximum allowed number of characters
  *               in #GtkEntryBuffer, or 0 if there is no maximum.
  *
  * Since: 2.18

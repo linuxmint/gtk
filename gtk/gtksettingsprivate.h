@@ -19,9 +19,12 @@
 #define __GTK_SETTINGS_PRIVATE_H__
 
 #include <gtk/gtksettings.h>
+#include "gtkstylecascadeprivate.h"
 
 G_BEGIN_DECLS
 
+#define DEFAULT_THEME_NAME      "Adwaita"
+#define DEFAULT_ICON_THEME      "Adwaita"
 
 void                _gtk_settings_set_property_value_from_rc (GtkSettings            *settings,
                                                               const gchar            *name,
@@ -35,7 +38,18 @@ gboolean            _gtk_settings_parse_convert              (GtkRcPropertyParse
                                                               GParamSpec             *pspec,
                                                               GValue                 *dest_value);
 GdkScreen          *_gtk_settings_get_screen                 (GtkSettings            *settings);
+GtkStyleCascade    *_gtk_settings_get_style_cascade          (GtkSettings            *settings);
 
+typedef enum
+{
+  GTK_SETTINGS_SOURCE_DEFAULT,
+  GTK_SETTINGS_SOURCE_THEME,
+  GTK_SETTINGS_SOURCE_XSETTING,
+  GTK_SETTINGS_SOURCE_APPLICATION
+} GtkSettingsSource;
+
+GtkSettingsSource  _gtk_settings_get_setting_source (GtkSettings *settings,
+                                                     const gchar *name);
 
 G_END_DECLS
 

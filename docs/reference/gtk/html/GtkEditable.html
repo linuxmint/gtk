@@ -5,10 +5,10 @@
 <title>GTK+ 3 Reference Manual: GtkEditable</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
-<link rel="up" href="NumericEntry.html" title="Numeric/Text Data Entry">
+<link rel="up" href="NumericEntry.html" title="Numeric and Text Data Entry">
 <link rel="prev" href="GtkSearchBar.html" title="GtkSearchBar">
 <link rel="next" href="TextWidgetObjects.html" title="Multiline Text Editor">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -52,7 +52,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkEditable.html#gtk-editable-get-selection-bounds" title="gtk_editable_get_selection_bounds ()">gtk_editable_get_selection_bounds</a> <span class="c_punctuation">()</span>
@@ -76,7 +76,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GtkEditable.html#gtk-editable-get-chars" title="gtk_editable_get_chars ()">gtk_editable_get_chars</a> <span class="c_punctuation">()</span>
@@ -124,7 +124,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkEditable.html#gtk-editable-get-position" title="gtk_editable_get_position ()">gtk_editable_get_position</a> <span class="c_punctuation">()</span>
@@ -140,7 +140,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkEditable.html#gtk-editable-get-editable" title="gtk_editable_get_editable ()">gtk_editable_get_editable</a> <span class="c_punctuation">()</span>
@@ -216,9 +216,9 @@ connect to to modify the behavior of a widget.</p>
 <p>As an example of the latter usage, by connecting
 the following handler to <a class="link" href="GtkEditable.html#GtkEditable-insert-text" title="The “insert-text” signal"><span class="type">“insert-text”</span></a>, an application
 can convert all entry into a widget into uppercase.</p>
-<div class="example">
-<a name="id-1.3.10.9.9.4"></a><p class="title"><b>Example 29. Forcing entry to uppercase.</b></p>
-<div class="example-contents">
+<div class="refsect3">
+<a name="id-1.3.10.9.9.4"></a><h4>Forcing entry to uppercase.</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -243,7 +243,7 @@ can convert all entry into a widget into uppercase.</p>
 19
 20
 21</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="preproc">#include</span><span class="normal"> </span><span class="string">&lt;ctype.h&gt;</span>
+        <td class="listing_code"><pre class="programlisting"><span class="preproc">#include</span><span class="normal"> </span><span class="string">&lt;ctype.h&gt;</span><span class="normal">;</span>
 
 <span class="type">void</span>
 <span class="function">insert_text_handler</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GtkEditable</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">editable</span><span class="symbol">,</span>
@@ -252,25 +252,25 @@ can convert all entry into a widget into uppercase.</p>
 <span class="normal">                     </span><span class="usertype">gint</span><span class="normal">        </span><span class="symbol">*</span><span class="normal">position</span><span class="symbol">,</span>
 <span class="normal">                     </span><span class="usertype">gpointer</span><span class="normal">     data</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
-<span class="normal">  </span><span class="usertype">gchar</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">result </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Unicode-Manipulation.html#g-utf8-strup">g_utf8_strup</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">text</span><span class="symbol">,</span><span class="normal"> length</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="usertype">gchar</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">result </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Unicode-Manipulation.html#g-utf8-strup">g_utf8_strup</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">text</span><span class="symbol">,</span><span class="normal"> length</span><span class="symbol">);</span>
 
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#g-signal-handlers-block-by-func">g_signal_handlers_block_by_func</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">editable</span><span class="symbol">,</span>
-<span class="normal">                               </span><span class="symbol">(</span><span class="normal"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer">gpointer</a></span><span class="symbol">)</span><span class="normal"> insert_text_handler</span><span class="symbol">,</span><span class="normal"> data</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#g-signal-handlers-block-by-func">g_signal_handlers_block_by_func</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">editable</span><span class="symbol">,</span>
+<span class="normal">                               </span><span class="symbol">(</span><span class="normal"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer">gpointer</a></span><span class="symbol">)</span><span class="normal"> insert_text_handler</span><span class="symbol">,</span><span class="normal"> data</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="function"><a href="GtkEditable.html#gtk-editable-insert-text">gtk_editable_insert_text</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">editable</span><span class="symbol">,</span><span class="normal"> result</span><span class="symbol">,</span><span class="normal"> length</span><span class="symbol">,</span><span class="normal"> position</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#g-signal-handlers-unblock-by-func">g_signal_handlers_unblock_by_func</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">editable</span><span class="symbol">,</span>
-<span class="normal">                                     </span><span class="symbol">(</span><span class="normal"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer">gpointer</a></span><span class="symbol">)</span><span class="normal"> insert_text_handler</span><span class="symbol">,</span><span class="normal"> data</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#g-signal-handlers-unblock-by-func">g_signal_handlers_unblock_by_func</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">editable</span><span class="symbol">,</span>
+<span class="normal">                                     </span><span class="symbol">(</span><span class="normal"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer">gpointer</a></span><span class="symbol">)</span><span class="normal"> insert_text_handler</span><span class="symbol">,</span><span class="normal"> data</span><span class="symbol">);</span>
 
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#g-signal-stop-emission-by-name">g_signal_stop_emission_by_name</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">editable</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"insert_text"</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#g-signal-stop-emission-by-name">g_signal_stop_emission_by_name</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">editable</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"insert_text"</span><span class="symbol">);</span>
 
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free">g_free</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">result</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free">g_free</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">result</span><span class="symbol">);</span>
 <span class="cbracket">}</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
+<p></p>
 </div>
-<br class="example-break">
 </div>
 <div class="refsect1">
 <a name="GtkEditable.functions_details"></a><h2>Functions</h2>
@@ -278,8 +278,8 @@ can convert all entry into a widget into uppercase.</p>
 <a name="gtk-editable-select-region"></a><h3>gtk_editable_select_region ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_editable_select_region (<em class="parameter"><code><a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> start_pos</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> end_pos</code></em>);</pre>
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> start_pos</code></em>,
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> end_pos</code></em>);</pre>
 <p>Selects a region of text. The characters that are selected are 
 those characters at positions from <em class="parameter"><code>start_pos</code></em>
  up to, but not 
@@ -290,9 +290,8 @@ characters selected are those characters from <em class="parameter"><code>start_
  to 
 the end of the text.</p>
 <p>Note that positions are specified in characters, not bytes.</p>
-<p>Virtual: set_selection_bounds</p>
 <div class="refsect3">
-<a name="id-1.3.10.9.10.2.7"></a><h4>Parameters</h4>
+<a name="id-1.3.10.9.10.2.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -322,14 +321,14 @@ the end of the text.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-editable-get-selection-bounds"></a><h3>gtk_editable_get_selection_bounds ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_editable_get_selection_bounds (<em class="parameter"><code><a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable</code></em>,
-                                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *start_pos</code></em>,
-                                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *end_pos</code></em>);</pre>
+                                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *start_pos</code></em>,
+                                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *end_pos</code></em>);</pre>
 <p>Retrieves the selection bound of the editable. start_pos will be filled
 with the start of the selection and <em class="parameter"><code>end_pos</code></em>
  with end. If no text was
-selected both will be identical and <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> will be returned.</p>
+selected both will be identical and <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> will be returned.</p>
 <p>Note that positions are specified in characters, not bytes.</p>
 <div class="refsect3">
 <a name="id-1.3.10.9.10.3.6"></a><h4>Parameters</h4>
@@ -347,20 +346,20 @@ selected both will be identical and <a href="http://library.gnome.org/devel/glib
 </tr>
 <tr>
 <td class="parameter_name"><p>start_pos</p></td>
-<td class="parameter_description"><p> location to store the starting position, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> location to store the starting position, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>end_pos</p></td>
-<td class="parameter_description"><p> location to store the end position, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> location to store the end position, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
 <a name="id-1.3.10.9.10.3.7"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if an area is selected, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if an area is selected, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
 <p></p>
 </div>
 </div>
@@ -369,9 +368,9 @@ selected both will be identical and <a href="http://library.gnome.org/devel/glib
 <a name="gtk-editable-insert-text"></a><h3>gtk_editable_insert_text ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_editable_insert_text (<em class="parameter"><code><a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable</code></em>,
-                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *new_text</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> new_text_length</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *position</code></em>);</pre>
+                          <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *new_text</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> new_text_length</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *position</code></em>);</pre>
 <p>Inserts <em class="parameter"><code>new_text_length</code></em>
  bytes of <em class="parameter"><code>new_text</code></em>
  into the contents of the
@@ -380,9 +379,8 @@ widget, at position <em class="parameter"><code>position</code></em>
 <p>Note that the position is in characters, not in bytes. 
 The function updates <em class="parameter"><code>position</code></em>
  to point after the newly inserted text.</p>
-<p>Virtual: do_insert_text</p>
 <div class="refsect3">
-<a name="id-1.3.10.9.10.4.7"></a><h4>Parameters</h4>
+<a name="id-1.3.10.9.10.4.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -419,8 +417,8 @@ The function updates <em class="parameter"><code>position</code></em>
 <a name="gtk-editable-delete-text"></a><h3>gtk_editable_delete_text ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_editable_delete_text (<em class="parameter"><code><a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> start_pos</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> end_pos</code></em>);</pre>
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> start_pos</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> end_pos</code></em>);</pre>
 <p>Deletes a sequence of characters. The characters that are deleted are 
 those characters at positions from <em class="parameter"><code>start_pos</code></em>
  up to, but not including 
@@ -430,9 +428,8 @@ those characters at positions from <em class="parameter"><code>start_pos</code><
 are those from <em class="parameter"><code>start_pos</code></em>
  to the end of the text.</p>
 <p>Note that the positions are specified in characters, not bytes.</p>
-<p>Virtual: do_delete_text</p>
 <div class="refsect3">
-<a name="id-1.3.10.9.10.5.7"></a><h4>Parameters</h4>
+<a name="id-1.3.10.9.10.5.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -462,10 +459,10 @@ are those from <em class="parameter"><code>start_pos</code></em>
 <hr>
 <div class="refsect2">
 <a name="gtk-editable-get-chars"></a><h3>gtk_editable_get_chars ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gtk_editable_get_chars (<em class="parameter"><code><a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable</code></em>,
-                        <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> start_pos</code></em>,
-                        <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> end_pos</code></em>);</pre>
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> start_pos</code></em>,
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> end_pos</code></em>);</pre>
 <p>Retrieves a sequence of characters. The characters that are retrieved 
 are those characters at positions from <em class="parameter"><code>start_pos</code></em>
  up to, but not 
@@ -585,7 +582,7 @@ cursor in the editable.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_editable_delete_selection (<em class="parameter"><code><a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable</code></em>);</pre>
 <p>Deletes the currently selected text of the editable.
-This call doesn't do anything if there is no selected text.</p>
+This call doesn’t do anything if there is no selected text.</p>
 <div class="refsect3">
 <a name="id-1.3.10.9.10.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -607,7 +604,7 @@ This call doesn't do anything if there is no selected text.</p>
 <a name="gtk-editable-set-position"></a><h3>gtk_editable_set_position ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_editable_set_position (<em class="parameter"><code><a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable</code></em>,
-                           <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> position</code></em>);</pre>
+                           <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> position</code></em>);</pre>
 <p>Sets the cursor position in the editable to the given value.</p>
 <p>The cursor is displayed before the character with the given (base 0) 
 index in the contents of the editable. The value must be less than or 
@@ -641,7 +638,7 @@ of the editable. Note that <em class="parameter"><code>position</code></em>
 <hr>
 <div class="refsect2">
 <a name="gtk-editable-get-position"></a><h3>gtk_editable_get_position ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 gtk_editable_get_position (<em class="parameter"><code><a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable</code></em>);</pre>
 <p>Retrieves the current position of the cursor relative to the start
 of the content of the editable. </p>
@@ -672,7 +669,7 @@ of the content of the editable. </p>
 <a name="gtk-editable-set-editable"></a><h3>gtk_editable_set_editable ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_editable_set_editable (<em class="parameter"><code><a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable</code></em>,
-                           <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> is_editable</code></em>);</pre>
+                           <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> is_editable</code></em>);</pre>
 <p>Determines if the user can edit the text in the editable
 widget or not.</p>
 <div class="refsect3">
@@ -691,7 +688,7 @@ widget or not.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>is_editable</p></td>
-<td class="parameter_description"><p><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the user is allowed to edit the text
+<td class="parameter_description"><p><a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the user is allowed to edit the text
 in the widget</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -702,7 +699,7 @@ in the widget</p></td>
 <hr>
 <div class="refsect2">
 <a name="gtk-editable-get-editable"></a><h3>gtk_editable_get_editable ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_editable_get_editable (<em class="parameter"><code><a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable</code></em>);</pre>
 <p>Retrieves whether <em class="parameter"><code>editable</code></em>
  is editable. See
@@ -724,7 +721,7 @@ gtk_editable_get_editable (<em class="parameter"><code><a class="link" href="Gtk
 </div>
 <div class="refsect3">
 <a name="id-1.3.10.9.10.14.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>editable</code></em>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>editable</code></em>
 is editable.</p>
 <p></p>
 </div>
@@ -743,7 +740,7 @@ is editable.</p>
 <a name="GtkEditable-changed"></a><h3>The <code class="literal">“changed”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     user_data)</pre>
 <p>The ::changed signal is emitted at the end of a single
 user-visible operation on the contents of the <a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a>.</p>
 <p>E.g., a paste operation that replaces the contents of the
@@ -780,14 +777,14 @@ to be emitted).</p>
 <a name="GtkEditable-delete-text"></a><h3>The <code class="literal">“delete-text”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>         start_pos,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>         end_pos,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>         start_pos,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>         end_pos,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     user_data)</pre>
 <p>This signal is emitted when text is deleted from
 the widget by the user. The default handler for
 this signal will normally be responsible for deleting
 the text, so by connecting to this signal and then
-stopping the signal with <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#g-signal-stop-emission"><code class="function">g_signal_stop_emission()</code></a>, it
+stopping the signal with <a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#g-signal-stop-emission"><code class="function">g_signal_stop_emission()</code></a>, it
 is possible to modify the range of deleted text, or
 prevent it from being deleted entirely. The <em class="parameter"><code>start_pos</code></em>
 
@@ -833,15 +830,15 @@ and <em class="parameter"><code>end_pos</code></em>
 <a name="GtkEditable-insert-text"></a><h3>The <code class="literal">“insert-text”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkEditable.html" title="GtkEditable"><span class="type">GtkEditable</span></a> *editable,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>       *new_text,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>         new_text_length,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     position,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>       *new_text,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>         new_text_length,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     position,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     user_data)</pre>
 <p>This signal is emitted when text is inserted into
 the widget by the user. The default handler for
 this signal will normally be responsible for inserting
 the text, so by connecting to this signal and then
-stopping the signal with <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#g-signal-stop-emission"><code class="function">g_signal_stop_emission()</code></a>, it
+stopping the signal with <a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#g-signal-stop-emission"><code class="function">g_signal_stop_emission()</code></a>, it
 is possible to modify the inserted text, or prevent
 it from being inserted entirely.</p>
 <div class="refsect3">
@@ -891,6 +888,6 @@ should point after the newly inserted text. </p></td>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

@@ -3,7 +3,7 @@
 /*
  *  GtkPlacesSidebar - sidebar widget for places in the filesystem
  *
- *  This code comes from Nautilus, GNOME's file manager.
+ *  This code comes from Nautilus, GNOME’s file manager.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License as
@@ -105,6 +105,17 @@ gboolean           gtk_places_sidebar_get_show_connect_to_server (GtkPlacesSideb
 GDK_AVAILABLE_IN_3_10
 void               gtk_places_sidebar_set_show_connect_to_server (GtkPlacesSidebar   *sidebar,
                                                                   gboolean            show_connect_to_server);
+GDK_AVAILABLE_IN_3_14
+gboolean           gtk_places_sidebar_get_show_enter_location    (GtkPlacesSidebar   *sidebar);
+GDK_AVAILABLE_IN_3_14
+void               gtk_places_sidebar_set_show_enter_location    (GtkPlacesSidebar   *sidebar,
+                                                                  gboolean            show_enter_location);
+
+GDK_AVAILABLE_IN_3_12
+void                 gtk_places_sidebar_set_local_only           (GtkPlacesSidebar   *sidebar,
+                                                                  gboolean            local_only);
+GDK_AVAILABLE_IN_3_12
+gboolean             gtk_places_sidebar_get_local_only           (GtkPlacesSidebar   *sidebar);
 
 
 GDK_AVAILABLE_IN_3_10

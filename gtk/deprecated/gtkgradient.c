@@ -33,7 +33,7 @@
  *
  * GtkGradient is a boxed type that represents a gradient.
  * It is the result of parsing a
- * <link linkend="gtkcssprovider-gradients">gradient expression</link>.
+ * [gradient expression][gtkcssprovider-gradients].
  * To obtain the gradient represented by a GtkGradient, it has to
  * be resolved with gtk_gradient_resolve(), which replaces all
  * symbolic color references by the colors they refer to (in a given
@@ -43,7 +43,7 @@
  * since they are mostly used behind the scenes by #GtkStyleContext and
  * #GtkCssProvider.
  *
- * #GtkGradient is deprecated. It was used internally by GTK's CSS engine
+ * #GtkGradient is deprecated. It was used internally by GTK’s CSS engine
  * to represent gradients. As its handling is not conforming to modern
  * web standards, it is not used anymore. If you want to use gradients in
  * your own code, please use Cairo directly.
@@ -249,7 +249,7 @@ gtk_gradient_unref (GtkGradient *gradient)
  *
  * If @gradient is resolvable, @resolved_gradient will be filled in
  * with the resolved gradient as a cairo_pattern_t, and %TRUE will
- * be returned. Generally, if @gradient can't be resolved, it is
+ * be returned. Generally, if @gradient can’t be resolved, it is
  * due to it being defined on top of a named color that doesn't
  * exist in @props.
  *

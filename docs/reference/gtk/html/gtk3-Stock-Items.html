@@ -6,9 +6,9 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
 <link rel="up" href="DeprecatedObjects.html" title="Deprecated">
-<link rel="prev" href="GtkImageMenuItem.html" title="GtkImageMenuItem">
-<link rel="next" href="gtkbase.html" title="Part III. GTK+ Core Reference">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<link rel="prev" href="GtkMisc.html" title="GtkMisc">
+<link rel="next" href="gtk3-Themeable-Stock-Images.html" title="Themeable Stock Images">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -19,8 +19,8 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="DeprecatedObjects.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="GtkImageMenuItem.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gtkbase.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="p" href="GtkMisc.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="gtk3-Themeable-Stock-Images.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gtk3-Stock-Items"></a><div class="titlepage"></div>
@@ -73,7 +73,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+<a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gtk3-Stock-Items.html#gtk-stock-list-ids" title="gtk_stock_list_ids ()">gtk_stock_list_ids</a> <span class="c_punctuation">()</span>
@@ -81,7 +81,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gtk3-Stock-Items.html#gtk-stock-lookup" title="gtk_stock_lookup ()">gtk_stock_lookup</a> <span class="c_punctuation">()</span>
@@ -539,7 +539,7 @@
 <div class="refsect1">
 <a name="gtk3-Stock-Items.description"></a><h2>Description</h2>
 <p>Stock items represent commonly-used menu or toolbar items such as
-"Open" or "Exit". Each stock item is identified by a stock ID;
+“Open” or “Exit”. Each stock item is identified by a stock ID;
 stock IDs are just strings, but macros such as <a class="link" href="gtk3-Stock-Items.html#GTK-STOCK-OPEN:CAPS" title="GTK_STOCK_OPEN"><span class="type">GTK_STOCK_OPEN</span></a> are
 provided to avoid typing mistakes in the strings.
 Applications can register their own stock items in addition to those
@@ -547,10 +547,9 @@ built-in to GTK+.</p>
 <p>Each stock ID can be associated with a <a class="link" href="gtk3-Stock-Items.html#GtkStockItem" title="struct GtkStockItem"><span class="type">GtkStockItem</span></a>, which contains
 the user-visible label, keyboard accelerator, and translation domain
 of the menu or toolbar item; and/or with an icon stored in a
-<a class="link" href="gtk3-Themeable-Stock-Images.html#GtkIconFactory"><span class="type">GtkIconFactory</span></a>. See <a class="link" href="gtk3-Themeable-Stock-Images.html" title="Themeable Stock Images">GtkIconFactory</a> for
-more information on stock icons. The connection between a
+<a class="link" href="gtk3-Themeable-Stock-Images.html#GtkIconFactory"><span class="type">GtkIconFactory</span></a>. The connection between a
 <a class="link" href="gtk3-Stock-Items.html#GtkStockItem" title="struct GtkStockItem"><span class="type">GtkStockItem</span></a> and stock icons is purely conventional (by virtue of
-using the same stock ID); it's possible to register a stock item but
+using the same stock ID); it’s possible to register a stock item but
 no icon, and vice versa. Stock icons may have a RTL variant which gets
 used for right-to-left locales.</p>
 </div>
@@ -560,7 +559,7 @@ used for right-to-left locales.</p>
 <a name="gtk-stock-add"></a><h3>gtk_stock_add ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_stock_add (<em class="parameter"><code>const <a class="link" href="gtk3-Stock-Items.html#GtkStockItem" title="struct GtkStockItem"><span class="type">GtkStockItem</span></a> *items</code></em>,
-               <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_items</code></em>);</pre>
+               <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_items</code></em>);</pre>
 <div class="warning"><p><code class="literal">gtk_stock_add</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
 <p>Registers each of the stock items in <em class="parameter"><code>items</code></em>
 . If an item already
@@ -574,7 +573,7 @@ any pointer into <em class="parameter"><code>items</code></em>
  is persistent and GTK+ need not
 copy the array.</p>
 <div class="refsect3">
-<a name="id-1.3.23.33.7.2.6"></a><h4>Parameters</h4>
+<a name="id-1.3.24.34.7.2.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -602,14 +601,14 @@ copy the array.</p>
 <a name="gtk-stock-add-static"></a><h3>gtk_stock_add_static ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_stock_add_static (<em class="parameter"><code>const <a class="link" href="gtk3-Stock-Items.html#GtkStockItem" title="struct GtkStockItem"><span class="type">GtkStockItem</span></a> *items</code></em>,
-                      <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_items</code></em>);</pre>
+                      <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> n_items</code></em>);</pre>
 <div class="warning"><p><code class="literal">gtk_stock_add_static</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>Same as <a class="link" href="gtk3-Stock-Items.html#gtk-stock-add" title="gtk_stock_add ()"><code class="function">gtk_stock_add()</code></a>, but doesn't copy <em class="parameter"><code>items</code></em>
+<p>Same as <a class="link" href="gtk3-Stock-Items.html#gtk-stock-add" title="gtk_stock_add ()"><code class="function">gtk_stock_add()</code></a>, but doesn’t copy <em class="parameter"><code>items</code></em>
 , so
 <em class="parameter"><code>items</code></em>
  must persist until application exit.</p>
 <div class="refsect3">
-<a name="id-1.3.23.33.7.3.6"></a><h4>Parameters</h4>
+<a name="id-1.3.24.34.7.3.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -639,7 +638,7 @@ gtk_stock_item_copy (<em class="parameter"><code>const <a class="link" href="gtk
 <div class="warning"><p><code class="literal">gtk_stock_item_copy</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
 <p>Copies a stock item, mostly useful for language bindings and not in applications.</p>
 <div class="refsect3">
-<a name="id-1.3.23.33.7.4.6"></a><h4>Parameters</h4>
+<a name="id-1.3.24.34.7.4.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -654,7 +653,7 @@ gtk_stock_item_copy (<em class="parameter"><code>const <a class="link" href="gtk
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.23.33.7.4.7"></a><h4>Returns</h4>
+<a name="id-1.3.24.34.7.4.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gtk3-Stock-Items.html#GtkStockItem" title="struct GtkStockItem"><span class="type">GtkStockItem</span></a></p>
 <p></p>
 </div>
@@ -667,9 +666,9 @@ gtk_stock_item_free (<em class="parameter"><code><a class="link" href="gtk3-Stoc
 <div class="warning"><p><code class="literal">gtk_stock_item_free</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
 <p>Frees a stock item allocated on the heap, such as one returned by
 <a class="link" href="gtk3-Stock-Items.html#gtk-stock-item-copy" title="gtk_stock_item_copy ()"><code class="function">gtk_stock_item_copy()</code></a>. Also frees the fields inside the stock item,
-if they are not <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+if they are not <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.23.33.7.5.6"></a><h4>Parameters</h4>
+<a name="id-1.3.24.34.7.5.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -687,14 +686,14 @@ if they are not <a href="http://library.gnome.org/devel/glib/unstable/glib-Stand
 <hr>
 <div class="refsect2">
 <a name="gtk-stock-list-ids"></a><h3>gtk_stock_list_ids ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
 gtk_stock_list_ids (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <div class="warning"><p><code class="literal">gtk_stock_list_ids</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
 <p>Retrieves a list of all known stock IDs added to a <a class="link" href="gtk3-Themeable-Stock-Images.html#GtkIconFactory"><span class="type">GtkIconFactory</span></a>
-or registered with <a class="link" href="gtk3-Stock-Items.html#gtk-stock-add" title="gtk_stock_add ()"><code class="function">gtk_stock_add()</code></a>. The list must be freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#g-slist-free"><code class="function">g_slist_free()</code></a>,
-and each string in the list must be freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>.</p>
+or registered with <a class="link" href="gtk3-Stock-Items.html#gtk-stock-add" title="gtk_stock_add ()"><code class="function">gtk_stock_add()</code></a>. The list must be freed with <a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#g-slist-free"><code class="function">g_slist_free()</code></a>,
+and each string in the list must be freed with <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.23.33.7.6.6"></a><h4>Returns</h4>
+<a name="id-1.3.24.34.7.6.6"></a><h4>Returns</h4>
 <p> a list of known stock IDs. </p>
 <p><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> utf8][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -702,17 +701,17 @@ and each string in the list must be freed with <a href="http://library.gnome.org
 <hr>
 <div class="refsect2">
 <a name="gtk-stock-lookup"></a><h3>gtk_stock_lookup ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gtk_stock_lookup (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stock_id</code></em>,
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gtk_stock_lookup (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stock_id</code></em>,
                   <em class="parameter"><code><a class="link" href="gtk3-Stock-Items.html#GtkStockItem" title="struct GtkStockItem"><span class="type">GtkStockItem</span></a> *item</code></em>);</pre>
 <div class="warning"><p><code class="literal">gtk_stock_lookup</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
 <p>Fills <em class="parameter"><code>item</code></em>
  with the registered values for <em class="parameter"><code>stock_id</code></em>
-, returning <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>
+, returning <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>
 if <em class="parameter"><code>stock_id</code></em>
  was known.</p>
 <div class="refsect3">
-<a name="id-1.3.23.33.7.7.6"></a><h4>Parameters</h4>
+<a name="id-1.3.24.34.7.7.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -734,8 +733,8 @@ if <em class="parameter"><code>stock_id</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.23.33.7.7.7"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>item</code></em>
+<a name="id-1.3.24.34.7.7.7"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>item</code></em>
 was initialized</p>
 <p></p>
 </div>
@@ -744,16 +743,16 @@ was initialized</p>
 <div class="refsect2">
 <a name="gtk-stock-set-translate-func"></a><h3>gtk_stock_set_translate_func ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_stock_set_translate_func (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *domain</code></em>,
+gtk_stock_set_translate_func (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *domain</code></em>,
                               <em class="parameter"><code><a class="link" href="GtkActionGroup.html#GtkTranslateFunc" title="GtkTranslateFunc ()"><span class="type">GtkTranslateFunc</span></a> func</code></em>,
-                              <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
-                              <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
+                              <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
+                              <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
 <div class="warning"><p><code class="literal">gtk_stock_set_translate_func</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
 <p>Sets a function to be used for translating the <em class="parameter"><code>label</code></em>
  of 
 a stock item.</p>
 <p>If no function is registered for a translation domain,
-<a href="http://library.gnome.org/devel/glib/unstable/glib-I18N.html#g-dgettext"><code class="function">g_dgettext()</code></a> is used.</p>
+<a href="https://developer.gnome.org/glib/unstable/glib-I18N.html#g-dgettext"><code class="function">g_dgettext()</code></a> is used.</p>
 <p>The function is used for all stock items whose
 <em class="parameter"><code>translation_domain</code></em>
  matches <em class="parameter"><code>domain</code></em>
@@ -786,22 +785,22 @@ when dealing with message contexts:</p>
 18
 19</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="usertype">GtkStockItem</span><span class="normal"> items</span><span class="symbol">[]</span><span class="normal"> </span><span class="symbol">=</span><span class="normal"> </span><span class="cbracket">{</span><span class="normal"> </span>
-<span class="normal"> </span><span class="cbracket">{</span><span class="normal"> MY_ITEM1</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-I18N.html#NC-:CAPS">NC_</a></span><span class="symbol">(</span><span class="string">"odd items"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"Item 1"</span><span class="symbol">),</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"odd-item-domain"</span><span class="normal"> </span><span class="cbracket">}</span><span class="symbol">,</span>
-<span class="normal"> </span><span class="cbracket">{</span><span class="normal"> MY_ITEM2</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-I18N.html#NC-:CAPS">NC_</a></span><span class="symbol">(</span><span class="string">"even items"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"Item 2"</span><span class="symbol">),</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"even-item-domain"</span><span class="normal"> </span><span class="cbracket">}</span><span class="symbol">,</span>
+<span class="normal"> </span><span class="cbracket">{</span><span class="normal"> MY_ITEM1</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-I18N.html#NC-:CAPS">NC_</a></span><span class="symbol">(</span><span class="string">"odd items"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"Item 1"</span><span class="symbol">),</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"odd-item-domain"</span><span class="normal"> </span><span class="cbracket">}</span><span class="symbol">,</span>
+<span class="normal"> </span><span class="cbracket">{</span><span class="normal"> MY_ITEM2</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-I18N.html#NC-:CAPS">NC_</a></span><span class="symbol">(</span><span class="string">"even items"</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"Item 2"</span><span class="symbol">),</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"even-item-domain"</span><span class="normal"> </span><span class="cbracket">}</span><span class="symbol">,</span>
 <span class="cbracket">}</span><span class="symbol">;</span>
 
-<span class="normal"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar">gchar</a> </span><span class="symbol">*</span>
+<span class="normal"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar">gchar</a> </span><span class="symbol">*</span>
 <span class="function">my_translate_func</span><span class="normal"> </span><span class="symbol">(</span><span class="keyword">const</span><span class="normal"> </span><span class="usertype">gchar</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">msgid</span><span class="symbol">,</span>
 <span class="normal">                   </span><span class="usertype">gpointer</span><span class="normal">     data</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="usertype">gchar</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">msgctxt </span><span class="symbol">=</span><span class="normal"> data</span><span class="symbol">;</span>
 
-<span class="normal">  </span><span class="keyword">return</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar">gchar</a></span><span class="symbol">*)</span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-I18N.html#g-dpgettext2">g_dpgettext2</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">GETTEXT_PACKAGE</span><span class="symbol">,</span><span class="normal"> msgctxt</span><span class="symbol">,</span><span class="normal"> msgid</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="keyword">return</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar">gchar</a></span><span class="symbol">*)</span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-I18N.html#g-dpgettext2">g_dpgettext2</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">GETTEXT_PACKAGE</span><span class="symbol">,</span><span class="normal"> msgctxt</span><span class="symbol">,</span><span class="normal"> msgid</span><span class="symbol">);</span>
 <span class="cbracket">}</span>
 
-<span class="comment">/* ... */</span>
+<span class="symbol">...</span>
 
-<span class="function"><a href="gtk3-Stock-Items.html#gtk-stock-add">gtk_stock_add</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">items</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#G-N-ELEMENTS:CAPS">G_N_ELEMENTS</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">items</span><span class="symbol">));</span>
+<span class="function"><a href="gtk3-Stock-Items.html#gtk-stock-add">gtk_stock_add</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">items</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#G-N-ELEMENTS:CAPS">G_N_ELEMENTS</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">items</span><span class="symbol">));</span>
 <span class="function"><a href="gtk3-Stock-Items.html#gtk-stock-set-translate-func">gtk_stock_set_translate_func</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"odd-item-domain"</span><span class="symbol">,</span><span class="normal"> my_translate_func</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"odd items"</span><span class="symbol">);</span><span class="normal"> </span>
 <span class="function"><a href="gtk3-Stock-Items.html#gtk-stock-set-translate-func">gtk_stock_set_translate_func</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"even-item-domain"</span><span class="symbol">,</span><span class="normal"> my_translate_func</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"even items"</span><span class="symbol">);</span></pre></td>
       </tr>
@@ -811,7 +810,7 @@ when dealing with message contexts:</p>
 
 <p></p>
 <div class="refsect3">
-<a name="id-1.3.23.33.7.8.11"></a><h4>Parameters</h4>
+<a name="id-1.3.24.34.7.8.11"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -838,7 +837,7 @@ shall be used</p></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>notify</p></td>
-<td class="parameter_description"><p>a <a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> that is called when <em class="parameter"><code>data</code></em>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> that is called when <em class="parameter"><code>data</code></em>
 is
 no longer needed</p></td>
 <td class="parameter_annotations"> </td>
@@ -857,8 +856,9 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_ABOUT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "help-about" or the label "_About".</p>
 </div>
-<p>The "About" item.</p>
-<img src="help-about.png"><p class="since">Since 2.6</p>
+<p>The “About” item.
+<span class="inlinemediaobject"><img src="help-about.png"></span></p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -869,8 +869,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_ADD</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "list-add" or the label "_Add".</p>
 </div>
-<p>The "Add" item.</p>
-<img src="list-add.png">
+<p>The “Add” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -881,8 +880,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_APPLY</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Do not use an icon. Use label "_Apply".</p>
 </div>
-<p>The "Apply" item.</p>
-<img src="gtk-apply.png">
+<p>The “Apply” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -893,8 +891,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_BOLD</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "format-text-bold".</p>
 </div>
-<p>The "Bold" item.</p>
-<img src="format-text-bold.png">
+<p>The “Bold” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -905,8 +902,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_CANCEL</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Do not use an icon. Use label "_Cancel".</p>
 </div>
-<p>The "Cancel" item.</p>
-<img src="gtk-cancel.png">
+<p>The “Cancel” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -917,8 +913,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_CAPS_LOCK_WARNING</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "dialog-warning-symbolic".</p>
 </div>
-<p>The "Caps Lock Warning" icon.</p>
-<img src="gtk-caps-lock-warning.png"><p class="since">Since 2.16</p>
+<p>The “Caps Lock Warning” icon.</p>
+<p class="since">Since 2.16</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -929,8 +925,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_CDROM</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "media-optical".</p>
 </div>
-<p>The "CD-Rom" item.</p>
-<img src="media-optical.png">
+<p>The “CD-Rom” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -941,8 +936,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_CLEAR</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "edit-clear".</p>
 </div>
-<p>The "Clear" item.</p>
-<img src="edit-clear.png">
+<p>The “Clear” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -953,8 +947,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_CLOSE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "window-close" or the label "_Close".</p>
 </div>
-<p>The "Close" item.</p>
-<img src="window-close.png">
+<p>The “Close” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -962,8 +955,8 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_COLOR_PICKER     ((GtkStock)"gtk-color-picker")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_COLOR_PICKER</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Color Picker" item.</p>
-<img src="gtk-color-picker.png"><p class="since">Since 2.2</p>
+<p>The “Color Picker” item and icon.</p>
+<p class="since">Since 2.2</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -971,8 +964,7 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_CONVERT          ((GtkStock)"gtk-convert")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_CONVERT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Convert" item.</p>
-<img src="gtk-convert.png">
+<p>The “Convert” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -980,8 +972,8 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_CONNECT          ((GtkStock)"gtk-connect")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_CONNECT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Connect" icon.</p>
-<img src="gtk-connect.png"><p class="since">Since 2.6</p>
+<p>The “Connect” icon.</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -992,8 +984,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_COPY</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Do not use an icon. Use label "_Copy".</p>
 </div>
-<p>The "Copy" item.</p>
-<img src="edit-copy.png">
+<p>The “Copy” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1004,8 +995,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_CUT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Do not use an icon. Use label "Cu_t".</p>
 </div>
-<p>The "Cut" item.</p>
-<img src="edit-cut.png">
+<p>The “Cut” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1016,8 +1006,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_DELETE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Do not use an icon. Use label "_Delete".</p>
 </div>
-<p>The "Delete" item.</p>
-<img src="edit-delete.png">
+<p>The “Delete” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1028,8 +1017,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_DIALOG_AUTHENTICATION</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "dialog-password".</p>
 </div>
-<p>The "Authentication" item.</p>
-<img src="dialog-password.png"><p class="since">Since 2.4</p>
+<p>The “Authentication” item and icon.</p>
+<p class="since">Since 2.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1040,8 +1029,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_DIALOG_ERROR</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "dialog-error".</p>
 </div>
-<p>The "Error" item.</p>
-<img src="dialog-error.png">
+<p>The “Error” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1052,8 +1040,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_DIALOG_INFO</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "dialog-information".</p>
 </div>
-<p>The "Information" item.</p>
-<img src="dialog-information.png">
+<p>The “Information” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1064,8 +1051,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_DIALOG_QUESTION</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "dialog-question".</p>
 </div>
-<p>The "Question" item.</p>
-<img src="dialog-question.png">
+<p>The “Question” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1076,8 +1062,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_DIALOG_WARNING</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "dialog-warning".</p>
 </div>
-<p>The "Warning" item.</p>
-<img src="dialog-warning.png">
+<p>The “Warning” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1088,8 +1073,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_DIRECTORY</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "folder".</p>
 </div>
-<p>The "Directory" icon.</p>
-<img src="folder.png"><p class="since">Since 2.6</p>
+<p>The “Directory” icon.</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1097,7 +1082,7 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_DISCARD          ((GtkStock)"gtk-discard")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_DISCARD</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Discard" item.</p>
+<p>The “Discard” item.</p>
 <p class="since">Since 2.12</p>
 </div>
 <hr>
@@ -1106,8 +1091,8 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_DISCONNECT       ((GtkStock)"gtk-disconnect")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_DISCONNECT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Disconnect" icon.</p>
-<img src="gtk-disconnect.png"><p class="since">Since 2.6</p>
+<p>The “Disconnect” icon.</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1115,8 +1100,7 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_DND              ((GtkStock)"gtk-dnd")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_DND</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Drag-And-Drop" icon.</p>
-<img src="gtk-dnd.png">
+<p>The “Drag-And-Drop” icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1124,8 +1108,7 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_DND_MULTIPLE     ((GtkStock)"gtk-dnd-multiple")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_DND_MULTIPLE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Drag-And-Drop multiple" icon.</p>
-<img src="gtk-dnd-multiple.png">
+<p>The “Drag-And-Drop multiple” icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1133,8 +1116,8 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_EDIT             ((GtkStock)"gtk-edit")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_EDIT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Edit" item.</p>
-<img src="gtk-edit.png"><p class="since">Since 2.6</p>
+<p>The “Edit” item and icon.</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1145,8 +1128,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_EXECUTE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "system-run".</p>
 </div>
-<p>The "Execute" item.</p>
-<img src="system-run.png">
+<p>The “Execute” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1157,8 +1139,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_FILE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "text-x-generic".</p>
 </div>
-<p>The "File" item.</p>
-<img src="text-x-generic.png"><p>Since 3.0, this item has a label, before it only had an icon.</p>
+<p>The “File” item and icon.</p>
+<p>Since 3.0, this item has a label, before it only had an icon.</p>
 <p class="since">Since 2.6</p>
 </div>
 <hr>
@@ -1170,8 +1152,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_FIND</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "edit-find".</p>
 </div>
-<p>The "Find" item.</p>
-<img src="edit-find.png">
+<p>The “Find” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1182,8 +1163,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_FIND_AND_REPLACE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "edit-find-replace".</p>
 </div>
-<p>The "Find and Replace" item.</p>
-<img src="edit-find-replace.png">
+<p>The “Find and Replace” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1191,8 +1171,7 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_FLOPPY           ((GtkStock)"gtk-floppy")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_FLOPPY</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Floppy" item.</p>
-<img src="media-floppy.png">
+<p>The “Floppy” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1203,8 +1182,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_FULLSCREEN</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "view-fullscreen".</p>
 </div>
-<p>The "Fullscreen" item.</p>
-<img src="view-fullscreen.png"><p class="since">Since 2.8</p>
+<p>The “Fullscreen” item and icon.</p>
+<p class="since">Since 2.8</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1215,8 +1194,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_GOTO_BOTTOM</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "go-bottom".</p>
 </div>
-<p>The "Bottom" item.</p>
-<img src="go-bottom.png">
+<p>The “Bottom” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1227,9 +1205,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_GOTO_FIRST</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "go-first".</p>
 </div>
-<p>The "First" item.</p>
-<img src="go-first-ltr.png"><p>RTL variant</p>
-<img src="go-first-rtl.png">
+<p>The “First” item and icon. The icon has an RTL variant.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1240,9 +1216,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_GOTO_LAST</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "go-last".</p>
 </div>
-<p>The "Last" item.</p>
-<img src="go-last-ltr.png"><p>RTL variant</p>
-<img src="go-last-rtl.png">
+<p>The “Last” item and icon. The icon has an RTL variant.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1253,8 +1227,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_GOTO_TOP</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "go-top".</p>
 </div>
-<p>The "Top" item.</p>
-<img src="go-top.png">
+<p>The “Top” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1265,9 +1238,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_GO_BACK</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "go-previous".</p>
 </div>
-<p>The "Back" item.</p>
-<img src="go-previous-ltr.png"><p>RTL variant</p>
-<img src="go-previous-rtl.png">
+<p>The “Back” item and icon. The icon has an RTL variant.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1278,8 +1249,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_GO_DOWN</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "go-down".</p>
 </div>
-<p>The "Down" item.</p>
-<img src="go-down.png">
+<p>The “Down” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1290,9 +1260,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_GO_FORWARD</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "go-next".</p>
 </div>
-<p>The "Forward" item.</p>
-<img src="go-next-ltr.png"><p>RTL variant</p>
-<img src="go-next-rtl.png">
+<p>The “Forward” item and icon. The icon has an RTL variant.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1303,8 +1271,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_GO_UP</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "go-up".</p>
 </div>
-<p>The "Up" item.</p>
-<img src="go-up.png">
+<p>The “Up” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1315,8 +1282,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_HARDDISK</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "drive-harddisk".</p>
 </div>
-<p>The "Harddisk" item.</p>
-<img src="drive-harddisk.png"><p class="since">Since 2.4</p>
+<p>The “Harddisk” item and icon.</p>
+<p class="since">Since 2.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1327,8 +1294,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_HELP</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "help-browser".</p>
 </div>
-<p>The "Help" item.</p>
-<img src="help-contents.png">
+<p>The “Help” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1339,8 +1305,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_HOME</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "go-home".</p>
 </div>
-<p>The "Home" item.</p>
-<img src="go-home.png">
+<p>The “Home” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1351,9 +1316,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_INDENT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "format-indent-more".</p>
 </div>
-<p>The "Indent" item.</p>
-<img src="format-indent-more-ltr.png"><p>RTL variant</p>
-<img src="format-indent-more-rtl.png"><p class="since">Since 2.4</p>
+<p>The “Indent” item and icon. The icon has an RTL variant.</p>
+<p class="since">Since 2.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1361,8 +1325,7 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_INDEX            ((GtkStock)"gtk-index")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_INDEX</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Index" item.</p>
-<img src="gtk-index.png">
+<p>The “Index” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1373,8 +1336,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_INFO</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "dialog-information".</p>
 </div>
-<p>The "Info" item.</p>
-<img src="dialog-information.png"><p class="since">Since 2.8</p>
+<p>The “Info” item and icon.</p>
+<p class="since">Since 2.8</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1385,8 +1348,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_ITALIC</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "format-text-italic".</p>
 </div>
-<p>The "Italic" item.</p>
-<img src="format-text-italic.png">
+<p>The “Italic” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1397,9 +1359,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_JUMP_TO</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "go-jump".</p>
 </div>
-<p>The "Jump to" item.</p>
-<img src="go-jump-ltr.png"><p>RTL-variant</p>
-<img src="go-jump-rtl.png">
+<p>The “Jump to” item and icon. The icon has an RTL variant.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1410,8 +1370,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_JUSTIFY_CENTER</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "format-justify-center".</p>
 </div>
-<p>The "Center" item.</p>
-<img src="format-justify-center.png">
+<p>The “Center” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1422,8 +1381,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_JUSTIFY_FILL</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "format-justify-fill".</p>
 </div>
-<p>The "Fill" item.</p>
-<img src="format-justify-fill.png">
+<p>The “Fill” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1434,8 +1392,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_JUSTIFY_LEFT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "format-justify-left".</p>
 </div>
-<p>The "Left" item.</p>
-<img src="format-justify-left.png">
+<p>The “Left” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1446,8 +1403,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_JUSTIFY_RIGHT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "format-justify-right".</p>
 </div>
-<p>The "Right" item.</p>
-<img src="format-justify-right.png">
+<p>The “Right” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1458,8 +1414,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_LEAVE_FULLSCREEN</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "view-restore".</p>
 </div>
-<p>The "Leave Fullscreen" item.</p>
-<img src="view-restore.png"><p class="since">Since 2.8</p>
+<p>The “Leave Fullscreen” item and icon.</p>
+<p class="since">Since 2.8</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1470,9 +1426,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_MEDIA_FORWARD</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "media-seek-forward" or the label "_Forward".</p>
 </div>
-<p>The "Media Forward" item.</p>
-<img src="media-seek-forward-ltr.png"><p>RTL variant</p>
-<img src="media-seek-forward-rtl.png"><p class="since">Since 2.6</p>
+<p>The “Media Forward” item and icon. The icon has an RTL variant.</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1483,9 +1438,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_MEDIA_NEXT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "media-skip-forward" or the label "_Next".</p>
 </div>
-<p>The "Media Next" item.</p>
-<img src="media-skip-forward-ltr.png"><p>RTL variant</p>
-<img src="media-skip-forward-rtl.png"><p class="since">Since 2.6</p>
+<p>The “Media Next” item and icon. The icon has an RTL variant.</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1496,8 +1450,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_MEDIA_PAUSE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "media-playback-pause" or the label "P_ause".</p>
 </div>
-<p>The "Media Pause" item.</p>
-<img src="media-playback-pause.png"><p class="since">Since 2.6</p>
+<p>The “Media Pause” item and icon.</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1508,9 +1462,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_MEDIA_PLAY</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "media-playback-start" or the label "_Play".</p>
 </div>
-<p>The "Media Play" item.</p>
-<img src="media-playback-start-ltr.png"><p>RTL variant</p>
-<img src="media-playback-start-rtl.png"><p class="since">Since 2.6</p>
+<p>The “Media Play” item and icon. The icon has an RTL variant.</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1521,9 +1474,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_MEDIA_PREVIOUS</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "media-skip-backward" or the label "Pre_vious".</p>
 </div>
-<p>The "Media Previous" item.</p>
-<img src="media-skip-backward-ltr.png"><p>RTL variant</p>
-<img src="media-skip-backward-rtl.png"><p class="since">Since 2.6</p>
+<p>The “Media Previous” item and icon. The icon has an RTL variant.</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1534,8 +1486,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_MEDIA_RECORD</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "media-record" or the label "_Record".</p>
 </div>
-<p>The "Media Record" item.</p>
-<img src="media-record.png"><p class="since">Since 2.6</p>
+<p>The “Media Record” item and icon.</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1546,9 +1498,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_MEDIA_REWIND</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "media-seek-backward" or the label "R_ewind".</p>
 </div>
-<p>The "Media Rewind" item.</p>
-<img src="media-seek-backward-ltr.png"><p>RTL variant</p>
-<img src="media-seek-backward-rtl.png"><p class="since">Since 2.6</p>
+<p>The “Media Rewind” item and icon. The icon has an RTL variant.</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1559,8 +1510,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_MEDIA_STOP</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "media-playback-stop" or the label "_Stop".</p>
 </div>
-<p>The "Media Stop" item.</p>
-<img src="media-playback-stop.png"><p class="since">Since 2.6</p>
+<p>The “Media Stop” item and icon.</p>
+<p class="since">Since 2.6</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1571,8 +1522,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_MISSING_IMAGE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "image-missing".</p>
 </div>
-<p>The "Missing image" icon.</p>
-<img src="image-missing.png">
+<p>The “Missing image” icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1583,8 +1533,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_NETWORK</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "network-workgroup".</p>
 </div>
-<p>The "Network" item.</p>
-<img src="network-idle.png"><p class="since">Since 2.4</p>
+<p>The “Network” item and icon.</p>
+<p class="since">Since 2.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1595,8 +1545,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_NEW</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "document-new" or the label "_New".</p>
 </div>
-<p>The "New" item.</p>
-<img src="document-new.png">
+<p>The “New” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1604,8 +1553,7 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_NO               ((GtkStock)"gtk-no")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_NO</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "No" item.</p>
-<img src="gtk-no.png">
+<p>The “No” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1616,8 +1564,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_OK</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Do not use an icon. Use label "_OK".</p>
 </div>
-<p>The "OK" item.</p>
-<img src="gtk-ok.png">
+<p>The “OK” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1628,8 +1575,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_OPEN</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "document-open" or the label "_Open".</p>
 </div>
-<p>The "Open" item.</p>
-<img src="document-open.png">
+<p>The “Open” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1637,8 +1583,8 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_ORIENTATION_LANDSCAPE ((GtkStock)"gtk-orientation-landscape")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_ORIENTATION_LANDSCAPE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Landscape Orientation" item.</p>
-<img src="gtk-orientation-landscape.png"><p class="since">Since 2.10</p>
+<p>The “Landscape Orientation” item and icon.</p>
+<p class="since">Since 2.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1646,8 +1592,8 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_ORIENTATION_PORTRAIT ((GtkStock)"gtk-orientation-portrait")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_ORIENTATION_PORTRAIT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Portrait Orientation" item.</p>
-<img src="gtk-orientation-portrait.png"><p class="since">Since 2.10</p>
+<p>The “Portrait Orientation” item and icon.</p>
+<p class="since">Since 2.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1655,8 +1601,8 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_ORIENTATION_REVERSE_LANDSCAPE ((GtkStock)"gtk-orientation-reverse-landscape")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_ORIENTATION_REVERSE_LANDSCAPE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Reverse Landscape Orientation" item.</p>
-<img src="gtk-orientation-reverse-landscape.png"><p class="since">Since 2.10</p>
+<p>The “Reverse Landscape Orientation” item and icon.</p>
+<p class="since">Since 2.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1664,8 +1610,8 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_ORIENTATION_REVERSE_PORTRAIT ((GtkStock)"gtk-orientation-reverse-portrait")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_ORIENTATION_REVERSE_PORTRAIT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Reverse Portrait Orientation" item.</p>
-<img src="gtk-orientation-reverse-portrait.png"><p class="since">Since 2.10</p>
+<p>The “Reverse Portrait Orientation” item and icon.</p>
+<p class="since">Since 2.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1676,8 +1622,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_PAGE_SETUP</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "document-page-setup" or the label "Page Set_up".</p>
 </div>
-<p>The "Page Setup" item.</p>
-<img src="gtk-page-setup.png"><p class="since">Since 2.14</p>
+<p>The “Page Setup” item and icon.</p>
+<p class="since">Since 2.14</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1688,8 +1634,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_PASTE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Do not use an icon. Use label "_Paste".</p>
 </div>
-<p>The "Paste" item.</p>
-<img src="edit-paste.png">
+<p>The “Paste” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1700,8 +1645,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_PREFERENCES</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "preferences-system" or the label "_Preferences".</p>
 </div>
-<p>The "Preferences" item.</p>
-<img src="gtk-preferences.png">
+<p>The “Preferences” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1712,8 +1656,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_PRINT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "document-print" or the label "_Print".</p>
 </div>
-<p>The "Print" item.</p>
-<img src="document-print.png">
+<p>The “Print” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1724,8 +1667,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_PRINT_ERROR</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "printer-error".</p>
 </div>
-<p>The "Print Error" icon.</p>
-<img src="printer-error.png"><p class="since">Since 2.14</p>
+<p>The “Print Error” icon.</p>
+<p class="since">Since 2.14</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1733,8 +1676,8 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_PRINT_PAUSED     ((GtkStock)"gtk-print-paused")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_PRINT_PAUSED</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Print Paused" icon.</p>
-<img src="printer-paused.png"><p class="since">Since 2.14</p>
+<p>The “Print Paused” icon.</p>
+<p class="since">Since 2.14</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1745,8 +1688,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_PRINT_PREVIEW</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use label "Pre_view".</p>
 </div>
-<p>The "Print Preview" item.</p>
-<img src="document-print-preview.png">
+<p>The “Print Preview” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1754,8 +1696,8 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_PRINT_REPORT     ((GtkStock)"gtk-print-report")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_PRINT_REPORT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Print Report" icon.</p>
-<img src="printer-info.png"><p class="since">Since 2.14</p>
+<p>The “Print Report” icon.</p>
+<p class="since">Since 2.14</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1763,8 +1705,8 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_PRINT_WARNING    ((GtkStock)"gtk-print-warning")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_PRINT_WARNING</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Print Warning" icon.</p>
-<img src="printer-warning.png"><p class="since">Since 2.14</p>
+<p>The “Print Warning” icon.</p>
+<p class="since">Since 2.14</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1775,8 +1717,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_PROPERTIES</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "document-properties" or the label "_Properties".</p>
 </div>
-<p>The "Properties" item.</p>
-<img src="document-properties.png">
+<p>The “Properties” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1787,8 +1728,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_QUIT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "application-exit" or the label "_Quit".</p>
 </div>
-<p>The "Quit" item.</p>
-<img src="application-exit.png">
+<p>The “Quit” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1799,9 +1739,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_REDO</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "edit-redo" or the label "_Redo".</p>
 </div>
-<p>The "Redo" item.</p>
-<img src="edit-redo-ltr.png"><p>RTL variant</p>
-<img src="edit-redo-rtl.png">
+<p>The “Redo” item and icon. The icon has an RTL variant.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1812,8 +1750,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_REFRESH</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "view-refresh" or the label "_Refresh".</p>
 </div>
-<p>The "Refresh" item.</p>
-<img src="view-refresh.png">
+<p>The “Refresh” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1824,8 +1761,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_REMOVE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "list-remove" or the label "_Remove".</p>
 </div>
-<p>The "Remove" item.</p>
-<img src="list-remove.png">
+<p>The “Remove” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1836,9 +1772,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_REVERT_TO_SAVED</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "document-revert" or the label "_Revert".</p>
 </div>
-<p>The "Revert" item.</p>
-<img src="document-revert-ltr.png"><p>RTL variant</p>
-<img src="document-revert-rtl.png">
+<p>The “Revert” item and icon. The icon has an RTL variant.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1849,8 +1783,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_SAVE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "document-save" or the label "_Save".</p>
 </div>
-<p>The "Save" item.</p>
-<img src="document-save.png">
+<p>The “Save” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1861,8 +1794,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_SAVE_AS</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "document-save-as" or the label "Save _As".</p>
 </div>
-<p>The "Save As" item.</p>
-<img src="document-save-as.png">
+<p>The “Save As” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1873,8 +1805,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_SELECT_ALL</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "edit-select-all" or the label "Select _All".</p>
 </div>
-<p>The "Select All" item.</p>
-<img src="edit-select-all.png"><p class="since">Since 2.10</p>
+<p>The “Select All” item and icon.</p>
+<p class="since">Since 2.10</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1882,8 +1814,7 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_SELECT_COLOR     ((GtkStock)"gtk-select-color")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_SELECT_COLOR</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Color" item.</p>
-<img src="gtk-select-color.png">
+<p>The “Color” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1891,8 +1822,7 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_SELECT_FONT      ((GtkStock)"gtk-select-font")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_SELECT_FONT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Font" item.</p>
-<img src="gtk-font.png">
+<p>The “Font” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1903,8 +1833,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_SORT_ASCENDING</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "view-sort-ascending".</p>
 </div>
-<p>The "Ascending" item.</p>
-<img src="view-sort-ascending.png">
+<p>The “Ascending” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1915,8 +1844,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_SORT_DESCENDING</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "view-sort-descending".</p>
 </div>
-<p>The "Descending" item.</p>
-<img src="view-sort-descending.png">
+<p>The “Descending” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1927,8 +1855,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_SPELL_CHECK</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "tools-check-spelling".</p>
 </div>
-<p>The "Spell Check" item.</p>
-<img src="tools-check-spelling.png">
+<p>The “Spell Check” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1939,8 +1866,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_STOP</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "process-stop" or the label "_Stop".</p>
 </div>
-<p>The "Stop" item.</p>
-<img src="process-stop.png">
+<p>The “Stop” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1951,8 +1877,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_STRIKETHROUGH</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "format-text-strikethrough" or the label "_Strikethrough".</p>
 </div>
-<p>The "Strikethrough" item.</p>
-<img src="format-text-strikethrough.png">
+<p>The “Strikethrough” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1960,9 +1885,7 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_UNDELETE         ((GtkStock)"gtk-undelete")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_UNDELETE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Undelete" item.</p>
-<img src="gtk-undelete-ltr.png"><p>RTL variant</p>
-<img src="gtk-undelete-rtl.png">
+<p>The “Undelete” item and icon. The icon has an RTL variant.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1973,8 +1896,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_UNDERLINE</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "format-text-underline" or the label "_Underline".</p>
 </div>
-<p>The "Underline" item.</p>
-<img src="format-text-underline.png">
+<p>The “Underline” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1985,9 +1907,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_UNDO</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "edit-undo" or the label "_Undo".</p>
 </div>
-<p>The "Undo" item.</p>
-<img src="edit-undo-ltr.png"><p>RTL variant</p>
-<img src="edit-undo-rtl.png">
+<p>The “Undo” item and icon. The icon has an RTL variant.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1998,9 +1918,8 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_UNINDENT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "format-indent-less".</p>
 </div>
-<p>The "Unindent" item.</p>
-<img src="format-indent-less-ltr.png"><p>RTL variant</p>
-<img src="format-indent-less-rtl.png"><p class="since">Since 2.4</p>
+<p>The “Unindent” item and icon. The icon has an RTL variant.</p>
+<p class="since">Since 2.4</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2008,8 +1927,7 @@ no longer needed</p></td>
 <pre class="programlisting">#define GTK_STOCK_YES              ((GtkStock)"gtk-yes")
 </pre>
 <div class="warning"><p><code class="literal">GTK_STOCK_YES</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
-<p>The "Yes" item.</p>
-<img src="gtk-yes.png">
+<p>The “Yes” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2020,8 +1938,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_ZOOM_100</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "zoom-original" or the label "_Normal Size".</p>
 </div>
-<p>The "Zoom 100%" item.</p>
-<img src="zoom-original.png">
+<p>The “Zoom 100%” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2032,8 +1949,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_ZOOM_FIT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "zoom-fit-best" or the label "Best _Fit".</p>
 </div>
-<p>The "Zoom to Fit" item.</p>
-<img src="zoom-fit-best.png">
+<p>The “Zoom to Fit” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2044,8 +1960,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_ZOOM_IN</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "zoom-in" or the label "Zoom _In".</p>
 </div>
-<p>The "Zoom In" item.</p>
-<img src="zoom-in.png">
+<p>The “Zoom In” item and icon.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -2056,8 +1971,7 @@ no longer needed</p></td>
 <p><code class="literal">GTK_STOCK_ZOOM_OUT</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use named icon "zoom-out" or the label "Zoom _Out".</p>
 </div>
-<p>The "Zoom Out" item.</p>
-<img src="zoom-out.png">
+<p>The “Zoom Out” item and icon.</p>
 </div>
 </div>
 <div class="refsect1">
@@ -2072,11 +1986,49 @@ no longer needed</p></td>
   gchar *translation_domain;
 };
 </pre>
+<div class="warning"><p><code class="literal">GtkStockItem</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
+<div class="refsect3">
+<a name="id-1.3.24.34.8.2.5"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkStockItem.stock-id"></a>stock_id</code></em>;</p></td>
+<td class="struct_member_description"><p>Identifier.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkStockItem.label"></a>label</code></em>;</p></td>
+<td class="struct_member_description"><p>User visible label.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="http://developer.gnome.org/gdk2/gdk3-Windows.html#GdkModifierType"><span class="type">GdkModifierType</span></a> <em class="structfield"><code><a name="GtkStockItem.modifier"></a>modifier</code></em>;</p></td>
+<td class="struct_member_description"><p>Modifier type for keyboard accelerator</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="GtkStockItem.keyval"></a>keyval</code></em>;</p></td>
+<td class="struct_member_description"><p>Keyboard accelerator</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkStockItem.translation-domain"></a>translation_domain</code></em>;</p></td>
+<td class="struct_member_description"><p>Translation domain of the menu or toolbar item</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

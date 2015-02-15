@@ -8,7 +8,7 @@
 <link rel="up" href="MiscObjects.html" title="Miscellaneous">
 <link rel="prev" href="GtkCalendar.html" title="GtkCalendar">
 <link rel="next" href="GtkEventBox.html" title="GtkEventBox">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -65,8 +65,8 @@
 </div>
 <div class="refsect1">
 <a name="GtkDrawingArea.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> GtkDrawingArea
 </pre>
@@ -85,27 +85,19 @@ GtkDrawingArea implements
 <div class="refsect1">
 <a name="GtkDrawingArea.description"></a><h2>Description</h2>
 <p>The <a class="link" href="GtkDrawingArea.html" title="GtkDrawingArea"><span class="type">GtkDrawingArea</span></a> widget is used for creating custom user interface
-elements. It's essentially a blank widget; you can draw on it. After
+elements. It’s essentially a blank widget; you can draw on it. After
 creating a drawing area, the application may want to connect to:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
-    Mouse and button press signals to respond to input from
-    the user. (Use <a class="link" href="GtkWidget.html#gtk-widget-add-events" title="gtk_widget_add_events ()"><code class="function">gtk_widget_add_events()</code></a> to enable events
-    you wish to receive.)
-    </p></li>
-<li class="listitem"><p>
-    The <a class="link" href="GtkWidget.html#GtkWidget-realize" title="The “realize” signal"><span class="type">“realize”</span></a> signal to take any necessary actions
-    when the widget is instantiated on a particular display.
-    (Create GDK resources in response to this signal.)
-    </p></li>
-<li class="listitem"><p>
-    The <a class="link" href="GtkWidget.html#GtkWidget-configure-event" title="The “configure-event” signal"><span class="type">“configure-event”</span></a> signal to take any necessary
-    actions when the widget changes size.
-    </p></li>
-<li class="listitem"><p>
-    The <a class="link" href="GtkWidget.html#GtkWidget-draw" title="The “draw” signal"><span class="type">“draw”</span></a> signal to handle redrawing the
-    contents of the widget.
-    </p></li>
+<li class="listitem"><p>Mouse and button press signals to respond to input from
+the user. (Use <a class="link" href="GtkWidget.html#gtk-widget-add-events" title="gtk_widget_add_events ()"><code class="function">gtk_widget_add_events()</code></a> to enable events
+you wish to receive.)</p></li>
+<li class="listitem"><p>The <a class="link" href="GtkWidget.html#GtkWidget-realize" title="The “realize” signal"><span class="type">“realize”</span></a> signal to take any necessary actions
+when the widget is instantiated on a particular display.
+(Create GDK resources in response to this signal.)</p></li>
+<li class="listitem"><p>The <a class="link" href="GtkWidget.html#GtkWidget-size-allocate" title="The “size-allocate” signal"><span class="type">“size-allocate”</span></a> signal to take any necessary
+actions when the widget changes size.</p></li>
+<li class="listitem"><p>The <a class="link" href="GtkWidget.html#GtkWidget-draw" title="The “draw” signal"><span class="type">“draw”</span></a> signal to handle redrawing the
+contents of the widget.</p></li>
 </ul></div>
 <p>The following code portion demonstrates using a drawing
 area to display a circle in the normal widget foreground
@@ -113,9 +105,9 @@ color.</p>
 <p>Note that GDK automatically clears the exposed area to the
 background color before sending the expose event, and that
 drawing is implicitly clipped to the exposed area.</p>
-<div class="example">
-<a name="id-1.3.18.5.8.6"></a><p class="title"><b>Example 65. Simple GtkDrawingArea usage</b></p>
-<div class="example-contents">
+<div class="refsect3">
+<a name="id-1.3.18.4.8.6"></a><h4>Simple GtkDrawingArea usage</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -146,7 +138,7 @@ drawing is implicitly clipped to the exposed area.</p>
 25
 26
 27</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="normal"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean">gboolean</a></span>
+        <td class="listing_code"><pre class="programlisting"><span class="normal"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean">gboolean</a></span>
 <span class="function">draw_callback</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GtkWidget</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">widget</span><span class="symbol">,</span><span class="normal"> </span><span class="usertype">cairo_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> </span><span class="usertype">gpointer</span><span class="normal"> data</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="usertype">guint</span><span class="normal"> width</span><span class="symbol">,</span><span class="normal"> height</span><span class="symbol">;</span>
@@ -156,8 +148,8 @@ drawing is implicitly clipped to the exposed area.</p>
 <span class="normal">  height </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkWidget.html#gtk-widget-get-allocated-height">gtk_widget_get_allocated_height</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">widget</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="function">cairo_arc</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span>
 <span class="normal">             width </span><span class="symbol">/</span><span class="normal"> </span><span class="number">2.0</span><span class="symbol">,</span><span class="normal"> height </span><span class="symbol">/</span><span class="normal"> </span><span class="number">2.0</span><span class="symbol">,</span>
-<span class="normal">             </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#MIN:CAPS">MIN</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">width</span><span class="symbol">,</span><span class="normal"> height</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">/</span><span class="normal"> </span><span class="number">2.0</span><span class="symbol">,</span>
-<span class="normal">             </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">2</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Numerical-Definitions.html#G-PI:CAPS">G_PI</a></span><span class="symbol">);</span>
+<span class="normal">             </span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#MIN:CAPS">MIN</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">width</span><span class="symbol">,</span><span class="normal"> height</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">/</span><span class="normal"> </span><span class="number">2.0</span><span class="symbol">,</span>
+<span class="normal">             </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">2</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Numerical-Definitions.html#G-PI:CAPS">G_PI</a></span><span class="symbol">);</span>
 
 <span class="normal">  </span><span class="function"><a href="GtkStyleContext.html#gtk-style-context-get-color">gtk_style_context_get_color</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="GtkWidget.html#gtk-widget-get-style-context">gtk_widget_get_style_context</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">widget</span><span class="symbol">),</span>
 <span class="normal">                               </span><span class="number">0</span><span class="symbol">,</span>
@@ -166,34 +158,36 @@ drawing is implicitly clipped to the exposed area.</p>
 
 <span class="normal">  </span><span class="function">cairo_fill</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
 
-<span class="normal"> </span><span class="keyword">return</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS">FALSE</a></span><span class="symbol">;</span>
+<span class="normal"> </span><span class="keyword">return</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS">FALSE</a></span><span class="symbol">;</span>
 <span class="cbracket">}</span>
 <span class="symbol">[...]</span>
 <span class="normal">  </span><span class="usertype">GtkWidget</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">drawing_area </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkDrawingArea.html#gtk-drawing-area-new">gtk_drawing_area_new</a></span><span class="normal"> </span><span class="symbol">();</span>
 <span class="normal">  </span><span class="function"><a href="GtkWidget.html#gtk-widget-set-size-request">gtk_widget_set_size_request</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">drawing_area</span><span class="symbol">,</span><span class="normal"> </span><span class="number">100</span><span class="symbol">,</span><span class="normal"> </span><span class="number">100</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#g-signal-connect">g_signal_connect</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#G-OBJECT:CAPS">G_OBJECT</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">drawing_area</span><span class="symbol">),</span><span class="normal"> </span><span class="string">"draw"</span><span class="symbol">,</span>
-<span class="normal">                    </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Closures.html#G-CALLBACK:CAPS">G_CALLBACK</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">draw_callback</span><span class="symbol">),</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span></pre></td>
+<span class="normal">  </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#g-signal-connect">g_signal_connect</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#G-OBJECT:CAPS">G_OBJECT</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">drawing_area</span><span class="symbol">),</span><span class="normal"> </span><span class="string">"draw"</span><span class="symbol">,</span>
+<span class="normal">                    </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Closures.html#G-CALLBACK:CAPS">G_CALLBACK</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">draw_callback</span><span class="symbol">),</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
-</div>
-<br class="example-break"><p>Draw signals are normally delivered when a drawing area first comes
-onscreen, or when it's covered by another window and then uncovered.
-You can also force an expose event by adding to the "damage region"
-of the drawing area's window; <a class="link" href="GtkWidget.html#gtk-widget-queue-draw-area" title="gtk_widget_queue_draw_area ()"><code class="function">gtk_widget_queue_draw_area()</code></a> and
+<p></p>
+<p>Draw signals are normally delivered when a drawing area first comes
+onscreen, or when it’s covered by another window and then uncovered.
+You can also force an expose event by adding to the “damage region”
+of the drawing area’s window; <a class="link" href="GtkWidget.html#gtk-widget-queue-draw-area" title="gtk_widget_queue_draw_area ()"><code class="function">gtk_widget_queue_draw_area()</code></a> and
 <a href="http://developer.gnome.org/gdk2/gdk3-Windows.html#gdk-window-invalidate-rect"><code class="function">gdk_window_invalidate_rect()</code></a> are equally good ways to do this.
-You'll then get a draw signal for the invalid region.</p>
-<p>The available routines for drawing are documented on the <a href="http://developer.gnome.org/gdk2/gdk3-Cairo-Interaction.html">GDK Drawing Primitives</a> page
+You’ll then get a draw signal for the invalid region.</p>
+<p>The available routines for drawing are documented on the
+<a href="http://developer.gnome.org/gdk2/gdk3-Cairo-Interaction.html">GDK Drawing Primitives</a> page
 and the cairo documentation.</p>
 <p>To receive mouse events on a drawing area, you will need to enable
 them with <a class="link" href="GtkWidget.html#gtk-widget-add-events" title="gtk_widget_add_events ()"><code class="function">gtk_widget_add_events()</code></a>. To receive keyboard events, you
-will need to set the "can-focus" property on the drawing area, and you
+will need to set the “can-focus” property on the drawing area, and you
 should probably draw some user-visible indication that the drawing
 area is focused. Use <a class="link" href="GtkWidget.html#gtk-widget-has-focus" title="gtk_widget_has_focus ()"><code class="function">gtk_widget_has_focus()</code></a> in your expose event
 handler to decide whether to draw the focus indicator. See
 <a class="link" href="GtkStyleContext.html#gtk-render-focus" title="gtk_render_focus ()"><code class="function">gtk_render_focus()</code></a> for one way to draw focus.</p>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkDrawingArea.functions_details"></a><h2>Functions</h2>
@@ -203,7 +197,7 @@ handler to decide whether to draw the focus indicator. See
 gtk_drawing_area_new (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Creates a new drawing area.</p>
 <div class="refsect3">
-<a name="id-1.3.18.5.9.2.5"></a><h4>Returns</h4>
+<a name="id-1.3.18.4.9.2.5"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GtkDrawingArea.html" title="GtkDrawingArea"><span class="type">GtkDrawingArea</span></a></p>
 <p></p>
 </div>
@@ -223,6 +217,6 @@ gtk_drawing_area_new (<em class="parameter"><code><span class="type">void</span>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

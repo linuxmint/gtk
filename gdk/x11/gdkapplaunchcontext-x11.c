@@ -116,15 +116,15 @@ end_startup_notification (GdkDisplay *display,
 
 
 /* This should be fairly long, as it's confusing to users if a startup
- * ends when it shouldn't (it appears that the startup failed, and
+ * ends when it shouldn’t (it appears that the startup failed, and
  * they have to relaunch the app). Also the timeout only matters when
- * there are bugs and apps don't end their own startup sequence.
+ * there are bugs and apps don’t end their own startup sequence.
  *
  * This timeout is a "last resort" timeout that ignores whether the
  * startup sequence has shown activity or not.  Metacity and the
  * tasklist have smarter, and correspondingly able-to-be-shorter
- * timeouts. The reason our timeout is dumb is that we don't monitor
- * the sequence (don't use an SnMonitorContext)
+ * timeouts. The reason our timeout is dumb is that we don’t monitor
+ * the sequence (don’t use an SnMonitorContext)
  */
 #define STARTUP_TIMEOUT_LENGTH_SECONDS 30
 #define STARTUP_TIMEOUT_LENGTH (STARTUP_TIMEOUT_LENGTH_SECONDS * 1000)
@@ -215,8 +215,10 @@ startup_timeout (void *data)
 
   if (std->contexts == NULL)
     std->timeout_id = 0;
-  else
+  else {
     std->timeout_id = g_timeout_add_seconds ((min_timeout + 500)/1000, startup_timeout, std);
+    g_source_set_name_by_id (std->timeout_id, "[gtk+] startup_timeout");
+  }
 
   /* always remove this one, but we may have reinstalled another one. */
   return G_SOURCE_REMOVE;
@@ -249,9 +251,11 @@ add_startup_timeout (GdkScreen  *screen,
 
   data->contexts = g_slist_prepend (data->contexts, sn_data);
 
-  if (data->timeout_id == 0)
+  if (data->timeout_id == 0) {
     data->timeout_id = g_timeout_add_seconds (STARTUP_TIMEOUT_LENGTH_SECONDS,
                                               startup_timeout, data);
+    g_source_set_name_by_id (data->timeout_id, "[gtk+] startup_timeout");
+  }
 }
 
 

@@ -32,6 +32,7 @@
 #include "gtkbuildable.h"
 #include "gtklabel.h"
 #include "gtkbox.h"
+#include "gtkbbox.h"
 #include "gtkimage.h"
 #include "gtkintl.h"
 #include "gtkprivate.h"
@@ -43,8 +44,7 @@
  * @Title: GtkMessageDialog
  * @See_also:#GtkDialog
  *
- * #GtkMessageDialog presents a dialog with an image representing the type of
- * message (Error, Question, etc.) alongside some message text. It's simply a
+ * #GtkMessageDialog presents a dialog with some message text. It’s simply a
  * convenience widget; you could construct the equivalent of #GtkMessageDialog
  * from #GtkDialog without too much effort, but #GtkMessageDialog saves typing.
  *
@@ -56,44 +56,46 @@
  * you can also pass in the %GTK_DIALOG_MODAL flag, gtk_dialog_run() automatically
  * makes the dialog modal and waits for the user to respond to it. gtk_dialog_run()
  * returns when any dialog button is clicked.
- * <example>
- * <title>A modal dialog.</title>
- * <programlisting>
- *  dialog = gtk_message_dialog_new (main_application_window,
- *                                   GTK_DIALOG_DESTROY_WITH_PARENT,
+ *
+ * An example for using a modal dialog:
+ * |[<!-- language="C" -->
+ *  GtkDialogFlags flags = GTK_DIALOG_DESTROY_WITH_PARENT;
+ *  dialog = gtk_message_dialog_new (parent_window,
+ *                                   flags,
  *                                   GTK_MESSAGE_ERROR,
  *                                   GTK_BUTTONS_CLOSE,
- *                                   "Error loading file '&percnt;s': &percnt;s",
- *                                   filename, g_strerror (errno));
+ *                                   "Error reading “%s”: %s",
+ *                                   filename,
+ *                                   g_strerror (errno));
  *  gtk_dialog_run (GTK_DIALOG (dialog));
  *  gtk_widget_destroy (dialog);
- * </programlisting>
- * </example>
+ * ]|
+ *
  * You might do a non-modal #GtkMessageDialog as follows:
- * <example>
- * <title>A non-modal dialog.</title>
- * <programlisting>
- *  dialog = gtk_message_dialog_new (main_application_window,
- *                                   GTK_DIALOG_DESTROY_WITH_PARENT,
+ *
+ * An example for a non-modal dialog:
+ * |[<!-- language="C" -->
+ *  GtkDialogFlags flags = GTK_DIALOG_DESTROY_WITH_PARENT;
+ *  dialog = gtk_message_dialog_new (parent_window,
+ *                                   flags,
  *                                   GTK_MESSAGE_ERROR,
  *                                   GTK_BUTTONS_CLOSE,
- *                                   "Error loading file '&percnt;s': &percnt;s",
- *                                   filename, g_strerror (errno));
+ *                                   "Error reading “%s”: %s",
+ *                                   filename,
+ *                                   g_strerror (errno));
  *
- *  /&ast; Destroy the dialog when the user responds to it (e.g. clicks a button) &ast;/
+ *  // Destroy the dialog when the user responds to it
+ *  // (e.g. clicks a button)
+ *
  *  g_signal_connect_swapped (dialog, "response",
  *                            G_CALLBACK (gtk_widget_destroy),
  *                            dialog);
- * </programlisting>
- * </example>
+ * ]|
  *
- * <refsect2 id="GtkMessageDialog-BUILDER-UI">
- * <title>GtkMessageDialog as GtkBuildable</title>
- * <para>
+ * # GtkMessageDialog as GtkBuildable
+ *
  * The GtkMessageDialog implementation of the GtkBuildable interface exposes
- * the message area as an internal child with the name "message_area".
- * </para>
- * </refsect2>
+ * the message area as an internal child with the name “message_area”.
  */
 
 struct _GtkMessageDialogPrivate
@@ -108,8 +110,9 @@ struct _GtkMessageDialogPrivate
   guint          message_type       : 3;
 };
 
-static void gtk_message_dialog_style_updated (GtkWidget             *widget);
+static void gtk_message_dialog_style_updated (GtkWidget       *widget);
 
+static void gtk_message_dialog_constructed  (GObject          *object);
 static void gtk_message_dialog_set_property (GObject          *object,
 					     guint             prop_id,
 					     const GValue     *value,
@@ -162,13 +165,14 @@ gtk_message_dialog_class_init (GtkMessageDialogClass *class)
 
   gtk_widget_class_set_accessible_role (widget_class, ATK_ROLE_ALERT);
 
+  gobject_class->constructed = gtk_message_dialog_constructed;
   gobject_class->set_property = gtk_message_dialog_set_property;
   gobject_class->get_property = gtk_message_dialog_get_property;
   
   gtk_widget_class_install_style_property (widget_class,
 					   g_param_spec_int ("message-border",
-                                                             P_("Image/label border"),
-                                                             P_("Width of border around the label and image in the message dialog"),
+                                                             P_("label border"),
+                                                             P_("Width of border around the label in the message dialog"),
                                                              0,
                                                              G_MAXINT,
                                                              12,
@@ -177,9 +181,7 @@ gtk_message_dialog_class_init (GtkMessageDialogClass *class)
   /**
    * GtkMessageDialog:message-type:
    *
-   * The type of the message. The type is used to determine
-   * the image that is shown in the dialog, unless the image is 
-   * explicitly set by the ::image property.
+   * The type of the message.
    */
   g_object_class_install_property (gobject_class,
                                    PROP_MESSAGE_TYPE,
@@ -188,7 +190,7 @@ gtk_message_dialog_class_init (GtkMessageDialogClass *class)
 						      P_("The type of message"),
 						      GTK_TYPE_MESSAGE_TYPE,
                                                       GTK_MESSAGE_INFO,
-                                                      GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+                                                      GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_EXPLICIT_NOTIFY));
   g_object_class_install_property (gobject_class,
                                    PROP_BUTTONS,
                                    g_param_spec_enum ("buttons",
@@ -196,7 +198,7 @@ gtk_message_dialog_class_init (GtkMessageDialogClass *class)
 						      P_("The buttons shown in the message dialog"),
 						      GTK_TYPE_BUTTONS_TYPE,
                                                       GTK_BUTTONS_NONE,
-                                                      GTK_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+                                                      GTK_PARAM_WRITABLE|G_PARAM_CONSTRUCT_ONLY));
 
   /**
    * GtkMessageDialog:text:
@@ -228,7 +230,7 @@ gtk_message_dialog_class_init (GtkMessageDialogClass *class)
 							 P_("Use Markup"),
 							 P_("The primary text of the title includes Pango markup."),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   /**
    * GtkMessageDialog:secondary-text:
@@ -259,14 +261,15 @@ gtk_message_dialog_class_init (GtkMessageDialogClass *class)
 							 P_("Use Markup in secondary"),
 							 P_("The secondary text includes Pango markup."),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkMessageDialog:image:
-   * 
+   *
    * The image for this dialog.
    *
    * Since: 2.10
+   * Deprecated: 3.12: Use #GtkDialog to create dialogs with images
    */
   g_object_class_install_property (gobject_class,
                                    PROP_IMAGE,
@@ -274,12 +277,12 @@ gtk_message_dialog_class_init (GtkMessageDialogClass *class)
                                                         P_("Image"),
                                                         P_("The image"),
                                                         GTK_TYPE_WIDGET,
-                                                        GTK_PARAM_READWRITE));
+                                                        GTK_PARAM_READWRITE|G_PARAM_DEPRECATED));
 
   /**
    * GtkMessageDialog:message-area:
    *
-   * The #GtkVBox that corresponds to the message area of this dialog.  See
+   * The #GtkBox that corresponds to the message area of this dialog.  See
    * gtk_message_dialog_get_message_area() for a detailed description of this
    * area.
    *
@@ -294,8 +297,7 @@ gtk_message_dialog_class_init (GtkMessageDialogClass *class)
 							GTK_PARAM_READABLE));
 
   /* Setup Composite data */
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/libgtk/gtkmessagedialog.ui");
-  gtk_widget_class_bind_template_child_private (widget_class, GtkMessageDialog, image);
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/libgtk/ui/gtkmessagedialog.ui");
   gtk_widget_class_bind_template_child_private (widget_class, GtkMessageDialog, label);
   gtk_widget_class_bind_template_child_private (widget_class, GtkMessageDialog, secondary_label);
   gtk_widget_class_bind_template_child_internal_private (widget_class, GtkMessageDialog, message_area);
@@ -305,6 +307,7 @@ static void
 gtk_message_dialog_init (GtkMessageDialog *dialog)
 {
   GtkMessageDialogPrivate *priv;
+  GtkWidget *action_area;
 
   dialog->priv = gtk_message_dialog_get_instance_private (dialog);
   priv = dialog->priv;
@@ -313,9 +316,14 @@ gtk_message_dialog_init (GtkMessageDialog *dialog)
   priv->has_secondary_text = FALSE;
   priv->has_primary_markup = FALSE;
   priv->has_secondary_text = FALSE;
+  priv->message_type = GTK_MESSAGE_OTHER;
 
   gtk_widget_init_template (GTK_WIDGET (dialog));
   gtk_message_dialog_style_updated (GTK_WIDGET (dialog));
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+  action_area = gtk_dialog_get_action_area (GTK_DIALOG (dialog));
+G_GNUC_END_IGNORE_DEPRECATIONS
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (action_area), GTK_BUTTONBOX_EXPAND);
 }
 
 static void
@@ -356,7 +364,9 @@ setup_type (GtkMessageDialog *dialog,
   GtkMessageDialogPrivate *priv = dialog->priv;
   const gchar *name = NULL;
   AtkObject *atk_obj;
-  GIcon *gicon = NULL;
+
+  if (priv->message_type == type)
+    return;
 
   priv->message_type = type;
 
@@ -364,22 +374,18 @@ setup_type (GtkMessageDialog *dialog,
     {
     case GTK_MESSAGE_INFO:
       name = _("Information");
-      gicon = g_themed_icon_new_with_default_fallbacks ("dialog-information-symbolic");
       break;
 
     case GTK_MESSAGE_QUESTION:
       name = _("Question");
-      gicon = g_themed_icon_new_with_default_fallbacks ("dialog-question-symbolic");
       break;
 
     case GTK_MESSAGE_WARNING:
       name = _("Warning");
-      gicon = g_themed_icon_new_with_default_fallbacks ("dialog-warning-symbolic");
       break;
 
     case GTK_MESSAGE_ERROR:
       name = _("Error");
-      gicon = g_themed_icon_new_with_default_fallbacks ("dialog-error-symbolic");
       break;
 
     case GTK_MESSAGE_OTHER:
@@ -390,16 +396,57 @@ setup_type (GtkMessageDialog *dialog,
       break;
     }
 
-  gtk_image_set_from_gicon (GTK_IMAGE (priv->image), gicon, GTK_ICON_SIZE_DIALOG);
-  if (gicon)
-    g_object_unref (gicon);
-
   atk_obj = gtk_widget_get_accessible (GTK_WIDGET (dialog));
   if (GTK_IS_ACCESSIBLE (atk_obj))
     {
       atk_object_set_role (atk_obj, ATK_ROLE_ALERT);
       if (name)
         atk_object_set_name (atk_obj, name);
+    }
+
+  g_object_notify (G_OBJECT (dialog), "message-type");
+}
+
+static void
+update_title (GObject    *dialog,
+              GParamSpec *pspec,
+              GtkWidget  *label)
+{
+  const gchar *title;
+
+  title = gtk_window_get_title (GTK_WINDOW (dialog));
+  gtk_label_set_label (GTK_LABEL (label), title);
+  gtk_widget_set_visible (label, title && title[0]);
+}
+
+static void
+gtk_message_dialog_constructed (GObject *object)
+{
+  GtkMessageDialog *dialog = GTK_MESSAGE_DIALOG (object);
+  gboolean use_header;
+
+  G_OBJECT_CLASS (gtk_message_dialog_parent_class)->constructed (object);
+
+  g_object_get (gtk_widget_get_settings (GTK_WIDGET (dialog)),
+                "gtk-dialogs-use-header", &use_header,
+                NULL);
+
+  if (use_header)
+    {
+      GtkWidget *box;
+      GtkWidget *label;
+
+      box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+      gtk_widget_show (box);
+      gtk_widget_set_size_request (box, -1, 16);
+      label = gtk_label_new ("");
+      gtk_widget_set_margin_top (label, 6);
+      gtk_widget_set_margin_bottom (label, 6);
+      gtk_style_context_add_class (gtk_widget_get_style_context (label), "title");
+      gtk_box_set_center_widget (GTK_BOX (box), label);
+      g_signal_connect_object (dialog, "notify::title", G_CALLBACK (update_title), label, 0);
+
+      gtk_window_set_titlebar (GTK_WINDOW (dialog), box);
     }
 }
 
@@ -429,10 +476,13 @@ gtk_message_dialog_set_property (GObject      *object,
 			    g_value_get_string (value));
       break;
     case PROP_USE_MARKUP:
-      priv->has_primary_markup = g_value_get_boolean (value) != FALSE;
-      gtk_label_set_use_markup (GTK_LABEL (priv->label),
-				priv->has_primary_markup);
-      setup_primary_label_font (dialog);
+      if (priv->has_primary_markup != g_value_get_boolean (value))
+        {
+          priv->has_primary_markup = g_value_get_boolean (value);
+          gtk_label_set_use_markup (GTK_LABEL (priv->label), priv->has_primary_markup);
+          g_object_notify_by_pspec (object, pspec);
+        }
+        setup_primary_label_font (dialog);
       break;
     case PROP_SECONDARY_TEXT:
       {
@@ -457,11 +507,16 @@ gtk_message_dialog_set_property (GObject      *object,
       }
       break;
     case PROP_SECONDARY_USE_MARKUP:
-      gtk_label_set_use_markup (GTK_LABEL (priv->secondary_label), 
-				g_value_get_boolean (value));
+      if (gtk_label_get_use_markup (GTK_LABEL (priv->secondary_label)) != g_value_get_boolean (value))
+        {
+          gtk_label_set_use_markup (GTK_LABEL (priv->secondary_label), g_value_get_boolean (value));
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_IMAGE:
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       gtk_message_dialog_set_image (dialog, g_value_get_object (value));
+G_GNUC_END_IGNORE_DEPRECATIONS
       break;
 
     default:
@@ -527,11 +582,11 @@ gtk_message_dialog_get_property (GObject     *object,
  *
  * Creates a new message dialog, which is a simple dialog with an icon
  * indicating the dialog type (error, warning, etc.) and some text the
- * user may want to see. When the user clicks a button a "response"
+ * user may want to see. When the user clicks a button a “response”
  * signal is emitted with response IDs from #GtkResponseType. See
  * #GtkDialog for more details.
  *
- * Return value: (transfer none): a new #GtkMessageDialog
+ * Returns: (transfer none): a new #GtkMessageDialog
  */
 GtkWidget*
 gtk_message_dialog_new (GtkWindow     *parent,
@@ -549,6 +604,7 @@ gtk_message_dialog_new (GtkWindow     *parent,
   g_return_val_if_fail (parent == NULL || GTK_IS_WINDOW (parent), NULL);
 
   widget = g_object_new (GTK_TYPE_MESSAGE_DIALOG,
+                         "use-header-bar", FALSE,
 			 "message-type", type,
 			 "buttons", buttons,
 			 NULL);
@@ -560,15 +616,13 @@ gtk_message_dialog_new (GtkWindow     *parent,
       msg = g_strdup_vprintf (message_format, args);
       va_end (args);
 
-      gtk_label_set_text (GTK_LABEL (GTK_MESSAGE_DIALOG (widget)->priv->label),
-                          msg);
+      gtk_label_set_text (GTK_LABEL (GTK_MESSAGE_DIALOG (widget)->priv->label), msg);
 
       g_free (msg);
     }
 
   if (parent != NULL)
-    gtk_window_set_transient_for (GTK_WINDOW (widget),
-                                  GTK_WINDOW (parent));
+    gtk_window_set_transient_for (GTK_WINDOW (widget), GTK_WINDOW (parent));
   
   if (flags & GTK_DIALOG_MODAL)
     gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
@@ -590,8 +644,8 @@ gtk_message_dialog_new (GtkWindow     *parent,
  *
  * Creates a new message dialog, which is a simple dialog with an icon
  * indicating the dialog type (error, warning, etc.) and some text which
- * is marked up with the <link linkend="PangoMarkupFormat">Pango text markup language</link>.
- * When the user clicks a button a "response" signal is emitted with
+ * is marked up with the [Pango text markup language][PangoMarkupFormat].
+ * When the user clicks a button a “response” signal is emitted with
  * response IDs from #GtkResponseType. See #GtkDialog for more details.
  *
  * Special XML characters in the printf() arguments passed to this
@@ -600,13 +654,14 @@ gtk_message_dialog_new (GtkWindow     *parent,
  * Usually this is what you want, but if you have an existing
  * Pango markup string that you want to use literally as the
  * label, then you need to use gtk_message_dialog_set_markup()
- * instead, since you can't pass the markup string either
- * as the format (it might contain '%' characters) or as a string
+ * instead, since you can’t pass the markup string either
+ * as the format (it might contain “%” characters) or as a string
  * argument.
- * |[
+ * |[<!-- language="C" -->
  *  GtkWidget *dialog;
- *  dialog = gtk_message_dialog_new (main_application_window,
- *                                   GTK_DIALOG_DESTROY_WITH_PARENT,
+ *  GtkDialogFlags flags = GTK_DIALOG_DESTROY_WITH_PARENT;
+ *  dialog = gtk_message_dialog_new (parent_window,
+ *                                   flags,
  *                                   GTK_MESSAGE_ERROR,
  *                                   GTK_BUTTONS_CLOSE,
  *                                   NULL);
@@ -614,7 +669,7 @@ gtk_message_dialog_new (GtkWindow     *parent,
  *                                 markup);
  * ]|
  * 
- * Return value: a new #GtkMessageDialog
+ * Returns: a new #GtkMessageDialog
  *
  * Since: 2.4
  **/
@@ -653,9 +708,10 @@ gtk_message_dialog_new_with_markup (GtkWindow     *parent,
  * @dialog: a #GtkMessageDialog
  * @image: the image
  * 
- * Sets the dialog's image to @image.
+ * Sets the dialog’s image to @image.
  *
  * Since: 2.10
+ * Deprecated: 3.12: Use #GtkDialog to create dialogs with images
  **/
 void
 gtk_message_dialog_set_image (GtkMessageDialog *dialog,
@@ -668,35 +724,37 @@ gtk_message_dialog_set_image (GtkMessageDialog *dialog,
   g_return_if_fail (image == NULL || GTK_IS_WIDGET (image));
 
   priv = dialog->priv;
+  
+  if (priv->image)
+    gtk_widget_destroy (priv->image);
 
-  if (image == NULL)
-    {
-      image = gtk_image_new_from_icon_name (NULL, GTK_ICON_SIZE_DIALOG);
-      gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
-      gtk_widget_set_valign (image, GTK_ALIGN_START);
+  priv->image = image;
+ 
+  if (priv->image)
+    { 
+      gtk_widget_set_halign (priv->image, GTK_ALIGN_CENTER);
+      gtk_widget_set_valign (priv->image, GTK_ALIGN_START);
+      parent = gtk_widget_get_parent (priv->message_area);
+      gtk_container_add (GTK_CONTAINER (parent), priv->image);
+      gtk_box_reorder_child (GTK_BOX (parent), priv->image, 0);
     }
 
   priv->message_type = GTK_MESSAGE_OTHER;
 
-  parent = gtk_widget_get_parent (priv->image);
-  gtk_container_add (GTK_CONTAINER (parent), image);
-  gtk_container_remove (GTK_CONTAINER (parent), priv->image);
-  gtk_box_reorder_child (GTK_BOX (parent), image, 0);
-
-  priv->image = image;
-
   g_object_notify (G_OBJECT (dialog), "image");
+  g_object_notify (G_OBJECT (dialog), "message-type");
 }
 
 /**
  * gtk_message_dialog_get_image:
  * @dialog: a #GtkMessageDialog
  *
- * Gets the dialog's image.
+ * Gets the dialog’s image.
  *
- * Return value: (transfer none): the dialog's image
+ * Returns: (transfer none): the dialog’s image
  *
  * Since: 2.14
+ * Deprecated: 3.12: Use #GtkDialog for dialogs with images
  **/
 GtkWidget *
 gtk_message_dialog_get_image (GtkMessageDialog *dialog)
@@ -709,11 +767,10 @@ gtk_message_dialog_get_image (GtkMessageDialog *dialog)
 /**
  * gtk_message_dialog_set_markup:
  * @message_dialog: a #GtkMessageDialog
- * @str: markup string (see <link linkend="PangoMarkupFormat">Pango markup format</link>)
+ * @str: markup string (see [Pango markup format][PangoMarkupFormat])
  * 
  * Sets the text of the message dialog to be @str, which is marked
- * up with the <link linkend="PangoMarkupFormat">Pango text markup
- * language</link>.
+ * up with the [Pango text markup language][PangoMarkupFormat].
  *
  * Since: 2.4
  **/
@@ -781,25 +838,26 @@ gtk_message_dialog_format_secondary_text (GtkMessageDialog *message_dialog,
  * gtk_message_dialog_format_secondary_markup:
  * @message_dialog: a #GtkMessageDialog
  * @message_format: printf()-style markup string (see
-     <link linkend="PangoMarkupFormat">Pango markup format</link>), or %NULL
+     [Pango markup format][PangoMarkupFormat]), or %NULL
  * @...: arguments for @message_format
  *
  * Sets the secondary text of the message dialog to be @message_format (with
  * printf()-style), which is marked up with the
- * <link linkend="PangoMarkupFormat">Pango text markup language</link>.
+ * [Pango text markup language][PangoMarkupFormat].
  *
  * Due to an oversight, this function does not escape special XML characters
  * like gtk_message_dialog_new_with_markup() does. Thus, if the arguments
  * may contain special XML characters, you should use g_markup_printf_escaped()
  * to escape it.
 
- * <informalexample><programlisting>
+ * |[<!-- language="C" -->
  * gchar *msg;
  *
  * msg = g_markup_printf_escaped (message_format, ...);
- * gtk_message_dialog_format_secondary_markup (message_dialog, "&percnt;s", msg);
+ * gtk_message_dialog_format_secondary_markup (message_dialog,
+ *                                             "%s", msg);
  * g_free (msg);
- * </programlisting></informalexample>
+ * ]|
  *
  * Since: 2.6
  */
@@ -843,14 +901,13 @@ gtk_message_dialog_format_secondary_markup (GtkMessageDialog *message_dialog,
  * @message_dialog: a #GtkMessageDialog
  *
  * Returns the message area of the dialog. This is the box where the
- * dialog's primary and secondary labels are packed. You can add your
- * own extra content to that box and it will appear below those labels,
- * on the right side of the dialog's image (or on the left for right-to-left
- * languages).  See gtk_dialog_get_content_area() for the corresponding
+ * dialog’s primary and secondary labels are packed. You can add your
+ * own extra content to that box and it will appear below those labels.
+ * See gtk_dialog_get_content_area() for the corresponding
  * function in the parent #GtkDialog.
  *
- * Return value: (transfer none): A #GtkVBox corresponding to the
- *     "message area" in the @message_dialog.
+ * Returns: (transfer none): A #GtkVBox corresponding to the
+ *     “message area” in the @message_dialog.
  *
  * Since: 2.22
  **/
@@ -868,6 +925,7 @@ gtk_message_dialog_add_buttons (GtkMessageDialog* message_dialog,
 {
   GtkDialog* dialog = GTK_DIALOG (message_dialog);
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   switch (buttons)
     {
     case GTK_BUTTONS_NONE:
@@ -875,30 +933,20 @@ gtk_message_dialog_add_buttons (GtkMessageDialog* message_dialog,
       break;
 
     case GTK_BUTTONS_OK:
-      gtk_dialog_add_button (dialog,
-                             _("_OK"),
-                             GTK_RESPONSE_OK);
+      gtk_dialog_add_button (dialog, _("_OK"), GTK_RESPONSE_OK);
       break;
 
     case GTK_BUTTONS_CLOSE:
-      gtk_dialog_add_button (dialog,
-                             _("_Close"),
-                             GTK_RESPONSE_CLOSE);
+      gtk_dialog_add_button (dialog, _("_Close"), GTK_RESPONSE_CLOSE);
       break;
 
     case GTK_BUTTONS_CANCEL:
-      gtk_dialog_add_button (dialog,
-                             _("_Cancel"),
-                             GTK_RESPONSE_CANCEL);
+      gtk_dialog_add_button (dialog, _("_Cancel"), GTK_RESPONSE_CANCEL);
       break;
 
     case GTK_BUTTONS_YES_NO:
-      gtk_dialog_add_button (dialog,
-                             _("_No"),
-                             GTK_RESPONSE_NO);
-      gtk_dialog_add_button (dialog,
-                             _("_Yes"),
-                             GTK_RESPONSE_YES);
+      gtk_dialog_add_button (dialog, _("_No"), GTK_RESPONSE_NO);
+      gtk_dialog_add_button (dialog, _("_Yes"), GTK_RESPONSE_YES);
       gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
 					       GTK_RESPONSE_YES,
 					       GTK_RESPONSE_NO,
@@ -906,12 +954,8 @@ gtk_message_dialog_add_buttons (GtkMessageDialog* message_dialog,
       break;
 
     case GTK_BUTTONS_OK_CANCEL:
-      gtk_dialog_add_button (dialog,
-                             _("_Cancel"),
-                             GTK_RESPONSE_CANCEL);
-      gtk_dialog_add_button (dialog,
-                             _("_OK"),
-                             GTK_RESPONSE_OK);
+      gtk_dialog_add_button (dialog, _("_Cancel"), GTK_RESPONSE_CANCEL);
+      gtk_dialog_add_button (dialog, _("_OK"), GTK_RESPONSE_OK);
       gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
 					       GTK_RESPONSE_OK,
 					       GTK_RESPONSE_CANCEL,
@@ -922,6 +966,7 @@ gtk_message_dialog_add_buttons (GtkMessageDialog* message_dialog,
       g_warning ("Unknown GtkButtonsType");
       break;
     } 
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   g_object_notify (G_OBJECT (message_dialog), "buttons");
 }
@@ -933,7 +978,7 @@ gtk_message_dialog_style_updated (GtkWidget *widget)
   GtkWidget *parent;
   gint border_width;
 
-  parent = gtk_widget_get_parent (gtk_message_dialog_get_image (dialog));
+  parent = gtk_widget_get_parent (dialog->priv->message_area);
 
   if (parent)
     {

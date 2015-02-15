@@ -152,9 +152,13 @@ gtk_notebook_page_accessible_ref_state_set (AtkObject *accessible)
   atk_state_set_add_state (state_set, ATK_STATE_SELECTABLE);
 
   selected = atk_selection_ref_selection (ATK_SELECTION (page->priv->notebook), 0);
-  if (selected == accessible)
-    atk_state_set_add_state (state_set, ATK_STATE_SELECTED);
-  g_object_unref (selected);
+  if (selected)
+    {
+      if (selected == accessible)
+        atk_state_set_add_state (state_set, ATK_STATE_SELECTED);
+
+      g_object_unref (selected);
+    }
 
   label = get_label_from_notebook_page (GTK_NOTEBOOK_PAGE_ACCESSIBLE (accessible));
   if (label)
@@ -316,7 +320,8 @@ gtk_notebook_page_accessible_get_extents (AtkComponent *component,
       if (!child)
         return;
 
-      atk_component_get_position (ATK_COMPONENT (child), x, y, coord_type);
+      atk_component_get_extents (ATK_COMPONENT (child), x, y, NULL, NULL,
+                                 coord_type);
       g_object_unref (child);
     }
   else

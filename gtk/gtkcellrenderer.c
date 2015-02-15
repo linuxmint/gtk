@@ -33,37 +33,37 @@
  *
  * The #GtkCellRenderer is a base class of a set of objects used for
  * rendering a cell to a #cairo_t.  These objects are used primarily by
- * the #GtkTreeView widget, though they aren't tied to them in any
+ * the #GtkTreeView widget, though they aren’t tied to them in any
  * specific way.  It is worth noting that #GtkCellRenderer is not a
  * #GtkWidget and cannot be treated as such.
  *
  * The primary use of a #GtkCellRenderer is for drawing a certain graphical
  * elements on a #cairo_t. Typically, one cell renderer is used to
- * draw many cells on the screen.  To this extent, it isn't expected that a
+ * draw many cells on the screen.  To this extent, it isn’t expected that a
  * CellRenderer keep any permanent state around.  Instead, any state is set
  * just prior to use using #GObjects property system.  Then, the
  * cell is measured using gtk_cell_renderer_get_size(). Finally, the cell
  * is rendered in the correct location using gtk_cell_renderer_render().
  *
  * There are a number of rules that must be followed when writing a new
- * #GtkCellRenderer.  First and foremost, it's important that a certain set
+ * #GtkCellRenderer.  First and foremost, it’s important that a certain set
  * of properties will always yield a cell renderer of the same size,
  * barring a #GtkStyle change.  The #GtkCellRenderer also has a number of
  * generic properties that are expected to be honored by all children.
  *
  * Beyond merely rendering a cell, cell renderers can optionally
  * provide active user interface elements. A cell renderer can be
- * <firstterm>activatable</firstterm> like #GtkCellRendererToggle,
+ * “activatable” like #GtkCellRendererToggle,
  * which toggles when it gets activated by a mouse click, or it can be
- * <firstterm>editable</firstterm> like #GtkCellRendererText, which
+ * “editable” like #GtkCellRendererText, which
  * allows the user to edit the text using a #GtkEntry.
  * To make a cell renderer activatable or editable, you have to
  * implement the #GtkCellRendererClass.activate or
  * #GtkCellRendererClass.start_editing virtual functions, respectively.
  *
  * Many properties of #GtkCellRenderer and its subclasses have a
- * corresponding "set" property, e.g. "cell-background-set" corresponds
- * to "cell-background". These "set" properties reflect whether a property
+ * corresponding “set” property, e.g. “cell-background-set” corresponds
+ * to “cell-background”. These “set” properties reflect whether a property
  * has been set or not. You should not set them independently.
  */
 
@@ -248,7 +248,7 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
    * continue to use the same kind of widget for editing in future
    * releases, therefore you should check the type of @editable
    * before doing any specific setup, as in the following example:
-   * |[
+   * |[<!-- language="C" -->
    * static void
    * text_editing_started (GtkCellRenderer *cell,
    *                       GtkCellEditable *editable,
@@ -259,7 +259,7 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
    *     {
    *       GtkEntry *entry = GTK_ENTRY (editable);
    *       
-   *       /&ast; ... create a GtkEntryCompletion &ast;/
+   *       // ... create a GtkEntryCompletion
    *       
    *       gtk_entry_set_completion (entry, completion);
    *     }
@@ -286,7 +286,7 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
 						      P_("Editable mode of the CellRenderer"),
 						      GTK_TYPE_CELL_RENDERER_MODE,
 						      GTK_CELL_RENDERER_MODE_INERT,
-						      GTK_PARAM_READWRITE));
+						      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
 				   PROP_VISIBLE,
@@ -294,14 +294,14 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
 							 P_("visible"),
 							 P_("Display the cell"),
 							 TRUE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   g_object_class_install_property (object_class,
 				   PROP_SENSITIVE,
 				   g_param_spec_boolean ("sensitive",
 							 P_("Sensitive"),
 							 P_("Display the cell sensitive"),
 							 TRUE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
 				   PROP_XALIGN,
@@ -311,7 +311,7 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
 						       0.0,
 						       1.0,
 						       0.5,
-						       GTK_PARAM_READWRITE));
+						       GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
 				   PROP_YALIGN,
@@ -321,7 +321,7 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
 						       0.0,
 						       1.0,
 						       0.5,
-						       GTK_PARAM_READWRITE));
+						       GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
 				   PROP_XPAD,
@@ -331,7 +331,7 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
 						      0,
 						      G_MAXUINT,
 						      0,
-						      GTK_PARAM_READWRITE));
+						      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
 				   PROP_YPAD,
@@ -341,7 +341,7 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
 						      0,
 						      G_MAXUINT,
 						      0,
-						      GTK_PARAM_READWRITE));
+						      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
 				   PROP_WIDTH,
@@ -351,7 +351,7 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
 						     -1,
 						     G_MAXINT,
 						     -1,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
 				   PROP_HEIGHT,
@@ -361,7 +361,7 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
 						     -1,
 						     G_MAXINT,
 						     -1,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
 				   PROP_IS_EXPANDER,
@@ -369,7 +369,7 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
 							 P_("Is Expander"),
 							 P_("Row has children"),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
 
   g_object_class_install_property (object_class,
@@ -378,7 +378,7 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
 							 P_("Is Expanded"),
 							 P_("Row is an expander row, and is expanded"),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
 				   PROP_CELL_BACKGROUND,
@@ -395,13 +395,15 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
    *
    * Deprecated: 3.4: Use #GtkCellRenderer:cell-background-rgba instead.
    */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   g_object_class_install_property (object_class,
 				   PROP_CELL_BACKGROUND_GDK,
 				   g_param_spec_boxed ("cell-background-gdk",
 						       P_("Cell background color"),
 						       P_("Cell background color as a GdkColor"),
 						       GDK_TYPE_COLOR,
-						       GTK_PARAM_READWRITE | G_PARAM_DEPRECATED));
+						       GTK_PARAM_READWRITE|G_PARAM_DEPRECATED));
+G_GNUC_END_IGNORE_DEPRECATIONS
   /**
    * GtkCellRenderer:cell-background-rgba:
    *
@@ -426,7 +428,7 @@ gtk_cell_renderer_class_init (GtkCellRendererClass *class)
 							 GTK_PARAM_READABLE));
 
 
-#define ADD_SET_PROP(propname, propval, nick, blurb) g_object_class_install_property (object_class, propval, g_param_spec_boolean (propname, nick, blurb, FALSE, GTK_PARAM_READWRITE))
+#define ADD_SET_PROP(propname, propval, nick, blurb) g_object_class_install_property (object_class, propval, g_param_spec_boolean (propname, nick, blurb, FALSE, GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY))
 
   ADD_SET_PROP ("cell-background-set", PROP_CELL_BACKGROUND_SET,
                 P_("Cell background set"),
@@ -561,40 +563,81 @@ gtk_cell_renderer_set_property (GObject      *object,
   switch (param_id)
     {
     case PROP_MODE:
-      priv->mode = g_value_get_enum (value);
+      if (priv->mode != g_value_get_enum (value))
+        {
+          priv->mode = g_value_get_enum (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_VISIBLE:
-      priv->visible = g_value_get_boolean (value);
+      if (priv->visible != g_value_get_boolean (value))
+        {
+          priv->visible = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_SENSITIVE:
-      priv->sensitive = g_value_get_boolean (value);
-      break;
-    case PROP_EDITING:
-      priv->editing = g_value_get_boolean (value);
+      if (priv->sensitive != g_value_get_boolean (value))
+        {
+          priv->sensitive = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_XALIGN:
-      priv->xalign = g_value_get_float (value);
+      if (priv->xalign != g_value_get_float (value))
+        {
+          priv->xalign = g_value_get_float (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_YALIGN:
-      priv->yalign = g_value_get_float (value);
+      if (priv->yalign != g_value_get_float (value))
+        {
+          priv->yalign = g_value_get_float (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_XPAD:
-      priv->xpad = g_value_get_uint (value);
+      if (priv->xpad != g_value_get_uint (value))
+        {
+          priv->xpad = g_value_get_uint (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_YPAD:
-      priv->ypad = g_value_get_uint (value);
+      if (priv->ypad != g_value_get_uint (value))
+        {
+          priv->ypad = g_value_get_uint (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_WIDTH:
-      priv->width = g_value_get_int (value);
+      if (priv->width != g_value_get_int (value))
+        {
+          priv->width = g_value_get_int (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_HEIGHT:
-      priv->height = g_value_get_int (value);
+      if (priv->height != g_value_get_int (value))
+        {
+          priv->height = g_value_get_int (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_IS_EXPANDER:
-      priv->is_expander = g_value_get_boolean (value);
+      if (priv->is_expander != g_value_get_boolean (value))
+        {
+          priv->is_expander = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_IS_EXPANDED:
-      priv->is_expanded = g_value_get_boolean (value);
+      if (priv->is_expanded != g_value_get_boolean (value))
+        {
+          priv->is_expanded = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_CELL_BACKGROUND:
       {
@@ -607,7 +650,7 @@ gtk_cell_renderer_set_property (GObject      *object,
         else
           g_warning ("Don't know color `%s'", g_value_get_string (value));
 
-        g_object_notify (object, "cell-background-gdk");
+        g_object_notify (object, "cell-background");
       }
       break;
     case PROP_CELL_BACKGROUND_GDK:
@@ -630,13 +673,18 @@ gtk_cell_renderer_set_property (GObject      *object,
           {
             set_cell_bg_color (cell, NULL);
           }
+        g_object_notify (object, "cell-background-gdk");
       }
       break;
     case PROP_CELL_BACKGROUND_RGBA:
       set_cell_bg_color (cell, g_value_get_boxed (value));
       break;
     case PROP_CELL_BACKGROUND_SET:
-      priv->cell_background_set = g_value_get_boolean (value);
+      if (priv->cell_background_set != g_value_get_boolean (value))
+        {
+          priv->cell_background_set = g_value_get_boolean (value);
+          g_object_notify (object, "cell-background-set");
+        }
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -668,6 +716,7 @@ set_cell_bg_color (GtkCellRenderer *cell,
 	  g_object_notify (G_OBJECT (cell), "cell-background-set");
 	}
     }
+  g_object_notify (G_OBJECT (cell), "cell-background-rgba");
 }
 
 /**
@@ -799,7 +848,7 @@ gtk_cell_renderer_render (GtkCellRenderer      *cell,
  * Some cell renderers may use events; for example, #GtkCellRendererToggle 
  * toggles when it gets a mouse click.
  *
- * Return value: %TRUE if the event was consumed/handled
+ * Returns: %TRUE if the event was consumed/handled
  **/
 gboolean
 gtk_cell_renderer_activate (GtkCellRenderer      *cell,
@@ -844,7 +893,7 @@ gtk_cell_renderer_activate (GtkCellRenderer      *cell,
  *
  * Passes an activate event to the cell renderer for possible processing.
  *
- * Return value: (transfer none): A new #GtkCellEditable, or %NULL
+ * Returns: (transfer none): A new #GtkCellEditable, or %NULL
  **/
 GtkCellEditable *
 gtk_cell_renderer_start_editing (GtkCellRenderer      *cell,
@@ -876,6 +925,9 @@ gtk_cell_renderer_start_editing (GtkCellRenderer      *cell,
 								(GdkRectangle *) background_area,
 								(GdkRectangle *) cell_area,
 								flags);
+  if (editable == NULL)
+    return NULL;
+
   gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (editable)),
                                GTK_STYLE_CLASS_CELL);
 
@@ -959,7 +1011,7 @@ gtk_cell_renderer_get_fixed_size (GtkCellRenderer *cell,
  * @xalign: the x alignment of the cell renderer
  * @yalign: the y alignment of the cell renderer
  *
- * Sets the renderer's alignment within its available space.
+ * Sets the renderer’s alignment within its available space.
  *
  * Since: 2.18
  **/
@@ -1029,7 +1081,7 @@ gtk_cell_renderer_get_alignment (GtkCellRenderer *cell,
  * @xpad: the x padding of the cell renderer
  * @ypad: the y padding of the cell renderer
  *
- * Sets the renderer's padding.
+ * Sets the renderer’s padding.
  *
  * Since: 2.18
  **/
@@ -1097,7 +1149,7 @@ gtk_cell_renderer_get_padding (GtkCellRenderer *cell,
  * @cell: A #GtkCellRenderer
  * @visible: the visibility of the cell
  *
- * Sets the cell renderer's visibility.
+ * Sets the cell renderer’s visibility.
  *
  * Since: 2.18
  **/
@@ -1122,7 +1174,7 @@ gtk_cell_renderer_set_visible (GtkCellRenderer *cell,
  * gtk_cell_renderer_get_visible:
  * @cell: A #GtkCellRenderer
  *
- * Returns the cell renderer's visibility.
+ * Returns the cell renderer’s visibility.
  *
  * Returns: %TRUE if the cell renderer is visible
  *
@@ -1141,7 +1193,7 @@ gtk_cell_renderer_get_visible (GtkCellRenderer *cell)
  * @cell: A #GtkCellRenderer
  * @sensitive: the sensitivity of the cell
  *
- * Sets the cell renderer's sensitivity.
+ * Sets the cell renderer’s sensitivity.
  *
  * Since: 2.18
  **/
@@ -1166,7 +1218,7 @@ gtk_cell_renderer_set_sensitive (GtkCellRenderer *cell,
  * gtk_cell_renderer_get_sensitive:
  * @cell: A #GtkCellRenderer
  *
- * Returns the cell renderer's sensitivity.
+ * Returns the cell renderer’s sensitivity.
  *
  * Returns: %TRUE if the cell renderer is sensitive
  *
@@ -1391,7 +1443,7 @@ gtk_cell_renderer_real_get_aligned_area (GtkCellRenderer         *cell,
  * cell alignment in a target allocation (used to draw focus and align
  * cells in the icon view).
  *
- * Note this is only a trivial 'align * (allocation - request)' operation.
+ * Note this is only a trivial “align * (allocation - request)” operation.
  */
 void
 _gtk_cell_renderer_calc_offset    (GtkCellRenderer      *cell,
@@ -1451,7 +1503,7 @@ gtk_cell_renderer_get_request_mode (GtkCellRenderer *cell)
  * @minimum_size: (out) (allow-none): location to store the minimum size, or %NULL
  * @natural_size: (out) (allow-none): location to store the natural size, or %NULL
  *
- * Retreives a renderer's natural size when rendered to @widget.
+ * Retreives a renderer’s natural size when rendered to @widget.
  *
  * Since: 3.0
  */
@@ -1499,7 +1551,7 @@ gtk_cell_renderer_get_preferred_width (GtkCellRenderer *cell,
  * @minimum_size: (out) (allow-none): location to store the minimum size, or %NULL
  * @natural_size: (out) (allow-none): location to store the natural size, or %NULL
  *
- * Retreives a renderer's natural size when rendered to @widget.
+ * Retreives a renderer’s natural size when rendered to @widget.
  *
  * Since: 3.0
  */
@@ -1548,7 +1600,7 @@ gtk_cell_renderer_get_preferred_height (GtkCellRenderer *cell,
  * @minimum_width: (out) (allow-none): location for storing the minimum size, or %NULL
  * @natural_width: (out) (allow-none): location for storing the preferred size, or %NULL
  *
- * Retreives a cell renderers's minimum and natural width if it were rendered to 
+ * Retreives a cell renderers’s minimum and natural width if it were rendered to 
  * @widget with the specified @height.
  *
  * Since: 3.0
@@ -1598,7 +1650,7 @@ gtk_cell_renderer_get_preferred_width_for_height (GtkCellRenderer *cell,
  * @minimum_height: (out) (allow-none): location for storing the minimum size, or %NULL
  * @natural_height: (out) (allow-none): location for storing the preferred size, or %NULL
  *
- * Retreives a cell renderers's minimum and natural height if it were rendered to 
+ * Retreives a cell renderers’s minimum and natural height if it were rendered to 
  * @widget with the specified @width.
  *
  * Since: 3.0
@@ -1648,7 +1700,7 @@ gtk_cell_renderer_get_preferred_height_for_width (GtkCellRenderer *cell,
  * @natural_size: (out) (allow-none): location for storing the natural size, or %NULL
  *
  * Retrieves the minimum and natural size of a cell taking
- * into account the widget's preference for height-for-width management.
+ * into account the widget’s preference for height-for-width management.
  *
  * Since: 3.0
  */

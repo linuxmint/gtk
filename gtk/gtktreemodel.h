@@ -47,12 +47,12 @@ typedef struct _GtkTreeModelIface   GtkTreeModelIface;
  * @model: the #GtkTreeModel being iterated
  * @path: the current #GtkTreePath
  * @iter: the current #GtkTreeIter
- * @data: The user data passed to gtk_tree_model_foreach()
+ * @data: (closure): The user data passed to gtk_tree_model_foreach()
  *
  * Type of the callback passed to gtk_tree_model_foreach() to
  * iterate over the rows in a tree model.
  *
- * Return value: %TRUE to stop iterating, %FALSE to continue
+ * Returns: %TRUE to stop iterating, %FALSE to continue
  *
  */
 typedef gboolean (* GtkTreeModelForeachFunc) (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data);
@@ -84,10 +84,10 @@ typedef enum
  * @user_data2: model-specific data
  * @user_data3: model-specific data
  *
- * The <structname>GtkTreeIter</structname> is the primary structure
+ * The #GtkTreeIter is the primary structure
  * for accessing a #GtkTreeModel. Models are expected to put a unique
- * integer in the <structfield>stamp</structfield> member, and put
- * model-specific data in the three <structfield>user_data</structfield>
+ * integer in the @stamp member, and put
+ * model-specific data in the three @user_data
  * members.
  */
 struct _GtkTreeIter
@@ -98,9 +98,41 @@ struct _GtkTreeIter
   gpointer user_data3;
 };
 
+/**
+ * GtkTreeModelIface:
+ * @row_changed: Signal emitted when a row in the model has changed.
+ * @row_inserted: Signal emitted when a new row has been inserted in
+ *    the model.
+ * @row_has_child_toggled: Signal emitted when a row has gotten the
+ *    first child row or lost its last child row.
+ * @row_deleted: Signal emitted when a row has been deleted.
+ * @rows_reordered: Signal emitted when the children of a node in the
+ *    GtkTreeModel have been reordered.
+ * @get_flags: Get #GtkTreeModelFlags supported by this interface.
+ * @get_n_columns: Get the number of columns supported by the model.
+ * @get_column_type: Get the type of the column.
+ * @get_iter: Sets iter to a valid iterator pointing to path.
+ * @get_path: Gets a newly-created #GtkTreePath referenced by iter.
+ * @get_value: Initializes and sets value to that at column.
+ * @iter_next: Sets iter to point to the node following it at the
+ *    current level.
+ * @iter_previous: Sets iter to point to the previous node at the
+ *    current level.
+ * @iter_children: Sets iter to point to the first child of parent.
+ * @iter_has_child: %TRUE if iter has children, %FALSE otherwise.
+ * @iter_n_children: Gets the number of children that iter has.
+ * @iter_nth_child: Sets iter to be the child of parent, using the
+ *    given index.
+ * @iter_parent: Sets iter to be the parent of child.
+ * @ref_node: Lets the tree ref the node.
+ * @unref_node: Lets the tree unref the node.
+ */
 struct _GtkTreeModelIface
 {
+  /*< private >*/
   GTypeInterface g_iface;
+
+  /*< public >*/
 
   /* Signals */
   void         (* row_changed)           (GtkTreeModel *tree_model,
@@ -167,6 +199,9 @@ GtkTreePath *gtk_tree_path_new_from_string  (const gchar       *path);
 GDK_AVAILABLE_IN_ALL
 GtkTreePath *gtk_tree_path_new_from_indices (gint               first_index,
 					     ...);
+GDK_AVAILABLE_IN_3_12
+GtkTreePath *gtk_tree_path_new_from_indicesv (gint             *indices,
+					      gsize             length);
 GDK_AVAILABLE_IN_ALL
 gchar       *gtk_tree_path_to_string        (GtkTreePath       *path);
 GDK_AVAILABLE_IN_ALL

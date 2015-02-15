@@ -21,6 +21,8 @@
 
 #include "gtkcssshadowsvalueprivate.h"
 
+#include <math.h>
+
 #include "gtkcairoblurprivate.h"
 #include "gtkcssshadowvalueprivate.h"
 
@@ -213,7 +215,8 @@ gtk_css_shadows_value_new (GtkCssValue **values,
 }
 
 GtkCssValue *
-_gtk_css_shadows_value_parse (GtkCssParser *parser)
+_gtk_css_shadows_value_parse (GtkCssParser *parser,
+                              gboolean      box_shadow_mode)
 {
   GtkCssValue *value, *result;
   GPtrArray *values;
@@ -224,7 +227,7 @@ _gtk_css_shadows_value_parse (GtkCssParser *parser)
   values = g_ptr_array_new ();
 
   do {
-    value = _gtk_css_shadow_value_parse (parser);
+    value = _gtk_css_shadow_value_parse (parser, box_shadow_mode);
 
     if (value == NULL)
       {
@@ -239,6 +242,14 @@ _gtk_css_shadows_value_parse (GtkCssParser *parser)
   result = gtk_css_shadows_value_new ((GtkCssValue **) values->pdata, values->len);
   g_ptr_array_free (values, TRUE);
   return result;
+}
+
+gboolean
+_gtk_css_shadows_value_is_none (const GtkCssValue *shadows)
+{
+  g_return_val_if_fail (shadows->class == &GTK_CSS_VALUE_SHADOWS, TRUE);
+
+  return shadows->len == 0;
 }
 
 void
@@ -314,6 +325,8 @@ _gtk_css_shadows_value_get_extents (const GtkCssValue *shadows,
 
   g_return_if_fail (shadows->class == &GTK_CSS_VALUE_SHADOWS);
 
+  *border = b;
+
   for (i = 0; i < shadows->len; i++)
     {
       shadow = shadows->values[i];
@@ -326,10 +339,10 @@ _gtk_css_shadows_value_get_extents (const GtkCssValue *shadows,
                                           &radius, &spread);
       clip_radius = _gtk_cairo_blur_compute_pixels (radius);
 
-      b.top = MAX (0, clip_radius + spread - voffset);
-      b.right = MAX (0, clip_radius + spread + hoffset);
-      b.bottom = MAX (0, clip_radius + spread + voffset);
-      b.left = MAX (0, clip_radius + spread - hoffset);
+      b.top = MAX (0, ceil (clip_radius + spread - voffset));
+      b.right = MAX (0, ceil (clip_radius + spread + hoffset));
+      b.bottom = MAX (0, ceil (clip_radius + spread + voffset));
+      b.left = MAX (0, ceil (clip_radius + spread - hoffset));
 
       border->top = MAX (border->top, b.top);
       border->right = MAX (border->right, b.right);

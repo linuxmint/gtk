@@ -487,7 +487,7 @@ gtk_drag_dest_site_destroy (gpointer data)
  * gtk_drag_dest_set: (method)
  * @widget: a #GtkWidget
  * @flags: which types of default drag behavior to use
- * @targets: (allow-none) (array length=n_targets): a pointer to an array of #GtkTargetEntry<!-- -->s
+ * @targets: (allow-none) (array length=n_targets): a pointer to an array of #GtkTargetEntrys
  *     indicating the drop types that this @widget will accept, or %NULL.
  *     Later you can access the list with gtk_drag_dest_get_target_list()
  *     and gtk_drag_dest_find_target().
@@ -597,7 +597,7 @@ gtk_drag_dest_get_target_list (GtkWidget *widget)
 
 /**
  * gtk_drag_dest_set_target_list: (method)
- * @widget: a #GtkWidget that's a drag destination
+ * @widget: a #GtkWidget that’s a drag destination
  * @target_list: (allow-none): list of droppable targets, or %NULL for none
  */
 void
@@ -630,7 +630,7 @@ gtk_drag_dest_set_target_list (GtkWidget      *widget,
 
 /**
  * gtk_drag_dest_add_text_targets: (method)
- * @widget: a #GtkWidget that's a drag destination
+ * @widget: a #GtkWidget that’s a drag destination
  */
 void
 gtk_drag_dest_add_text_targets (GtkWidget *widget)
@@ -650,7 +650,7 @@ gtk_drag_dest_add_text_targets (GtkWidget *widget)
 
 /**
  * gtk_drag_dest_add_image_targets: (method)
- * @widget: a #GtkWidget that's a drag destination
+ * @widget: a #GtkWidget that’s a drag destination
  */
 void
 gtk_drag_dest_add_image_targets (GtkWidget *widget)
@@ -669,7 +669,7 @@ gtk_drag_dest_add_image_targets (GtkWidget *widget)
 
 /**
  * gtk_drag_dest_add_uri_targets: (method)
- * @widget: a #GtkWidget that's a drag destination
+ * @widget: a #GtkWidget that’s a drag destination
  */
 void
 gtk_drag_dest_add_uri_targets (GtkWidget *widget)
@@ -940,7 +940,7 @@ gtk_drag_dest_drop (GtkWidget	     *widget,
 
 /**
  * gtk_drag_dest_set_track_motion: (method)
- * @widget: a #GtkWidget that's a drag destination
+ * @widget: a #GtkWidget that’s a drag destination
  * @track_motion: whether to accept all targets
  */
 void
@@ -960,7 +960,7 @@ gtk_drag_dest_set_track_motion (GtkWidget *widget,
 
 /**
  * gtk_drag_dest_get_track_motion: (method)
- * @widget: a #GtkWidget that's a drag destination
+ * @widget: a #GtkWidget that’s a drag destination
  */
 gboolean
 gtk_drag_dest_get_track_motion (GtkWidget *widget)
@@ -1181,7 +1181,7 @@ gtk_drag_begin_idle (gpointer arg)
   return G_SOURCE_REMOVE;
 }
 /* Fake protocol to let us call GdkNSView gdkWindow without including
- * gdk/GdkNSView.h (which we can't because it pulls in the internal-only
+ * gdk/GdkNSView.h (which we can’t because it pulls in the internal-only
  * gdkwindow.h).
  */
 @protocol GdkNSView
@@ -1524,7 +1524,7 @@ gtk_drag_source_get_target_list (GtkWidget *widget)
 
 /**
  * gtk_drag_source_set_target_list: (method)
- * @widget: a #GtkWidget that's a drag source
+ * @widget: a #GtkWidget that’s a drag source
  * @target_list: (allow-none): list of draggable targets, or %NULL for none
  */
 void
@@ -1554,7 +1554,7 @@ gtk_drag_source_set_target_list (GtkWidget     *widget,
 
 /**
  * gtk_drag_source_add_text_targets:
- * @widget: a #GtkWidget that's is a drag source
+ * @widget: a #GtkWidget that’s is a drag source
  *
  * Add the text targets supported by #GtkSelection to
  * the target list of the drag source.  The targets
@@ -1581,7 +1581,7 @@ gtk_drag_source_add_text_targets (GtkWidget *widget)
 
 /**
  * gtk_drag_source_add_image_targets: (method)
- * @widget: a #GtkWidget that's is a drag source
+ * @widget: a #GtkWidget that’s is a drag source
  */
 void
 gtk_drag_source_add_image_targets (GtkWidget *widget)
@@ -1600,7 +1600,7 @@ gtk_drag_source_add_image_targets (GtkWidget *widget)
 
 /**
  * gtk_drag_source_add_uri_targets: (method)
- * @widget: a #GtkWidget that's is a drag source
+ * @widget: a #GtkWidget that’s is a drag source
  */
 void
 gtk_drag_source_add_uri_targets (GtkWidget *widget)
@@ -1740,8 +1740,8 @@ gtk_drag_source_set_icon_name (GtkWidget   *widget,
  * @hot_y: the Y offset within @widget of the hotspot.
  * 
  * Changes the icon for a widget to a given widget. GTK+
- * will not destroy the icon, so if you don't want
- * it to persist, you should connect to the "drag-end" 
+ * will not destroy the icon, so if you don’t want
+ * it to persist, you should connect to the “drag-end” 
  * signal and destroy it yourself.
  **/
 void 

@@ -24,6 +24,7 @@
 
 #include "gtkorientableprivate.h"
 #include "gtksizerequest.h"
+#include "gtkwidgetprivate.h"
 #include "gtkprivate.h"
 #include "gtkintl.h"
 
@@ -36,9 +37,9 @@
  *
  * GtkGrid is a container which arranges its child widgets in
  * rows and columns. It is a very similar to #GtkTable and #GtkBox,
- * but it consistently uses #GtkWidget's #GtkWidget:margin and #GtkWidget:expand
+ * but it consistently uses #GtkWidget’s #GtkWidget:margin and #GtkWidget:expand
  * properties instead of custom child properties, and it fully supports
- * <link linkend="geometry-management">height-for-width geometry management</link>.
+ * [height-for-width geometry management][geometry-management].
  *
  * Children are added using gtk_grid_attach(). They can span multiple
  * rows or columns. It is also possible to add a child next to an
@@ -146,13 +147,16 @@ struct _GtkGridRequest
 enum
 {
   PROP_0,
-  PROP_ORIENTATION,
   PROP_ROW_SPACING,
   PROP_COLUMN_SPACING,
   PROP_ROW_HOMOGENEOUS,
   PROP_COLUMN_HOMOGENEOUS,
-  PROP_BASELINE_ROW
+  PROP_BASELINE_ROW,
+  N_PROPERTIES,
+  PROP_ORIENTATION
 };
+
+static GParamSpec *obj_properties[N_PROPERTIES] = { NULL, };
 
 enum
 {
@@ -393,6 +397,8 @@ gtk_grid_init (GtkGrid *grid)
 
   priv->linedata[0].homogeneous = FALSE;
   priv->linedata[1].homogeneous = FALSE;
+
+  _gtk_orientable_set_style_classes (GTK_ORIENTABLE (grid));
 }
 
 static void
@@ -1120,11 +1126,8 @@ gtk_grid_request_sum (GtkGridRequest *request,
       nat -= linedata->spacing;
     }
 
-  if (minimum)
-    *minimum = min;
-
-  if (natural)
-    *natural = nat;
+  *minimum = min;
+  *natural = nat;
 }
 
 /* Computes minimum and natural fields of lines.
@@ -1425,11 +1428,8 @@ gtk_grid_get_size (GtkGrid        *grid,
   GtkGridRequest request;
   GtkGridLines *lines;
 
-  if (minimum)
-    *minimum = 0;
-
-  if (natural)
-    *natural = 0;
+  *minimum = 0;
+  *natural = 0;
 
   if (minimum_baseline)
     *minimum_baseline = -1;
@@ -1462,7 +1462,7 @@ gtk_grid_get_size_for_size (GtkGrid        *grid,
 {
   GtkGridRequest request;
   GtkGridLines *lines;
-  gint min_size;
+  gint min_size, nat_size;
 
   if (minimum)
     *minimum = 0;
@@ -1489,7 +1489,7 @@ gtk_grid_get_size_for_size (GtkGrid        *grid,
   memset (lines->lines, 0, (lines->max - lines->min) * sizeof (GtkGridLine));
 
   gtk_grid_request_run (&request, 1 - orientation, FALSE);
-  gtk_grid_request_sum (&request, 1 - orientation, &min_size, NULL, NULL, NULL);
+  gtk_grid_request_sum (&request, 1 - orientation, &min_size, &nat_size, NULL, NULL);
   gtk_grid_request_allocate (&request, 1 - orientation, MAX (size, min_size));
 
   gtk_grid_request_run (&request, orientation, TRUE);
@@ -1680,6 +1680,8 @@ gtk_grid_size_allocate (GtkWidget     *widget,
   gtk_grid_request_position (&request, 1);
 
   gtk_grid_request_allocate_children (&request);
+
+  _gtk_widget_set_simple_clip (widget, NULL);
 }
 
 static gboolean
@@ -1727,40 +1729,44 @@ gtk_grid_class_init (GtkGridClass *class)
 
   g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
 
-  g_object_class_install_property (object_class, PROP_ROW_SPACING,
+  obj_properties[PROP_ROW_SPACING] =
     g_param_spec_int ("row-spacing",
                       P_("Row spacing"),
                       P_("The amount of space between two consecutive rows"),
                       0, G_MAXINT16, 0,
-                      GTK_PARAM_READWRITE));
+                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
 
-  g_object_class_install_property (object_class, PROP_COLUMN_SPACING,
+  obj_properties[PROP_COLUMN_SPACING] =
     g_param_spec_int ("column-spacing",
                       P_("Column spacing"),
                       P_("The amount of space between two consecutive columns"),
                       0, G_MAXINT16, 0,
-                      GTK_PARAM_READWRITE));
+                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
 
-  g_object_class_install_property (object_class, PROP_ROW_HOMOGENEOUS,
+  obj_properties[PROP_ROW_HOMOGENEOUS] =
     g_param_spec_boolean ("row-homogeneous",
                           P_("Row Homogeneous"),
                           P_("If TRUE, the rows are all the same height"),
                           FALSE,
-                          GTK_PARAM_READWRITE));
+                          GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
 
-  g_object_class_install_property (object_class, PROP_COLUMN_HOMOGENEOUS,
+  obj_properties[PROP_COLUMN_HOMOGENEOUS] =
     g_param_spec_boolean ("column-homogeneous",
                           P_("Column Homogeneous"),
                           P_("If TRUE, the columns are all the same width"),
                           FALSE,
-                          GTK_PARAM_READWRITE));
+                          GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
 
-  g_object_class_install_property (object_class, PROP_BASELINE_ROW,
+  obj_properties[PROP_BASELINE_ROW] =
     g_param_spec_int ("baseline-row",
                       P_("Baseline Row"),
                       P_("The row to align the to the baseline when valign is GTK_ALIGN_BASELINE"),
                       0, G_MAXINT, 0,
-                      GTK_PARAM_READWRITE));
+                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
+
+  g_object_class_install_properties (object_class,
+                                     N_PROPERTIES,
+                                     obj_properties);
 
   gtk_container_class_install_child_property (container_class, CHILD_PROP_LEFT_ATTACH,
     g_param_spec_int ("left-attach",
@@ -1816,7 +1822,7 @@ gtk_grid_new (void)
  * Adds a widget to the grid.
  *
  * The position of @child is determined by @left and @top. The
- * number of 'cells' that @child will occupy is determined by
+ * number of “cells” that @child will occupy is determined by
  * @width and @height.
  */
 void
@@ -2244,7 +2250,7 @@ gtk_grid_set_row_homogeneous (GtkGrid  *grid,
       if (gtk_widget_get_visible (GTK_WIDGET (grid)))
         gtk_widget_queue_resize (GTK_WIDGET (grid));
 
-      g_object_notify (G_OBJECT (grid), "row-homogeneous");
+      g_object_notify_by_pspec (G_OBJECT (grid), obj_properties [PROP_ROW_HOMOGENEOUS]);
     }
 }
 
@@ -2291,7 +2297,7 @@ gtk_grid_set_column_homogeneous (GtkGrid  *grid,
       if (gtk_widget_get_visible (GTK_WIDGET (grid)))
         gtk_widget_queue_resize (GTK_WIDGET (grid));
 
-      g_object_notify (G_OBJECT (grid), "column-homogeneous");
+      g_object_notify_by_pspec (G_OBJECT (grid), obj_properties [PROP_COLUMN_HOMOGENEOUS]);
     }
 }
 
@@ -2338,7 +2344,7 @@ gtk_grid_set_row_spacing (GtkGrid *grid,
       if (gtk_widget_get_visible (GTK_WIDGET (grid)))
         gtk_widget_queue_resize (GTK_WIDGET (grid));
 
-      g_object_notify (G_OBJECT (grid), "row-spacing");
+      g_object_notify_by_pspec (G_OBJECT (grid), obj_properties [PROP_ROW_SPACING]);
     }
 }
 
@@ -2385,7 +2391,7 @@ gtk_grid_set_column_spacing (GtkGrid *grid,
       if (gtk_widget_get_visible (GTK_WIDGET (grid)))
         gtk_widget_queue_resize (GTK_WIDGET (grid));
 
-      g_object_notify (G_OBJECT (grid), "column-spacing");
+      g_object_notify_by_pspec (G_OBJECT (grid), obj_properties [PROP_COLUMN_SPACING]);
     }
 }
 

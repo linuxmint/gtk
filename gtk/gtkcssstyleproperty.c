@@ -26,6 +26,7 @@
 #include "gtkcssinitialvalueprivate.h"
 #include "gtkcssstylefuncsprivate.h"
 #include "gtkcsstypesprivate.h"
+#include "gtkcssunsetvalueprivate.h"
 #include "gtkintl.h"
 #include "gtkprivatetypebuiltins.h"
 #include "gtkstylepropertiesprivate.h"
@@ -255,6 +256,14 @@ gtk_css_style_property_parse_value (GtkStyleProperty *property,
        */
       return _gtk_css_inherit_value_new ();
     }
+  else if (_gtk_css_parser_try (parser, "unset", TRUE))
+    {
+      /* If the cascaded value of a property is the unset keyword,
+       * then if it is an inherited property, this is treated as
+       * inherit, and if it is not, this is treated as initial.
+       */
+      return _gtk_css_unset_value_new ();
+    }
 
   return (* style_property->parse_value) (style_property, parser);
 }
@@ -363,7 +372,7 @@ _gtk_css_style_property_get_n_properties (void)
  * @id: the id of the property
  *
  * Gets the style property with the given id. All style properties (but not
- * shorthand properties) are indexable by id so that it's easy to use arrays
+ * shorthand properties) are indexable by id so that it’s easy to use arrays
  * when doing style lookups.
  *
  * Returns: (transfer none): The style property with the given id
@@ -387,9 +396,9 @@ _gtk_css_style_property_lookup_by_id (guint id)
  * _gtk_css_style_property_is_inherit:
  * @property: the property
  *
- * Queries if the given @property is inherited. See
- * <ulink url="http://www.w3.org/TR/css3-cascade/#inheritance>
- * the CSS documentation</ulink> for an explanation of this concept.
+ * Queries if the given @property is inherited. See the
+ * [CSS Documentation](http://www.w3.org/TR/css3-cascade/#inheritance)
+ * for an explanation of this concept.
  *
  * Returns: %TRUE if the property is inherited by default.
  **/
@@ -405,9 +414,9 @@ _gtk_css_style_property_is_inherit (GtkCssStyleProperty *property)
  * _gtk_css_style_property_is_animated:
  * @property: the property
  *
- * Queries if the given @property can be is animated. See
- * <ulink url="http://www.w3.org/TR/css3-transitions/#animatable-css>
- * the CSS documentation</ulink> for animatable properties.
+ * Queries if the given @property can be is animated. See the
+ * [CSS Documentation](http://www.w3.org/TR/css3-transitions/#animatable-css)
+ * for animatable properties.
  *
  * Returns: %TRUE if the property can be animated.
  **/
@@ -443,7 +452,7 @@ _gtk_css_style_property_affects_size (GtkCssStyleProperty *property)
  *
  * Queries if the given @property affects the default font. This is
  * used for optimizations inside GTK, where clearing pango
- * layouts can be avoided if the font doesn't change.
+ * layouts can be avoided if the font doesn’t change.
  *
  * Returns: %TRUE if the property affects the font.
  **/
@@ -476,9 +485,9 @@ _gtk_css_style_property_get_id (GtkCssStyleProperty *property)
  * _gtk_css_style_property_get_initial_value:
  * @property: the property
  *
- * Queries the initial value of the given @property. See
- * <ulink url="http://www.w3.org/TR/css3-cascade/#intial>
- * the CSS documentation</ulink> for an explanation of this concept.
+ * Queries the initial value of the given @property. See the
+ * [CSS Documentation](http://www.w3.org/TR/css3-cascade/#intial)
+ * for an explanation of this concept.
  *
  * Returns: a reference to the initial value. The value will never change.
  **/

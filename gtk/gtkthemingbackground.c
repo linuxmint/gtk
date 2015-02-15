@@ -31,7 +31,7 @@
 #include "gtkcsspositionvalueprivate.h"
 #include "gtkcssrepeatvalueprivate.h"
 #include "gtkcsstypesprivate.h"
-#include "gtkthemingengineprivate.h"
+#include "gtkstylecontextprivate.h"
 
 #include <math.h>
 
@@ -270,7 +270,7 @@ _gtk_theming_background_apply_shadow (GtkThemingBackground *bg,
 {
   _gtk_css_shadows_value_paint_box (_gtk_style_context_peek_property (bg->context, GTK_CSS_PROPERTY_BOX_SHADOW),
                                     cr,
-                                    &bg->padding_box,
+                                    inset ? &bg->padding_box : &bg->border_box,
                                     inset);
 }
 
@@ -308,31 +308,12 @@ _gtk_theming_background_init_context (GtkThemingBackground *bg)
 
 void
 _gtk_theming_background_init (GtkThemingBackground *bg,
-                              GtkThemingEngine     *engine,
+                              GtkStyleContext      *context,
                               gdouble               x,
                               gdouble               y,
                               gdouble               width,
                               gdouble               height,
                               GtkJunctionSides      junction)
-{
-  GtkStyleContext *context;
-
-  g_assert (bg != NULL);
-
-  context = _gtk_theming_engine_get_context (engine);
-  _gtk_theming_background_init_from_context (bg, context,
-                                             x, y, width, height,
-                                             junction);
-}
-
-void
-_gtk_theming_background_init_from_context (GtkThemingBackground *bg,
-                                           GtkStyleContext      *context,
-                                           gdouble               x,
-                                           gdouble               y,
-                                           gdouble               width,
-                                           gdouble               height,
-                                           GtkJunctionSides      junction)
 {
   g_assert (bg != NULL);
 

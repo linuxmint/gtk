@@ -63,6 +63,13 @@ struct _GtkSettingsClass
   void (*_gtk_reserved4) (void);
 };
 
+/**
+ * GtkSettingsValue:
+ * @origin: Origin should be something like “filename:linenumber” for
+ *    rc files, or e.g. “XProperty” for other sources.
+ * @value: Valid types are LONG, DOUBLE and STRING corresponding to
+ *    the token parsed, or a GSTRING holding an unparsed statement
+ */
 struct _GtkSettingsValue
 {
   /* origin should be something like "filename:linenumber" for rc files,
@@ -80,10 +87,8 @@ struct _GtkSettingsValue
 /* --- functions --- */
 GDK_AVAILABLE_IN_ALL
 GType           gtk_settings_get_type                (void) G_GNUC_CONST;
-#ifndef GDK_MULTIHEAD_SAFE
 GDK_AVAILABLE_IN_ALL
 GtkSettings*    gtk_settings_get_default             (void);
-#endif
 GDK_AVAILABLE_IN_ALL
 GtkSettings*    gtk_settings_get_for_screen          (GdkScreen *screen);
 

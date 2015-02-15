@@ -22,6 +22,7 @@
 
 #include "gtkwidget.h"
 #include "gtkwidgetprivate.h"
+#include "gtkdebug.h"
 
 #include <string.h>
 
@@ -52,7 +53,6 @@ struct _GtkActionHelper
 {
   GObject parent_instance;
 
-  GtkApplication *application;
   GtkWidget *widget;
 
   GtkActionHelperGroup *group;
@@ -62,7 +62,6 @@ struct _GtkActionHelper
 
   GVariant *target;
 
-  GtkActionHelperRole role;
   gboolean can_activate;
   gboolean enabled;
   gboolean active;
@@ -75,7 +74,6 @@ enum
   PROP_0,
   PROP_ENABLED,
   PROP_ACTIVE,
-  PROP_ROLE,
   N_PROPS
 };
 
@@ -92,39 +90,25 @@ gtk_action_helper_report_change (GtkActionHelper *helper,
 {
   helper->reporting++;
 
-  if (!helper->application)
+  switch (prop_id)
     {
-      switch (prop_id)
-        {
-        case PROP_ENABLED:
-          gtk_widget_set_sensitive (GTK_WIDGET (helper->widget), helper->enabled);
-          break;
+    case PROP_ENABLED:
+      gtk_widget_set_sensitive (GTK_WIDGET (helper->widget), helper->enabled);
+      break;
 
-        case PROP_ACTIVE:
-          {
-            GParamSpec *pspec;
+    case PROP_ACTIVE:
+      {
+        GParamSpec *pspec;
 
-            pspec = g_object_class_find_property (G_OBJECT_GET_CLASS (helper->widget), "active");
+        pspec = g_object_class_find_property (G_OBJECT_GET_CLASS (helper->widget), "active");
 
-            if (pspec && G_PARAM_SPEC_VALUE_TYPE (pspec) == G_TYPE_BOOLEAN)
-              g_object_set (G_OBJECT (helper->widget), "active", helper->active, NULL);
-          }
-          break;
+        if (pspec && G_PARAM_SPEC_VALUE_TYPE (pspec) == G_TYPE_BOOLEAN)
+          g_object_set (G_OBJECT (helper->widget), "active", helper->active, NULL);
+      }
+      break;
 
-        case PROP_ROLE:
-          {
-            GParamSpec *pspec;
-
-            pspec = g_object_class_find_property (G_OBJECT_GET_CLASS (helper->widget), "action-role");
-
-            if (pspec && G_PARAM_SPEC_VALUE_TYPE (pspec) == G_TYPE_UINT)
-              g_object_set (G_OBJECT (helper->widget), "action-role", helper->role, NULL);
-          }
-          break;
-
-        default:
-          g_assert_not_reached ();
-        }
+    default:
+      g_assert_not_reached ();
     }
 
   g_object_notify_by_pspec (G_OBJECT (helper), gtk_action_helper_pspecs[prop_id]);
@@ -138,27 +122,34 @@ gtk_action_helper_action_added (GtkActionHelper    *helper,
                                 GVariant           *state,
                                 gboolean            should_emit_signals)
 {
+  GTK_NOTE(ACTIONS, g_message("actionhelper: %s added", helper->action_name));
+
   /* we can only activate if we have the correct type of parameter */
   helper->can_activate = (helper->target == NULL && parameter_type == NULL) ||
                           (helper->target != NULL && parameter_type != NULL &&
                           g_variant_is_of_type (helper->target, parameter_type));
 
   if (!helper->can_activate)
-    return;
+    {
+      GTK_NOTE(ACTIONS, g_message("actionhelper: %s found, but disabled due to parameter type mismatch",
+                                  helper->action_name));
+      return;
+    }
+
+  GTK_NOTE(ACTIONS, g_message ("actionhelper: %s can be activated", helper->action_name));
 
   helper->enabled = enabled;
 
+  if (!enabled)
+    GTK_NOTE(ACTIONS, g_message("actionhelper: %s found, but disabled due to disabled action", helper->action_name));
+  else
+    GTK_NOTE(ACTIONS, g_message("actionhelper: %s found and enabled", helper->action_name));
+
   if (helper->target != NULL && state != NULL)
-    {
-      helper->active = g_variant_equal (state, helper->target);
-      helper->role = GTK_ACTION_HELPER_ROLE_RADIO;
-    }
+    helper->active = g_variant_equal (state, helper->target);
 
   else if (state != NULL && g_variant_is_of_type (state, G_VARIANT_TYPE_BOOLEAN))
-    {
-      helper->active = g_variant_get_boolean (state);
-      helper->role = GTK_ACTION_HELPER_ROLE_TOGGLE;
-    }
+    helper->active = g_variant_get_boolean (state);
 
   if (should_emit_signals)
     {
@@ -167,15 +158,14 @@ gtk_action_helper_action_added (GtkActionHelper    *helper,
 
       if (helper->active)
         gtk_action_helper_report_change (helper, PROP_ACTIVE);
-
-      if (helper->role)
-        gtk_action_helper_report_change (helper, PROP_ROLE);
     }
 }
 
 static void
 gtk_action_helper_action_removed (GtkActionHelper *helper)
 {
+  GTK_NOTE(ACTIONS, g_message ("actionhelper: %s was removed", helper->action_name));
+
   if (!helper->can_activate)
     return;
 
@@ -192,18 +182,14 @@ gtk_action_helper_action_removed (GtkActionHelper *helper)
       helper->active = FALSE;
       gtk_action_helper_report_change (helper, PROP_ACTIVE);
     }
-
-  if (helper->role)
-    {
-      helper->role = GTK_ACTION_HELPER_ROLE_NORMAL;
-      gtk_action_helper_report_change (helper, PROP_ROLE);
-    }
 }
 
 static void
 gtk_action_helper_action_enabled_changed (GtkActionHelper *helper,
                                           gboolean         enabled)
 {
+  GTK_NOTE(ACTIONS, g_message ("actionhelper: %s enabled changed: %d", helper->action_name, enabled));
+
   if (!helper->can_activate)
     return;
 
@@ -219,6 +205,8 @@ gtk_action_helper_action_state_changed (GtkActionHelper *helper,
                                         GVariant        *new_state)
 {
   gboolean was_active;
+
+  GTK_NOTE(ACTIONS, g_message ("actionhelper: %s state changed", helper->action_name));
 
   if (!helper->can_activate)
     return;
@@ -254,10 +242,6 @@ gtk_action_helper_get_property (GObject *object, guint prop_id,
       g_value_set_boolean (value, helper->active);
       break;
 
-    case PROP_ROLE:
-      g_value_set_uint (value, helper->role);
-      break;
-
     default:
       g_assert_not_reached ();
     }
@@ -267,16 +251,6 @@ static void
 gtk_action_helper_finalize (GObject *object)
 {
   GtkActionHelper *helper = GTK_ACTION_HELPER (object);
-
-  if (helper->application)
-    {
-      g_signal_handlers_disconnect_by_data (helper->application, helper);
-      g_object_unref (helper->action_context);
-      g_object_unref (helper->application);
-
-      if (helper->widget)
-          g_object_unref (helper->widget);
-    }
 
   g_free (helper->action_name);
 
@@ -339,8 +313,6 @@ gtk_action_helper_class_init (GtkActionHelperClass *class)
                                                                  G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
   gtk_action_helper_pspecs[PROP_ACTIVE] = g_param_spec_boolean ("active", "active", "active", FALSE,
                                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-  gtk_action_helper_pspecs[PROP_ROLE] = g_param_spec_uint ("role", "role", "role", 0, 2, 0,
-                                                           G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
   g_object_class_install_properties (class, N_PROPS, gtk_action_helper_pspecs);
 }
 
@@ -395,63 +367,22 @@ gtk_action_helper_new (GtkActionable *widget)
   return helper;
 }
 
-static void
-gtk_action_helper_active_window_changed (GObject    *object,
-                                         GParamSpec *pspec,
-                                         gpointer    user_data)
-{
-  GtkActionHelper *helper = user_data;
-  GtkActionMuxer *parent;
-
-  if (helper->widget)
-    g_object_unref (helper->widget);
-
-  helper->widget = GTK_WIDGET (gtk_application_get_active_window (helper->application));
-
-  if (helper->widget)
-    {
-      parent = g_object_ref (_gtk_widget_get_action_muxer (GTK_WIDGET (helper->widget)));
-      g_object_ref (helper->widget);
-    }
-  else
-    {
-      parent = gtk_action_muxer_new ();
-      gtk_action_muxer_insert (parent, "app", G_ACTION_GROUP (helper->application));
-    }
-
-  gtk_action_muxer_set_parent (helper->action_context, parent);
-  g_object_unref (parent);
-}
-
-GtkActionHelper *
-gtk_action_helper_new_with_application (GtkApplication *application)
-{
-  GtkActionHelper *helper;
-
-  g_return_val_if_fail (GTK_IS_APPLICATION (application), NULL);
-
-  helper = g_object_new (GTK_TYPE_ACTION_HELPER, NULL);
-  helper->application = g_object_ref (application);
-
-  helper->action_context = gtk_action_muxer_new ();
-  g_signal_connect (application, "notify::active-window", G_CALLBACK (gtk_action_helper_active_window_changed), helper);
-  gtk_action_helper_active_window_changed (NULL, NULL, helper);
-
-  return helper;
-}
-
 void
 gtk_action_helper_set_action_name (GtkActionHelper *helper,
                                    const gchar     *action_name)
 {
   gboolean was_enabled, was_active;
-  GtkActionHelperRole old_role;
   const GVariantType *parameter_type;
   gboolean enabled;
   GVariant *state;
 
   if (g_strcmp0 (action_name, helper->action_name) == 0)
     return;
+
+  GTK_NOTE(ACTIONS,
+           if (!strchr (action_name, '.'))
+             g_message ("actionhelper: action name %s doesn't look like 'app.' or 'win.' "
+                        "which means that it will probably not work properly.", action_name));
 
   if (helper->action_name)
     {
@@ -472,11 +403,12 @@ gtk_action_helper_set_action_name (GtkActionHelper *helper,
    */
   was_enabled = helper->enabled;
   was_active = helper->active;
-  old_role = helper->role;
 
   if (g_action_group_query_action (G_ACTION_GROUP (helper->action_context), helper->action_name,
                                    &enabled, &parameter_type, NULL, NULL, &state))
     {
+      GTK_NOTE(ACTIONS, g_message ("actionhelper: %s existed from the start", helper->action_name));
+
       gtk_action_helper_action_added (helper, enabled, parameter_type, state, FALSE);
 
       if (state)
@@ -484,6 +416,7 @@ gtk_action_helper_set_action_name (GtkActionHelper *helper,
     }
   else
     {
+      GTK_NOTE(ACTIONS, g_message ("actionhelper: %s missing from the start", helper->action_name));
       helper->enabled = FALSE;
     }
 
@@ -498,11 +431,7 @@ gtk_action_helper_set_action_name (GtkActionHelper *helper,
   if (helper->active != was_active)
     gtk_action_helper_report_change (helper, PROP_ACTIVE);
 
-  if (helper->role != old_role)
-    gtk_action_helper_report_change (helper, PROP_ROLE);
-
-  if (!helper->application)
-    g_object_notify (G_OBJECT (helper->widget), "action-name");
+  g_object_notify (G_OBJECT (helper->widget), "action-name");
 }
 
 /*< private >
@@ -578,8 +507,7 @@ gtk_action_helper_set_action_target_value (GtkActionHelper *helper,
   if (helper->active != was_active)
     gtk_action_helper_report_change (helper, PROP_ACTIVE);
 
-  if (!helper->application)
-    g_object_notify (G_OBJECT (helper->widget), "action-target");
+  g_object_notify (G_OBJECT (helper->widget), "action-target");
 }
 
 const gchar *
@@ -598,15 +526,6 @@ gtk_action_helper_get_action_target_value (GtkActionHelper *helper)
     return NULL;
 
   return helper->target;
-}
-
-GtkActionHelperRole
-gtk_action_helper_get_role (GtkActionHelper *helper)
-{
-  if (helper == NULL)
-    return GTK_ACTION_HELPER_ROLE_NORMAL;
-
-  return helper->role;
 }
 
 gboolean

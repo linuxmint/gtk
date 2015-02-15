@@ -27,14 +27,14 @@
 #include <stdlib.h>
 
 #include <gdk/gdk.h>
-#include <gtk/gtkx.h>
+#include <gtk/gtkcombobox.h>
 #include <gtk/gtkentry.h>
 #include <gtk/gtknotebook.h>
 #include <gtk/gtkmenuitem.h>
 #include <gtk/gtkmenu.h>
 #include <gtk/gtkmenubar.h>
+#include <gtk/gtksocket.h>
 #include <gtk/gtktogglebutton.h>
-#include <gtk/gtkcombobox.h>
 #include <gtk/gtkaccessible.h>
 
 #ifdef GDK_WINDOWING_X11
@@ -603,6 +603,7 @@ gail_focus_notify_when_idle (GtkWidget *widget)
     }
 
   focus_notify_handler = gdk_threads_add_idle (gail_focus_idle_handler, widget);
+  g_source_set_name_by_id (focus_notify_handler, "[gtk+] gail_focus_idle_handler");
 }
 
 static gboolean

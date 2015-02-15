@@ -96,7 +96,7 @@ struct _GdkWindowImplClass
                                          gint            *y,
                                          gint            *width,
                                          gint            *height);
-  gint         (* get_root_coords)      (GdkWindow       *window,
+  void         (* get_root_coords)      (GdkWindow       *window,
 					 gint             x,
 					 gint             y,
                                          gint            *root_x,
@@ -126,12 +126,10 @@ struct _GdkWindowImplClass
 
   /* Called before processing updates for a window. This gives the windowing
    * layer a chance to save the region for later use in avoiding duplicate
-   * exposes. The return value indicates whether the function has a saved
-   * the region; if the result is TRUE, then the windowing layer is responsible
-   * for destroying the region later.
+   * exposes.
    */
-  gboolean     (* queue_antiexpose)     (GdkWindow       *window,
-					 cairo_region_t  *update_area);
+  void     (* queue_antiexpose)     (GdkWindow       *window,
+                                     cairo_region_t  *update_area);
 
 /* Called to do the windowing system specific part of gdk_window_destroy(),
  *
@@ -157,11 +155,6 @@ struct _GdkWindowImplClass
   * send a message to the owner requesting that the window be destroyed.
   */
   void         (*destroy_foreign)       (GdkWindow       *window);
-
-  cairo_surface_t * (* resize_cairo_surface) (GdkWindow       *window,
-                                              cairo_surface_t *surface,
-                                              gint             width,
-                                              gint             height);
 
   /* optional */
   gboolean     (* beep)                 (GdkWindow       *window);
@@ -190,9 +183,6 @@ struct _GdkWindowImplClass
 					 const gchar *startup_id);
   void         (* set_transient_for)    (GdkWindow *window,
 					 GdkWindow *parent);
-  void         (* get_root_origin)      (GdkWindow *window,
-					 gint      *x,
-					 gint      *y);
   void         (* get_frame_extents)    (GdkWindow    *window,
 					 GdkRectangle *rect);
   void         (* set_override_redirect) (GdkWindow *window,
@@ -295,6 +285,13 @@ struct _GdkWindowImplClass
 
   void         (* set_opaque_region)      (GdkWindow      *window,
                                            cairo_region_t *region);
+  void         (* set_shadow_width)       (GdkWindow      *window,
+                                           gint            left,
+                                           gint            right,
+                                           gint            top,
+                                           gint            bottom);
+  gboolean     (* show_window_menu)       (GdkWindow      *window,
+                                           GdkEvent       *event);
 };
 
 /* Interface Functions */

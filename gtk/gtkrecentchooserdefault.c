@@ -60,6 +60,7 @@
 #include "gtktooltip.h"
 #include "gtktypebuiltins.h"
 #include "gtkorientable.h"
+#include "gtkwindowgroup.h"
 #include "deprecated/gtkactivatable.h"
 
 #include "gtkrecentmanager.h"
@@ -346,7 +347,7 @@ _gtk_recent_chooser_default_class_init (GtkRecentChooserDefaultClass *klass)
   /* Bind class to template
    */
   gtk_widget_class_set_template_from_resource (widget_class,
-					       "/org/gtk/libgtk/gtkrecentchooserdefault.ui");
+					       "/org/gtk/libgtk/ui/gtkrecentchooserdefault.ui");
 
   gtk_widget_class_bind_template_child_private (widget_class, GtkRecentChooserDefault, filter_combo_hbox);
   gtk_widget_class_bind_template_child_private (widget_class, GtkRecentChooserDefault, filter_combo);
@@ -435,43 +436,70 @@ gtk_recent_chooser_default_set_property (GObject      *object,
       set_recent_manager (impl, g_value_get_object (value));
       break;
     case GTK_RECENT_CHOOSER_PROP_SHOW_PRIVATE:
-      impl->priv->show_private = g_value_get_boolean (value);
-      if (impl->priv->recent_popup_menu_show_private_item)
-	{
-          GtkCheckMenuItem *item = GTK_CHECK_MENU_ITEM (impl->priv->recent_popup_menu_show_private_item);
-	  g_signal_handlers_block_by_func (item, G_CALLBACK (show_private_toggled_cb), impl);
-          gtk_check_menu_item_set_active (item, impl->priv->show_private);
-	  g_signal_handlers_unblock_by_func (item, G_CALLBACK (show_private_toggled_cb), impl);
+      if (impl->priv->show_private != g_value_get_boolean (value))
+        {
+          impl->priv->show_private = g_value_get_boolean (value);
+          if (impl->priv->recent_popup_menu_show_private_item)
+            {
+              GtkCheckMenuItem *item = GTK_CHECK_MENU_ITEM (impl->priv->recent_popup_menu_show_private_item);
+              g_signal_handlers_block_by_func (item, G_CALLBACK (show_private_toggled_cb), impl);
+              gtk_check_menu_item_set_active (item, impl->priv->show_private);
+              g_signal_handlers_unblock_by_func (item, G_CALLBACK (show_private_toggled_cb), impl);
+            }
+          reload_recent_items (impl);
+          g_object_notify_by_pspec (object, pspec);
         }
-      reload_recent_items (impl);
       break;
     case GTK_RECENT_CHOOSER_PROP_SHOW_NOT_FOUND:
-      impl->priv->show_not_found = g_value_get_boolean (value);
-      reload_recent_items (impl);
+      if (impl->priv->show_not_found != g_value_get_boolean (value))
+        {
+          impl->priv->show_not_found = g_value_get_boolean (value);
+          reload_recent_items (impl);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SHOW_TIPS:
-      impl->priv->show_tips = g_value_get_boolean (value);
+      if (impl->priv->show_tips != g_value_get_boolean (value))
+        {
+          impl->priv->show_tips = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SHOW_ICONS:
-      impl->priv->show_icons = g_value_get_boolean (value);
-      gtk_tree_view_column_set_visible (impl->priv->icon_column, impl->priv->show_icons);
+      if (impl->priv->show_icons != g_value_get_boolean (value))
+        {
+          impl->priv->show_icons = g_value_get_boolean (value);
+          gtk_tree_view_column_set_visible (impl->priv->icon_column, impl->priv->show_icons);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SELECT_MULTIPLE:
-      impl->priv->select_multiple = g_value_get_boolean (value);
-      
-      if (impl->priv->select_multiple)
-        gtk_tree_selection_set_mode (impl->priv->selection, GTK_SELECTION_MULTIPLE);
-      else
-        gtk_tree_selection_set_mode (impl->priv->selection, GTK_SELECTION_SINGLE);
+      if (impl->priv->select_multiple != g_value_get_boolean (value))
+        {
+          impl->priv->select_multiple = g_value_get_boolean (value);
+          if (impl->priv->select_multiple)
+            gtk_tree_selection_set_mode (impl->priv->selection, GTK_SELECTION_MULTIPLE);
+          else
+            gtk_tree_selection_set_mode (impl->priv->selection, GTK_SELECTION_SINGLE);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_LOCAL_ONLY:
-      impl->priv->local_only = g_value_get_boolean (value);
-      reload_recent_items (impl);
+      if (impl->priv->local_only != g_value_get_boolean (value))
+        {
+          impl->priv->local_only = g_value_get_boolean (value);
+          reload_recent_items (impl);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_LIMIT:
-      impl->priv->limit = g_value_get_int (value);
-      impl->priv->limit_set = TRUE;
-      reload_recent_items (impl);
+      if (impl->priv->limit != g_value_get_int (value))
+        {
+          impl->priv->limit = g_value_get_int (value);
+          impl->priv->limit_set = TRUE;
+          reload_recent_items (impl);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SORT_TYPE:
       chooser_set_sort_type (impl, g_value_get_enum (value));
@@ -717,7 +745,7 @@ load_recent_items (gpointer user_data)
       if (!impl->priv->recent_items)
         {
 	  impl->priv->load_state = LOAD_FINISHED;
-          
+          impl->priv->load_id = 0;
           return FALSE;
         }
         
@@ -790,7 +818,6 @@ cleanup_after_load (gpointer user_data)
       /* we have officialy finished loading all the items,
        * so we can reset the state machine
        */
-      g_source_remove (impl->priv->load_id);
       impl->priv->load_id = 0;
       impl->priv->load_state = LOAD_EMPTY;
     }
@@ -833,6 +860,7 @@ reload_recent_items (GtkRecentChooserDefault *impl)
                                              load_recent_items,
                                              impl,
                                              cleanup_after_load);
+  g_source_set_name_by_id (impl->priv->load_id, "[gtk+] load_recent_items");
 }
 
 /* taken form gtkfilechooserdialog.c */
@@ -1306,7 +1334,6 @@ chooser_set_sort_type (GtkRecentChooserDefault *impl,
     {
       impl->priv->sort_type = sort_type;
       reload_recent_items (impl);
-
       g_object_notify (G_OBJECT (impl), "sort-type");
     }
 }
@@ -1426,16 +1453,10 @@ append_uri_to_urilist (GtkTreeModel *model,
 		       gpointer      user_data)
 {
   DragData *drag_data = (DragData *) user_data;
-  GtkTreeModel *child_model;
-  GtkTreeIter child_iter;
   gchar *uri = NULL;
   gsize pos;
 
-  child_model = gtk_tree_model_filter_get_model (GTK_TREE_MODEL_FILTER (model));
-  gtk_tree_model_filter_convert_iter_to_child_iter (GTK_TREE_MODEL_FILTER (model),
-  						    &child_iter,
-  						    iter);
-  gtk_tree_model_get (child_model, &child_iter,
+  gtk_tree_model_get (model, iter,
   		      RECENT_URI_COLUMN, &uri,
   		      -1);
   g_assert (uri != NULL);

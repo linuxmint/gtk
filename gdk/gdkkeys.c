@@ -40,7 +40,7 @@
  * #GdkEventKey structure, which is passed to signal handlers for the
  * #GtkWidget::key-press-event and #GtkWidget::key-release-event signals.
  * The complete list of key values can be found in the
- * <filename>&lt;gdk/gdkkeysyms.h&gt;</filename> header file.
+ * `gdk/gdkkeysyms.h` header file.
  *
  * Key values are regularly updated from the upstream X.org X11 implementation,
  * so new values are added regularly. They will be prefixed with GDK_KEY_ rather
@@ -57,7 +57,8 @@
  * When it makes sense, key values can be converted to and from
  * Unicode characters with gdk_keyval_to_unicode() and gdk_unicode_to_keyval().
  *
- * <para id="key-group-explanation">
+ * # Groups # {#key-group-explanation}
+ *
  * One #GdkKeymap object exists for each user display. gdk_keymap_get_default()
  * returns the #GdkKeymap for the default display; to obtain keymaps for other
  * displays, use gdk_keymap_get_for_display(). A keymap
@@ -65,10 +66,10 @@
  * as a representation of a symbol printed on a physical keyboard key. That is, it
  * contains three pieces of information. First, it contains the hardware keycode;
  * this is an identifying number for a physical key. Second, it contains the
- * <firstterm>level</firstterm> of the key. The level indicates which symbol on the
+ * “level” of the key. The level indicates which symbol on the
  * key will be used, in a vertical direction. So on a standard US keyboard, the key
- * with the number "1" on it also has the exclamation point ("!") character on
- * it. The level indicates whether to use the "1" or the "!" symbol.  The letter
+ * with the number “1“ on it also has the exclamation point (”!”) character on
+ * it. The level indicates whether to use the “1” or the “!” symbol.  The letter
  * keys are considered to have a lowercase letter at level 0, and an uppercase
  * letter at level 1, though only the uppercase letter is printed.  Third, the
  * #GdkKeymapKey contains a group; groups are not used on standard US keyboards,
@@ -78,16 +79,15 @@
  * group 0, a key might have two English characters, and in group 1 it might have
  * two Hebrew characters. The Hebrew characters will be printed on the key next to
  * the English characters.
- * </para>
  *
- * In order to use a keymap to interpret a key event, it's necessary to first
+ * In order to use a keymap to interpret a key event, it’s necessary to first
  * convert the keyboard state into an effective group and level. This is done via a
  * set of rules that varies widely according to type of keyboard and user
  * configuration. The function gdk_keymap_translate_keyboard_state() accepts a
  * keyboard state -- consisting of hardware keycode pressed, active modifiers, and
  * active group -- applies the appropriate rules, and returns the group/level to be
  * used to index the keymap, along with the modifiers which did not affect the
- * group and level. i.e. it returns "unconsumed modifiers." The keyboard group may
+ * group and level. i.e. it returns “unconsumed modifiers.” The keyboard group may
  * differ from the effective group used for keymap lookups because some keys don't
  * have multiple groups - e.g. the Enter key is always in group 0 regardless of
  * keyboard state.
@@ -95,7 +95,7 @@
  * Note that gdk_keymap_translate_keyboard_state() also returns the keyval, i.e. it
  * goes ahead and performs the keymap lookup in addition to telling you which
  * effective group/level values were used for the lookup. #GdkEventKey already
- * contains this keyval, however, so you don't normally need to call
+ * contains this keyval, however, so you don’t normally need to call
  * gdk_keymap_translate_keyboard_state() just to get the keyval.
  */
 
@@ -381,7 +381,7 @@ gdk_keymap_get_modifier_state (GdkKeymap *keymap)
 /**
  * gdk_keymap_get_entries_for_keyval:
  * @keymap: a #GdkKeymap
- * @keyval: a keyval, such as %GDK_a, %GDK_Up, %GDK_Return, etc.
+ * @keyval: a keyval, such as %GDK_KEY_a, %GDK_KEY_Up, %GDK_KEY_Return, etc.
  * @keys: (out) (array length=n_keys) (transfer full): return location
  *     for an array of #GdkKeymapKey
  * @n_keys: return location for number of elements in returned array
@@ -398,7 +398,7 @@ gdk_keymap_get_modifier_state (GdkKeymap *keymap)
  * The returned array should be freed
  * with g_free().
  *
- * Return value: %TRUE if keys were found and returned
+ * Returns: %TRUE if keys were found and returned
  **/
 gboolean
 gdk_keymap_get_entries_for_keyval (GdkKeymap     *keymap,
@@ -459,7 +459,7 @@ gdk_keymap_get_entries_for_keycode (GdkKeymap     *keymap,
  * this function, since the effective group/level may not be
  * the same as the current keyboard state.
  *
- * Return value: a keyval, or 0 if none was mapped to the given @key
+ * Returns: a keyval, or 0 if none was mapped to the given @key
  **/
 guint
 gdk_keymap_lookup_key (GdkKeymap          *keymap,
@@ -488,57 +488,51 @@ gdk_keymap_lookup_key (GdkKeymap          *keymap,
  * group, and level. Modifiers that affected the translation and
  * are thus unavailable for application use are returned in
  * @consumed_modifiers.
- * See <xref linkend="key-group-explanation"/> for an explanation of
+ * See [Groups][key-group-explanation] for an explanation of
  * groups and levels. The @effective_group is the group that was
  * actually used for the translation; some keys such as Enter are not
  * affected by the active keyboard group. The @level is derived from
  * @state. For convenience, #GdkEventKey already contains the translated
- * keyval, so this function isn't as useful as you might think.
+ * keyval, so this function isn’t as useful as you might think.
  *
- * <note><para>
- * @consumed_modifiers gives modifiers that should be masked out
- * from @state when comparing this key press to a hot key. For
- * instance, on a US keyboard, the <literal>plus</literal>
- * symbol is shifted, so when comparing a key press to a
- * <literal>&lt;Control&gt;plus</literal> accelerator &lt;Shift&gt; should
- * be masked out.
- * </para>
- * <informalexample><programlisting>
- * &sol;* We want to ignore irrelevant modifiers like ScrollLock *&sol;
- * &num;define ALL_ACCELS_MASK (GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK)
+ * @consumed_modifiers gives modifiers that should be masked outfrom @state
+ * when comparing this key press to a hot key. For instance, on a US keyboard,
+ * the `plus` symbol is shifted, so when comparing a key press to a
+ * `<Control>plus` accelerator `<Shift>` should be masked out.
+ *
+ * |[<!-- language="C" -->
+ * // We want to ignore irrelevant modifiers like ScrollLock
+ * #define ALL_ACCELS_MASK (GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK)
  * gdk_keymap_translate_keyboard_state (keymap, event->hardware_keycode,
  *                                      event->state, event->group,
- *                                      &amp;keyval, NULL, NULL, &amp;consumed);
+ *                                      &keyval, NULL, NULL, &consumed);
  * if (keyval == GDK_PLUS &&
- *     (event->state &amp; ~consumed &amp; ALL_ACCELS_MASK) == GDK_CONTROL_MASK)
- *   &sol;* Control was pressed *&sol;
- * </programlisting></informalexample>
- * <para>
+ *     (event->state & ~consumed & ALL_ACCELS_MASK) == GDK_CONTROL_MASK)
+ *   // Control was pressed
+ * ]|
+ * 
  * An older interpretation @consumed_modifiers was that it contained
  * all modifiers that might affect the translation of the key;
  * this allowed accelerators to be stored with irrelevant consumed
- * modifiers, by doing:</para>
- * <informalexample><programlisting>
- * &sol;* XXX Don't do this XXX *&sol;
+ * modifiers, by doing:
+ * |[<!-- language="C" -->
+ * // XXX Don’t do this XXX
  * if (keyval == accel_keyval &&
- *     (event->state &amp; ~consumed &amp; ALL_ACCELS_MASK) == (accel_mods &amp; ~consumed))
- *   &sol;* Accelerator was pressed *&sol;
- * </programlisting></informalexample>
- * <para>
- * However, this did not work if multi-modifier combinations were
- * used in the keymap, since, for instance, <literal>&lt;Control&gt;</literal>
- * would be masked out even if only <literal>&lt;Control&gt;&lt;Alt&gt;</literal>
- * was used in the keymap. To support this usage as well as well as
- * possible, all <emphasis>single modifier</emphasis> combinations
- * that could affect the key for any combination of modifiers will
- * be returned in @consumed_modifiers; multi-modifier combinations
- * are returned only when actually found in @state. When you store
- * accelerators, you should always store them with consumed modifiers
- * removed. Store <literal>&lt;Control&gt;plus</literal>,
- * not <literal>&lt;Control&gt;&lt;Shift&gt;plus</literal>,
- * </para></note>
+ *     (event->state & ~consumed & ALL_ACCELS_MASK) == (accel_mods & ~consumed))
+ *   // Accelerator was pressed
+ * ]|
  *
- * Return value: %TRUE if there was a keyval bound to the keycode/state/group
+ * However, this did not work if multi-modifier combinations were
+ * used in the keymap, since, for instance, `<Control>` would be
+ * masked out even if only `<Control><Alt>` was used in the keymap.
+ * To support this usage as well as well as possible, all single
+ * modifier combinations that could affect the key for any combination
+ * of modifiers will be returned in @consumed_modifiers; multi-modifier
+ * combinations are returned only when actually found in @state. When
+ * you store accelerators, you should always store them with consumed
+ * modifiers removed. Store `<Control>plus`, not `<Control><Shift>plus`,
+ *
+ * Returns: %TRUE if there was a keyval bound to the keycode/state/group
  **/
 gboolean
 gdk_keymap_translate_keyboard_state (GdkKeymap       *keymap,
@@ -651,7 +645,7 @@ gdk_keymap_real_get_modifier_mask (GdkKeymap         *keymap,
  * @keymap: a #GdkKeymap
  * @intent: the use case for the modifier mask
  *
- * Returns the modifier mask the @keymap's windowing system backend
+ * Returns the modifier mask the @keymap’s windowing system backend
  * uses for a particular purpose.
  *
  * Note that this function always returns real hardware modifiers, not
@@ -683,12 +677,12 @@ gdk_keymap_get_modifier_mask (GdkKeymap         *keymap,
  * Converts a key value into a symbolic name.
  *
  * The names are the same as those in the
- * <filename>&lt;gdk/gdkkeysyms.h&gt;</filename> header file
- * but without the leading "GDK_KEY_".
+ * `gdk/gdkkeysyms.h` header file
+ * but without the leading “GDK_KEY_”.
  *
- * Return value: (transfer none): a string containing the name of the key,
- *     or %NULL if @keyval is not a valid key. The string should not be
- *     modified.
+ * Returns: (nullable) (transfer none): a string containing the name
+ *     of the key, or %NULL if @keyval is not a valid key. The string
+ *     should not be modified.
  */
 gchar *
 gdk_keyval_name (guint keyval)
@@ -703,8 +697,8 @@ gdk_keyval_name (guint keyval)
  * Converts a key name to a key value.
  *
  * The names are the same as those in the
- * <filename>&lt;gdk/gdkkeysyms.h&gt;</filename> header file
- * but without the leading "GDK_KEY_".
+ * `gdk/gdkkeysyms.h` header file
+ * but without the leading “GDK_KEY_”.
  *
  * Returns: the corresponding key value, or %GDK_KEY_VoidSymbol
  *     if the key name is not a valid key

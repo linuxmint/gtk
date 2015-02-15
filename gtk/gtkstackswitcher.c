@@ -19,6 +19,9 @@
 
 #include "config.h"
 #include "gtkstackswitcher.h"
+#include "gtkradiobutton.h"
+#include "gtklabel.h"
+#include "gtkorientable.h"
 #include "gtkprivate.h"
 #include "gtkintl.h"
 
@@ -68,15 +71,10 @@ gtk_stack_switcher_init (GtkStackSwitcher *switcher)
   priv->buttons = g_hash_table_new (g_direct_hash, g_direct_equal);
 
   context = gtk_widget_get_style_context (GTK_WIDGET (switcher));
+  gtk_style_context_add_class (context, "stack-switcher");
   gtk_style_context_add_class (context, GTK_STYLE_CLASS_LINKED);
 
   gtk_orientable_set_orientation (GTK_ORIENTABLE (switcher), GTK_ORIENTATION_HORIZONTAL);
-}
-
-static void
-clear_switcher (GtkStackSwitcher *self)
-{
-  gtk_container_foreach (GTK_CONTAINER (self), (GtkCallback) gtk_widget_destroy, self);
 }
 
 static void
@@ -133,9 +131,29 @@ rebuild_child (GtkWidget   *self,
 
   if (button_child)
     {
+      gtk_widget_set_halign (GTK_WIDGET (button_child), GTK_ALIGN_CENTER);
       gtk_widget_show_all (button_child);
       gtk_container_add (GTK_CONTAINER (self), button_child);
     }
+}
+
+static void
+update_needs_attention (GtkWidget *widget, GtkWidget *button, gpointer data)
+{
+  GtkContainer *container;
+  gboolean needs_attention;
+  GtkStyleContext *context;
+
+  container = GTK_CONTAINER (data);
+  gtk_container_child_get (container, widget,
+                           "needs-attention", &needs_attention,
+                           NULL);
+
+  context = gtk_widget_get_style_context (button);
+  if (needs_attention)
+    gtk_style_context_add_class (context, GTK_STYLE_CLASS_NEEDS_ATTENTION);
+  else
+    gtk_style_context_remove_class (context, GTK_STYLE_CLASS_NEEDS_ATTENTION);
 }
 
 static void
@@ -165,6 +183,8 @@ update_button (GtkStackSwitcher *self,
 
   g_free (title);
   g_free (icon_name);
+
+  update_needs_attention (widget, button, priv->stack);
 }
 
 static void
@@ -202,8 +222,22 @@ on_position_updated (GtkWidget        *widget,
 }
 
 static void
-add_child (GtkStackSwitcher *self,
-           GtkWidget        *widget)
+on_needs_attention_updated (GtkWidget        *widget,
+                            GParamSpec       *pspec,
+                            GtkStackSwitcher *self)
+{
+  GtkWidget *button;
+  GtkStackSwitcherPrivate *priv;
+
+  priv = gtk_stack_switcher_get_instance_private (self);
+
+  button = g_hash_table_lookup (priv->buttons, widget);
+  update_button (self, widget, button);
+}
+
+static void
+add_child (GtkWidget        *widget,
+           GtkStackSwitcher *self)
 {
   GtkWidget *button;
   GList *group;
@@ -231,24 +265,53 @@ add_child (GtkStackSwitcher *self,
   g_signal_connect (widget, "child-notify::title", G_CALLBACK (on_title_icon_visible_updated), self);
   g_signal_connect (widget, "child-notify::icon-name", G_CALLBACK (on_title_icon_visible_updated), self);
   g_signal_connect (widget, "child-notify::position", G_CALLBACK (on_position_updated), self);
+  g_signal_connect (widget, "child-notify::needs-attention", G_CALLBACK (on_needs_attention_updated), self);
 
   g_hash_table_insert (priv->buttons, widget, button);
 }
 
 static void
-foreach_stack (GtkWidget        *widget,
-               GtkStackSwitcher *self)
+remove_child (GtkWidget        *widget,
+              GtkStackSwitcher *self)
 {
-  add_child (self, widget);
+  GtkWidget *button;
+  GtkStackSwitcherPrivate *priv;
+
+  priv = gtk_stack_switcher_get_instance_private (self);
+
+  g_signal_handlers_disconnect_by_func (widget, on_title_icon_visible_updated, self);
+  g_signal_handlers_disconnect_by_func (widget, on_position_updated, self);
+  g_signal_handlers_disconnect_by_func (widget, on_needs_attention_updated, self);
+
+  button = g_hash_table_lookup (priv->buttons, widget);
+  gtk_container_remove (GTK_CONTAINER (self), button);
+  g_hash_table_remove (priv->buttons, widget);
 }
 
 static void
 populate_switcher (GtkStackSwitcher *self)
 {
   GtkStackSwitcherPrivate *priv;
+  GtkWidget *widget, *button;
 
   priv = gtk_stack_switcher_get_instance_private (self);
-  gtk_container_foreach (GTK_CONTAINER (priv->stack), (GtkCallback)foreach_stack, self);
+  gtk_container_foreach (GTK_CONTAINER (priv->stack), (GtkCallback)add_child, self);
+
+  widget = gtk_stack_get_visible_child (priv->stack);
+  if (widget)
+    {
+      button = g_hash_table_lookup (priv->buttons, widget);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+    }
+}
+
+static void
+clear_switcher (GtkStackSwitcher *self)
+{
+  GtkStackSwitcherPrivate *priv;
+
+  priv = gtk_stack_switcher_get_instance_private (self);
+  gtk_container_foreach (GTK_CONTAINER (priv->stack), (GtkCallback)remove_child, self);
 }
 
 static void
@@ -277,7 +340,7 @@ on_stack_child_added (GtkContainer     *container,
                       GtkWidget        *widget,
                       GtkStackSwitcher *self)
 {
-  add_child (self, widget);
+  add_child (widget, self);
 }
 
 static void
@@ -285,13 +348,7 @@ on_stack_child_removed (GtkContainer     *container,
                         GtkWidget        *widget,
                         GtkStackSwitcher *self)
 {
-  GtkWidget *button;
-  GtkStackSwitcherPrivate *priv;
-
-  priv = gtk_stack_switcher_get_instance_private (self);
-  button = g_hash_table_lookup (priv->buttons, widget);
-  gtk_container_remove (GTK_CONTAINER (self), button);
-  g_hash_table_remove (priv->buttons, widget);
+  remove_child (widget, self);
 }
 
 static void
@@ -351,7 +408,6 @@ gtk_stack_switcher_set_stack (GtkStackSwitcher *switcher,
       clear_switcher (switcher);
       g_clear_object (&priv->stack);
     }
-
   if (stack)
     {
       priv->stack = g_object_ref (stack);
@@ -371,7 +427,7 @@ gtk_stack_switcher_set_stack (GtkStackSwitcher *switcher,
  * Retrieves the stack.
  * See gtk_stack_switcher_set_stack().
  *
- * Return value: (transfer none): the stack, or %NULL if
+ * Returns: (transfer none): the stack, or %NULL if
  *    none has been set explicitly.
  *
  * Since: 3.10
@@ -476,7 +532,7 @@ gtk_stack_switcher_class_init (GtkStackSwitcherClass *class)
  *
  * Create a new #GtkStackSwitcher.
  *
- * Return value: a new #GtkStackSwitcher.
+ * Returns: a new #GtkStackSwitcher.
  *
  * Since: 3.10
  */

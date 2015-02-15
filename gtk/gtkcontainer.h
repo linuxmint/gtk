@@ -55,9 +55,28 @@ struct _GtkContainer
   GtkContainerPrivate *priv;
 };
 
+/**
+ * GtkContainerClass:
+ * @parent_class: The parent class.
+ * @add: Signal emitted when a widget is added to container.
+ * @remove: Signal emitted when a widget is removed from container.
+ * @check_resize: Signal emitted when a size recalculation is needed.
+ * @forall: Invokes callback on each child of container.
+ * @set_focus_child: Sets the focused child of container.
+ * @child_type: Returns the type of the children supported by the container.
+ * @composite_name: Gets a widget’s composite name. Deprecated: 3.10.
+ * @set_child_property: Set a property on a child of container.
+ * @get_child_property: Get a property from a child of container.
+ * @get_path_for_child: Get path representing entire widget hierarchy
+ *    from the toplevel down to and including @child.
+ *
+ * Base class for containers.
+ */
 struct _GtkContainerClass
 {
   GtkWidgetClass parent_class;
+
+  /*< public >*/
 
   void    (*add)       		(GtkContainer	 *container,
 				 GtkWidget	 *widget);
@@ -103,6 +122,20 @@ struct _GtkContainerClass
 };
 
 
+/**
+ * GtkResizeMode:
+ * @GTK_RESIZE_PARENT: Pass resize request to the parent
+ * @GTK_RESIZE_QUEUE: Queue resizes on this widget
+ * @GTK_RESIZE_IMMEDIATE: Resize immediately. Deprecated.
+ */
+typedef enum
+{
+  GTK_RESIZE_PARENT,
+  GTK_RESIZE_QUEUE,
+  GTK_RESIZE_IMMEDIATE
+} GtkResizeMode;
+
+
 /* Application-level methods */
 
 GDK_AVAILABLE_IN_ALL
@@ -119,10 +152,10 @@ GDK_AVAILABLE_IN_ALL
 void    gtk_container_remove		 (GtkContainer	   *container,
 					  GtkWidget	   *widget);
 
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_12
 void    gtk_container_set_resize_mode    (GtkContainer     *container,
 					  GtkResizeMode     resize_mode);
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_12
 GtkResizeMode gtk_container_get_resize_mode (GtkContainer     *container);
 
 GDK_AVAILABLE_IN_ALL
@@ -154,7 +187,7 @@ void     gtk_container_unset_focus_chain (GtkContainer  *container);
 
 /* Widget-level methods */
 
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 void   gtk_container_set_reallocate_redraws (GtkContainer    *container,
 					     gboolean         needs_redraws);
 GDK_AVAILABLE_IN_ALL

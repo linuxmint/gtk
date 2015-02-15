@@ -24,6 +24,7 @@
 
 #include "config.h"
 #include "gtkadjustment.h"
+#include "gtkadjustmentprivate.h"
 #include "gtkmarshalers.h"
 #include "gtkprivate.h"
 #include "gtkintl.h"
@@ -57,6 +58,15 @@ struct _GtkAdjustmentPrivate {
   gdouble step_increment;
   gdouble page_increment;
   gdouble page_size;
+
+  gdouble source;
+  gdouble target;
+
+  guint duration;
+  gint64 start_time;
+  gint64 end_time;
+  guint tick_id;
+  GdkFrameClock *clock;
 };
 
 enum
@@ -97,10 +107,25 @@ static guint64 adjustment_changed_stamp = 0; /* protected by global gdk lock */
 G_DEFINE_TYPE_WITH_PRIVATE (GtkAdjustment, gtk_adjustment, G_TYPE_INITIALLY_UNOWNED)
 
 static void
+gtk_adjustment_finalize (GObject *object)
+{
+  GtkAdjustment *adjustment = GTK_ADJUSTMENT (object);
+  GtkAdjustmentPrivate *priv = adjustment->priv;
+
+  if (priv->tick_id)
+    g_signal_handler_disconnect (priv->clock, priv->tick_id);
+  if (priv->clock)
+    g_object_unref (priv->clock);
+
+  G_OBJECT_CLASS (gtk_adjustment_parent_class)->finalize (object);
+}
+
+static void
 gtk_adjustment_class_init (GtkAdjustmentClass *class)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (class);
 
+  gobject_class->finalize                    = gtk_adjustment_finalize;
   gobject_class->set_property                = gtk_adjustment_set_property;
   gobject_class->get_property                = gtk_adjustment_get_property;
   gobject_class->dispatch_properties_changed = gtk_adjustment_dispatch_properties_changed;
@@ -147,7 +172,7 @@ gtk_adjustment_class_init (GtkAdjustmentClass *class)
    * 
    * The maximum value of the adjustment. 
    * Note that values will be restricted by 
-   * <literal>upper - page-size</literal> if the page-size 
+   * `upper - page-size` if the page-size 
    * property is nonzero.
    *
    * Since: 2.4
@@ -394,7 +419,7 @@ gtk_adjustment_new (gdouble value,
  * Gets the current value of the adjustment. See
  * gtk_adjustment_set_value ().
  *
- * Return value: The current value of the adjustment.
+ * Returns: The current value of the adjustment.
  **/
 gdouble
 gtk_adjustment_get_value (GtkAdjustment *adjustment)
@@ -402,6 +427,123 @@ gtk_adjustment_get_value (GtkAdjustment *adjustment)
   g_return_val_if_fail (GTK_IS_ADJUSTMENT (adjustment), 0.0);
 
   return adjustment->priv->value;
+}
+
+gdouble
+gtk_adjustment_get_target_value (GtkAdjustment *adjustment)
+{
+  g_return_val_if_fail (GTK_IS_ADJUSTMENT (adjustment), 0.0);
+
+  if (adjustment->priv->tick_id)
+    return adjustment->priv->target;
+  else
+    return adjustment->priv->value;
+}
+
+static void
+adjustment_set_value (GtkAdjustment *adjustment,
+                      gdouble        value)
+{
+  if (adjustment->priv->value != value)
+    {
+      adjustment->priv->value = value;
+      gtk_adjustment_value_changed (adjustment);
+    }
+}
+
+static void gtk_adjustment_on_frame_clock_update (GdkFrameClock *clock, 
+                                                  GtkAdjustment *adjustment);
+
+static void
+gtk_adjustment_begin_updating (GtkAdjustment *adjustment)
+{
+  GtkAdjustmentPrivate *priv = adjustment->priv;
+
+  if (priv->tick_id == 0)
+    {
+      priv->tick_id = g_signal_connect (priv->clock, "update",
+                                        G_CALLBACK (gtk_adjustment_on_frame_clock_update), adjustment);
+      gdk_frame_clock_begin_updating (priv->clock);
+    }
+}
+
+static void
+gtk_adjustment_end_updating (GtkAdjustment *adjustment)
+{
+  GtkAdjustmentPrivate *priv = adjustment->priv;
+
+  if (priv->tick_id != 0)
+    {
+      g_signal_handler_disconnect (priv->clock, priv->tick_id);
+      priv->tick_id = 0;
+      gdk_frame_clock_end_updating (priv->clock);
+    }
+}
+
+/* From clutter-easing.c, based on Robert Penner's
+ * infamous easing equations, MIT license.
+ */
+static gdouble
+ease_out_cubic (gdouble t)
+{
+  gdouble p = t - 1;
+
+  return p * p * p + 1;
+}
+
+static void
+gtk_adjustment_on_frame_clock_update (GdkFrameClock *clock, 
+                                      GtkAdjustment *adjustment)
+{
+  GtkAdjustmentPrivate *priv = adjustment->priv;
+  gint64 now;
+
+  now = gdk_frame_clock_get_frame_time (clock);
+
+  if (now < priv->end_time)
+    {
+      gdouble t;
+
+      t = (now - priv->start_time) / (gdouble) (priv->end_time - priv->start_time);
+      t = ease_out_cubic (t);
+      adjustment_set_value (adjustment, priv->source + t * (priv->target - priv->source));
+    }
+  else
+    {
+      adjustment_set_value (adjustment, priv->target);
+      gtk_adjustment_end_updating (adjustment);
+    }
+}
+
+static void
+gtk_adjustment_set_value_internal (GtkAdjustment *adjustment,
+                                   gdouble        value,
+                                   gboolean       animate)
+{
+  GtkAdjustmentPrivate *priv = adjustment->priv;
+
+  /* don't use CLAMP() so we don't end up below lower if upper - page_size
+   * is smaller than lower
+   */
+  value = MIN (value, priv->upper - priv->page_size);
+  value = MAX (value, priv->lower);
+
+  if (animate && priv->duration != 0 && priv->clock != NULL)
+    {
+      if (priv->tick_id && priv->target == value)
+        return;
+
+      priv->source = priv->value;
+      priv->target = value;
+      priv->start_time = gdk_frame_clock_get_frame_time (priv->clock);
+      priv->end_time = priv->start_time + 1000 * priv->duration;
+      gtk_adjustment_begin_updating (adjustment);
+    }
+  else
+    {
+      gtk_adjustment_end_updating (adjustment);
+      adjustment_set_value (adjustment, value);
+    }
 }
 
 /**
@@ -420,24 +562,18 @@ void
 gtk_adjustment_set_value (GtkAdjustment *adjustment,
 			  gdouble        value)
 {
-  GtkAdjustmentPrivate *priv;
-  
   g_return_if_fail (GTK_IS_ADJUSTMENT (adjustment));
 
-  priv = adjustment->priv;
+  gtk_adjustment_set_value_internal (adjustment, value, FALSE);
+}
 
-  /* don't use CLAMP() so we don't end up below lower if upper - page_size
-   * is smaller than lower
-   */
-  value = MIN (value, priv->upper - priv->page_size);
-  value = MAX (value, priv->lower);
+void
+gtk_adjustment_animate_to_value (GtkAdjustment *adjustment,
+			         gdouble        value)
+{
+  g_return_if_fail (GTK_IS_ADJUSTMENT (adjustment));
 
-  if (value != priv->value)
-    {
-      priv->value = value;
-
-      gtk_adjustment_value_changed (adjustment);
-    }
+  gtk_adjustment_set_value_internal (adjustment, value, TRUE);
 }
 
 /**
@@ -446,7 +582,7 @@ gtk_adjustment_set_value (GtkAdjustment *adjustment,
  *
  * Retrieves the minimum value of the adjustment.
  *
- * Return value: The current minimum value of the adjustment.
+ * Returns: The current minimum value of the adjustment.
  *
  * Since: 2.14
  **/
@@ -468,7 +604,7 @@ gtk_adjustment_get_lower (GtkAdjustment *adjustment)
  * When setting multiple adjustment properties via their individual
  * setters, multiple #GtkAdjustment::changed signals will be emitted. However, since
  * the emission of the #GtkAdjustment::changed signal is tied to the emission of the
- * #GObject::notify signals of the changed properties, it's possible
+ * #GObject::notify signals of the changed properties, it’s possible
  * to compress the #GtkAdjustment::changed signals into one by calling
  * g_object_freeze_notify() and g_object_thaw_notify() around the
  * calls to the individual setters.
@@ -495,7 +631,7 @@ gtk_adjustment_set_lower (GtkAdjustment *adjustment,
  *
  * Retrieves the maximum value of the adjustment.
  *
- * Return value: The current maximum value of the adjustment.
+ * Returns: The current maximum value of the adjustment.
  *
  * Since: 2.14
  **/
@@ -515,7 +651,7 @@ gtk_adjustment_get_upper (GtkAdjustment *adjustment)
  * Sets the maximum value of the adjustment.
  *
  * Note that values will be restricted by
- * <literal>upper - page-size</literal> if the page-size
+ * `upper - page-size` if the page-size
  * property is nonzero.
  *
  * See gtk_adjustment_set_lower() about how to compress multiple
@@ -540,7 +676,7 @@ gtk_adjustment_set_upper (GtkAdjustment *adjustment,
  *
  * Retrieves the step increment of the adjustment.
  *
- * Return value: The current step increment of the adjustment.
+ * Returns: The current step increment of the adjustment.
  *
  * Since: 2.14
  **/
@@ -581,7 +717,7 @@ gtk_adjustment_set_step_increment (GtkAdjustment *adjustment,
  *
  * Retrieves the page increment of the adjustment.
  *
- * Return value: The current page increment of the adjustment.
+ * Returns: The current page increment of the adjustment.
  *
  * Since: 2.14
  **/
@@ -622,7 +758,7 @@ gtk_adjustment_set_page_increment (GtkAdjustment *adjustment,
  *
  * Retrieves the page size of the adjustment.
  *
- * Return value: The current page size of the adjustment.
+ * Returns: The current page size of the adjustment.
  *
  * Since: 2.14
  **/
@@ -847,3 +983,44 @@ gtk_adjustment_get_minimum_increment (GtkAdjustment *adjustment)
   return minimum_increment;
 }
 
+void
+gtk_adjustment_enable_animation (GtkAdjustment *adjustment,
+                                 GdkFrameClock *clock,
+                                 guint          duration)
+{
+  GtkAdjustmentPrivate *priv = adjustment->priv;
+
+  if (priv->clock != clock)
+    {
+      if (priv->tick_id)
+        {
+          adjustment_set_value (adjustment, priv->target);
+
+          g_signal_handler_disconnect (priv->clock, priv->tick_id);
+          priv->tick_id = 0;
+          gdk_frame_clock_end_updating (priv->clock);
+        }
+
+      if (priv->clock)
+        g_object_unref (priv->clock);
+
+      priv->clock = clock;
+
+      if (priv->clock)
+        g_object_ref (priv->clock);
+    }
+
+  priv->duration = duration; 
+}
+
+guint
+gtk_adjustment_get_animation_duration (GtkAdjustment *adjustment)
+{
+  return adjustment->priv->duration;
+}
+
+gboolean
+gtk_adjustment_is_animating (GtkAdjustment *adjustment)
+{
+  return adjustment->priv->tick_id != 0;
+}

@@ -65,13 +65,13 @@ typedef enum
  * @cell: The #GtkCellRenderer that is being rendered by @tree_column
  * @tree_model: The #GtkTreeModel being rendered
  * @iter: A #GtkTreeIter of the current row rendered
- * @data: user data
+ * @data: (closure): user data
  *
  * A function to set the properties of a cell instead of just using the
  * straight mapping between the cell and the model.  This is useful for
  * customizing the cell renderer.  For example, a function might get an
- * integer from the @tree_model, and render it to the "text" attribute of
- * "cell" by converting it to its written equivilent.  This is set by
+ * integer from the @tree_model, and render it to the “text” attribute of
+ * “cell” by converting it to its written equivilent.  This is set by
  * calling gtk_tree_view_column_set_cell_data_func()
  */
 typedef void (* GtkTreeCellDataFunc) (GtkTreeViewColumn *tree_column,

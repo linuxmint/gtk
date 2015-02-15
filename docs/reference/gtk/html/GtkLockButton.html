@@ -7,8 +7,8 @@
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
 <link rel="up" href="ButtonWidgets.html" title="Buttons and Toggles">
 <link rel="prev" href="GtkVolumeButton.html" title="GtkVolumeButton">
-<link rel="next" href="NumericEntry.html" title="Numeric/Text Data Entry">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<link rel="next" href="NumericEntry.html" title="Numeric and Text Data Entry">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -52,7 +52,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="returnvalue">GPermission</span></a> *
+<a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="returnvalue">GPermission</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GtkLockButton.html#gtk-lock-button-get-permission" title="gtk_lock_button_get_permission ()">gtk_lock_button_get_permission</a> <span class="c_punctuation">()</span>
@@ -80,37 +80,37 @@
 <tbody>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> *</td>
+<a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkLockButton.html#GtkLockButton--permission" title="The “permission” property">permission</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkLockButton.html#GtkLockButton--text-lock" title="The “text-lock” property">text-lock</a></td>
 <td class="property_flags">Read / Write / Construct</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkLockButton.html#GtkLockButton--text-unlock" title="The “text-unlock” property">text-unlock</a></td>
 <td class="property_flags">Read / Write / Construct</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkLockButton.html#GtkLockButton--tooltip-lock" title="The “tooltip-lock” property">tooltip-lock</a></td>
 <td class="property_flags">Read / Write / Construct</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkLockButton.html#GtkLockButton--tooltip-not-authorized" title="The “tooltip-not-authorized” property">tooltip-not-authorized</a></td>
 <td class="property_flags">Read / Write / Construct</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkLockButton.html#GtkLockButton--tooltip-unlock" title="The “tooltip-unlock” property">tooltip-unlock</a></td>
 <td class="property_flags">Read / Write / Construct</td>
 </tr>
@@ -124,16 +124,22 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GtkLockButton.html#GtkLockButton-struct" title="struct GtkLockButton">GtkLockButton</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkLockButton.html#GtkLockButtonClass" title="struct GtkLockButtonClass">GtkLockButtonClass</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="GtkLockButton.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBin.html" title="GtkBin">GtkBin</a>
@@ -157,20 +163,20 @@ GtkLockButton implements
 <p>GtkLockButton is a widget that can be used in control panels or
 preference dialogs to allow users to obtain and revoke authorizations
 needed to operate the controls. The required authorization is represented
-by a <a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> object. Concrete implementations of <a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> may use
+by a <a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> object. Concrete implementations of <a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> may use
 PolicyKit or some other authorization framework. To obtain a PolicyKit-based
-<a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="type">GPermission</span></a>, use <code class="function">polkit_permission_new()</code>.</p>
+<a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="type">GPermission</span></a>, use <code class="function">polkit_permission_new()</code>.</p>
 <p>If the user is not currently allowed to perform the action, but can obtain
-the permission, the widget looks like this</p>
-<div class="informalexample"><img src="lockbutton-locked.png"></div>
+the permission, the widget looks like this:</p>
+<p><span class="inlinemediaobject"><img src="lockbutton-locked.png"></span></p>
 <p>and the user can click the button to request the permission. Depending
 on the platform, this may pop up an authentication dialog or ask the user
 to authenticate in some other way. Once the user has obtained the permission,
-the widget changes to this</p>
-<div class="informalexample"><img src="lockbutton-unlocked.png"></div>
+the widget changes to this:</p>
+<p><span class="inlinemediaobject"><img src="lockbutton-unlocked.png"></span></p>
 <p>and the permission can be dropped again by clicking the button. If the user
-is not able to obtain the permission at all, the widget looks like this</p>
-<div class="informalexample"><img src="lockbutton-sorry.png"></div>
+is not able to obtain the permission at all, the widget looks like this:</p>
+<p><span class="inlinemediaobject"><img src="lockbutton-sorry.png"></span></p>
 <p>If the user has the permission and cannot drop it, the button is hidden.</p>
 <p>The text (and tooltips) that are shown in the various cases can be adjusted
 with the <a class="link" href="GtkLockButton.html#GtkLockButton--text-lock" title="The “text-lock” property"><span class="type">“text-lock”</span></a>, <a class="link" href="GtkLockButton.html#GtkLockButton--text-unlock" title="The “text-unlock” property"><span class="type">“text-unlock”</span></a>,
@@ -182,7 +188,7 @@ with the <a class="link" href="GtkLockButton.html#GtkLockButton--text-lock" titl
 <div class="refsect2">
 <a name="gtk-lock-button-new"></a><h3>gtk_lock_button_new ()</h3>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *
-gtk_lock_button_new (<em class="parameter"><code><a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> *permission</code></em>);</pre>
+gtk_lock_button_new (<em class="parameter"><code><a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> *permission</code></em>);</pre>
 <p>Creates a new lock button which reflects the <em class="parameter"><code>permission</code></em>
 .</p>
 <div class="refsect3">
@@ -195,8 +201,8 @@ gtk_lock_button_new (<em class="parameter"><code><a href="http://library.gnome.o
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>permission</p></td>
-<td class="parameter_description"><p> a <a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="type">GPermission</span></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> a <a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="type">GPermission</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
 </div>
@@ -210,9 +216,9 @@ gtk_lock_button_new (<em class="parameter"><code><a href="http://library.gnome.o
 <hr>
 <div class="refsect2">
 <a name="gtk-lock-button-get-permission"></a><h3>gtk_lock_button_get_permission ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="returnvalue">GPermission</span></a> *
+<pre class="programlisting"><a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="returnvalue">GPermission</span></a> *
 gtk_lock_button_get_permission (<em class="parameter"><code><a class="link" href="GtkLockButton.html" title="GtkLockButton"><span class="type">GtkLockButton</span></a> *button</code></em>);</pre>
-<p>Obtains the <a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> object that controls <em class="parameter"><code>button</code></em>
+<p>Obtains the <a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> object that controls <em class="parameter"><code>button</code></em>
 .</p>
 <div class="refsect3">
 <a name="id-1.3.9.11.10.3.5"></a><h4>Parameters</h4>
@@ -231,7 +237,7 @@ gtk_lock_button_get_permission (<em class="parameter"><code><a class="link" href
 </div>
 <div class="refsect3">
 <a name="id-1.3.9.11.10.3.6"></a><h4>Returns</h4>
-<p> the <a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> of <em class="parameter"><code>button</code></em>
+<p> the <a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> of <em class="parameter"><code>button</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -242,8 +248,8 @@ gtk_lock_button_get_permission (<em class="parameter"><code><a class="link" href
 <a name="gtk-lock-button-set-permission"></a><h3>gtk_lock_button_set_permission ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_lock_button_set_permission (<em class="parameter"><code><a class="link" href="GtkLockButton.html" title="GtkLockButton"><span class="type">GtkLockButton</span></a> *button</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> *permission</code></em>);</pre>
-<p>Sets the <a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> object that controls <em class="parameter"><code>button</code></em>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> *permission</code></em>);</pre>
+<p>Sets the <a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> object that controls <em class="parameter"><code>button</code></em>
 .</p>
 <div class="refsect3">
 <a name="id-1.3.9.11.10.4.5"></a><h4>Parameters</h4>
@@ -261,8 +267,8 @@ gtk_lock_button_set_permission (<em class="parameter"><code><a class="link" href
 </tr>
 <tr>
 <td class="parameter_name"><p>permission</p></td>
-<td class="parameter_description"><p> a <a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> object, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> a <a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> object, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -276,19 +282,42 @@ gtk_lock_button_set_permission (<em class="parameter"><code><a class="link" href
 <a name="GtkLockButton-struct"></a><h3>struct GtkLockButton</h3>
 <pre class="programlisting">struct GtkLockButton;</pre>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GtkLockButtonClass"></a><h3>struct GtkLockButtonClass</h3>
+<pre class="programlisting">struct GtkLockButtonClass {
+  GtkButtonClass parent_class;
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.9.11.11.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody><tr>
+<td class="struct_member_name"><p><a class="link" href="GtkButton.html#GtkButtonClass" title="struct GtkButtonClass"><span class="type">GtkButtonClass</span></a> <em class="structfield"><code><a name="GtkLockButtonClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkLockButton.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GtkLockButton--permission"></a><h3>The <code class="literal">“permission”</code> property</h3>
-<pre class="programlisting">  “permission”               <a href="http://library.gnome.org/devel/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> *</pre>
+<pre class="programlisting">  “permission”               <a href="https://developer.gnome.org/gio/unstable/GPermission.html"><span class="type">GPermission</span></a> *</pre>
 <p>The GPermission object controlling this button.</p>
 <p>Flags: Read / Write</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GtkLockButton--text-lock"></a><h3>The <code class="literal">“text-lock”</code> property</h3>
-<pre class="programlisting">  “text-lock”                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “text-lock”                <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The text to display when prompting the user to lock.</p>
 <p>Flags: Read / Write / Construct</p>
 <p>Default value: "Lock"</p>
@@ -296,7 +325,7 @@ gtk_lock_button_set_permission (<em class="parameter"><code><a class="link" href
 <hr>
 <div class="refsect2">
 <a name="GtkLockButton--text-unlock"></a><h3>The <code class="literal">“text-unlock”</code> property</h3>
-<pre class="programlisting">  “text-unlock”              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “text-unlock”              <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The text to display when prompting the user to unlock.</p>
 <p>Flags: Read / Write / Construct</p>
 <p>Default value: "Unlock"</p>
@@ -304,7 +333,7 @@ gtk_lock_button_set_permission (<em class="parameter"><code><a class="link" href
 <hr>
 <div class="refsect2">
 <a name="GtkLockButton--tooltip-lock"></a><h3>The <code class="literal">“tooltip-lock”</code> property</h3>
-<pre class="programlisting">  “tooltip-lock”             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “tooltip-lock”             <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The tooltip to display when prompting the user to lock.</p>
 <p>Flags: Read / Write / Construct</p>
 <p>Default value: "Dialog is unlocked.\nClick to prevent further changes"</p>
@@ -312,7 +341,7 @@ gtk_lock_button_set_permission (<em class="parameter"><code><a class="link" href
 <hr>
 <div class="refsect2">
 <a name="GtkLockButton--tooltip-not-authorized"></a><h3>The <code class="literal">“tooltip-not-authorized”</code> property</h3>
-<pre class="programlisting">  “tooltip-not-authorized”   <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “tooltip-not-authorized”   <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The tooltip to display when prompting the user cannot obtain authorization.</p>
 <p>Flags: Read / Write / Construct</p>
 <p>Default value: "System policy prevents changes.\nContact your system administrator"</p>
@@ -320,7 +349,7 @@ gtk_lock_button_set_permission (<em class="parameter"><code><a class="link" href
 <hr>
 <div class="refsect2">
 <a name="GtkLockButton--tooltip-unlock"></a><h3>The <code class="literal">“tooltip-unlock”</code> property</h3>
-<pre class="programlisting">  “tooltip-unlock”           <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “tooltip-unlock”           <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The tooltip to display when prompting the user to unlock.</p>
 <p>Flags: Read / Write / Construct</p>
 <p>Default value: "Dialog is locked.\nClick to make changes"</p>
@@ -329,6 +358,6 @@ gtk_lock_button_set_permission (<em class="parameter"><code><a class="link" href
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

@@ -41,7 +41,7 @@
 /* This defines the max file length that the file chooser
  * button should display. The total length will be
  * FILENAME_LENGTH_MAX+3 because the truncated name is prefixed
- * with "...".
+ * with “...”.
  */
 #define FILENAME_LENGTH_MAX 27
 
@@ -891,7 +891,7 @@ construct_widgets (GtkPrinterOptionWidget *widget)
   gtk_box_pack_start (GTK_BOX (widget), priv->image, FALSE, FALSE, 0);
 }
 
-/**
+/*
  * If the filename exceeds FILENAME_LENGTH_MAX, then trim it and replace
  * the first three letters with three dots.
  */

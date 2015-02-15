@@ -24,7 +24,6 @@
 
 #include "gdkpixbuf.h"
 
-#include "gdkcolor.h"
 #include "gdkwindow.h"
 #include "gdkinternals.h"
 
@@ -64,21 +63,21 @@
  * obscured/offscreen regions to be placed in the pixbuf. The contents of
  * portions of the pixbuf corresponding to the offscreen region are undefined.
  *
- * If the window you're obtaining data from is partially obscured by
+ * If the window you’re obtaining data from is partially obscured by
  * other windows, then the contents of the pixbuf areas corresponding
  * to the obscured regions are undefined.
  *
- * If the window is not mapped (typically because it's iconified/minimized
+ * If the window is not mapped (typically because it’s iconified/minimized
  * or not on the current workspace), then %NULL will be returned.
  *
- * If memory can't be allocated for the return value, %NULL will be returned
+ * If memory can’t be allocated for the return value, %NULL will be returned
  * instead.
  *
  * (In short, there are several ways this function can fail, and if it fails
  *  it returns %NULL; so check the return value.)
  *
- * Return value: (transfer full): A newly-created pixbuf with a reference
- *     count of 1, or %NULL on error
+ * Returns: (nullable) (transfer full): A newly-created pixbuf with a
+ *     reference count of 1, or %NULL on error
  */
 GdkPixbuf *
 gdk_pixbuf_get_from_window (GdkWindow *src,
@@ -225,8 +224,8 @@ convert_no_alpha (guchar *dest_data,
  * This function will create an RGB pixbuf with 8 bits per channel.
  * The pixbuf will contain an alpha channel if the @surface contains one.
  *
- * Return value: (transfer full): A newly-created pixbuf with a reference
- *     count of 1, or %NULL on error
+ * Returns: (nullable) (transfer full): A newly-created pixbuf with a
+ *     reference count of 1, or %NULL on error
  */
 GdkPixbuf *
 gdk_pixbuf_get_from_surface  (cairo_surface_t *surface,

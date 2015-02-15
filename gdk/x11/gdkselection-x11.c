@@ -69,7 +69,7 @@ _gdk_x11_selection_window_destroyed (GdkWindow *window)
 }
 
 /* We only pass through those SelectionClear events that actually
- * reflect changes to the selection owner that we didn't make ourself.
+ * reflect changes to the selection owner that we didn’t make ourself.
  */
 gboolean
 _gdk_x11_selection_filter_clear_event (XSelectionClearEvent *event)
@@ -703,7 +703,7 @@ _gdk_x11_display_utf8_to_string_target (GdkDisplay  *display,
  *
  * Converts from UTF-8 to compound text.
  *
- * Return value: %TRUE if the conversion succeeded,
+ * Returns: %TRUE if the conversion succeeded,
  *     otherwise %FALSE
  *
  * Since: 2.24

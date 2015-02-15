@@ -41,7 +41,7 @@
  * The style of transition can be controlled with
  * gtk_revealer_set_transition_type().
  *
- * These animations respect the #GtkSettings::gtk-enable-animations
+ * These animations respect the #GtkSettings:gtk-enable-animations
  * setting.
  *
  * The GtkRevealer widget was added in GTK+ 3.10.
@@ -65,7 +65,8 @@ enum  {
   PROP_TRANSITION_TYPE,
   PROP_TRANSITION_DURATION,
   PROP_REVEAL_CHILD,
-  PROP_CHILD_REVEALED
+  PROP_CHILD_REVEALED,
+  LAST_PROP
 };
 
 typedef struct {
@@ -84,6 +85,7 @@ typedef struct {
   gint64 end_time;
 } GtkRevealerPrivate;
 
+static GParamSpec *props[LAST_PROP] = { NULL, };
 
 static void     gtk_revealer_real_realize                        (GtkWidget     *widget);
 static void     gtk_revealer_real_unrealize                      (GtkWidget     *widget);
@@ -218,38 +220,36 @@ gtk_revealer_class_init (GtkRevealerClass *klass)
 
   container_class->add = gtk_revealer_real_add;
 
-  g_object_class_install_property (object_class,
-                                   PROP_TRANSITION_TYPE,
-                                   g_param_spec_enum ("transition-type",
-                                                      P_("Transition type"),
-                                                      P_("The type of animation used to transition"),
-                                                      GTK_TYPE_REVEALER_TRANSITION_TYPE,
-                                                      GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN,
-                                                      GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+  props[PROP_TRANSITION_TYPE] =
+    g_param_spec_enum ("transition-type",
+                       P_("Transition type"),
+                       P_("The type of animation used to transition"),
+                       GTK_TYPE_REVEALER_TRANSITION_TYPE,
+                       GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN,
+                       GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_EXPLICIT_NOTIFY);
 
-  g_object_class_install_property (object_class,
-                                   PROP_TRANSITION_DURATION,
-                                   g_param_spec_uint ("transition-duration",
-                                                      P_("Transition duration"),
-                                                      P_("The animation duration, in milliseconds"),
-                                                      0, G_MAXUINT,
-                                                      250,
-                                                      GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
-  g_object_class_install_property (object_class,
-                                   PROP_REVEAL_CHILD,
-                                   g_param_spec_boolean ("reveal-child",
-                                                         P_("Reveal Child"),
-                                                         P_("Whether the container should reveal the child"),
-                                                         FALSE,
-                                                         GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+  props[PROP_TRANSITION_DURATION] =
+    g_param_spec_uint ("transition-duration",
+                       P_("Transition duration"),
+                       P_("The animation duration, in milliseconds"),
+                       0, G_MAXUINT, 250,
+                       GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_EXPLICIT_NOTIFY);
 
-  g_object_class_install_property (object_class,
-                                   PROP_CHILD_REVEALED,
-                                   g_param_spec_boolean ("child-revealed",
-                                                         P_("Child Revealed"),
-                                                         P_("Whether the child is revealed and the animation target reached"),
-                                                         FALSE,
-                                                         G_PARAM_READABLE));
+  props[PROP_REVEAL_CHILD] =
+    g_param_spec_boolean ("reveal-child",
+                          P_("Reveal Child"),
+                          P_("Whether the container should reveal the child"),
+                          FALSE,
+                          GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_EXPLICIT_NOTIFY);
+
+  props[PROP_CHILD_REVEALED] =
+    g_param_spec_boolean ("child-revealed",
+                          P_("Child Revealed"),
+                          P_("Whether the child is revealed and the animation target reached"),
+                          FALSE,
+                          G_PARAM_READABLE);
+
+  g_object_class_install_properties (object_class, LAST_PROP, props);
 }
 
 /**
@@ -303,8 +303,8 @@ gtk_revealer_get_child_allocation (GtkRevealer   *revealer,
 
   child_allocation->x = 0;
   child_allocation->y = 0;
-  child_allocation->width = allocation->width;
-  child_allocation->height = allocation->height;
+  child_allocation->width = 0;
+  child_allocation->height = 0;
 
   child = gtk_bin_get_child (GTK_BIN (revealer));
   if (child != NULL && gtk_widget_get_visible (child))
@@ -312,12 +312,15 @@ gtk_revealer_get_child_allocation (GtkRevealer   *revealer,
       transition = effective_transition (revealer);
       if (transition == GTK_REVEALER_TRANSITION_TYPE_SLIDE_LEFT ||
           transition == GTK_REVEALER_TRANSITION_TYPE_SLIDE_RIGHT)
-        gtk_widget_get_preferred_width_for_height (child, child_allocation->height, NULL,
+        gtk_widget_get_preferred_width_for_height (child, allocation->height, NULL,
                                                    &child_allocation->width);
       else
-        gtk_widget_get_preferred_height_for_width (child, child_allocation->width, NULL,
+        gtk_widget_get_preferred_height_for_width (child, allocation->width, NULL,
                                                    &child_allocation->height);
     }
+
+  child_allocation->width = MAX (child_allocation->width, allocation->width);
+  child_allocation->height = MAX (child_allocation->height, allocation->height);
 }
 
 static void
@@ -513,14 +516,17 @@ gtk_revealer_set_position (GtkRevealer *revealer,
     }
 
   if (priv->current_pos == priv->target_pos)
-    g_object_notify (G_OBJECT (revealer), "child-revealed");
+    g_object_notify_by_pspec (G_OBJECT (revealer), props[PROP_CHILD_REVEALED]);
 }
 
-static gdouble
-ease_out_quad (gdouble t, gdouble d)
+/* From clutter-easing.c, based on Robert Penner's
+ * infamous easing equations, MIT license.
+ */
+static double
+ease_out_cubic (double t)
 {
-  gdouble p = t / d;
-  return  ((-1.0) * p) * (p - 2);
+  double p = t - 1;
+  return p * p * p + 1;
 }
 
 static void
@@ -530,20 +536,22 @@ gtk_revealer_animate_step (GtkRevealer *revealer,
   GtkRevealerPrivate *priv = gtk_revealer_get_instance_private (revealer);
   gdouble t;
 
-  t = 1.0;
   if (now < priv->end_time)
-      t = (now - priv->start_time) / (gdouble) (priv->end_time - priv->start_time);
-  t = ease_out_quad (t, 1.0);
+    t = (now - priv->start_time) / (gdouble) (priv->end_time - priv->start_time);
+  else
+    t = 1.0;
+  t = ease_out_cubic (t);
 
   gtk_revealer_set_position (revealer,
                             priv->source_pos + (t * (priv->target_pos - priv->source_pos)));
 }
 
 static gboolean
-gtk_revealer_animate_cb (GtkRevealer   *revealer,
+gtk_revealer_animate_cb (GtkWidget     *widget,
                          GdkFrameClock *frame_clock,
                          gpointer       user_data)
 {
+  GtkRevealer *revealer = GTK_REVEALER (widget);
   GtkRevealerPrivate *priv = gtk_revealer_get_instance_private (revealer);
   gint64 now;
 
@@ -570,7 +578,7 @@ gtk_revealer_start_animation (GtkRevealer *revealer,
     return;
 
   priv->target_pos = target;
-  g_object_notify (G_OBJECT (revealer), "reveal-child");
+  g_object_notify_by_pspec (G_OBJECT (revealer), props[PROP_REVEAL_CHILD]);
 
   transition = effective_transition (revealer);
   if (gtk_widget_get_mapped (widget) &&
@@ -582,7 +590,7 @@ gtk_revealer_start_animation (GtkRevealer *revealer,
       priv->end_time = priv->start_time + (priv->transition_duration * 1000);
       if (priv->tick_id == 0)
         priv->tick_id =
-          gtk_widget_add_tick_callback (widget, (GtkTickCallback)gtk_revealer_animate_cb, revealer, NULL);
+          gtk_widget_add_tick_callback (widget, gtk_revealer_animate_cb, revealer, NULL);
       gtk_revealer_animate_step (revealer, priv->start_time);
     }
   else
@@ -683,7 +691,7 @@ gtk_revealer_set_reveal_child (GtkRevealer *revealer,
  * the child is fully revealed (ie the transition is completed),
  * use gtk_revealer_get_child_revealed().
  *
- * Return value: %TRUE if the child is revealed.
+ * Returns: %TRUE if the child is revealed.
  *
  * Since: 3.10
  */
@@ -704,7 +712,7 @@ gtk_revealer_get_reveal_child (GtkRevealer *revealer)
  * Returns whether the child is fully revealed, ie wether
  * the transition to the revealed state is completed.
  *
- * Return value: %TRUE if the child is fully revealed
+ * Returns: %TRUE if the child is fully revealed
  *
  * Since: 3.10
  */
@@ -748,10 +756,8 @@ gtk_revealer_real_get_preferred_height (GtkWidget *widget,
 
   minimum_height = MIN (minimum_height, natural_height);
 
-  if (minimum_height_out)
-    *minimum_height_out = minimum_height;
-  if (natural_height_out)
-    *natural_height_out = natural_height;
+  *minimum_height_out = minimum_height;
+  *natural_height_out = natural_height;
 }
 
 static void
@@ -776,10 +782,8 @@ gtk_revealer_real_get_preferred_height_for_width (GtkWidget *widget,
 
   minimum_height = MIN (minimum_height, natural_height);
 
-  if (minimum_height_out)
-    *minimum_height_out = minimum_height;
-  if (natural_height_out)
-    *natural_height_out = natural_height;
+  *minimum_height_out = minimum_height;
+  *natural_height_out = natural_height;
 }
 
 static void
@@ -803,10 +807,8 @@ gtk_revealer_real_get_preferred_width (GtkWidget *widget,
 
   minimum_width = MIN (minimum_width, natural_width);
 
-  if (minimum_width_out)
-    *minimum_width_out = minimum_width;
-  if (natural_width_out)
-    *natural_width_out = natural_width;
+  *minimum_width_out = minimum_width;
+  *natural_width_out = natural_width;
 }
 
 static void
@@ -831,10 +833,8 @@ gtk_revealer_real_get_preferred_width_for_height (GtkWidget *widget,
 
   minimum_width = MIN (minimum_width, natural_width);
 
-  if (minimum_width_out)
-    *minimum_width_out = minimum_width;
-  if (natural_width_out)
-    *natural_width_out = natural_width;
+  *minimum_width_out = minimum_width;
+  *natural_width_out = natural_width;
 }
 
 /**
@@ -875,8 +875,11 @@ gtk_revealer_set_transition_duration (GtkRevealer *revealer,
 
   g_return_if_fail (GTK_IS_REVEALER (revealer));
 
+  if (priv->transition_duration == value)
+    return;
+
   priv->transition_duration = value;
-  g_object_notify (G_OBJECT (revealer), "transition-duration");
+  g_object_notify_by_pspec (G_OBJECT (revealer), props[PROP_TRANSITION_DURATION]);
 }
 
 /**
@@ -886,7 +889,7 @@ gtk_revealer_set_transition_duration (GtkRevealer *revealer,
  * Gets the type of animation that will be used
  * for transitions in @revealer.
  *
- * Return value: the current transition type of @revealer
+ * Returns: the current transition type of @revealer
  *
  * Since: 3.10
  */
@@ -919,7 +922,10 @@ gtk_revealer_set_transition_type (GtkRevealer               *revealer,
 
   g_return_if_fail (GTK_IS_REVEALER (revealer));
 
+  if (priv->transition_type == transition)
+    return;
+
   priv->transition_type = transition;
   gtk_widget_queue_resize (GTK_WIDGET (revealer));
-  g_object_notify (G_OBJECT (revealer), "transition-type");
+  g_object_notify_by_pspec (G_OBJECT (revealer), props[PROP_TRANSITION_TYPE]);
 }

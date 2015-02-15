@@ -72,7 +72,7 @@ struct _GtkComposeTableCompact
  */
 #include "gtkimcontextsimpleseqs.h"
 
-/* From the values below, the value 24 means the number of different first keysyms
+/* From the values below, the value 30 means the number of different first keysyms
  * that exist in the Compose file (from Xorg). When running compose-parse.py without
  * parameters, you get the count that you can put here. Needed when updating the
  * gtkimcontextsimpleseqs.h header file (contains the compose sequences).
@@ -80,7 +80,7 @@ struct _GtkComposeTableCompact
 static const GtkComposeTableCompact gtk_compose_table_compact = {
   gtk_compose_seqs_compact,
   5,
-  24,
+  30,
   6
 };
 
@@ -676,7 +676,7 @@ check_algorithmically (GtkIMContextSimple *context_simple,
 /* In addition to the table-driven sequences, we allow Unicode hex
  * codes to be entered. The method chosen here is similar to the
  * one recommended in ISO 14755, but not exactly the same, since we
- * don't want to steal 16 valuable key combinations.
+ * don’t want to steal 16 valuable key combinations.
  *
  * A hex Unicode sequence must be started with Ctrl-Shift-U, followed
  * by a sequence of hex digits entered with Ctrl-Shift still held.
@@ -1213,7 +1213,7 @@ gtk_im_context_simple_get_preedit_string (GtkIMContext   *context,
 /**
  * gtk_im_context_simple_add_table: (skip)
  * @context_simple: A #GtkIMContextSimple
- * @data: the table 
+ * @data: (array): the table
  * @max_seq_len: Maximum length of a sequence in the table
  *               (cannot be greater than #GTK_MAX_COMPOSE_LEN)
  * @n_seqs: number of sequences in the table

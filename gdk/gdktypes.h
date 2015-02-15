@@ -108,7 +108,7 @@ typedef struct _GdkAtom            *GdkAtom;
  * GDK_NONE:
  *
  * A null value for #GdkAtom, used in a similar way as
- * <literal>None</literal> in the Xlib API.
+ * `None` in the Xlib API.
  */
 #define GDK_NONE            _GDK_MAKE_ATOM (0)
 
@@ -171,9 +171,22 @@ typedef enum
  * @GDK_BUTTON4_MASK: the fourth mouse button.
  * @GDK_BUTTON5_MASK: the fifth mouse button.
  * @GDK_MODIFIER_RESERVED_13_MASK: A reserved bit flag; do not use in your own code
+ * @GDK_MODIFIER_RESERVED_14_MASK: A reserved bit flag; do not use in your own code
+ * @GDK_MODIFIER_RESERVED_15_MASK: A reserved bit flag; do not use in your own code
+ * @GDK_MODIFIER_RESERVED_16_MASK: A reserved bit flag; do not use in your own code
+ * @GDK_MODIFIER_RESERVED_17_MASK: A reserved bit flag; do not use in your own code
+ * @GDK_MODIFIER_RESERVED_18_MASK: A reserved bit flag; do not use in your own code
+ * @GDK_MODIFIER_RESERVED_19_MASK: A reserved bit flag; do not use in your own code
+ * @GDK_MODIFIER_RESERVED_20_MASK: A reserved bit flag; do not use in your own code
+ * @GDK_MODIFIER_RESERVED_21_MASK: A reserved bit flag; do not use in your own code
+ * @GDK_MODIFIER_RESERVED_22_MASK: A reserved bit flag; do not use in your own code
+ * @GDK_MODIFIER_RESERVED_23_MASK: A reserved bit flag; do not use in your own code
+ * @GDK_MODIFIER_RESERVED_24_MASK: A reserved bit flag; do not use in your own code
+ * @GDK_MODIFIER_RESERVED_25_MASK: A reserved bit flag; do not use in your own code
  * @GDK_SUPER_MASK: the Super modifier. Since 2.10
  * @GDK_HYPER_MASK: the Hyper modifier. Since 2.10
  * @GDK_META_MASK: the Meta modifier. Since 2.10
+ * @GDK_MODIFIER_RESERVED_29_MASK: A reserved bit flag; do not use in your own code
  * @GDK_RELEASE_MASK: not used in GDK itself. GTK+ uses it to differentiate
  *  between (keyval, modifiers) pairs from key press and release events.
  * @GDK_MODIFIER_MASK: a mask covering all modifier types.
@@ -246,10 +259,9 @@ typedef enum
  *  menu accelerators.
  * @GDK_MODIFIER_INTENT_CONTEXT_MENU: the modifier used to invoke context menus.
  *  Note that mouse button 3 always triggers context menus. When this modifier
- *  is not 0, it <strong>additionally</strong> triggers context menus when used
- *  with mouse button 1.
+ *  is not 0, it additionally triggers context menus when used with mouse button 1.
  * @GDK_MODIFIER_INTENT_EXTEND_SELECTION: the modifier used to extend selections
- *  using &lt;modifier&gt;-click or &lt;modifier&gt;-cursor-key
+ *  using `modifier`-click or `modifier`-cursor-key
  * @GDK_MODIFIER_INTENT_MODIFY_SELECTION: the modifier used to modify selections,
  *  which in most cases means toggling the clicked item into or out of the selection.
  * @GDK_MODIFIER_INTENT_NO_TEXT_INPUT: when any of these modifiers is pressed, the
@@ -258,12 +270,12 @@ typedef enum
  * @GDK_MODIFIER_INTENT_SHIFT_GROUP: the modifier that switches between keyboard
  *  groups (AltGr on X11/Windows and Option/Alt on OS X).
  *
- * This enum is used with gdk_keymap_get_modifier_mask() and
- * gdk_get_modifier_mask() in order to determine what modifiers the
+ * This enum is used with gdk_keymap_get_modifier_mask()
+ * in order to determine what modifiers the
  * currently used windowing system backend uses for particular
  * purposes. For example, on X11/Windows, the Control key is used for
  * invoking menu shortcuts (accelerators), whereas on Apple computers
- * it's the Command key (which correspond to %GDK_CONTROL_MASK and
+ * it’s the Command key (which correspond to %GDK_CONTROL_MASK and
  * %GDK_MOD2_MASK, respectively).
  *
  * Since: 3.4
@@ -311,9 +323,9 @@ typedef enum
 
 /**
  * GdkGrabOwnership:
- * @GDK_OWNERSHIP_NONE: All other devices' events are allowed.
- * @GDK_OWNERSHIP_WINDOW: Other devices' events are blocked for the grab window.
- * @GDK_OWNERSHIP_APPLICATION: Other devices' events are blocked for the whole application.
+ * @GDK_OWNERSHIP_NONE: All other devices’ events are allowed.
+ * @GDK_OWNERSHIP_WINDOW: Other devices’ events are blocked for the grab window.
+ * @GDK_OWNERSHIP_APPLICATION: Other devices’ events are blocked for the whole application.
  *
  * Defines how device grabs interact with other devices.
  */
@@ -328,7 +340,7 @@ typedef enum
  * GdkEventMask:
  * @GDK_EXPOSURE_MASK: receive expose events
  * @GDK_POINTER_MOTION_MASK: receive all pointer motion events
- * @GDK_POINTER_MOTION_HINT_MASK: see the explanation above
+ * @GDK_POINTER_MOTION_HINT_MASK: deprecated. see the explanation above
  * @GDK_BUTTON_MOTION_MASK: receive pointer motion events while any button is pressed
  * @GDK_BUTTON1_MOTION_MASK: receive pointer motion events while 1 button is pressed
  * @GDK_BUTTON2_MOTION_MASK: receive pointer motion events while 2 button is pressed
@@ -356,15 +368,18 @@ typedef enum
  * Most of these masks map onto one or more of the #GdkEventType event types
  * above.
  *
- * %GDK_POINTER_MOTION_HINT_MASK is a special mask which is used to reduce the
- * number of %GDK_MOTION_NOTIFY events received. Normally a %GDK_MOTION_NOTIFY
- * event is received each time the mouse moves. However, if the application
- * spends a lot of time processing the event (updating the display, for example),
- * it can lag behind the position of the mouse. When using
- * %GDK_POINTER_MOTION_HINT_MASK, fewer %GDK_MOTION_NOTIFY events will be sent,
- * some of which are marked as a hint (the is_hint member is %TRUE).
- * To receive more motion events after a motion hint event, the application
- * needs to asks for more, by calling gdk_event_request_motions().
+ * %GDK_POINTER_MOTION_HINT_MASK is deprecated. It is a special mask
+ * to reduce the number of %GDK_MOTION_NOTIFY events received. When using
+ * %GDK_POINTER_MOTION_HINT_MASK, fewer %GDK_MOTION_NOTIFY events will
+ * be sent, some of which are marked as a hint (the is_hint member is
+ * %TRUE). To receive more motion events after a motion hint event,
+ * the application needs to asks for more, by calling
+ * gdk_event_request_motions().
+ * 
+ * Since GTK 3.8, motion events are already compressed by default, independent
+ * of this mechanism. This compression can be disabled with
+ * gdk_window_set_event_compression(). See the documentation of that function
+ * for details.
  *
  * If %GDK_TOUCH_MASK is enabled, the window will receive touch events
  * from touch-enabled devices. Those will come as sequences of #GdkEventTouch

@@ -34,7 +34,7 @@
  * @title: GtkOverlay
  *
  * GtkOverlay is a container which contains a single main child, on top
- * of which it can place <firstterm>overlay</firstterm> widgets. The
+ * of which it can place “overlay” widgets. The
  * position of each overlay widget is determined by its #GtkWidget:halign
  * and #GtkWidget:valign properties. E.g. a widget with both alignments
  * set to %GTK_ALIGN_START will be placed at the top left corner of the
@@ -46,14 +46,11 @@
  * More complicated placement of overlays is possible by connecting
  * to the #GtkOverlay::get-child-position signal.
  *
- * <refsect2 id="GtkOverlay-BUILDER-UI">
- * <title>GtkOverlay as GtkBuildable</title>
- * <para>
+ * # GtkOverlay as GtkBuildable
+ *
  * The GtkOverlay implementation of the GtkBuildable interface
- * supports placing a child as an overlay by specifying "overlay" as
- * the "type" attribute of a <tag class="starttag">child</tag> element.
- * </para>
- * </refsect2>
+ * supports placing a child as an overlay by specifying “overlay” as
+ * the “type” attribute of a `<child>` element.
  */
 
 struct _GtkOverlayPrivate
@@ -104,8 +101,8 @@ gtk_overlay_compute_child_allocation (GtkOverlay      *overlay,
   /* put the margins outside the window; also arrange things
    * so that the adjusted child allocation still ends up at 0, 0
    */
-  left = gtk_widget_get_margin_left (child->widget);
-  right = gtk_widget_get_margin_right (child->widget);
+  left = gtk_widget_get_margin_start (child->widget);
+  right = gtk_widget_get_margin_end (child->widget);
   top = gtk_widget_get_margin_top (child->widget);
   bottom = gtk_widget_get_margin_bottom (child->widget);
 
@@ -217,8 +214,8 @@ gtk_overlay_get_main_widget_allocation (GtkOverlay *overlay,
     {
       main_alloc.x = 0;
       main_alloc.y = 0;
-      main_alloc.width = 1;
-      main_alloc.height = 1;
+      main_alloc.width = gtk_widget_get_allocated_width (GTK_WIDGET (overlay));
+      main_alloc.height = gtk_widget_get_allocated_height (GTK_WIDGET (overlay));
     }
 
   if (main_alloc_out)
@@ -317,44 +314,6 @@ gtk_overlay_child_allocate (GtkOverlay      *overlay,
 }
 
 static void
-gtk_overlay_get_preferred_width (GtkWidget *widget,
-                                 gint      *minimum,
-                                 gint      *natural)
-{
-  GtkBin *bin = GTK_BIN (widget);
-  GtkWidget *child;
-
-  if (minimum)
-    *minimum = 0;
-
-  if (natural)
-    *natural = 0;
-
-  child = gtk_bin_get_child (bin);
-  if (child && gtk_widget_get_visible (child))
-    gtk_widget_get_preferred_width (child, minimum, natural);
-}
-
-static void
-gtk_overlay_get_preferred_height (GtkWidget *widget,
-                                  gint      *minimum,
-                                  gint      *natural)
-{
-  GtkBin *bin = GTK_BIN (widget);
-  GtkWidget *child;
-
-  if (minimum)
-    *minimum = 0;
-
-  if (natural)
-    *natural = 0;
-
-  child = gtk_bin_get_child (bin);
-  if (child && gtk_widget_get_visible (child))
-    gtk_widget_get_preferred_height (child, minimum, natural);
-}
-
-static void
 gtk_overlay_size_allocate (GtkWidget     *widget,
                            GtkAllocation *allocation)
 {
@@ -366,10 +325,8 @@ gtk_overlay_size_allocate (GtkWidget     *widget,
   GTK_WIDGET_CLASS (gtk_overlay_parent_class)->size_allocate (widget, allocation);
 
   main_widget = gtk_bin_get_child (GTK_BIN (overlay));
-  if (!main_widget || !gtk_widget_get_visible (main_widget))
-    return;
-
-  gtk_widget_size_allocate (main_widget, allocation);
+  if (main_widget && gtk_widget_get_visible (main_widget))
+    gtk_widget_size_allocate (main_widget, allocation);
 
   for (children = priv->children; children; children = children->next)
     gtk_overlay_child_allocate (overlay, children->data);
@@ -521,37 +478,6 @@ gtk_overlay_unmap (GtkWidget *widget)
   GTK_WIDGET_CLASS (gtk_overlay_parent_class)->unmap (widget);
 }
 
-static gboolean
-gtk_overlay_draw (GtkWidget *widget,
-                  cairo_t   *cr)
-{
-  GtkOverlay *overlay = GTK_OVERLAY (widget);
-  GtkOverlayPrivate *priv = overlay->priv;
-  GtkOverlayChild *child;
-  GSList *children;
-
-  for (children = priv->children; children; children = children->next)
-    {
-      child = children->data;
-
-      if (gtk_cairo_should_draw_window (cr, child->window))
-        {
-          cairo_save (cr);
-          gtk_cairo_transform_to_window (cr, widget, child->window);
-          gtk_render_background (gtk_widget_get_style_context (widget),
-                                 cr,
-                                 0, 0,
-                                 gdk_window_get_width (child->window),
-                                 gdk_window_get_height (child->window));
-          cairo_restore (cr);
-        }
-    }
-
-  GTK_WIDGET_CLASS (gtk_overlay_parent_class)->draw (widget, cr);
-
-  return FALSE;
-}
-
 static void
 gtk_overlay_remove (GtkContainer *container,
                     GtkWidget    *widget)
@@ -616,14 +542,11 @@ gtk_overlay_class_init (GtkOverlayClass *klass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
   GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
 
-  widget_class->get_preferred_width = gtk_overlay_get_preferred_width;
-  widget_class->get_preferred_height = gtk_overlay_get_preferred_height;
   widget_class->size_allocate = gtk_overlay_size_allocate;
   widget_class->realize = gtk_overlay_realize;
   widget_class->unrealize = gtk_overlay_unrealize;
   widget_class->map = gtk_overlay_map;
   widget_class->unmap = gtk_overlay_unmap;
-  widget_class->draw = gtk_overlay_draw;
 
   container_class->remove = gtk_overlay_remove;
   container_class->forall = gtk_overlay_forall;
@@ -634,7 +557,8 @@ gtk_overlay_class_init (GtkOverlayClass *klass)
    * GtkOverlay::get-child-position:
    * @overlay: the #GtkOverlay
    * @widget: the child widget to position
-   * @allocation: (out caller-allocates): return location for the allocation
+   * @allocation: (type Gdk.Rectangle) (out caller-allocates): return
+   *   location for the allocation
    *
    * The ::get-child-position signal is emitted to determine
    * the position and size of any overlay child widgets. A
@@ -650,7 +574,7 @@ gtk_overlay_class_init (GtkOverlayClass *klass)
    * #GtkScrolledWindow, the overlays are placed relative
    * to its contents.
    *
-   * Return: %TRUE if the @allocation has been filled
+   * Returns: %TRUE if the @allocation has been filled
    */
   signals[GET_CHILD_POSITION] =
     g_signal_new (I_("get-child-position"),

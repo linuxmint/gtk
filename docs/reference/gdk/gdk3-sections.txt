@@ -58,6 +58,11 @@ GDK_WINDOWING_WAYLAND
 GDK_VERSION_3_0
 GDK_VERSION_3_2
 GDK_VERSION_3_4
+GDK_VERSION_3_6
+GDK_VERSION_3_8
+GDK_VERSION_3_10
+GDK_VERSION_3_12
+GDK_VERSION_3_14
 GDK_VERSION_MIN_REQUIRED
 GDK_VERSION_MAX_ALLOWED
 GDK_DISABLE_DEPRECATION_WARNINGS
@@ -384,6 +389,7 @@ gdk_window_begin_resize_drag
 gdk_window_begin_resize_drag_for_device
 gdk_window_begin_move_drag
 gdk_window_begin_move_drag_for_device
+gdk_window_show_window_menu
 gdk_window_constrain_size
 gdk_window_beep
 gdk_window_get_scale_factor
@@ -450,6 +456,7 @@ gdk_window_set_modal_hint
 gdk_window_get_modal_hint
 gdk_window_set_type_hint
 gdk_window_get_type_hint
+gdk_window_set_shadow_width
 gdk_window_set_skip_taskbar_hint
 gdk_window_set_skip_pager_hint
 gdk_window_set_urgency_hint
@@ -462,6 +469,7 @@ gdk_window_get_pointer
 gdk_window_get_device_position
 gdk_window_get_device_position_double
 GdkModifierType
+GdkModifierIntent
 gdk_window_get_parent
 gdk_window_get_toplevel
 gdk_window_get_children
@@ -491,6 +499,8 @@ gdk_window_get_device_events
 gdk_window_set_device_events
 gdk_window_get_source_events
 gdk_window_set_source_events
+gdk_window_get_event_compression
+gdk_window_set_event_compression
 
 <SUBSECTION>
 gdk_offscreen_window_get_surface
@@ -732,6 +742,7 @@ GdkTimeCoord
 gdk_device_get_axis
 gdk_device_list_axes
 gdk_device_get_axis_value
+gdk_device_get_last_event_window
 
 <SUBSECTION Standard>
 GDK_TYPE_AXIS_USE
@@ -1159,8 +1170,7 @@ gdk_wayland_device_get_wl_pointer
 gdk_wayland_device_get_wl_seat
 gdk_wayland_display_get_wl_compositor
 gdk_wayland_display_get_wl_display
-gdk_wayland_display_get_wl_shell
-gdk_wayland_window_get_wl_shell_surface
+gdk_wayland_display_get_xdg_shell
 gdk_wayland_window_get_wl_surface
 gdk_wayland_window_set_use_custom_surface
 

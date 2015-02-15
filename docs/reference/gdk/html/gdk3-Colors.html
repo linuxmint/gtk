@@ -5,10 +5,10 @@
 <title>GDK 3 Reference Manual: Colors</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GDK 3 Reference Manual">
-<link rel="up" href="reference.html" title="API Reference">
-<link rel="prev" href="gdk3-Pixbufs.html" title="Pixbufs">
-<link rel="next" href="gdk3-RGBA-Colors.html" title="RGBA Colors">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<link rel="up" href="rn02.html" title="Deprecated">
+<link rel="prev" href="rn02.html" title="Deprecated">
+<link rel="next" href="api-index-full.html" title="Index of all symbols">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -18,9 +18,9 @@
                   <a href="#gdk3-Colors.description" class="shortcut">Description</a></span>
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
-<td><a accesskey="u" href="reference.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gdk3-Pixbufs.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gdk3-RGBA-Colors.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="u" href="rn02.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
+<td><a accesskey="p" href="rn02.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="api-index-full.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gdk3-Colors"></a><div class="titlepage"></div>
@@ -57,7 +57,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gdk3-Colors.html#gdk-color-parse" title="gdk_color_parse ()">gdk_color_parse</a> <span class="c_punctuation">()</span>
@@ -65,7 +65,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gdk3-Colors.html#gdk-color-equal" title="gdk_color_equal ()">gdk_color_equal</a> <span class="c_punctuation">()</span>
@@ -73,7 +73,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gdk3-Colors.html#gdk-color-hash" title="gdk_color_hash ()">gdk_color_hash</a> <span class="c_punctuation">()</span>
@@ -81,7 +81,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gdk3-Colors.html#gdk-color-to-string" title="gdk_color_to_string ()">gdk_color_to_string</a> <span class="c_punctuation">()</span>
@@ -112,7 +112,8 @@
 <a name="gdk3-Colors.description"></a><h2>Description</h2>
 <p>A <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> represents a color.</p>
 <p>When working with cairo, it is often more convenient
-to use a <a class="link" href="gdk3-RGBA-Colors.html#GdkRGBA" title="GdkRGBA"><span class="type">GdkRGBA</span></a> instead.</p>
+to use a <a class="link" href="gdk3-RGBA-Colors.html#GdkRGBA" title="GdkRGBA"><span class="type">GdkRGBA</span></a> instead, and <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> has been
+deprecated in favor of <a class="link" href="gdk3-RGBA-Colors.html#GdkRGBA" title="GdkRGBA"><span class="type">GdkRGBA</span></a>.</p>
 </div>
 <div class="refsect1">
 <a name="gdk3-Colors.functions_details"></a><h2>Functions</h2>
@@ -120,10 +121,14 @@ to use a <a class="link" href="gdk3-RGBA-Colors.html#GdkRGBA" title="GdkRGBA"><s
 <a name="gdk-color-copy"></a><h3>gdk_color_copy ()</h3>
 <pre class="programlisting"><a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="returnvalue">GdkColor</span></a> *
 gdk_color_copy (<em class="parameter"><code>const <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> *color</code></em>);</pre>
-<p>Makes a copy of a color structure.</p>
+<div class="warning">
+<p><code class="literal">gdk_color_copy</code> has been deprecated since version 3.14 and should not be used in newly-written code.</p>
+<p>Use <a class="link" href="gdk3-RGBA-Colors.html#GdkRGBA" title="GdkRGBA"><span class="type">GdkRGBA</span></a></p>
+</div>
+<p>Makes a copy of a <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a>.</p>
 <p>The result must be freed using <a class="link" href="gdk3-Colors.html#gdk-color-free" title="gdk_color_free ()"><code class="function">gdk_color_free()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.10.7.2.6"></a><h4>Parameters</h4>
+<a name="id-1.3.2.7.2.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -138,7 +143,7 @@ gdk_color_copy (<em class="parameter"><code>const <a class="link" href="gdk3-Col
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.10.7.2.7"></a><h4>Returns</h4>
+<a name="id-1.3.2.7.2.8"></a><h4>Returns</h4>
 <p> a copy of <em class="parameter"><code>color</code></em>
 </p>
 <p></p>
@@ -149,9 +154,13 @@ gdk_color_copy (<em class="parameter"><code>const <a class="link" href="gdk3-Col
 <a name="gdk-color-free"></a><h3>gdk_color_free ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gdk_color_free (<em class="parameter"><code><a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> *color</code></em>);</pre>
-<p>Frees a color structure created with <a class="link" href="gdk3-Colors.html#gdk-color-copy" title="gdk_color_copy ()"><code class="function">gdk_color_copy()</code></a>.</p>
+<div class="warning">
+<p><code class="literal">gdk_color_free</code> has been deprecated since version 3.14 and should not be used in newly-written code.</p>
+<p>Use <a class="link" href="gdk3-RGBA-Colors.html#GdkRGBA" title="GdkRGBA"><span class="type">GdkRGBA</span></a></p>
+</div>
+<p>Frees a <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> created with <a class="link" href="gdk3-Colors.html#gdk-color-copy" title="gdk_color_copy ()"><code class="function">gdk_color_copy()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.10.7.3.5"></a><h4>Parameters</h4>
+<a name="id-1.3.2.7.3.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -169,23 +178,27 @@ gdk_color_free (<em class="parameter"><code><a class="link" href="gdk3-Colors.ht
 <hr>
 <div class="refsect2">
 <a name="gdk-color-parse"></a><h3>gdk_color_parse ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gdk_color_parse (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *spec</code></em>,
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gdk_color_parse (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *spec</code></em>,
                  <em class="parameter"><code><a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> *color</code></em>);</pre>
-<p>Parses a textual specification of a color and fill in the</p>
-<em class="structfield"><code>red</code></em>, <em class="structfield"><code>green</code></em>,
-<p>and <em class="structfield"><code>blue</code></em> fields of a <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a>
-structure.</p>
+<div class="warning">
+<p><code class="literal">gdk_color_parse</code> has been deprecated since version 3.14 and should not be used in newly-written code.</p>
+<p>Use <a class="link" href="gdk3-RGBA-Colors.html#GdkRGBA" title="GdkRGBA"><span class="type">GdkRGBA</span></a></p>
+</div>
+<p>Parses a textual specification of a color and fill in the
+<em class="parameter"><code>red</code></em>
+, <em class="parameter"><code>green</code></em>
+, and <em class="parameter"><code>blue</code></em>
+ fields of a <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a>.</p>
 <p>The string can either one of a large set of standard names
-(taken from the X11 <code class="filename">rgb.txt</code> file), or
-it can be a hex value in the form '#rgb' '#rrggbb'
-'#rrrgggbbb' or '#rrrrggggbbbb' where 'r', 'g' and
-'b' are hex digits of the red, green, and blue components
-of the color, respectively. (White in the four forms is
-'#fff', '#ffffff', '#fffffffff' and
-'#ffffffffffff').</p>
+(taken from the X11 <code class="literal">rgb.txt</code> file), or it can be a hexadecimal
+value in the form “#rgb” “#rrggbb”, “#rrrgggbbb” or
+“#rrrrggggbbbb” where “r”, “g” and “b” are hex digits of
+the red, green, and blue components of the color, respectively.
+(White in the four forms is “#fff”, “#ffffff”, “#fffffffff”
+and “#ffffffffffff”).</p>
 <div class="refsect3">
-<a name="id-1.2.10.7.4.9"></a><h4>Parameters</h4>
+<a name="id-1.3.2.7.4.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -207,20 +220,24 @@ of the color, respectively. (White in the four forms is
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.10.7.4.10"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the parsing succeeded</p>
+<a name="id-1.3.2.7.4.8"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the parsing succeeded</p>
 <p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gdk-color-equal"></a><h3>gdk_color_equal ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gdk_color_equal (<em class="parameter"><code>const <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> *colora</code></em>,
                  <em class="parameter"><code>const <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> *colorb</code></em>);</pre>
+<div class="warning">
+<p><code class="literal">gdk_color_equal</code> has been deprecated since version 3.14 and should not be used in newly-written code.</p>
+<p>Use <a class="link" href="gdk3-RGBA-Colors.html#GdkRGBA" title="GdkRGBA"><span class="type">GdkRGBA</span></a></p>
+</div>
 <p>Compares two colors.</p>
 <div class="refsect3">
-<a name="id-1.2.10.7.5.5"></a><h4>Parameters</h4>
+<a name="id-1.3.2.7.5.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -242,20 +259,24 @@ gdk_color_equal (<em class="parameter"><code>const <a class="link" href="gdk3-Co
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.10.7.5.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the two colors compare equal</p>
+<a name="id-1.3.2.7.5.7"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the two colors compare equal</p>
 <p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gdk-color-hash"></a><h3>gdk_color_hash ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 gdk_color_hash (<em class="parameter"><code>const <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> *color</code></em>);</pre>
+<div class="warning">
+<p><code class="literal">gdk_color_hash</code> has been deprecated since version 3.14 and should not be used in newly-written code.</p>
+<p>Use <a class="link" href="gdk3-RGBA-Colors.html#GdkRGBA" title="GdkRGBA"><span class="type">GdkRGBA</span></a></p>
+</div>
 <p>A hash function suitable for using for a hash
 table that stores <a href="gdk3-Colors.html#GdkColor"><span class="type">GdkColors</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.10.7.6.5"></a><h4>Parameters</h4>
+<a name="id-1.3.2.7.6.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -270,7 +291,7 @@ table that stores <a href="gdk3-Colors.html#GdkColor"><span class="type">GdkColo
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.10.7.6.6"></a><h4>Returns</h4>
+<a name="id-1.3.2.7.6.7"></a><h4>Returns</h4>
 <p> The hash function applied to <em class="parameter"><code>color</code></em>
 </p>
 <p></p>
@@ -279,16 +300,19 @@ table that stores <a href="gdk3-Colors.html#GdkColor"><span class="type">GdkColo
 <hr>
 <div class="refsect2">
 <a name="gdk-color-to-string"></a><h3>gdk_color_to_string ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gdk_color_to_string (<em class="parameter"><code>const <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> *color</code></em>);</pre>
+<div class="warning">
+<p><code class="literal">gdk_color_to_string</code> has been deprecated since version 3.14 and should not be used in newly-written code.</p>
+<p>Use <a class="link" href="gdk3-RGBA-Colors.html#GdkRGBA" title="GdkRGBA"><span class="type">GdkRGBA</span></a></p>
+</div>
 <p>Returns a textual specification of <em class="parameter"><code>color</code></em>
- in the hexadecimal form
-<code class="literal">#rrrrggggbbbb</code>, where <code class="literal">r</code>,
-<code class="literal">g</code> and <code class="literal">b</code> are hex digits
+ in the hexadecimal
+form “#rrrrggggbbbb” where “r”, “g” and “b” are hex digits
 representing the red, green and blue components respectively.</p>
 <p>The returned string can be parsed by <a class="link" href="gdk3-Colors.html#gdk-color-parse" title="gdk_color_parse ()"><code class="function">gdk_color_parse()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.10.7.7.6"></a><h4>Parameters</h4>
+<a name="id-1.3.2.7.7.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -303,7 +327,7 @@ representing the red, green and blue components respectively.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.10.7.7.7"></a><h4>Returns</h4>
+<a name="id-1.3.2.7.7.9"></a><h4>Returns</h4>
 <p> a newly-allocated text string</p>
 <p></p>
 </div>
@@ -321,10 +345,14 @@ representing the red, green and blue components respectively.</p>
   guint16 blue;
 } GdkColor;
 </pre>
-<p>The <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> structure is used to describe a color,
+<div class="warning">
+<p><code class="literal">GdkColor</code> has been deprecated since version 3.14 and should not be used in newly-written code.</p>
+<p>Use <a class="link" href="gdk3-RGBA-Colors.html#GdkRGBA" title="GdkRGBA"><span class="type">GdkRGBA</span></a></p>
+</div>
+<p>A <a class="link" href="gdk3-Colors.html#GdkColor" title="GdkColor"><span class="type">GdkColor</span></a> is used to describe a color,
 similar to the XColor struct used in the X11 drawing API.</p>
 <div class="refsect3">
-<a name="id-1.2.10.8.2.5"></a><h4>Members</h4>
+<a name="id-1.3.2.8.2.6"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
@@ -333,25 +361,25 @@ similar to the XColor struct used in the X11 drawing API.</p>
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="GdkColor.pixel"></a>pixel</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="GdkColor.pixel"></a>pixel</code></em>;</p></td>
 <td class="struct_member_description"><p>For allocated colors, the pixel value used to
 draw this color on the screen. Not used anymore.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="GdkColor.red"></a>red</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="GdkColor.red"></a>red</code></em>;</p></td>
 <td class="struct_member_description"><p>The red component of the color. This is
 a value between 0 and 65535, with 65535 indicating
 full intensity</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="GdkColor.green"></a>green</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="GdkColor.green"></a>green</code></em>;</p></td>
 <td class="struct_member_description"><p>The green component of the color</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="GdkColor.blue"></a>blue</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> <em class="structfield"><code><a name="GdkColor.blue"></a>blue</code></em>;</p></td>
 <td class="struct_member_description"><p>The blue component of the color</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -363,6 +391,6 @@ full intensity</p></td>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

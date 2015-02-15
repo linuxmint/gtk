@@ -72,48 +72,51 @@
  * by using gtk_info_bar_set_message_type(). GTK+ may use the message type
  * to determine how the message is displayed.
  *
- * <example>
- * <title>Simple GtkInfoBar usage.</title>
- * <programlisting>
- * /&ast; set up info bar &ast;/
- * info_bar = gtk_info_bar_new ();
- * gtk_widget_set_no_show_all (info_bar, TRUE);
+ * A simple example for using a GtkInfoBar:
+ * |[<!-- language="C" -->
+ * // set up info bar
+ * GtkWidget *widget;
+ * GtkInfoBar *bar;
+ *
+ * widget = gtk_info_bar_new ();
+ * bar = GTK_INFO_BAR (bar);
+ *
+ * gtk_widget_set_no_show_all (widget, TRUE);
  * message_label = gtk_label_new ("");
  * gtk_widget_show (message_label);
- * content_area = gtk_info_bar_get_content_area (GTK_INFO_BAR (info_bar));
- * gtk_container_add (GTK_CONTAINER (content_area), message_label);
- * gtk_info_bar_add_button (GTK_INFO_BAR (info_bar),
- *                          _("_OK"), GTK_RESPONSE_OK);
- * g_signal_connect (info_bar, "response",
- *                   G_CALLBACK (gtk_widget_hide), NULL);
+ * content_area = gtk_info_bar_get_content_area (bar);
+ * gtk_container_add (GTK_CONTAINER (content_area),
+ *                    message_label);
+ * gtk_info_bar_add_button (bar,
+ *                          _("_OK"),
+ *                          GTK_RESPONSE_OK);
+ * g_signal_connect (bar,
+ *                   "response",
+ *                   G_CALLBACK (gtk_widget_hide),
+ *                   NULL);
  * gtk_grid_attach (GTK_GRID (grid),
- *                  info_bar,
+ *                  widget,
  *                  0, 2, 1, 1);
  *
- * /&ast; ... &ast;/
+ * ...
  *
- * /&ast; show an error message &ast;/
- * gtk_label_set_text (GTK_LABEL (message_label), error_message);
- * gtk_info_bar_set_message_type (GTK_INFO_BAR (info_bar),
+ * // show an error message
+ * gtk_label_set_text (GTK_LABEL (message_label), message);
+ * gtk_info_bar_set_message_type (bar,
  *                                GTK_MESSAGE_ERROR);
- * gtk_widget_show (info_bar);
- * </programlisting>
- * </example>
+ * gtk_widget_show (bar);
+ * ]|
  *
- * <refsect2 id="GtkInfoBar-BUILDER-UI">
- * <title>GtkInfoBar as GtkBuildable</title>
- * <para>
+ * # GtkInfoBar as GtkBuildable
+ *
  * The GtkInfoBar implementation of the GtkBuildable interface exposes
  * the content area and action area as internal children with the names
- * "content_area" and "action_area".
- * </para>
- * <para>
- * GtkInfoBar supports a custom &lt;action-widgets&gt; element, which
- * can contain multiple &lt;action-widget&gt; elements. The "response"
- * attribute specifies a numeric response, and the content of the element
- * is the id of widget (which should be a child of the dialogs @action_area).
- * </para>
- * </refsect2>
+ * “content_area” and “action_area”.
+ *
+ * GtkInfoBar supports a custom <action-widgets> element, which can contain
+ * multiple <action-widget> elements. The “response” attribute specifies a
+ * numeric response, and the content of the element is the id of widget
+ * (which should be a child of the dialogs @action_area).
  */
 
 enum
@@ -334,10 +337,8 @@ gtk_info_bar_get_preferred_width (GtkWidget *widget,
                                                                      minimum_width,
                                                                      natural_width);
 
-  if (minimum_width)
-    *minimum_width += border.left + border.right;
-  if (natural_width)
-    *natural_width += border.left + border.right;
+  *minimum_width += border.left + border.right;
+  *natural_width += border.left + border.right;
 }
 
 static void
@@ -353,10 +354,8 @@ gtk_info_bar_get_preferred_height (GtkWidget *widget,
                                                                       minimum_height,
                                                                       natural_height);
 
-  if (minimum_height)
-    *minimum_height += border.top + border.bottom;
-  if (natural_height)
-    *natural_height += border.top + border.bottom;
+  *minimum_height += border.top + border.bottom;
+  *natural_height += border.top + border.bottom;
 }
 
 static gboolean
@@ -447,7 +446,7 @@ gtk_info_bar_class_init (GtkInfoBarClass *klass)
                                                       P_("The type of message"),
                                                       GTK_TYPE_MESSAGE_TYPE,
                                                       GTK_MESSAGE_INFO,
-                                                      GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+                                                      GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkInfoBar:show-close-button:
@@ -462,7 +461,7 @@ gtk_info_bar_class_init (GtkInfoBarClass *klass)
                                                          P_("Show Close Button"),
                                                          P_("Whether to include a standard close button"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+                                                         GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_EXPLICIT_NOTIFY));
   /**
    * GtkInfoBar::response:
    * @info_bar: the object on which the signal is emitted
@@ -487,7 +486,7 @@ gtk_info_bar_class_init (GtkInfoBarClass *klass)
    * GtkInfoBar::close:
    *
    * The ::close signal is a
-   * <link linkend="keybinding-signals">keybinding signal</link>
+   * [keybinding signal][GtkBindingSignal]
    * which gets emitted when the user uses a keybinding to dismiss
    * the info bar.
    *
@@ -579,7 +578,7 @@ gtk_info_bar_class_init (GtkInfoBarClass *klass)
 
   /* Bind class to template
    */
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/libgtk/gtkinfobar.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/libgtk/ui/gtkinfobar.ui");
   gtk_widget_class_bind_template_child_internal_private (widget_class, GtkInfoBar, content_area);
   gtk_widget_class_bind_template_child_internal_private (widget_class, GtkInfoBar, action_area);
   gtk_widget_class_bind_template_child_internal_private (widget_class, GtkInfoBar, close_button);
@@ -742,12 +741,13 @@ gtk_info_bar_get_content_area (GtkInfoBar *info_bar)
  * @response_id: response ID for the button
  *
  * Adds a button with the given text and sets things up so that
- * clicking the button will emit the "response" signal with the given
+ * clicking the button will emit the “response” signal with the given
  * response_id. The button is appended to the end of the info bars's
  * action area. The button widget is returned, but usually you don't
  * need it.
  *
- * Returns: (transfer none): the #GtkButton widget that was added
+ * Returns: (transfer none) (type Gtk.Button): the #GtkButton widget
+ * that was added
  *
  * Since: 2.18
  */
@@ -865,7 +865,7 @@ gtk_info_bar_new (void)
  * some arbitrary text. A response ID can be any positive number,
  * or one of the values in the #GtkResponseType enumeration. If the
  * user clicks one of these dialog buttons, GtkInfoBar will emit
- * the "response" signal with the corresponding response ID.
+ * the “response” signal with the corresponding response ID.
  *
  * Returns: a new #GtkInfoBar
  */
@@ -892,7 +892,7 @@ gtk_info_bar_new_with_buttons (const gchar *first_button_text,
  * @setting: TRUE for sensitive
  *
  * Calls gtk_widget_set_sensitive (widget, setting) for each
- * widget in the info bars's action area with the given response_id.
+ * widget in the info bars’s action area with the given response_id.
  * A convenient way to sensitize/desensitize dialog buttons.
  *
  * Since: 2.18
@@ -925,9 +925,9 @@ gtk_info_bar_set_response_sensitive (GtkInfoBar *info_bar,
  * @info_bar: a #GtkInfoBar
  * @response_id: a response ID
  *
- * Sets the last widget in the info bar's action area with
+ * Sets the last widget in the info bar’s action area with
  * the given response_id as the default widget for the dialog.
- * Pressing "Enter" normally activates the default widget.
+ * Pressing “Enter” normally activates the default widget.
  *
  * Note that this function currently requires @info_bar to
  * be added to a widget hierarchy. 
@@ -961,7 +961,7 @@ gtk_info_bar_set_default_response (GtkInfoBar *info_bar,
  * @info_bar: a #GtkInfoBar
  * @response_id: a response ID
  *
- * Emits the 'response' signal with the given @response_id.
+ * Emits the “response” signal with the given @response_id.
  *
  * Since: 2.18
  */
@@ -1184,7 +1184,7 @@ gtk_info_bar_set_message_type (GtkInfoBar     *info_bar,
         {
           const char *name = NULL;
 
-          atk_object_set_role (atk_obj, ATK_ROLE_ALERT);
+          atk_object_set_role (atk_obj, ATK_ROLE_INFO_BAR);
 
           switch (message_type)
             {
@@ -1213,9 +1213,7 @@ gtk_info_bar_set_message_type (GtkInfoBar     *info_bar,
             }
 
           if (name)
-            {
-              atk_object_set_name (atk_obj, name);
-            }
+            atk_object_set_name (atk_obj, name);
         }
 
       if (type_class[priv->message_type])

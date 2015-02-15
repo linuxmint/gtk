@@ -34,6 +34,7 @@
 #include "gtkprivate.h"
 #include "gtksocketprivate.h"
 #include "gtkwidgetprivate.h"
+#include "gtkwindowgroup.h"
 #include "gtkwindowprivate.h"
 #include "gtkxembed.h"
 
@@ -49,25 +50,23 @@
  * Together with #GtkSocket, #GtkPlug provides the ability to embed
  * widgets from one process into another process in a fashion that is
  * transparent to the user. One process creates a #GtkSocket widget
- * and passes the ID of that widget's window to the other process,
+ * and passes the ID of that widget’s window to the other process,
  * which then creates a #GtkPlug with that window ID. Any widgets
  * contained in the #GtkPlug then will appear inside the first
- * application's window.
+ * application’s window.
  *
  * The communication between a #GtkSocket and a #GtkPlug follows the
- * <ulink url="http://www.freedesktop.org/Standards/xembed-spec">XEmbed</ulink>
- * protocol. This protocol has also been implemented in other toolkits,
- * e.g. <application>Qt</application>, allowing the same level of
- * integration when embedding a <application>Qt</application> widget
+ * [XEmbed Protocol](http://www.freedesktop.org/Standards/xembed-spec).
+ * This protocol has also been implemented in other toolkits,
+ * e.g. Qt, allowing the same level of
+ * integration when embedding a Qt widget
  * in GTK+ or vice versa.
  *
- * <note>
  * The #GtkPlug and #GtkSocket widgets are only available when GTK+
  * is compiled for the X11 platform and %GDK_WINDOWING_X11 is defined.
  * They can only be used on a #GdkX11Display. To use #GtkPlug and
- * #GtkSocket, you need to include the <filename>gtk/gtkx.h</filename>
+ * #GtkSocket, you need to include the `gtk/gtkx.h`
  * header.
- * </note>
  */
 
 struct _GtkPlugPrivate
@@ -313,7 +312,9 @@ gtk_plug_set_is_child (GtkPlug  *plug,
 	gtk_widget_unmap (widget);
 
       _gtk_window_set_is_toplevel (GTK_WINDOW (plug), FALSE);
+      G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
       gtk_container_set_resize_mode (GTK_CONTAINER (plug), GTK_RESIZE_PARENT);
+      G_GNUC_END_IGNORE_DEPRECATIONS;
 
       _gtk_widget_propagate_hierarchy_changed (widget, widget);
     }
@@ -328,7 +329,9 @@ gtk_plug_set_is_child (GtkPlug  *plug,
       gtk_window_group_add_window (priv->modality_group, GTK_WINDOW (plug));
 
       _gtk_window_set_is_toplevel (GTK_WINDOW (plug), TRUE);
+      G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
       gtk_container_set_resize_mode (GTK_CONTAINER (plug), GTK_RESIZE_QUEUE);
+      G_GNUC_END_IGNORE_DEPRECATIONS;
 
       _gtk_widget_propagate_hierarchy_changed (GTK_WIDGET (plug), NULL);
     }
@@ -342,7 +345,7 @@ gtk_plug_set_is_child (GtkPlug  *plug,
  * be used to embed this window inside another window, for
  * instance with gtk_socket_add_id().
  * 
- * Return value: the window ID for the plug
+ * Returns: the window ID for the plug
  **/
 Window
 gtk_plug_get_id (GtkPlug *plug)
@@ -361,7 +364,7 @@ gtk_plug_get_id (GtkPlug *plug)
  *
  * Determines whether the plug is embedded in a socket.
  *
- * Return value: %TRUE if the plug is embedded in a socket
+ * Returns: %TRUE if the plug is embedded in a socket
  *
  * Since: 2.14
  **/
@@ -379,7 +382,7 @@ gtk_plug_get_embedded (GtkPlug *plug)
  *
  * Retrieves the socket the plug is embedded in.
  *
- * Return value: (transfer none): the window of the socket, or %NULL
+ * Returns: (transfer none): the window of the socket, or %NULL
  *
  * Since: 2.14
  **/
@@ -477,6 +480,7 @@ _gtk_plug_remove_from_socket (GtkPlug   *plug,
   GtkPlugPrivate *priv;
   GtkWidget *widget;
   GdkWindow *window;
+  GdkWindow *root_window;
   gboolean result;
   gboolean widget_was_visible;
 
@@ -495,12 +499,11 @@ _gtk_plug_remove_from_socket (GtkPlug   *plug,
 
   widget_was_visible = gtk_widget_get_visible (widget);
   window = gtk_widget_get_window (widget);
+  root_window = gdk_screen_get_root_window (gtk_widget_get_screen (widget));
 
   gdk_window_hide (window);
   _gtk_widget_set_in_reparent (widget, TRUE);
-  gdk_window_reparent (window,
-		       gtk_widget_get_root_window (widget),
-		       0, 0);
+  gdk_window_reparent (window, root_window, 0, 0);
   gtk_widget_unparent (GTK_WIDGET (plug));
   _gtk_widget_set_in_reparent (widget, FALSE);
   
@@ -539,7 +542,7 @@ _gtk_plug_remove_from_socket (GtkPlug   *plug,
 /**
  * gtk_plug_construct:
  * @plug: a #GtkPlug.
- * @socket_id: the XID of the socket's window.
+ * @socket_id: the XID of the socket’s window.
  *
  * Finish the initialization of @plug for a given #GtkSocket identified by
  * @socket_id. This function will generally only be used by classes deriving from #GtkPlug.
@@ -554,9 +557,9 @@ gtk_plug_construct (GtkPlug *plug,
 /**
  * gtk_plug_construct_for_display:
  * @plug: a #GtkPlug.
- * @display: the #GdkDisplay associated with @socket_id's 
+ * @display: the #GdkDisplay associated with @socket_id’s 
  *	     #GtkSocket.
- * @socket_id: the XID of the socket's window.
+ * @socket_id: the XID of the socket’s window.
  *
  * Finish the initialization of @plug for a given #GtkSocket identified by
  * @socket_id which is currently displayed on @display.
@@ -618,10 +621,10 @@ gtk_plug_construct_for_display (GtkPlug    *plug,
  * @socket_id:  the window ID of the socket, or 0.
  * 
  * Creates a new plug widget inside the #GtkSocket identified
- * by @socket_id. If @socket_id is 0, the plug is left "unplugged" and
+ * by @socket_id. If @socket_id is 0, the plug is left “unplugged” and
  * can later be plugged into a #GtkSocket by  gtk_socket_add_id().
  * 
- * Return value: the new #GtkPlug widget.
+ * Returns: the new #GtkPlug widget.
  **/
 GtkWidget*
 gtk_plug_new (Window socket_id)
@@ -632,11 +635,11 @@ gtk_plug_new (Window socket_id)
 /**
  * gtk_plug_new_for_display:
  * @display: the #GdkDisplay on which @socket_id is displayed
- * @socket_id: the XID of the socket's window.
+ * @socket_id: the XID of the socket’s window.
  * 
  * Create a new plug widget inside the #GtkSocket identified by socket_id.
  *
- * Return value: the new #GtkPlug widget.
+ * Returns: the new #GtkPlug widget.
  *
  * Since: 2.2
  */
@@ -1044,14 +1047,17 @@ gtk_plug_realize (GtkWidget *widget)
 
   if (gtk_widget_is_toplevel (widget))
     {
+      GdkWindow *root_window;
       attributes.window_type = GDK_WINDOW_TOPLEVEL;
+
+      root_window = gdk_screen_get_root_window (gtk_widget_get_screen (widget));
 
       gdk_error_trap_push ();
       if (priv->socket_window)
         gdk_window = gdk_window_new (priv->socket_window,
                                      &attributes, attributes_mask);
       else /* If it's a passive plug, we use the root window */
-        gdk_window = gdk_window_new (gtk_widget_get_root_window (widget),
+        gdk_window = gdk_window_new (root_window,
                                      &attributes, attributes_mask);
       /* Because the window isn't known to the window manager,
        * frame sync won't work. In theory, XEMBED could be extended
@@ -1068,8 +1074,8 @@ gtk_plug_realize (GtkWidget *widget)
 	  gdk_error_trap_push ();
 	  gdk_window_destroy (gdk_window);
 	  gdk_error_trap_pop_ignored ();
-	  gdk_window = gdk_window_new (gtk_widget_get_root_window (widget),
-                                   &attributes, attributes_mask);
+	  gdk_window = gdk_window_new (root_window,
+                                       &attributes, attributes_mask);
           gtk_widget_set_window (widget, gdk_window);
 	}
 
@@ -1113,7 +1119,7 @@ gtk_plug_hide (GtkWidget *widget)
     GTK_WIDGET_CLASS (bin_class)->hide (widget);
 }
 
-/* From gdkinternals.h */
+/* From gdkprivate.h */
 void gdk_synthesize_window_state (GdkWindow     *window,
                                   GdkWindowState unset_flags,
                                   GdkWindowState set_flags);

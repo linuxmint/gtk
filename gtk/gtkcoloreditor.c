@@ -245,6 +245,8 @@ get_child_position (GtkOverlay     *overlay,
 
   gtk_widget_get_preferred_size (widget, &req, NULL);
 
+  allocation->x = 0;
+  allocation->y = 0;
   allocation->width = req.width;
   allocation->height = req.height;
 
@@ -462,7 +464,7 @@ gtk_color_editor_class_init (GtkColorEditorClass *class)
   /* Bind class to template
    */
   gtk_widget_class_set_template_from_resource (widget_class,
-					       "/org/gtk/libgtk/gtkcoloreditor.ui");
+					       "/org/gtk/libgtk/ui/gtkcoloreditor.ui");
 
   gtk_widget_class_bind_template_child_private (widget_class, GtkColorEditor, overlay);
   gtk_widget_class_bind_template_child_private (widget_class, GtkColorEditor, grid);

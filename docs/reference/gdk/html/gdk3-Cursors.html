@@ -8,7 +8,7 @@
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk3-Visuals.html" title="Visuals">
 <link rel="next" href="gdk3-Windows.html" title="Windows">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -91,7 +91,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *
+<span class="returnvalue">GdkPixbuf</span> *
 </td>
 <td class="function_name">
 <a class="link" href="gdk3-Cursors.html#gdk-cursor-get-image" title="gdk_cursor_get_image ()">gdk_cursor_get_image</a> <span class="c_punctuation">()</span>
@@ -176,7 +176,7 @@
 </div>
 <div class="refsect1">
 <a name="gdk3-Cursors.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
     <span class="lineart">╰──</span> GdkCursor
 </pre>
 </div>
@@ -199,7 +199,7 @@ constructed on a given display, see
 <p>Cursors by themselves are not very interesting, they must be be
 bound to a window for users to see them. This is done with
 <a class="link" href="gdk3-Windows.html#gdk-window-set-cursor" title="gdk_window_set_cursor ()"><code class="function">gdk_window_set_cursor()</code></a> or by setting the cursor member of the
-<a class="link" href="gdk3-Windows.html#GdkWindowAttr" title="struct GdkWindowAttr"><span class="type">GdkWindowAttr</span></a> struct passed to <a class="link" href="gdk3-Windows.html#gdk-window-new" title="gdk_window_new ()"><code class="function">gdk_window_new()</code></a>.</p>
+<a class="link" href="gdk3-Windows.html#GdkWindowAttr" title="struct GdkWindowAttr"><span class="type">GdkWindowAttr</span></a> passed to <a class="link" href="gdk3-Windows.html#gdk-window-new" title="gdk_window_new ()"><code class="function">gdk_window_new()</code></a>.</p>
 </div>
 <div class="refsect1">
 <a name="gdk3-Cursors.functions_details"></a><h2>Functions</h2>
@@ -211,7 +211,7 @@ gdk_cursor_new (<em class="parameter"><code><a class="link" href="gdk3-Cursors.h
 See <a class="link" href="gdk3-Cursors.html#gdk-cursor-new-for-display" title="gdk_cursor_new_for_display ()"><code class="function">gdk_cursor_new_for_display()</code></a>.</p>
 <p>To make the cursor invisible, use <a class="link" href="gdk3-Cursors.html#GDK-BLANK-CURSOR:CAPS"><code class="literal">GDK_BLANK_CURSOR</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.13.10.2.6"></a><h4>Parameters</h4>
+<a name="id-1.2.12.10.2.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -226,7 +226,7 @@ See <a class="link" href="gdk3-Cursors.html#gdk-cursor-new-for-display" title="g
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.13.10.2.7"></a><h4>Returns</h4>
+<a name="id-1.2.12.10.2.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a></p>
 <p></p>
 </div>
@@ -236,9 +236,9 @@ See <a class="link" href="gdk3-Cursors.html#gdk-cursor-new-for-display" title="g
 <a name="gdk-cursor-new-from-pixbuf"></a><h3>gdk_cursor_new_from_pixbuf ()</h3>
 <pre class="programlisting"><a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="returnvalue">GdkCursor</span></a> *
 gdk_cursor_new_from_pixbuf (<em class="parameter"><code><a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> *display</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> *pixbuf</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> x</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y</code></em>);</pre>
+                            <em class="parameter"><code><span class="type">GdkPixbuf</span> *pixbuf</code></em>,
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> x</code></em>,
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y</code></em>);</pre>
 <p>Creates a new cursor from a pixbuf.</p>
 <p>Not all GDK backends support RGBA cursors. If they are not
 supported, a monochrome approximation will be displayed.
@@ -251,13 +251,13 @@ cursor sizes.</p>
 <p>If <em class="parameter"><code>x</code></em>
  or <em class="parameter"><code>y</code></em>
  are <code class="literal">-1</code>, the pixbuf must have
-options named "x_hot" and "y_hot", resp., containing
+options named “x_hot” and “y_hot”, resp., containing
 integer values between <code class="literal">0</code> and the width resp. height of
 the pixbuf. (Since: 3.0)</p>
 <p>On the X backend, support for RGBA cursors requires a
 sufficently new version of the X Render extension.</p>
 <div class="refsect3">
-<a name="id-1.2.13.10.3.8"></a><h4>Parameters</h4>
+<a name="id-1.2.12.10.3.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -272,24 +272,24 @@ sufficently new version of the X Render extension.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>pixbuf</p></td>
-<td class="parameter_description"><p>the <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> containing the cursor image</p></td>
+<td class="parameter_description"><p>the <span class="type">GdkPixbuf</span> containing the cursor image</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>x</p></td>
-<td class="parameter_description"><p>the horizontal offset of the 'hotspot' of the cursor.</p></td>
+<td class="parameter_description"><p>the horizontal offset of the “hotspot” of the cursor.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>y</p></td>
-<td class="parameter_description"><p>the vertical offset of the 'hotspot' of the cursor.</p></td>
+<td class="parameter_description"><p>the vertical offset of the “hotspot” of the cursor.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.13.10.3.9"></a><h4>Returns</h4>
+<a name="id-1.2.12.10.3.9"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a>.</p>
 <p></p>
 </div>
@@ -301,8 +301,8 @@ sufficently new version of the X Render extension.</p>
 <pre class="programlisting"><a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="returnvalue">GdkCursor</span></a> *
 gdk_cursor_new_from_surface (<em class="parameter"><code><a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> *display</code></em>,
                              <em class="parameter"><code><span class="type">cairo_surface_t</span> *surface</code></em>,
-                             <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> x</code></em>,
-                             <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> y</code></em>);</pre>
+                             <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> x</code></em>,
+                             <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> y</code></em>);</pre>
 <p>Creates a new cursor from a cairo image surface.</p>
 <p>Not all GDK backends support RGBA cursors. If they are not
 supported, a monochrome approximation will be displayed.
@@ -315,7 +315,7 @@ cursor sizes.</p>
 <p>On the X backend, support for RGBA cursors requires a
 sufficently new version of the X Render extension.</p>
 <div class="refsect3">
-<a name="id-1.2.13.10.4.7"></a><h4>Parameters</h4>
+<a name="id-1.2.12.10.4.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -335,19 +335,19 @@ sufficently new version of the X Render extension.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>x</p></td>
-<td class="parameter_description"><p>the horizontal offset of the 'hotspot' of the cursor</p></td>
+<td class="parameter_description"><p>the horizontal offset of the “hotspot” of the cursor</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>y</p></td>
-<td class="parameter_description"><p>the vertical offset of the 'hotspot' of the cursor</p></td>
+<td class="parameter_description"><p>the vertical offset of the “hotspot” of the cursor</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.13.10.4.8"></a><h4>Returns</h4>
+<a name="id-1.2.12.10.4.8"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a>.</p>
 <p></p>
 </div>
@@ -358,12 +358,12 @@ sufficently new version of the X Render extension.</p>
 <a name="gdk-cursor-new-from-name"></a><h3>gdk_cursor_new_from_name ()</h3>
 <pre class="programlisting"><a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="returnvalue">GdkCursor</span></a> *
 gdk_cursor_new_from_name (<em class="parameter"><code><a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> *display</code></em>,
-                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+                          <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>Creates a new cursor by looking up <em class="parameter"><code>name</code></em>
  in the current cursor
 theme.</p>
 <div class="refsect3">
-<a name="id-1.2.13.10.5.5"></a><h4>Parameters</h4>
+<a name="id-1.2.12.10.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -385,10 +385,10 @@ theme.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.13.10.5.6"></a><h4>Returns</h4>
-<p> a new <a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if there is no cursor with
-the given name</p>
-<p></p>
+<a name="id-1.2.12.10.5.6"></a><h4>Returns</h4>
+<p> a new <a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if there is no
+cursor with the given name. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 <p class="since">Since 2.8</p>
 </div>
@@ -401,63 +401,27 @@ gdk_cursor_new_for_display (<em class="parameter"><code><a class="link" href="Gd
 <p>Creates a new cursor from the set of builtin cursors.
 Some useful ones are:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem"><p>
- <img src="right_ptr.png"> <a class="link" href="gdk3-Cursors.html#GDK-RIGHT-PTR:CAPS"><span class="type">GDK_RIGHT_PTR</span></a> (right-facing arrow)
-</p></li>
-<li class="listitem"><p>
- <img src="crosshair.png"> <a class="link" href="gdk3-Cursors.html#GDK-CROSSHAIR:CAPS"><span class="type">GDK_CROSSHAIR</span></a> (crosshair)
-</p></li>
-<li class="listitem"><p>
- <img src="xterm.png"> <a class="link" href="gdk3-Cursors.html#GDK-XTERM:CAPS"><span class="type">GDK_XTERM</span></a> (I-beam)
-</p></li>
-<li class="listitem"><p>
-<img src="watch.png"> <a class="link" href="gdk3-Cursors.html#GDK-WATCH:CAPS"><span class="type">GDK_WATCH</span></a> (busy)
-</p></li>
-<li class="listitem"><p>
-<img src="fleur.png"> <a class="link" href="gdk3-Cursors.html#GDK-FLEUR:CAPS"><span class="type">GDK_FLEUR</span></a> (for moving objects)
-</p></li>
-<li class="listitem"><p>
-<img src="hand1.png"> <a class="link" href="gdk3-Cursors.html#GDK-HAND1:CAPS"><span class="type">GDK_HAND1</span></a> (a right-pointing hand)
-</p></li>
-<li class="listitem"><p>
-<img src="hand2.png"> <a class="link" href="gdk3-Cursors.html#GDK-HAND2:CAPS"><span class="type">GDK_HAND2</span></a> (a left-pointing hand)
-</p></li>
-<li class="listitem"><p>
-<img src="left_side.png"> <a class="link" href="gdk3-Cursors.html#GDK-LEFT-SIDE:CAPS"><span class="type">GDK_LEFT_SIDE</span></a> (resize left side)
-</p></li>
-<li class="listitem"><p>
-<img src="right_side.png"> <a class="link" href="gdk3-Cursors.html#GDK-RIGHT-SIDE:CAPS"><span class="type">GDK_RIGHT_SIDE</span></a> (resize right side)
-</p></li>
-<li class="listitem"><p>
-<img src="top_left_corner.png"> <a class="link" href="gdk3-Cursors.html#GDK-TOP-LEFT-CORNER:CAPS"><span class="type">GDK_TOP_LEFT_CORNER</span></a> (resize northwest corner)
-</p></li>
-<li class="listitem"><p>
-<img src="top_right_corner.png"> <a class="link" href="gdk3-Cursors.html#GDK-TOP-RIGHT-CORNER:CAPS"><span class="type">GDK_TOP_RIGHT_CORNER</span></a> (resize northeast corner)
-</p></li>
-<li class="listitem"><p>
-<img src="bottom_left_corner.png"> <a class="link" href="gdk3-Cursors.html#GDK-BOTTOM-LEFT-CORNER:CAPS"><span class="type">GDK_BOTTOM_LEFT_CORNER</span></a> (resize southwest corner)
-</p></li>
-<li class="listitem"><p>
-<img src="bottom_right_corner.png"> <a class="link" href="gdk3-Cursors.html#GDK-BOTTOM-RIGHT-CORNER:CAPS"><span class="type">GDK_BOTTOM_RIGHT_CORNER</span></a> (resize southeast corner)
-</p></li>
-<li class="listitem"><p>
-<img src="top_side.png"> <a class="link" href="gdk3-Cursors.html#GDK-TOP-SIDE:CAPS"><span class="type">GDK_TOP_SIDE</span></a> (resize top side)
-</p></li>
-<li class="listitem"><p>
-<img src="bottom_side.png"> <a class="link" href="gdk3-Cursors.html#GDK-BOTTOM-SIDE:CAPS"><span class="type">GDK_BOTTOM_SIDE</span></a> (resize bottom side)
-</p></li>
-<li class="listitem"><p>
-<img src="sb_h_double_arrow.png"> <a class="link" href="gdk3-Cursors.html#GDK-SB-H-DOUBLE-ARROW:CAPS"><span class="type">GDK_SB_H_DOUBLE_ARROW</span></a> (move vertical splitter)
-</p></li>
-<li class="listitem"><p>
-<img src="sb_v_double_arrow.png"> <a class="link" href="gdk3-Cursors.html#GDK-SB-V-DOUBLE-ARROW:CAPS"><span class="type">GDK_SB_V_DOUBLE_ARROW</span></a> (move horizontal splitter)
-</p></li>
-<li class="listitem"><p>
-<a class="link" href="gdk3-Cursors.html#GDK-BLANK-CURSOR:CAPS"><span class="type">GDK_BLANK_CURSOR</span></a> (Blank cursor). Since 2.16
-</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="right_ptr.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-RIGHT-PTR:CAPS"><span class="type">GDK_RIGHT_PTR</span></a> (right-facing arrow)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="crosshair.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-CROSSHAIR:CAPS"><span class="type">GDK_CROSSHAIR</span></a> (crosshair)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="xterm.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-XTERM:CAPS"><span class="type">GDK_XTERM</span></a> (I-beam)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="watch.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-WATCH:CAPS"><span class="type">GDK_WATCH</span></a> (busy)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="fleur.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-FLEUR:CAPS"><span class="type">GDK_FLEUR</span></a> (for moving objects)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="hand1.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-HAND1:CAPS"><span class="type">GDK_HAND1</span></a> (a right-pointing hand)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="hand2.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-HAND2:CAPS"><span class="type">GDK_HAND2</span></a> (a left-pointing hand)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="left_side.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-LEFT-SIDE:CAPS"><span class="type">GDK_LEFT_SIDE</span></a> (resize left side)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="right_side.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-RIGHT-SIDE:CAPS"><span class="type">GDK_RIGHT_SIDE</span></a> (resize right side)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="top_left_corner.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-TOP-LEFT-CORNER:CAPS"><span class="type">GDK_TOP_LEFT_CORNER</span></a> (resize northwest corner)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="top_right_corner.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-TOP-RIGHT-CORNER:CAPS"><span class="type">GDK_TOP_RIGHT_CORNER</span></a> (resize northeast corner)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="bottom_left_corner.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-BOTTOM-LEFT-CORNER:CAPS"><span class="type">GDK_BOTTOM_LEFT_CORNER</span></a> (resize southwest corner)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="bottom_right_corner.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-BOTTOM-RIGHT-CORNER:CAPS"><span class="type">GDK_BOTTOM_RIGHT_CORNER</span></a> (resize southeast corner)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="top_side.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-TOP-SIDE:CAPS"><span class="type">GDK_TOP_SIDE</span></a> (resize top side)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="bottom_side.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-BOTTOM-SIDE:CAPS"><span class="type">GDK_BOTTOM_SIDE</span></a> (resize bottom side)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="sb_h_double_arrow.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-SB-H-DOUBLE-ARROW:CAPS"><span class="type">GDK_SB_H_DOUBLE_ARROW</span></a> (move vertical splitter)</p></li>
+<li class="listitem"><p><span class="inlinemediaobject"><img src="sb_v_double_arrow.png"></span> <a class="link" href="gdk3-Cursors.html#GDK-SB-V-DOUBLE-ARROW:CAPS"><span class="type">GDK_SB_V_DOUBLE_ARROW</span></a> (move horizontal splitter)</p></li>
+<li class="listitem"><p><a class="link" href="gdk3-Cursors.html#GDK-BLANK-CURSOR:CAPS"><span class="type">GDK_BLANK_CURSOR</span></a> (Blank cursor). Since 2.16</p></li>
 </ul></div>
 <div class="refsect3">
-<a name="id-1.2.13.10.6.6"></a><h4>Parameters</h4>
+<a name="id-1.2.12.10.6.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -479,7 +443,7 @@ Some useful ones are:</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.13.10.6.7"></a><h4>Returns</h4>
+<a name="id-1.2.12.10.6.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a></p>
 <p></p>
 </div>
@@ -492,7 +456,7 @@ Some useful ones are:</p>
 gdk_cursor_get_display (<em class="parameter"><code><a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a> *cursor</code></em>);</pre>
 <p>Returns the display on which the <a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a> is defined.</p>
 <div class="refsect3">
-<a name="id-1.2.13.10.7.5"></a><h4>Parameters</h4>
+<a name="id-1.2.12.10.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -507,7 +471,7 @@ gdk_cursor_get_display (<em class="parameter"><code><a class="link" href="gdk3-C
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.13.10.7.6"></a><h4>Returns</h4>
+<a name="id-1.2.12.10.7.6"></a><h4>Returns</h4>
 <p> the <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> associated to <em class="parameter"><code>cursor</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
@@ -517,14 +481,14 @@ gdk_cursor_get_display (<em class="parameter"><code><a class="link" href="gdk3-C
 <hr>
 <div class="refsect2">
 <a name="gdk-cursor-get-image"></a><h3>gdk_cursor_get_image ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *
+<pre class="programlisting"><span class="returnvalue">GdkPixbuf</span> *
 gdk_cursor_get_image (<em class="parameter"><code><a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a> *cursor</code></em>);</pre>
-<p>Returns a <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> with the image used to display the cursor.</p>
+<p>Returns a <span class="type">GdkPixbuf</span> with the image used to display the cursor.</p>
 <p>Note that depending on the capabilities of the windowing system and 
 on the cursor, GDK may not be able to obtain the image data. In this 
-case, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is returned.</p>
+case, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is returned.</p>
 <div class="refsect3">
-<a name="id-1.2.13.10.8.6"></a><h4>Parameters</h4>
+<a name="id-1.2.12.10.8.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -539,10 +503,11 @@ case, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.13.10.8.7"></a><h4>Returns</h4>
-<p> a <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> representing <em class="parameter"><code>cursor</code></em>
-, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<a name="id-1.2.12.10.8.7"></a><h4>Returns</h4>
+<p> a <span class="type">GdkPixbuf</span> representing
+<em class="parameter"><code>cursor</code></em>
+, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 <p class="since">Since 2.8</p>
 </div>
@@ -551,14 +516,14 @@ case, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros
 <a name="gdk-cursor-get-surface"></a><h3>gdk_cursor_get_surface ()</h3>
 <pre class="programlisting"><span class="returnvalue">cairo_surface_t</span> *
 gdk_cursor_get_surface (<em class="parameter"><code><a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a> *cursor</code></em>,
-                        <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *x_hot</code></em>,
-                        <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *y_hot</code></em>);</pre>
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *x_hot</code></em>,
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *y_hot</code></em>);</pre>
 <p>Returns a cairo image surface with the image used to display the cursor.</p>
 <p>Note that depending on the capabilities of the windowing system and
 on the cursor, GDK may not be able to obtain the image data. In this
-case, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is returned.</p>
+case, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is returned.</p>
 <div class="refsect3">
-<a name="id-1.2.13.10.9.6"></a><h4>Parameters</h4>
+<a name="id-1.2.12.10.9.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -573,22 +538,25 @@ case, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros
 </tr>
 <tr>
 <td class="parameter_name"><p>x_hot</p></td>
-<td class="parameter_description"><p>Location to store the hotspot x position, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> Location to store the hotspot x position,
+or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>][<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>y_hot</p></td>
-<td class="parameter_description"><p>Location to store the hotspot y position, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> Location to store the hotspot y position,
+or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>][<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.13.10.9.7"></a><h4>Returns</h4>
-<p> a <span class="type">cairo_surface_t</span> representing <em class="parameter"><code>cursor</code></em>
-, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
-<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
+<a name="id-1.2.12.10.9.7"></a><h4>Returns</h4>
+<p> a <span class="type">cairo_surface_t</span>
+representing <em class="parameter"><code>cursor</code></em>
+, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 <p class="since">Since 3.10</p>
 </div>
@@ -599,7 +567,7 @@ case, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros
 gdk_cursor_get_cursor_type (<em class="parameter"><code><a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a> *cursor</code></em>);</pre>
 <p>Returns the cursor type for this cursor.</p>
 <div class="refsect3">
-<a name="id-1.2.13.10.10.5"></a><h4>Parameters</h4>
+<a name="id-1.2.12.10.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -614,7 +582,7 @@ gdk_cursor_get_cursor_type (<em class="parameter"><code><a class="link" href="gd
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.13.10.10.6"></a><h4>Returns</h4>
+<a name="id-1.2.12.10.10.6"></a><h4>Returns</h4>
 <p> a <a class="link" href="gdk3-Cursors.html#GdkCursorType" title="enum GdkCursorType"><span class="type">GdkCursorType</span></a></p>
 <p></p>
 </div>
@@ -627,12 +595,12 @@ gdk_cursor_get_cursor_type (<em class="parameter"><code><a class="link" href="gd
 gdk_cursor_ref (<em class="parameter"><code><a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a> *cursor</code></em>);</pre>
 <div class="warning">
 <p><code class="literal">gdk_cursor_ref</code> has been deprecated since version 3.0 and should not be used in newly-written code.</p>
-<p>Use <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a> instead</p>
+<p>Use <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a> instead</p>
 </div>
 <p>Adds a reference to <em class="parameter"><code>cursor</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.2.13.10.11.6"></a><h4>Parameters</h4>
+<a name="id-1.2.12.10.11.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -647,7 +615,7 @@ gdk_cursor_ref (<em class="parameter"><code><a class="link" href="gdk3-Cursors.h
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.13.10.11.7"></a><h4>Returns</h4>
+<a name="id-1.2.12.10.11.7"></a><h4>Returns</h4>
 <p> Same <em class="parameter"><code>cursor</code></em>
 that was passed in. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -660,13 +628,13 @@ that was passed in. </p>
 gdk_cursor_unref (<em class="parameter"><code><a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a> *cursor</code></em>);</pre>
 <div class="warning">
 <p><code class="literal">gdk_cursor_unref</code> has been deprecated since version 3.0 and should not be used in newly-written code.</p>
-<p>Use <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a> instead</p>
+<p>Use <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a> instead</p>
 </div>
 <p>Removes a reference from <em class="parameter"><code>cursor</code></em>
 , deallocating the cursor
 if no references remain.</p>
 <div class="refsect3">
-<a name="id-1.2.13.10.12.6"></a><h4>Parameters</h4>
+<a name="id-1.2.12.10.12.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -687,14 +655,14 @@ if no references remain.</p>
 <div class="refsect2">
 <a name="GdkCursor-struct"></a><h3>GdkCursor</h3>
 <pre class="programlisting">typedef struct _GdkCursor GdkCursor;</pre>
-<p>The <a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a> structure represents a cursor. Its contents are private.</p>
+<p>A <a class="link" href="gdk3-Cursors.html#GdkCursor"><span class="type">GdkCursor</span></a> represents a cursor. Its contents are private.</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GdkCursorType"></a><h3>enum GdkCursorType</h3>
 <p>The standard cursors available.</p>
 <div class="refsect3">
-<a name="id-1.2.13.11.3.4"></a><h4>Members</h4>
+<a name="id-1.2.12.11.3.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -705,539 +673,539 @@ if no references remain.</p>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-X-CURSOR:CAPS"></a>GDK_X_CURSOR</p></td>
 <td class="enum_member_description">
-<img src="X_cursor.png">
+<p><span class="inlinemediaobject"><img src="X_cursor.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-ARROW:CAPS"></a>GDK_ARROW</p></td>
 <td class="enum_member_description">
-<img src="arrow.png">
+<p><span class="inlinemediaobject"><img src="arrow.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-BASED-ARROW-DOWN:CAPS"></a>GDK_BASED_ARROW_DOWN</p></td>
 <td class="enum_member_description">
-<img src="based_arrow_down.png">
+<p><span class="inlinemediaobject"><img src="based_arrow_down.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-BASED-ARROW-UP:CAPS"></a>GDK_BASED_ARROW_UP</p></td>
 <td class="enum_member_description">
-<img src="based_arrow_up.png">
+<p><span class="inlinemediaobject"><img src="based_arrow_up.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-BOAT:CAPS"></a>GDK_BOAT</p></td>
 <td class="enum_member_description">
-<img src="boat.png">
+<p><span class="inlinemediaobject"><img src="boat.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-BOGOSITY:CAPS"></a>GDK_BOGOSITY</p></td>
 <td class="enum_member_description">
-<img src="bogosity.png">
+<p><span class="inlinemediaobject"><img src="bogosity.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-BOTTOM-LEFT-CORNER:CAPS"></a>GDK_BOTTOM_LEFT_CORNER</p></td>
 <td class="enum_member_description">
-<img src="bottom_left_corner.png">
+<p><span class="inlinemediaobject"><img src="bottom_left_corner.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-BOTTOM-RIGHT-CORNER:CAPS"></a>GDK_BOTTOM_RIGHT_CORNER</p></td>
 <td class="enum_member_description">
-<img src="bottom_right_corner.png">
+<p><span class="inlinemediaobject"><img src="bottom_right_corner.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-BOTTOM-SIDE:CAPS"></a>GDK_BOTTOM_SIDE</p></td>
 <td class="enum_member_description">
-<img src="bottom_side.png">
+<p><span class="inlinemediaobject"><img src="bottom_side.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-BOTTOM-TEE:CAPS"></a>GDK_BOTTOM_TEE</p></td>
 <td class="enum_member_description">
-<img src="bottom_tee.png">
+<p><span class="inlinemediaobject"><img src="bottom_tee.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-BOX-SPIRAL:CAPS"></a>GDK_BOX_SPIRAL</p></td>
 <td class="enum_member_description">
-<img src="box_spiral.png">
+<p><span class="inlinemediaobject"><img src="box_spiral.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-CENTER-PTR:CAPS"></a>GDK_CENTER_PTR</p></td>
 <td class="enum_member_description">
-<img src="center_ptr.png">
+<p><span class="inlinemediaobject"><img src="center_ptr.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-CIRCLE:CAPS"></a>GDK_CIRCLE</p></td>
 <td class="enum_member_description">
-<img src="circle.png">
+<p><span class="inlinemediaobject"><img src="circle.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-CLOCK:CAPS"></a>GDK_CLOCK</p></td>
 <td class="enum_member_description">
-<img src="clock.png">
+<p><span class="inlinemediaobject"><img src="clock.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-COFFEE-MUG:CAPS"></a>GDK_COFFEE_MUG</p></td>
 <td class="enum_member_description">
-<img src="coffee_mug.png">
+<p><span class="inlinemediaobject"><img src="coffee_mug.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-CROSS:CAPS"></a>GDK_CROSS</p></td>
 <td class="enum_member_description">
-<img src="cross.png">
+<p><span class="inlinemediaobject"><img src="cross.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-CROSS-REVERSE:CAPS"></a>GDK_CROSS_REVERSE</p></td>
 <td class="enum_member_description">
-<img src="cross_reverse.png">
+<p><span class="inlinemediaobject"><img src="cross_reverse.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-CROSSHAIR:CAPS"></a>GDK_CROSSHAIR</p></td>
 <td class="enum_member_description">
-<img src="crosshair.png">
+<p><span class="inlinemediaobject"><img src="crosshair.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-DIAMOND-CROSS:CAPS"></a>GDK_DIAMOND_CROSS</p></td>
 <td class="enum_member_description">
-<img src="diamond_cross.png">
+<p><span class="inlinemediaobject"><img src="diamond_cross.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-DOT:CAPS"></a>GDK_DOT</p></td>
 <td class="enum_member_description">
-<img src="dot.png">
+<p><span class="inlinemediaobject"><img src="dot.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-DOTBOX:CAPS"></a>GDK_DOTBOX</p></td>
 <td class="enum_member_description">
-<img src="dotbox.png">
+<p><span class="inlinemediaobject"><img src="dotbox.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-DOUBLE-ARROW:CAPS"></a>GDK_DOUBLE_ARROW</p></td>
 <td class="enum_member_description">
-<img src="double_arrow.png">
+<p><span class="inlinemediaobject"><img src="double_arrow.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-DRAFT-LARGE:CAPS"></a>GDK_DRAFT_LARGE</p></td>
 <td class="enum_member_description">
-<img src="draft_large.png">
+<p><span class="inlinemediaobject"><img src="draft_large.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-DRAFT-SMALL:CAPS"></a>GDK_DRAFT_SMALL</p></td>
 <td class="enum_member_description">
-<img src="draft_small.png">
+<p><span class="inlinemediaobject"><img src="draft_small.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-DRAPED-BOX:CAPS"></a>GDK_DRAPED_BOX</p></td>
 <td class="enum_member_description">
-<img src="draped_box.png">
+<p><span class="inlinemediaobject"><img src="draped_box.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-EXCHANGE:CAPS"></a>GDK_EXCHANGE</p></td>
 <td class="enum_member_description">
-<img src="exchange.png">
+<p><span class="inlinemediaobject"><img src="exchange.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-FLEUR:CAPS"></a>GDK_FLEUR</p></td>
 <td class="enum_member_description">
-<img src="fleur.png">
+<p><span class="inlinemediaobject"><img src="fleur.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-GOBBLER:CAPS"></a>GDK_GOBBLER</p></td>
 <td class="enum_member_description">
-<img src="gobbler.png">
+<p><span class="inlinemediaobject"><img src="gobbler.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-GUMBY:CAPS"></a>GDK_GUMBY</p></td>
 <td class="enum_member_description">
-<img src="gumby.png">
+<p><span class="inlinemediaobject"><img src="gumby.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-HAND1:CAPS"></a>GDK_HAND1</p></td>
 <td class="enum_member_description">
-<img src="hand1.png">
+<p><span class="inlinemediaobject"><img src="hand1.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-HAND2:CAPS"></a>GDK_HAND2</p></td>
 <td class="enum_member_description">
-<img src="hand2.png">
+<p><span class="inlinemediaobject"><img src="hand2.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-HEART:CAPS"></a>GDK_HEART</p></td>
 <td class="enum_member_description">
-<img src="heart.png">
+<p><span class="inlinemediaobject"><img src="heart.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-ICON:CAPS"></a>GDK_ICON</p></td>
 <td class="enum_member_description">
-<img src="icon.png">
+<p><span class="inlinemediaobject"><img src="icon.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-IRON-CROSS:CAPS"></a>GDK_IRON_CROSS</p></td>
 <td class="enum_member_description">
-<img src="iron_cross.png">
+<p><span class="inlinemediaobject"><img src="iron_cross.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-LEFT-PTR:CAPS"></a>GDK_LEFT_PTR</p></td>
 <td class="enum_member_description">
-<img src="left_ptr.png">
+<p><span class="inlinemediaobject"><img src="left_ptr.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-LEFT-SIDE:CAPS"></a>GDK_LEFT_SIDE</p></td>
 <td class="enum_member_description">
-<img src="left_side.png">
+<p><span class="inlinemediaobject"><img src="left_side.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-LEFT-TEE:CAPS"></a>GDK_LEFT_TEE</p></td>
 <td class="enum_member_description">
-<img src="left_tee.png">
+<p><span class="inlinemediaobject"><img src="left_tee.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-LEFTBUTTON:CAPS"></a>GDK_LEFTBUTTON</p></td>
 <td class="enum_member_description">
-<img src="leftbutton.png">
+<p><span class="inlinemediaobject"><img src="leftbutton.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-LL-ANGLE:CAPS"></a>GDK_LL_ANGLE</p></td>
 <td class="enum_member_description">
-<img src="ll_angle.png">
+<p><span class="inlinemediaobject"><img src="ll_angle.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-LR-ANGLE:CAPS"></a>GDK_LR_ANGLE</p></td>
 <td class="enum_member_description">
-<img src="lr_angle.png">
+<p><span class="inlinemediaobject"><img src="lr_angle.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-MAN:CAPS"></a>GDK_MAN</p></td>
 <td class="enum_member_description">
-<img src="man.png">
+<p><span class="inlinemediaobject"><img src="man.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-MIDDLEBUTTON:CAPS"></a>GDK_MIDDLEBUTTON</p></td>
 <td class="enum_member_description">
-<img src="middlebutton.png">
+<p><span class="inlinemediaobject"><img src="middlebutton.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-MOUSE:CAPS"></a>GDK_MOUSE</p></td>
 <td class="enum_member_description">
-<img src="mouse.png">
+<p><span class="inlinemediaobject"><img src="mouse.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-PENCIL:CAPS"></a>GDK_PENCIL</p></td>
 <td class="enum_member_description">
-<img src="pencil.png">
+<p><span class="inlinemediaobject"><img src="pencil.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-PIRATE:CAPS"></a>GDK_PIRATE</p></td>
 <td class="enum_member_description">
-<img src="pirate.png">
+<p><span class="inlinemediaobject"><img src="pirate.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-PLUS:CAPS"></a>GDK_PLUS</p></td>
 <td class="enum_member_description">
-<img src="plus.png">
+<p><span class="inlinemediaobject"><img src="plus.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-QUESTION-ARROW:CAPS"></a>GDK_QUESTION_ARROW</p></td>
 <td class="enum_member_description">
-<img src="question_arrow.png">
+<p><span class="inlinemediaobject"><img src="question_arrow.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-RIGHT-PTR:CAPS"></a>GDK_RIGHT_PTR</p></td>
 <td class="enum_member_description">
-<img src="right_ptr.png">
+<p><span class="inlinemediaobject"><img src="right_ptr.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-RIGHT-SIDE:CAPS"></a>GDK_RIGHT_SIDE</p></td>
 <td class="enum_member_description">
-<img src="right_side.png">
+<p><span class="inlinemediaobject"><img src="right_side.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-RIGHT-TEE:CAPS"></a>GDK_RIGHT_TEE</p></td>
 <td class="enum_member_description">
-<img src="right_tee.png">
+<p><span class="inlinemediaobject"><img src="right_tee.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-RIGHTBUTTON:CAPS"></a>GDK_RIGHTBUTTON</p></td>
 <td class="enum_member_description">
-<img src="rightbutton.png">
+<p><span class="inlinemediaobject"><img src="rightbutton.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-RTL-LOGO:CAPS"></a>GDK_RTL_LOGO</p></td>
 <td class="enum_member_description">
-<img src="rtl_logo.png">
+<p><span class="inlinemediaobject"><img src="rtl_logo.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-SAILBOAT:CAPS"></a>GDK_SAILBOAT</p></td>
 <td class="enum_member_description">
-<img src="sailboat.png">
+<p><span class="inlinemediaobject"><img src="sailboat.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-SB-DOWN-ARROW:CAPS"></a>GDK_SB_DOWN_ARROW</p></td>
 <td class="enum_member_description">
-<img src="sb_down_arrow.png">
+<p><span class="inlinemediaobject"><img src="sb_down_arrow.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-SB-H-DOUBLE-ARROW:CAPS"></a>GDK_SB_H_DOUBLE_ARROW</p></td>
 <td class="enum_member_description">
-<img src="sb_h_double_arrow.png">
+<p><span class="inlinemediaobject"><img src="sb_h_double_arrow.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-SB-LEFT-ARROW:CAPS"></a>GDK_SB_LEFT_ARROW</p></td>
 <td class="enum_member_description">
-<img src="sb_left_arrow.png">
+<p><span class="inlinemediaobject"><img src="sb_left_arrow.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-SB-RIGHT-ARROW:CAPS"></a>GDK_SB_RIGHT_ARROW</p></td>
 <td class="enum_member_description">
-<img src="sb_right_arrow.png">
+<p><span class="inlinemediaobject"><img src="sb_right_arrow.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-SB-UP-ARROW:CAPS"></a>GDK_SB_UP_ARROW</p></td>
 <td class="enum_member_description">
-<img src="sb_up_arrow.png">
+<p><span class="inlinemediaobject"><img src="sb_up_arrow.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-SB-V-DOUBLE-ARROW:CAPS"></a>GDK_SB_V_DOUBLE_ARROW</p></td>
 <td class="enum_member_description">
-<img src="sb_v_double_arrow.png">
+<p><span class="inlinemediaobject"><img src="sb_v_double_arrow.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-SHUTTLE:CAPS"></a>GDK_SHUTTLE</p></td>
 <td class="enum_member_description">
-<img src="shuttle.png">
+<p><span class="inlinemediaobject"><img src="shuttle.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-SIZING:CAPS"></a>GDK_SIZING</p></td>
 <td class="enum_member_description">
-<img src="sizing.png">
+<p><span class="inlinemediaobject"><img src="sizing.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-SPIDER:CAPS"></a>GDK_SPIDER</p></td>
 <td class="enum_member_description">
-<img src="spider.png">
+<p><span class="inlinemediaobject"><img src="spider.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-SPRAYCAN:CAPS"></a>GDK_SPRAYCAN</p></td>
 <td class="enum_member_description">
-<img src="spraycan.png">
+<p><span class="inlinemediaobject"><img src="spraycan.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-STAR:CAPS"></a>GDK_STAR</p></td>
 <td class="enum_member_description">
-<img src="star.png">
+<p><span class="inlinemediaobject"><img src="star.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-TARGET:CAPS"></a>GDK_TARGET</p></td>
 <td class="enum_member_description">
-<img src="target.png">
+<p><span class="inlinemediaobject"><img src="target.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-TCROSS:CAPS"></a>GDK_TCROSS</p></td>
 <td class="enum_member_description">
-<img src="tcross.png">
+<p><span class="inlinemediaobject"><img src="tcross.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-TOP-LEFT-ARROW:CAPS"></a>GDK_TOP_LEFT_ARROW</p></td>
 <td class="enum_member_description">
-<img src="top_left_arrow.png">
+<p><span class="inlinemediaobject"><img src="top_left_arrow.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-TOP-LEFT-CORNER:CAPS"></a>GDK_TOP_LEFT_CORNER</p></td>
 <td class="enum_member_description">
-<img src="top_left_corner.png">
+<p><span class="inlinemediaobject"><img src="top_left_corner.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-TOP-RIGHT-CORNER:CAPS"></a>GDK_TOP_RIGHT_CORNER</p></td>
 <td class="enum_member_description">
-<img src="top_right_corner.png">
+<p><span class="inlinemediaobject"><img src="top_right_corner.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-TOP-SIDE:CAPS"></a>GDK_TOP_SIDE</p></td>
 <td class="enum_member_description">
-<img src="top_side.png">
+<p><span class="inlinemediaobject"><img src="top_side.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-TOP-TEE:CAPS"></a>GDK_TOP_TEE</p></td>
 <td class="enum_member_description">
-<img src="top_tee.png">
+<p><span class="inlinemediaobject"><img src="top_tee.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-TREK:CAPS"></a>GDK_TREK</p></td>
 <td class="enum_member_description">
-<img src="trek.png">
+<p><span class="inlinemediaobject"><img src="trek.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-UL-ANGLE:CAPS"></a>GDK_UL_ANGLE</p></td>
 <td class="enum_member_description">
-<img src="ul_angle.png">
+<p><span class="inlinemediaobject"><img src="ul_angle.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-UMBRELLA:CAPS"></a>GDK_UMBRELLA</p></td>
 <td class="enum_member_description">
-<img src="umbrella.png">
+<p><span class="inlinemediaobject"><img src="umbrella.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-UR-ANGLE:CAPS"></a>GDK_UR_ANGLE</p></td>
 <td class="enum_member_description">
-<img src="ur_angle.png">
+<p><span class="inlinemediaobject"><img src="ur_angle.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-WATCH:CAPS"></a>GDK_WATCH</p></td>
 <td class="enum_member_description">
-<img src="watch.png">
+<p><span class="inlinemediaobject"><img src="watch.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GDK-XTERM:CAPS"></a>GDK_XTERM</p></td>
 <td class="enum_member_description">
-<img src="xterm.png">
+<p><span class="inlinemediaobject"><img src="xterm.png"></span></p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -1288,6 +1256,6 @@ if no references remain.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

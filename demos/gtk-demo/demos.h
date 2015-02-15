@@ -29,7 +29,10 @@ GtkWidget *do_drawingarea (GtkWidget *do_widget);
 GtkWidget *do_editable_cells (GtkWidget *do_widget);
 GtkWidget *do_entry_buffer (GtkWidget *do_widget);
 GtkWidget *do_entry_completion (GtkWidget *do_widget);
+GtkWidget *do_event_axes (GtkWidget *do_widget);
 GtkWidget *do_expander (GtkWidget *do_widget);
+GtkWidget *do_gestures (GtkWidget *do_widget);
+GtkWidget *do_headerbar (GtkWidget *do_widget);
 GtkWidget *do_hypertext (GtkWidget *do_widget);
 GtkWidget *do_iconview (GtkWidget *do_widget);
 GtkWidget *do_iconview_edit (GtkWidget *do_widget);
@@ -37,6 +40,7 @@ GtkWidget *do_images (GtkWidget *do_widget);
 GtkWidget *do_infobar (GtkWidget *do_widget);
 GtkWidget *do_links (GtkWidget *do_widget);
 GtkWidget *do_listbox (GtkWidget *do_widget);
+GtkWidget *do_flowbox (GtkWidget *do_widget);
 GtkWidget *do_list_store (GtkWidget *do_widget);
 GtkWidget *do_menus (GtkWidget *do_widget);
 GtkWidget *do_offscreen_window (GtkWidget *do_widget);
@@ -45,6 +49,7 @@ GtkWidget *do_overlay (GtkWidget *do_widget);
 GtkWidget *do_panes (GtkWidget *do_widget);
 GtkWidget *do_pickers (GtkWidget *do_widget);
 GtkWidget *do_pixbufs (GtkWidget *do_widget);
+GtkWidget *do_popover (GtkWidget *do_widget);
 GtkWidget *do_printing (GtkWidget *do_widget);
 GtkWidget *do_revealer (GtkWidget *do_widget);
 GtkWidget *do_rotated_text (GtkWidget *do_widget);
@@ -88,7 +93,7 @@ Demo child2[] = {
 Demo child3[] = {
   { "hypertext", "Hypertext", "hypertext.c", do_hypertext, NULL },
   { "textview", "Multiple Views", "textview.c", do_textview, NULL },
-  { "textscroll", "Automatic scrolling", "textscroll.c", do_textscroll, NULL },
+  { "textscroll", "Automatic Scrolling", "textscroll.c", do_textscroll, NULL },
   { NULL } 
 };
 
@@ -99,13 +104,13 @@ Demo child4[] = {
 };
 
 Demo child5[] = {
-  { "offscreen_window", "Rotated button", "offscreen_window.c", do_offscreen_window, NULL },
+  { "offscreen_window", "Rotated Button", "offscreen_window.c", do_offscreen_window, NULL },
   { "offscreen_window2", "Effects", "offscreen_window2.c", do_offscreen_window2, NULL },
   { NULL } 
 };
 
 Demo gtk_demos[] = {
-  { "application", "Application class", "application.c", do_application, NULL }, 
+  { "application", "Application Class", "application.c", do_application, NULL }, 
   { "assistant", "Assistant", "assistant.c", do_assistant, NULL }, 
   { "builder", "Builder", "builder.c", do_builder, NULL }, 
   { "button_box", "Button Boxes", "button_box.c", do_button_box, NULL }, 
@@ -113,22 +118,27 @@ Demo gtk_demos[] = {
   { "changedisplay", "Change Display", "changedisplay.c", do_changedisplay, NULL }, 
   { "clipboard", "Clipboard", "clipboard.c", do_clipboard, NULL }, 
   { "colorsel", "Color Chooser", "colorsel.c", do_colorsel, NULL }, 
-  { "combobox", "Combo boxes", "combobox.c", do_combobox, NULL }, 
+  { "combobox", "Combo Boxes", "combobox.c", do_combobox, NULL }, 
   { "dialog", "Dialog and Message Boxes", "dialog.c", do_dialog, NULL }, 
   { "drawingarea", "Drawing Area", "drawingarea.c", do_drawingarea, NULL }, 
   { NULL, "Entry", NULL, NULL, child2 }, 
+  { "event_axes", "Event Axes", "event_axes.c", do_event_axes, NULL }, 
   { "expander", "Expander", "expander.c", do_expander, NULL }, 
+  { "flowbox", "Flow Box", "flowbox.c", do_flowbox, NULL }, 
+  { "gestures", "Gestures", "gestures.c", do_gestures, NULL }, 
+  { "headerbar", "Header Bar", "headerbar.c", do_headerbar, NULL }, 
   { NULL, "Icon View", NULL, NULL, child4 }, 
   { "images", "Images", "images.c", do_images, NULL }, 
   { "infobar", "Info bar", "infobar.c", do_infobar, NULL }, 
   { "links", "Links", "links.c", do_links, NULL }, 
   { "listbox", "List Box", "listbox.c", do_listbox, NULL }, 
   { "menus", "Menus", "menus.c", do_menus, NULL }, 
-  { NULL, "Offscreen windows", NULL, NULL, child5 }, 
+  { NULL, "Offscreen Windows", NULL, NULL, child5 }, 
   { "overlay", "Overlay", "overlay.c", do_overlay, NULL }, 
   { "panes", "Paned Widgets", "panes.c", do_panes, NULL }, 
   { "pickers", "Pickers", "pickers.c", do_pickers, NULL }, 
   { "pixbufs", "Pixbufs", "pixbufs.c", do_pixbufs, NULL }, 
+  { "popover", "Popovers", "popover.c", do_popover, NULL }, 
   { "printing", "Printing", "printing.c", do_printing, NULL }, 
   { "revealer", "Revealer", "revealer.c", do_revealer, NULL }, 
   { "rotated_text", "Rotated Text", "rotated_text.c", do_rotated_text, NULL }, 
@@ -137,7 +147,7 @@ Demo gtk_demos[] = {
   { "stack", "Stack", "stack.c", do_stack, NULL }, 
   { NULL, "Text Widget", NULL, NULL, child3 }, 
   { "toolpalette", "Tool Palette", "toolpalette.c", do_toolpalette, NULL }, 
-  { "transparent", "Transparent", "transparent.c", do_transparent, NULL }, 
+  { "transparent", "Transparency", "transparent.c", do_transparent, NULL }, 
   { NULL, "Tree View", NULL, NULL, child1 },
   { NULL } 
 };

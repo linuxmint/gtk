@@ -48,7 +48,7 @@ AM_CPPFLAGS = 			\
 GTKDOC_LIBS = $(top_builddir)/gdk/libgdk-3.la $(GDK_DEP_LIBS)
 
 # Extra options to supply to gtkdoc-mkdb
-MKDB_OPTIONS=--sgml-mode --output-format=xml --name-space=gdk
+MKDB_OPTIONS=--output-format=xml --name-space=gdk
 
 # Extra SGML files that are included by DOC_MAIN_SGML_FILE
 content_files = 		\
@@ -135,12 +135,13 @@ HTML_IMAGES = 				\
 	images/watch.png		\
 	images/xterm.png
 
+if ENABLE_DOC_CROSS_REFERENCES
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS= \
 	--extra-dir=$(GLIB_PREFIX)/share/gtk-doc/html/gobject \
 	--extra-dir=$(GLIB_PREFIX)/share/gtk-doc/html/glib \
 	--extra-dir=$(CAIRO_PREFIX)/share/gtk-doc/html/cairo
-
+endif
 
 include $(top_srcdir)/gtk-doc.make
 

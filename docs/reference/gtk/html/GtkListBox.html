@@ -7,8 +7,8 @@
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
 <link rel="up" href="LayoutContainers.html" title="Layout Containers">
 <link rel="prev" href="GtkRevealer.html" title="GtkRevealer">
-<link rel="next" href="GtkStack.html" title="GtkStack">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<link rel="next" href="GtkFlowBox.html" title="GtkFlowBox">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -24,7 +24,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="LayoutContainers.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="GtkRevealer.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="GtkStack.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GtkFlowBox.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="GtkListBox"></a><div class="titlepage"></div>
@@ -45,7 +45,7 @@
 <tbody>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <span class="c_punctuation">(</span><a class="link" href="GtkListBox.html#GtkListBoxFilterFunc" title="GtkListBoxFilterFunc ()">*GtkListBoxFilterFunc</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
@@ -53,7 +53,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 </td>
 <td class="function_name">
 <span class="c_punctuation">(</span><a class="link" href="GtkListBox.html#GtkListBoxSortFunc" title="GtkListBoxSortFunc ()">*GtkListBoxSortFunc</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
@@ -101,10 +101,58 @@
 </tr>
 <tr>
 <td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GtkListBox.html#gtk-list-box-unselect-row" title="gtk_list_box_unselect_row ()">gtk_list_box_unselect_row</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GtkListBox.html#gtk-list-box-select-all" title="gtk_list_box_select_all ()">gtk_list_box_select_all</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GtkListBox.html#gtk-list-box-unselect-all" title="gtk_list_box_unselect_all ()">gtk_list_box_unselect_all</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="returnvalue">GtkListBoxRow</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GtkListBox.html#gtk-list-box-get-selected-row" title="gtk_list_box_get_selected_row ()">gtk_list_box_get_selected_row</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<span class="c_punctuation">(</span><a class="link" href="GtkListBox.html#GtkListBoxForeachFunc" title="GtkListBoxForeachFunc ()">*GtkListBoxForeachFunc</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GtkListBox.html#gtk-list-box-selected-foreach" title="gtk_list_box_selected_foreach ()">gtk_list_box_selected_foreach</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GtkListBox.html#gtk-list-box-get-selected-rows" title="gtk_list_box_get_selected_rows ()">gtk_list_box_get_selected_rows</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -133,7 +181,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkListBox.html#gtk-list-box-get-activate-on-single-click" title="gtk_list_box_get_activate_on_single_click ()">gtk_list_box_get_activate_on_single_click</a> <span class="c_punctuation">()</span>
@@ -261,6 +309,14 @@
 </tr>
 <tr>
 <td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GtkListBox.html#gtk-list-box-row-is-selected" title="gtk_list_box_row_is_selected ()">gtk_list_box_row_is_selected</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *
 </td>
 <td class="function_name">
@@ -269,7 +325,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
+<a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkListBox.html#gtk-list-box-row-get-type" title="gtk_list_box_row_get_type ()">gtk_list_box_row_get_type</a> <span class="c_punctuation">()</span>
@@ -285,10 +341,42 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkListBox.html#gtk-list-box-row-get-index" title="gtk_list_box_row_get_index ()">gtk_list_box_row_get_index</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GtkListBox.html#gtk-list-box-row-set-activatable" title="gtk_list_box_row_set_activatable ()">gtk_list_box_row_set_activatable</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GtkListBox.html#gtk-list-box-row-get-activatable" title="gtk_list_box_row_get_activatable ()">gtk_list_box_row_get_activatable</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GtkListBox.html#gtk-list-box-row-set-selectable" title="gtk_list_box_row_set_selectable ()">gtk_list_box_row_set_selectable</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GtkListBox.html#gtk-list-box-row-get-selectable" title="gtk_list_box_row_get_selectable ()">gtk_list_box_row_get_selectable</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 </tbody>
@@ -304,13 +392,23 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkListBox.html#GtkListBox--activate-on-single-click" title="The “activate-on-single-click” property">activate-on-single-click</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
 <td class="property_type"><a class="link" href="gtk3-Standard-Enumerations.html#GtkSelectionMode" title="enum GtkSelectionMode"><span class="type">GtkSelectionMode</span></a></td>
 <td class="property_name"><a class="link" href="GtkListBox.html#GtkListBox--selection-mode" title="The “selection-mode” property">selection-mode</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="GtkListBox.html#GtkListBoxRow--activatable" title="The “activatable” property">activatable</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="GtkListBox.html#GtkListBoxRow--selectable" title="The “selectable” property">selectable</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 </tbody>
@@ -347,7 +445,22 @@
 </tr>
 <tr>
 <td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="GtkListBox.html#GtkListBox-select-all" title="The “select-all” signal">select-all</a></td>
+<td class="signal_flags">Action</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="GtkListBox.html#GtkListBox-selected-rows-changed" title="The “selected-rows-changed” signal">selected-rows-changed</a></td>
+<td class="signal_flags">Run First</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
 <td class="signal_name"><a class="link" href="GtkListBox.html#GtkListBox-toggle-cursor-row" title="The “toggle-cursor-row” signal">toggle-cursor-row</a></td>
+<td class="signal_flags">Action</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="GtkListBox.html#GtkListBox-unselect-all" title="The “unselect-all” signal">unselect-all</a></td>
 <td class="signal_flags">Action</td>
 </tr>
 <tr>
@@ -372,15 +485,23 @@
 </tr>
 <tr>
 <td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkListBox.html#GtkListBoxClass" title="struct GtkListBoxClass">GtkListBoxClass</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GtkListBox.html#GtkListBoxRow-struct" title="struct GtkListBoxRow">GtkListBoxRow</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkListBox.html#GtkListBoxRowClass" title="struct GtkListBoxRowClass">GtkListBoxRowClass</a></td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="GtkListBox.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">├──</span> <a class="link" href="GtkBin.html" title="GtkBin">GtkBin</a>
@@ -416,15 +537,19 @@ button in it).</p>
 <p>Although a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> must have only <a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> children you can
 add any kind of widget to it via <a class="link" href="GtkContainer.html#gtk-container-add" title="gtk_container_add ()"><code class="function">gtk_container_add()</code></a>, and a <a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a>
 widget will automatically be inserted between the list and the widget.</p>
+<p><a href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRows</span></a> can be marked as activatable or selectable. If a row
+is activatable, <a class="link" href="GtkListBox.html#GtkListBox-row-activated" title="The “row-activated” signal"><span class="type">“row-activated”</span></a> will be emitted for it when
+the user tries to activate it. If it is selectable, the row will be marked
+as selected when the user tries to select it.</p>
 <p>The GtkListBox widget was added in GTK+ 3.10.</p>
 </div>
 <div class="refsect1">
 <a name="GtkListBox.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
 <a name="GtkListBoxFilterFunc"></a><h3>GtkListBoxFilterFunc ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 <span class="c_punctuation">(</span>*GtkListBoxFilterFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row</code></em>,
-                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>Will be called whenever the row changes or is added and lets you control
 if the row should be visible or not.</p>
 <div class="refsect3">
@@ -451,7 +576,7 @@ if the row should be visible or not.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.7.5.12.2.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the row should be visible, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the row should be visible, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
 <p></p>
 </div>
 <p class="since">Since 3.10</p>
@@ -459,10 +584,10 @@ if the row should be visible or not.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkListBoxSortFunc"></a><h3>GtkListBoxSortFunc ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 <span class="c_punctuation">(</span>*GtkListBoxSortFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row1</code></em>,
                        <em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row2</code></em>,
-                       <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>Compare two rows to determine which should be first.</p>
 <div class="refsect3">
 <a name="id-1.3.7.5.12.3.5"></a><h4>Parameters</h4>
@@ -507,7 +632,7 @@ equal and &gt; 0 otherwise</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 <span class="c_punctuation">(</span>*GtkListBoxUpdateHeaderFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row</code></em>,
                                <em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *before</code></em>,
-                               <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+                               <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>Whenever <em class="parameter"><code>row</code></em>
  changes or which row is before <em class="parameter"><code>row</code></em>
  changes this
@@ -532,8 +657,8 @@ just change the state of the current header widget.</p>
 <tr>
 <td class="parameter_name"><p>before</p></td>
 <td class="parameter_description"><p> the row before <em class="parameter"><code>row</code></em>
-, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if it is first. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if it is first. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>user_data</p></td>
@@ -562,7 +687,7 @@ gtk_list_box_new (<em class="parameter"><code><span class="type">void</span></co
 <div class="refsect2">
 <a name="gtk-list-box-prepend"></a><h3>gtk_list_box_prepend ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_prepend (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
+gtk_list_box_prepend (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
                       <em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *child</code></em>);</pre>
 <p>Prepend a widget to the list. If a sort function is set, the widget will
 actually be inserted at the calculated position and this function has the
@@ -577,8 +702,8 @@ same effect of <a class="link" href="GtkContainer.html#gtk-container-add" title=
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a>.</p></td>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -595,18 +720,18 @@ same effect of <a class="link" href="GtkContainer.html#gtk-container-add" title=
 <div class="refsect2">
 <a name="gtk-list-box-insert"></a><h3>gtk_list_box_insert ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_insert (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
+gtk_list_box_insert (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
                      <em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *child</code></em>,
-                     <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> position</code></em>);</pre>
+                     <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> position</code></em>);</pre>
 <p>Insert the <em class="parameter"><code>child</code></em>
- into the <em class="parameter"><code>list_box</code></em>
+ into the <em class="parameter"><code>box</code></em>
  at <em class="parameter"><code>position</code></em>
 . If a sort function is
 set, the widget will actually be inserted at the calculated position and
 this function has the same effect of <a class="link" href="GtkContainer.html#gtk-container-add" title="gtk_container_add ()"><code class="function">gtk_container_add()</code></a>.</p>
 <p>If <em class="parameter"><code>position</code></em>
  is -1, or larger than the total number of items in the
-<em class="parameter"><code>list_box</code></em>
+<em class="parameter"><code>box</code></em>
 , then the <em class="parameter"><code>child</code></em>
  will be appended to the end.</p>
 <div class="refsect3">
@@ -619,8 +744,8 @@ this function has the same effect of <a class="link" href="GtkContainer.html#gtk
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a>.</p></td>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -643,7 +768,7 @@ in</p></td>
 <div class="refsect2">
 <a name="gtk-list-box-select-row"></a><h3>gtk_list_box_select_row ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_select_row (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
+gtk_list_box_select_row (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
                          <em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row</code></em>);</pre>
 <p>Make <em class="parameter"><code>row</code></em>
  the currently selected row.</p>
@@ -657,14 +782,14 @@ gtk_list_box_select_row (<em class="parameter"><code><a class="link" href="GtkLi
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>row</p></td>
-<td class="parameter_description"><p> The row to select or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> The row to select or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -673,10 +798,12 @@ gtk_list_box_select_row (<em class="parameter"><code><a class="link" href="GtkLi
 </div>
 <hr>
 <div class="refsect2">
-<a name="gtk-list-box-get-selected-row"></a><h3>gtk_list_box_get_selected_row ()</h3>
-<pre class="programlisting"><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="returnvalue">GtkListBoxRow</span></a> *
-gtk_list_box_get_selected_row (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>);</pre>
-<p>Gets the selected row.</p>
+<a name="gtk-list-box-unselect-row"></a><h3>gtk_list_box_unselect_row ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtk_list_box_unselect_row (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
+                           <em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row</code></em>);</pre>
+<p>Unselects a single row of <em class="parameter"><code>box</code></em>
+, if the selection mode allows it.</p>
 <div class="refsect3">
 <a name="id-1.3.7.5.12.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -685,32 +812,113 @@ gtk_list_box_get_selected_row (<em class="parameter"><code><a class="link" href=
 <col class="parameters_description">
 <col width="200px" class="parameters_annotations">
 </colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>row</p></td>
+<td class="parameter_description"><p>the row to unselected</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-list-box-select-all"></a><h3>gtk_list_box_select_all ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtk_list_box_select_all (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>);</pre>
+<p>Select all children of <em class="parameter"><code>box</code></em>
+, if the selection mode allows it.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.10.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
 <tbody><tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-list-box-unselect-all"></a><h3>gtk_list_box_unselect_all ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtk_list_box_unselect_all (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>);</pre>
+<p>Unselect all children of <em class="parameter"><code>box</code></em>
+, if the selection mode allows it.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.11.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-list-box-get-selected-row"></a><h3>gtk_list_box_get_selected_row ()</h3>
+<pre class="programlisting"><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="returnvalue">GtkListBoxRow</span></a> *
+gtk_list_box_get_selected_row (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>);</pre>
+<p>Gets the selected row.</p>
+<p>Note that the box may allow multiple selection, in which
+case you should use <a class="link" href="GtkListBox.html#gtk-list-box-selected-foreach" title="gtk_list_box_selected_foreach ()"><code class="function">gtk_list_box_selected_foreach()</code></a> to
+find all selected rows.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.12.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.9.6"></a><h4>Returns</h4>
-<p> the selected <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>. </p>
+<a name="id-1.3.7.5.12.12.7"></a><h4>Returns</h4>
+<p> the selected row. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 <p class="since">Since 3.10</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="gtk-list-box-set-selection-mode"></a><h3>gtk_list_box_set_selection_mode ()</h3>
+<a name="GtkListBoxForeachFunc"></a><h3>GtkListBoxForeachFunc ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_set_selection_mode (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
-                                 <em class="parameter"><code><a class="link" href="gtk3-Standard-Enumerations.html#GtkSelectionMode" title="enum GtkSelectionMode"><span class="type">GtkSelectionMode</span></a> mode</code></em>);</pre>
-<p>Sets how selection works in the listbox.
-See <a class="link" href="gtk3-Standard-Enumerations.html#GtkSelectionMode" title="enum GtkSelectionMode"><span class="type">GtkSelectionMode</span></a> for details.</p>
-<p>Note: <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> does not support <em class="parameter"><code>GTK_SELECTION_MULTIPLE</code></em>
+<span class="c_punctuation">(</span>*GtkListBoxForeachFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
+                          <em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>A function used by <a class="link" href="GtkListBox.html#gtk-list-box-selected-foreach" title="gtk_list_box_selected_foreach ()"><code class="function">gtk_list_box_selected_foreach()</code></a>.
+It will be called on every selected child of the <em class="parameter"><code>box</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.10.6"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -719,7 +927,111 @@ See <a class="link" href="gtk3-Standard-Enumerations.html#GtkSelectionMode" titl
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>row</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p> user data. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-list-box-selected-foreach"></a><h3>gtk_list_box_selected_foreach ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtk_list_box_selected_foreach (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
+                               <em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxForeachFunc" title="GtkListBoxForeachFunc ()"><span class="type">GtkListBoxForeachFunc</span></a> func</code></em>,
+                               <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+<p>Calls a function for each selected child.</p>
+<p>Note that the selection cannot be modified from within this function.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.14.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p> the function to call for each selected child. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>data</p></td>
+<td class="parameter_description"><p>user data to pass to the function</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-list-box-get-selected-rows"></a><h3>gtk_list_box_get_selected_rows ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+gtk_list_box_get_selected_rows (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>);</pre>
+<p>Creates a list of all selected children.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.15.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.15.6"></a><h4>Returns</h4>
+<p>    A <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> containing the <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> for each selected child.
+Free with <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#g-list-free"><code class="function">g_list_free()</code></a> when done. </p>
+<p><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GtkListBoxRow][<acronym title="Free data container after the code is done."><span class="acronym">transfer container</span></acronym>]</span></p>
+</div>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-list-box-set-selection-mode"></a><h3>gtk_list_box_set_selection_mode ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtk_list_box_set_selection_mode (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
+                                 <em class="parameter"><code><a class="link" href="gtk3-Standard-Enumerations.html#GtkSelectionMode" title="enum GtkSelectionMode"><span class="type">GtkSelectionMode</span></a> mode</code></em>);</pre>
+<p>Sets how selection works in the listbox.
+See <a class="link" href="gtk3-Standard-Enumerations.html#GtkSelectionMode" title="enum GtkSelectionMode"><span class="type">GtkSelectionMode</span></a> for details.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.16.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -737,10 +1049,10 @@ See <a class="link" href="gtk3-Standard-Enumerations.html#GtkSelectionMode" titl
 <div class="refsect2">
 <a name="gtk-list-box-get-selection-mode"></a><h3>gtk_list_box_get_selection_mode ()</h3>
 <pre class="programlisting"><a class="link" href="gtk3-Standard-Enumerations.html#GtkSelectionMode" title="enum GtkSelectionMode"><span class="returnvalue">GtkSelectionMode</span></a>
-gtk_list_box_get_selection_mode (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>);</pre>
+gtk_list_box_get_selection_mode (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>);</pre>
 <p>Gets the selection mode of the listbox.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.11.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.17.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -748,14 +1060,14 @@ gtk_list_box_get_selection_mode (<em class="parameter"><code><a class="link" hre
 <col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody><tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.11.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.5.12.17.6"></a><h4>Returns</h4>
 <p> a <a class="link" href="gtk3-Standard-Enumerations.html#GtkSelectionMode" title="enum GtkSelectionMode"><span class="type">GtkSelectionMode</span></a></p>
 <p></p>
 </div>
@@ -766,13 +1078,13 @@ gtk_list_box_get_selection_mode (<em class="parameter"><code><a class="link" hre
 <a name="gtk-list-box-set-activate-on-single-click"></a><h3>gtk_list_box_set_activate_on_single_click ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_list_box_set_activate_on_single_click
-                               (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> single</code></em>);</pre>
+                               (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> single</code></em>);</pre>
 <p>If <em class="parameter"><code>single</code></em>
- is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, rows will be activated when you click on them,
+ is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, rows will be activated when you click on them,
 otherwise you need to double-click.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.12.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.18.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -781,7 +1093,7 @@ otherwise you need to double-click.</p>
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -798,12 +1110,12 @@ otherwise you need to double-click.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-list-box-get-activate-on-single-click"></a><h3>gtk_list_box_get_activate_on_single_click ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_list_box_get_activate_on_single_click
-                               (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>);</pre>
+                               (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>);</pre>
 <p>Returns whether rows activate on single clicks.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.13.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.19.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -811,15 +1123,15 @@ gtk_list_box_get_activate_on_single_click
 <col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody><tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.13.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if rows are activated on single click, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+<a name="id-1.3.7.5.12.19.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if rows are activated on single click, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
 <p></p>
 </div>
 <p class="since">Since 3.10</p>
@@ -828,11 +1140,11 @@ gtk_list_box_get_activate_on_single_click
 <div class="refsect2">
 <a name="gtk-list-box-get-adjustment"></a><h3>gtk_list_box_get_adjustment ()</h3>
 <pre class="programlisting"><a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="returnvalue">GtkAdjustment</span></a> *
-gtk_list_box_get_adjustment (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>);</pre>
+gtk_list_box_get_adjustment (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>);</pre>
 <p>Gets the adjustment (if any) that the widget uses to
 for vertical scrolling.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.14.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.20.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -840,14 +1152,14 @@ for vertical scrolling.</p>
 <col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody><tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.14.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.5.12.20.6"></a><h4>Returns</h4>
 <p> the adjustment. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -857,18 +1169,18 @@ for vertical scrolling.</p>
 <div class="refsect2">
 <a name="gtk-list-box-set-adjustment"></a><h3>gtk_list_box_set_adjustment ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_set_adjustment (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
+gtk_list_box_set_adjustment (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
                              <em class="parameter"><code><a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a> *adjustment</code></em>);</pre>
 <p>Sets the adjustment (if any) that the widget uses to
 for vertical scrolling. For instance, this is used
 to get the page size for PageUp/Down key handling.</p>
-<p>In the normal case when the <em class="parameter"><code>list_box</code></em>
+<p>In the normal case when the <em class="parameter"><code>box</code></em>
  is packed inside
 a <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a> the adjustment from that will
 be picked up automatically, so there is no need
 to manually do that.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.15.6"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.21.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -877,14 +1189,14 @@ to manually do that.</p>
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>adjustment</p></td>
-<td class="parameter_description"><p> the adjustment, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> the adjustment, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -895,12 +1207,12 @@ to manually do that.</p>
 <div class="refsect2">
 <a name="gtk-list-box-set-placeholder"></a><h3>gtk_list_box_set_placeholder ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_set_placeholder (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
+gtk_list_box_set_placeholder (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
                               <em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *placeholder</code></em>);</pre>
 <p>Sets the placeholder widget that is shown in the list when
 it doesn't display any visible children.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.16.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.22.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -909,14 +1221,14 @@ it doesn't display any visible children.</p>
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>placeholder</p></td>
-<td class="parameter_description"><p> a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> a <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -927,11 +1239,14 @@ it doesn't display any visible children.</p>
 <div class="refsect2">
 <a name="gtk-list-box-get-row-at-index"></a><h3>gtk_list_box_get_row_at_index ()</h3>
 <pre class="programlisting"><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="returnvalue">GtkListBoxRow</span></a> *
-gtk_list_box_get_row_at_index (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
-                               <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index_</code></em>);</pre>
-<p>Gets the n:th child in the list (not counting headers).</p>
+gtk_list_box_get_row_at_index (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
+                               <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index_</code></em>);</pre>
+<p>Gets the n-th child in the list (not counting headers).
+If <em class="parameter"><code>_index</code></em>
+ is negative or larger than the number of items in the
+list, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is returned.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.17.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.23.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -940,7 +1255,7 @@ gtk_list_box_get_row_at_index (<em class="parameter"><code><a class="link" href=
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -953,8 +1268,8 @@ gtk_list_box_get_row_at_index (<em class="parameter"><code><a class="link" href=
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.17.6"></a><h4>Returns</h4>
-<p> the child <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>. </p>
+<a name="id-1.3.7.5.12.23.6"></a><h4>Returns</h4>
+<p> the child <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 <p class="since">Since 3.10</p>
@@ -963,12 +1278,12 @@ gtk_list_box_get_row_at_index (<em class="parameter"><code><a class="link" href=
 <div class="refsect2">
 <a name="gtk-list-box-get-row-at-y"></a><h3>gtk_list_box_get_row_at_y ()</h3>
 <pre class="programlisting"><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="returnvalue">GtkListBoxRow</span></a> *
-gtk_list_box_get_row_at_y (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
-                           <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y</code></em>);</pre>
+gtk_list_box_get_row_at_y (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
+                           <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y</code></em>);</pre>
 <p>Gets the row at the <em class="parameter"><code>y</code></em>
  position.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.18.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.24.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -977,7 +1292,7 @@ gtk_list_box_get_row_at_y (<em class="parameter"><code><a class="link" href="Gtk
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -990,7 +1305,7 @@ gtk_list_box_get_row_at_y (<em class="parameter"><code><a class="link" href="Gtk
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.18.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.5.12.24.6"></a><h4>Returns</h4>
 <p> the row. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -1000,15 +1315,15 @@ gtk_list_box_get_row_at_y (<em class="parameter"><code><a class="link" href="Gtk
 <div class="refsect2">
 <a name="gtk-list-box-invalidate-filter"></a><h3>gtk_list_box_invalidate_filter ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_invalidate_filter (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>);</pre>
+gtk_list_box_invalidate_filter (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>);</pre>
 <p>Update the filtering for all rows. Call this when result
-of the filter function on the <em class="parameter"><code>list_box</code></em>
+of the filter function on the <em class="parameter"><code>box</code></em>
  is changed due
 to an external factor. For instance, this would be used
 if the filter function just looked for a specific search
 string and the entry with the search string has changed.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.19.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.25.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1016,7 +1331,7 @@ string and the entry with the search string has changed.</p>
 <col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody><tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
@@ -1028,13 +1343,13 @@ string and the entry with the search string has changed.</p>
 <div class="refsect2">
 <a name="gtk-list-box-invalidate-headers"></a><h3>gtk_list_box_invalidate_headers ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_invalidate_headers (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>);</pre>
+gtk_list_box_invalidate_headers (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>);</pre>
 <p>Update the separators for all rows. Call this when result
-of the header function on the <em class="parameter"><code>list_box</code></em>
+of the header function on the <em class="parameter"><code>box</code></em>
  is changed due
 to an external factor.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.20.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.26.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1042,7 +1357,7 @@ to an external factor.</p>
 <col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody><tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
@@ -1054,13 +1369,13 @@ to an external factor.</p>
 <div class="refsect2">
 <a name="gtk-list-box-invalidate-sort"></a><h3>gtk_list_box_invalidate_sort ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_invalidate_sort (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>);</pre>
+gtk_list_box_invalidate_sort (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>);</pre>
 <p>Update the sorting for all rows. Call this when result
-of the sort function on the <em class="parameter"><code>list_box</code></em>
+of the sort function on the <em class="parameter"><code>box</code></em>
  is changed due
 to an external factor.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.21.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.27.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1068,7 +1383,7 @@ to an external factor.</p>
 <col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody><tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
@@ -1080,11 +1395,11 @@ to an external factor.</p>
 <div class="refsect2">
 <a name="gtk-list-box-set-filter-func"></a><h3>gtk_list_box_set_filter_func ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_set_filter_func (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
+gtk_list_box_set_filter_func (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
                               <em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxFilterFunc" title="GtkListBoxFilterFunc ()"><span class="type">GtkListBoxFilterFunc</span></a> filter_func</code></em>,
-                              <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
-                              <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy</code></em>);</pre>
-<p>By setting a filter function on the <em class="parameter"><code>list_box</code></em>
+                              <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                              <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy</code></em>);</pre>
+<p>By setting a filter function on the <em class="parameter"><code>box</code></em>
  one can decide dynamically which
 of the rows to show. For instance, to implement a search function on a list that
 filters the original list to only show the matching rows.</p>
@@ -1093,7 +1408,7 @@ filters the original list to only show the matching rows.</p>
 continue to be called each time a row changes (via <a class="link" href="GtkListBox.html#gtk-list-box-row-changed" title="gtk_list_box_row_changed ()"><code class="function">gtk_list_box_row_changed()</code></a>) or
 when <a class="link" href="GtkListBox.html#gtk-list-box-invalidate-filter" title="gtk_list_box_invalidate_filter ()"><code class="function">gtk_list_box_invalidate_filter()</code></a> is called.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.22.6"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.28.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1102,14 +1417,14 @@ when <a class="link" href="GtkListBox.html#gtk-list-box-invalidate-filter" title
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>filter_func</p></td>
 <td class="parameter_description"><p> callback that lets you filter which rows to show. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym> user_data][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym> user_data][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>user_data</p></td>
@@ -1132,11 +1447,11 @@ when <a class="link" href="GtkListBox.html#gtk-list-box-invalidate-filter" title
 <div class="refsect2">
 <a name="gtk-list-box-set-header-func"></a><h3>gtk_list_box_set_header_func ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_set_header_func (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
+gtk_list_box_set_header_func (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
                               <em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxUpdateHeaderFunc" title="GtkListBoxUpdateHeaderFunc ()"><span class="type">GtkListBoxUpdateHeaderFunc</span></a> update_header</code></em>,
-                              <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
-                              <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy</code></em>);</pre>
-<p>By setting a header function on the <em class="parameter"><code>list_box</code></em>
+                              <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                              <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy</code></em>);</pre>
+<p>By setting a header function on the <em class="parameter"><code>box</code></em>
  one can dynamically add headers
 in front of rows, depending on the contents of the row and its position in the list.
 For instance, one could use it to add headers in front of the first item of a
@@ -1144,11 +1459,11 @@ new kind, in a list sorted by the kind.</p>
 <p>The <em class="parameter"><code>update_header</code></em>
  can look at the current header widget using <a class="link" href="GtkListBox.html#gtk-list-box-row-get-header" title="gtk_list_box_row_get_header ()"><code class="function">gtk_list_box_row_get_header()</code></a>
 and either update the state of the widget as needed, or set a new one using
-<a class="link" href="GtkListBox.html#gtk-list-box-row-set-header" title="gtk_list_box_row_set_header ()"><code class="function">gtk_list_box_row_set_header()</code></a>. If no header is needed, set the header to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+<a class="link" href="GtkListBox.html#gtk-list-box-row-set-header" title="gtk_list_box_row_set_header ()"><code class="function">gtk_list_box_row_set_header()</code></a>. If no header is needed, set the header to <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <p>Note that you may get many calls <em class="parameter"><code>update_header</code></em>
  to this for a particular row when e.g.
-changing things that don't affect the header. In this case it is important for performance
-to not blindly replace an exisiting header widh an identical one.</p>
+changing things that don’t affect the header. In this case it is important for performance
+to not blindly replace an existing header with an identical one.</p>
 <p>The <em class="parameter"><code>update_header</code></em>
  function will be called for each row after the call, and it will
 continue to be called each time a row changes (via <a class="link" href="GtkListBox.html#gtk-list-box-row-changed" title="gtk_list_box_row_changed ()"><code class="function">gtk_list_box_row_changed()</code></a>) and when
@@ -1156,7 +1471,7 @@ the row before changes (either by <a class="link" href="GtkListBox.html#gtk-list
 the previous row becomes a different row). It is also called for all rows when
 <a class="link" href="GtkListBox.html#gtk-list-box-invalidate-headers" title="gtk_list_box_invalidate_headers ()"><code class="function">gtk_list_box_invalidate_headers()</code></a> is called.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.23.8"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.29.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1165,14 +1480,14 @@ the previous row becomes a different row). It is also called for all rows when
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>update_header</p></td>
 <td class="parameter_description"><p> callback that lets you add row headers. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym> user_data][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym> user_data][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>user_data</p></td>
@@ -1195,11 +1510,11 @@ the previous row becomes a different row). It is also called for all rows when
 <div class="refsect2">
 <a name="gtk-list-box-set-sort-func"></a><h3>gtk_list_box_set_sort_func ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_set_sort_func (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
+gtk_list_box_set_sort_func (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
                             <em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxSortFunc" title="GtkListBoxSortFunc ()"><span class="type">GtkListBoxSortFunc</span></a> sort_func</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy</code></em>);</pre>
-<p>By setting a sort function on the <em class="parameter"><code>list_box</code></em>
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> destroy</code></em>);</pre>
+<p>By setting a sort function on the <em class="parameter"><code>box</code></em>
  one can dynamically reorder the rows
 of the list, based on the contents of the rows.</p>
 <p>The <em class="parameter"><code>sort_func</code></em>
@@ -1207,7 +1522,7 @@ of the list, based on the contents of the rows.</p>
 be called each time a row changes (via <a class="link" href="GtkListBox.html#gtk-list-box-row-changed" title="gtk_list_box_row_changed ()"><code class="function">gtk_list_box_row_changed()</code></a>) and when
 <a class="link" href="GtkListBox.html#gtk-list-box-invalidate-sort" title="gtk_list_box_invalidate_sort ()"><code class="function">gtk_list_box_invalidate_sort()</code></a> is called.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.24.6"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.30.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1216,14 +1531,14 @@ be called each time a row changes (via <a class="link" href="GtkListBox.html#gtk
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>sort_func</p></td>
 <td class="parameter_description"><p> the sort function. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym> user_data][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym> user_data][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>user_data</p></td>
@@ -1246,7 +1561,7 @@ be called each time a row changes (via <a class="link" href="GtkListBox.html#gtk
 <div class="refsect2">
 <a name="gtk-list-box-drag-highlight-row"></a><h3>gtk_list_box_drag_highlight_row ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_drag_highlight_row (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>,
+gtk_list_box_drag_highlight_row (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>,
                                  <em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row</code></em>);</pre>
 <p>This is a helper function for implementing DnD onto a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a>.
 The passed in <em class="parameter"><code>row</code></em>
@@ -1255,7 +1570,7 @@ and any previously highlighted row will be unhighlighted.</p>
 <p>The row will also be unhighlighted when the widget gets
 a drag leave event.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.25.6"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.31.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1264,8 +1579,8 @@ a drag leave event.</p>
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
-<td class="parameter_description"><p>An <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a>.</p></td>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1282,11 +1597,11 @@ a drag leave event.</p>
 <div class="refsect2">
 <a name="gtk-list-box-drag-unhighlight-row"></a><h3>gtk_list_box_drag_unhighlight_row ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_list_box_drag_unhighlight_row (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *list_box</code></em>);</pre>
+gtk_list_box_drag_unhighlight_row (<em class="parameter"><code><a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box</code></em>);</pre>
 <p>If a row has previously been highlighted via <a class="link" href="GtkListBox.html#gtk-list-box-drag-highlight-row" title="gtk_list_box_drag_highlight_row ()"><code class="function">gtk_list_box_drag_highlight_row()</code></a>
 it will have the highlight removed.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.26.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.32.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1294,8 +1609,8 @@ it will have the highlight removed.</p>
 <col width="200px" class="parameters_annotations">
 </colgroup>
 <tbody><tr>
-<td class="parameter_name"><p>list_box</p></td>
-<td class="parameter_description"><p>An <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a>.</p></td>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -1309,7 +1624,7 @@ it will have the highlight removed.</p>
 gtk_list_box_row_new (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a>, to be used as a child of a <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.27.5"></a><h4>Returns</h4>
+<a name="id-1.3.7.5.12.33.5"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a></p>
 <p></p>
 </div>
@@ -1330,13 +1645,13 @@ external data set then when you call <a class="link" href="GtkListBox.html#gtk-l
 on the first row the sort function must only read the new data
 for the first of the two changed rows, otherwise the resorting
 of the rows will be wrong.</p>
-<p>This generally means that if you don't fully control the data
+<p>This generally means that if you don’t fully control the data
 model you have to duplicate the data that affects the listbox
 row functions into the row widgets themselves. Another alternative
 is to call <a class="link" href="GtkListBox.html#gtk-list-box-invalidate-sort" title="gtk_list_box_invalidate_sort ()"><code class="function">gtk_list_box_invalidate_sort()</code></a> on any model change,
 but that is more expensive.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.28.7"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.34.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1351,6 +1666,36 @@ but that is more expensive.</p>
 </table></div>
 </div>
 <p class="since">Since 3.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-list-box-row-is-selected"></a><h3>gtk_list_box_row_is_selected ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gtk_list_box_row_is_selected (<em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row</code></em>);</pre>
+<p>Returns whether the child is currently selected in its
+<a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> container.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.35.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>row</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.35.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>row</code></em>
+is selected</p>
+<p></p>
+</div>
+<p class="since">Since 3.14</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1362,7 +1707,7 @@ gtk_list_box_row_get_header (<em class="parameter"><code><a class="link" href="G
 in a <a class="link" href="GtkListBox.html#GtkListBoxUpdateHeaderFunc" title="GtkListBoxUpdateHeaderFunc ()"><span class="type">GtkListBoxUpdateHeaderFunc</span></a> to see if there is a header
 set already, and if so to update the state of it.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.29.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.36.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1377,8 +1722,8 @@ set already, and if so to update the state of it.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.29.6"></a><h4>Returns</h4>
-<p> the current header, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p>
+<a name="id-1.3.7.5.12.36.6"></a><h4>Returns</h4>
+<p> the current header, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 <p class="since">Since 3.10</p>
@@ -1386,7 +1731,7 @@ set already, and if so to update the state of it.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-list-box-row-get-type"></a><h3>gtk_list_box_row_get_type ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>
 gtk_list_box_row_get_type (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 </div>
 <hr>
@@ -1400,7 +1745,7 @@ gtk_list_box_row_set_header (<em class="parameter"><code><a class="link" href="G
 from a <a class="link" href="GtkListBox.html#GtkListBoxUpdateHeaderFunc" title="GtkListBoxUpdateHeaderFunc ()"><span class="type">GtkListBoxUpdateHeaderFunc</span></a>. It will replace any existing
 header in the row, and be shown in front of the row in the listbox.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.31.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.38.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1415,8 +1760,8 @@ header in the row, and be shown in front of the row in the listbox.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>header</p></td>
-<td class="parameter_description"><p> the header, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> the header, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1426,12 +1771,12 @@ header in the row, and be shown in front of the row in the listbox.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-list-box-row-get-index"></a><h3>gtk_list_box_row_get_index ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 gtk_list_box_row_get_index (<em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row</code></em>);</pre>
 <p>Gets the current index of the <em class="parameter"><code>row</code></em>
  in its <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> container.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.32.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.12.39.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1446,13 +1791,133 @@ gtk_list_box_row_get_index (<em class="parameter"><code><a class="link" href="Gt
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.5.12.32.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.5.12.39.6"></a><h4>Returns</h4>
 <p> the index of the <em class="parameter"><code>row</code></em>
 , or -1 if the <em class="parameter"><code>row</code></em>
 is not in a listbox</p>
 <p></p>
 </div>
 <p class="since">Since 3.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-list-box-row-set-activatable"></a><h3>gtk_list_box_row_set_activatable ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtk_list_box_row_set_activatable (<em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row</code></em>,
+                                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> activatable</code></em>);</pre>
+<p>Set the <a class="link" href="GtkListBox.html#GtkListBoxRow--activatable" title="The “activatable” property"><span class="type">“activatable”</span></a> property for this row.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.40.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>row</p></td>
+<td class="parameter_description"><p>a <span class="type">GTkListBoxrow</span></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>activatable</p></td>
+<td class="parameter_description"><p><a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to mark the row as activatable</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-list-box-row-get-activatable"></a><h3>gtk_list_box_row_get_activatable ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gtk_list_box_row_get_activatable (<em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row</code></em>);</pre>
+<p>Gets the value of the <a class="link" href="GtkListBox.html#GtkListBoxRow--activatable" title="The “activatable” property"><span class="type">“activatable”</span></a> property
+for this row.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.41.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>row</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.41.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the row is activatable</p>
+<p></p>
+</div>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-list-box-row-set-selectable"></a><h3>gtk_list_box_row_set_selectable ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtk_list_box_row_set_selectable (<em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row</code></em>,
+                                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> selectable</code></em>);</pre>
+<p>Set the <a class="link" href="GtkListBox.html#GtkListBoxRow--selectable" title="The “selectable” property"><span class="type">“selectable”</span></a> property for this row.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.42.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>row</p></td>
+<td class="parameter_description"><p>a <span class="type">GTkListBoxrow</span></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>selectable</p></td>
+<td class="parameter_description"><p><a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to mark the row as selectable</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-list-box-row-get-selectable"></a><h3>gtk_list_box_row_get_selectable ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gtk_list_box_row_get_selectable (<em class="parameter"><code><a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row</code></em>);</pre>
+<p>Gets the value of the <a class="link" href="GtkListBox.html#GtkListBoxRow--selectable" title="The “selectable” property"><span class="type">“selectable”</span></a> property
+for this row.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.43.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>row</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.7.5.12.43.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the row is selectable</p>
+<p></p>
+</div>
+<p class="since">Since 3.14</p>
 </div>
 </div>
 <div class="refsect1">
@@ -1463,15 +1928,127 @@ is not in a listbox</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GtkListBoxClass"></a><h3>struct GtkListBoxClass</h3>
+<pre class="programlisting">struct GtkListBoxClass {
+  GtkContainerClass parent_class;
+
+
+  void (*row_selected)        (GtkListBox      *box,
+                               GtkListBoxRow   *row);
+  void (*row_activated)       (GtkListBox      *box,
+                               GtkListBoxRow   *row);
+  void (*activate_cursor_row) (GtkListBox      *box);
+  void (*toggle_cursor_row)   (GtkListBox      *box);
+  void (*move_cursor)         (GtkListBox      *box,
+                               GtkMovementStep  step,
+                               gint             count);
+  void (*selected_rows_changed) (GtkListBox    *box);
+  void (*select_all)            (GtkListBox    *box);
+  void (*unselect_all)          (GtkListBox    *box);
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.7.5.13.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GtkContainer.html#GtkContainerClass" title="struct GtkContainerClass"><span class="type">GtkContainerClass</span></a> <em class="structfield"><code><a name="GtkListBoxClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkListBoxClass.row-selected"></a>row_selected</code></em> ()</p></td>
+<td class="struct_member_description"><p>Class handler for the <a class="link" href="GtkListBox.html#GtkListBox-row-selected" title="The “row-selected” signal"><span class="type">“row-selected”</span></a> signal</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkListBoxClass.row-activated"></a>row_activated</code></em> ()</p></td>
+<td class="struct_member_description"><p>Class handler for the <a class="link" href="GtkListBox.html#GtkListBox-row-activated" title="The “row-activated” signal"><span class="type">“row-activated”</span></a> signal</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkListBoxClass.activate-cursor-row"></a>activate_cursor_row</code></em> ()</p></td>
+<td class="struct_member_description"><p>Class handler for the <a class="link" href="GtkListBox.html#GtkListBox-activate-cursor-row" title="The “activate-cursor-row” signal"><span class="type">“activate-cursor-row”</span></a> signal</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkListBoxClass.toggle-cursor-row"></a>toggle_cursor_row</code></em> ()</p></td>
+<td class="struct_member_description"><p>Class handler for the <a class="link" href="GtkListBox.html#GtkListBox-activate-cursor-row" title="The “activate-cursor-row” signal"><span class="type">“activate-cursor-row”</span></a> signal</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkListBoxClass.move-cursor"></a>move_cursor</code></em> ()</p></td>
+<td class="struct_member_description"><p>Class handler for the <a class="link" href="GtkListBox.html#GtkListBox-move-cursor" title="The “move-cursor” signal"><span class="type">“move-cursor”</span></a> signal</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkListBoxClass.selected-rows-changed"></a>selected_rows_changed</code></em> ()</p></td>
+<td class="struct_member_description"><p>Class handler for the <a class="link" href="GtkListBox.html#GtkListBox-selected-rows-changed" title="The “selected-rows-changed” signal"><span class="type">“selected-rows-changed”</span></a> signal</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkListBoxClass.select-all"></a>select_all</code></em> ()</p></td>
+<td class="struct_member_description"><p>Class handler for the <a class="link" href="GtkListBox.html#GtkListBox-select-all" title="The “select-all” signal"><span class="type">“select-all”</span></a> signal</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkListBoxClass.unselect-all"></a>unselect_all</code></em> ()</p></td>
+<td class="struct_member_description"><p>Class handler for the <a class="link" href="GtkListBox.html#GtkListBox-unselect-all" title="The “unselect-all” signal"><span class="type">“unselect-all”</span></a> signal</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GtkListBoxRow-struct"></a><h3>struct GtkListBoxRow</h3>
 <pre class="programlisting">struct GtkListBoxRow;</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GtkListBoxRowClass"></a><h3>struct GtkListBoxRowClass</h3>
+<pre class="programlisting">struct GtkListBoxRowClass {
+  GtkBinClass parent_class;
+
+
+  void (* activate) (GtkListBoxRow *row);
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.7.5.13.5.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GtkBin.html#GtkBinClass" title="struct GtkBinClass"><span class="type">GtkBinClass</span></a> <em class="structfield"><code><a name="GtkListBoxRowClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkListBoxRowClass.activate"></a>activate</code></em> ()</p></td>
+<td class="struct_member_description"> </td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 </div>
 <div class="refsect1">
 <a name="GtkListBox.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GtkListBox--activate-on-single-click"></a><h3>The <code class="literal">“activate-on-single-click”</code> property</h3>
-<pre class="programlisting">  “activate-on-single-click” <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “activate-on-single-click” <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>Activate row on a single click.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: TRUE</p>
@@ -1484,6 +2061,25 @@ is not in a listbox</p>
 <p>Flags: Read / Write</p>
 <p>Default value: GTK_SELECTION_SINGLE</p>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GtkListBoxRow--activatable"></a><h3>The <code class="literal">“activatable”</code> property</h3>
+<pre class="programlisting">  “activatable”              <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>The property determines whether the <a class="link" href="GtkListBox.html#GtkListBox-row-activated" title="The “row-activated” signal"><span class="type">“row-activated”</span></a>
+signal will be emitted for this row.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: TRUE</p>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GtkListBoxRow--selectable"></a><h3>The <code class="literal">“selectable”</code> property</h3>
+<pre class="programlisting">  “selectable”               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>The property determines whether this row can be selected.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: TRUE</p>
+<p class="since">Since 3.14</p>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkListBox.signal-details"></a><h2>Signal Details</h2>
@@ -1491,7 +2087,7 @@ is not in a listbox</p>
 <a name="GtkListBox-activate-cursor-row"></a><h3>The <code class="literal">“activate-cursor-row”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *listbox,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
 <p>Flags: Action</p>
 </div>
 <hr>
@@ -1500,19 +2096,18 @@ user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span c
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a>     *listbox,
                <a class="link" href="gtk3-Standard-Enumerations.html#GtkMovementStep" title="enum GtkMovementStep"><span class="type">GtkMovementStep</span></a> arg1,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>            arg2,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>        user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>            arg2,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>        user_data)</pre>
 <p>Flags: Action</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GtkListBox-row-activated"></a><h3>The <code class="literal">“row-activated”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a>    *list_box,
+user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a>    *box,
                <a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)</pre>
-<p>The ::row-activated signal is emitted when a row has been activated by
-the user.</p>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)</pre>
+<p>The ::row-activated signal is emitted when a row has been activated by the user.</p>
 <div class="refsect3">
 <a name="id-1.3.7.5.15.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1523,7 +2118,7 @@ the user.</p>
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>the <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -1547,14 +2142,18 @@ the user.</p>
 <div class="refsect2">
 <a name="GtkListBox-row-selected"></a><h3>The <code class="literal">“row-selected”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a>    *list_box,
+user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a>    *box,
                <a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *row,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)</pre>
 <p>The ::row-selected signal is emitted when a new row is selected, or
-(with a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> <em class="parameter"><code>row</code></em>
+(with a <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> <em class="parameter"><code>row</code></em>
 ) when the selection is cleared.</p>
+<p>When the <em class="parameter"><code>box</code></em>
+ is using <a class="link" href="gtk3-Standard-Enumerations.html#GTK-SELECTION-MULTIPLE:CAPS"><span class="type">GTK_SELECTION_MULTIPLE</span></a>, this signal will not
+give you the full picture of selection changes, and you should use
+the <a class="link" href="GtkListBox.html#GtkListBox-selected-rows-changed" title="The “selected-rows-changed” signal"><span class="type">“selected-rows-changed”</span></a> signal instead.</p>
 <div class="refsect3">
-<a name="id-1.3.7.5.15.5.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.5.15.5.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1563,14 +2162,14 @@ user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span c
 </colgroup>
 <tbody>
 <tr>
-<td class="parameter_name"><p>list_box</p></td>
+<td class="parameter_name"><p>box</p></td>
 <td class="parameter_description"><p>the <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>row</p></td>
-<td class="parameter_description"><p>the selected row</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> the selected row. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>user_data</p></td>
@@ -1585,18 +2184,121 @@ user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span c
 </div>
 <hr>
 <div class="refsect2">
+<a name="GtkListBox-select-all"></a><h3>The <code class="literal">“select-all”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
+<p>The ::select-all signal is a <a class="link" href="gtk3-Bindings.html#GtkBindingSignal" title="struct GtkBindingSignal">keybinding signal</a>
+which gets emitted to select all children of the box, if the selection
+mode permits it.</p>
+<p>The default bindings for this signal is Ctrl-a.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.15.6.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> on which the signal is emitted</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: Action</p>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GtkListBox-selected-rows-changed"></a><h3>The <code class="literal">“selected-rows-changed”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
+<p>The ::selected-rows-changed signal is emitted when the
+set of selected rows changes.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.15.7.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> on wich the signal is emitted</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: Run First</p>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GtkListBox-toggle-cursor-row"></a><h3>The <code class="literal">“toggle-cursor-row”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *listbox,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
 <p>Flags: Action</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GtkListBox-unselect-all"></a><h3>The <code class="literal">“unselect-all”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> *box,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)</pre>
+<p>The ::unselect-all signal is a <a class="link" href="gtk3-Bindings.html#GtkBindingSignal" title="struct GtkBindingSignal">keybinding signal</a>
+which gets emitted to unselect all children of the box, if the selection
+mode permits it.</p>
+<p>The default bindings for this signal is Ctrl-Shift-a.</p>
+<div class="refsect3">
+<a name="id-1.3.7.5.15.9.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>box</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GtkListBox.html" title="GtkListBox"><span class="type">GtkListBox</span></a> on which the signal is emitted</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: Action</p>
+<p class="since">Since 3.14</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GtkListBoxRow-activate"></a><h3>The <code class="literal">“activate”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkListBox.html#GtkListBoxRow"><span class="type">GtkListBoxRow</span></a> *listboxrow,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)</pre>
 <p>Flags: Action</p>
 </div>
 </div>
@@ -1607,6 +2309,6 @@ user_function (<a class="link" href="GtkListBox.html#GtkListBoxRow"><span class=
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

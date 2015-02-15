@@ -117,7 +117,7 @@ gtk_tree_sortable_sort_column_changed (GtkTreeSortable *sortable)
  * %GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID or 
  * %GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID.
  * 
- * Return value: %TRUE if the sort column is not one of the special sort
+ * Returns: %TRUE if the sort column is not one of the special sort
  *   column ids.
  **/
 gboolean
@@ -147,16 +147,11 @@ gtk_tree_sortable_get_sort_column_id (GtkTreeSortable  *sortable,
  * resort itself to reflect this change, after emitting a
  * #GtkTreeSortable::sort-column-changed signal. @sort_column_id may either be
  * a regular column id, or one of the following special values:
- * <variablelist>
- * <varlistentry>
- *   <term>%GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID</term>
- *   <listitem>the default sort function will be used, if it is set</listitem>
- * </varlistentry>
- * <varlistentry>
- *   <term>%GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID</term>
- *   <listitem>no sorting will occur</listitem>
- * </varlistentry>
- * </variablelist>
+ * 
+ * - %GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID: the default sort function
+ *   will be used, if it is set
+ * 
+ * - %GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID: no sorting will occur
  */
 void
 gtk_tree_sortable_set_sort_column_id (GtkTreeSortable  *sortable,
@@ -221,7 +216,7 @@ gtk_tree_sortable_set_sort_func (GtkTreeSortable        *sortable,
  * this function.
  *
  * If @sort_func is %NULL, then there will be no default comparison function.
- * This means that once the model  has been sorted, it can't go back to the
+ * This means that once the model  has been sorted, it can’t go back to the
  * default state. In this case, when the current sort column id of @sortable 
  * is %GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, the model will be unsorted.
  */
@@ -251,7 +246,7 @@ gtk_tree_sortable_set_default_sort_func (GtkTreeSortable        *sortable,
  * primarily by GtkTreeViewColumns in order to determine if a model can 
  * go back to the default state, or not.
  * 
- * Return value: %TRUE, if the model has a default sort function
+ * Returns: %TRUE, if the model has a default sort function
  */
 gboolean
 gtk_tree_sortable_has_default_sort_func (GtkTreeSortable *sortable)

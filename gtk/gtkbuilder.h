@@ -23,6 +23,7 @@
 #error "Only <gtk/gtk.h> can be included directly."
 #endif
 
+#include <gtk/gtkapplication.h>
 #include <gtk/gtkwidget.h>
 
 G_BEGIN_DECLS
@@ -41,26 +42,28 @@ typedef struct _GtkBuilderPrivate GtkBuilderPrivate;
 
 /**
  * GtkBuilderError:
- * @GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION: A type-func attribute didn't name
+ * @GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION: A type-func attribute didn’t name
  *  a function that returns a #GType.
  * @GTK_BUILDER_ERROR_UNHANDLED_TAG: The input contained a tag that #GtkBuilder
- *  can't handle.
+ *  can’t handle.
  * @GTK_BUILDER_ERROR_MISSING_ATTRIBUTE: An attribute that is required by
  *  #GtkBuilder was missing.
  * @GTK_BUILDER_ERROR_INVALID_ATTRIBUTE: #GtkBuilder found an attribute that
- *  it doesn't understand.
+ *  it doesn’t understand.
  * @GTK_BUILDER_ERROR_INVALID_TAG: #GtkBuilder found a tag that
- *  it doesn't understand.
+ *  it doesn’t understand.
  * @GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE: A required property value was
  *  missing.
- * @GTK_BUILDER_ERROR_INVALID_VALUE: #GtkBuilder couldn't parse
+ * @GTK_BUILDER_ERROR_INVALID_VALUE: #GtkBuilder couldn’t parse
  *  some attribute value.
  * @GTK_BUILDER_ERROR_VERSION_MISMATCH: The input file requires a newer version
  *  of GTK+.
  * @GTK_BUILDER_ERROR_DUPLICATE_ID: An object id occurred twice.
  * @GTK_BUILDER_ERROR_OBJECT_TYPE_REFUSED: A specified object type is of the same type or
  *  derived from the type of the composite class being extended with builder XML.
- * @GTK_BUILDER_ERROR_TEMPLATE_MISMATCH: The wrong type was specified in a composite class's template XML
+ * @GTK_BUILDER_ERROR_TEMPLATE_MISMATCH: The wrong type was specified in a composite class’s template XML
+ * @GTK_BUILDER_ERROR_INVALID_PROPERTY: The specified property is unknown for the object class.
+ * @GTK_BUILDER_ERROR_INVALID_SIGNAL: The specified signal is unknown for the object class.
  *
  * Error codes that identify various errors that can occur while using
  * #GtkBuilder.
@@ -77,7 +80,9 @@ typedef enum
   GTK_BUILDER_ERROR_VERSION_MISMATCH,
   GTK_BUILDER_ERROR_DUPLICATE_ID,
   GTK_BUILDER_ERROR_OBJECT_TYPE_REFUSED,
-  GTK_BUILDER_ERROR_TEMPLATE_MISMATCH
+  GTK_BUILDER_ERROR_TEMPLATE_MISMATCH,
+  GTK_BUILDER_ERROR_INVALID_PROPERTY,
+  GTK_BUILDER_ERROR_INVALID_SIGNAL
 } GtkBuilderError;
 
 GDK_AVAILABLE_IN_ALL
@@ -199,6 +204,14 @@ void         gtk_builder_add_callback_symbols    (GtkBuilder    *builder,
 GDK_AVAILABLE_IN_3_10
 GCallback    gtk_builder_lookup_callback_symbol  (GtkBuilder    *builder,
 						  const gchar   *callback_name);
+
+GDK_AVAILABLE_IN_3_12
+void         gtk_builder_set_application         (GtkBuilder     *builder,
+                                                  GtkApplication *application);
+
+GDK_AVAILABLE_IN_3_12
+GtkApplication * gtk_builder_get_application     (GtkBuilder     *builder);
+
 
 /**
  * GTK_BUILDER_WARN_INVALID_CHILD_TYPE:

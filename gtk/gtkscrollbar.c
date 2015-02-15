@@ -26,6 +26,7 @@
 #include "config.h"
 
 #include "gtkscrollbar.h"
+#include "gtkrangeprivate.h"
 
 #include "gtkadjustment.h"
 #include "gtkintl.h"
@@ -50,7 +51,7 @@
  * scrollable area. The #GtkAdjustment:step-increment and
  * #GtkAdjustment:page-increment fields are properties when the user asks to
  * step down (using the small stepper arrows) or page down (using for
- * example the <keycap>PageDown</keycap> key).
+ * example the `Page Down` key).
  */
 
 
@@ -62,10 +63,8 @@ static void
 gtk_scrollbar_class_init (GtkScrollbarClass *class)
 {
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
-  GtkRangeClass *range_class = (GtkRangeClass*) class;
 
   widget_class->style_updated = gtk_scrollbar_style_updated;
-  range_class->no_warp = TRUE;
 
   gtk_widget_class_install_style_property (widget_class,
 					   g_param_spec_int ("min-slider-length",
@@ -157,12 +156,12 @@ gtk_scrollbar_style_updated (GtkWidget *widget)
 
 /**
  * gtk_scrollbar_new:
- * @orientation: the scrollbar's orientation.
+ * @orientation: the scrollbar’s orientation.
  * @adjustment: (allow-none): the #GtkAdjustment to use, or %NULL to create a new adjustment.
  *
  * Creates a new scrollbar with the given orientation.
  *
- * Return value:  the new #GtkScrollbar.
+ * Returns:  the new #GtkScrollbar.
  *
  * Since: 3.0
  **/

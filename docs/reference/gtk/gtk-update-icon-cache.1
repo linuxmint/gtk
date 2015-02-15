@@ -2,7 +2,7 @@
 .\"     Title: gtk-update-icon-cache
 .\"    Author: Matthias Clasen
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 04/05/2014
+.\"      Date: 11/09/2014
 .\"    Manual: User Commands
 .\"    Source: GTK+
 .\"  Language: English
@@ -31,7 +31,7 @@
 gtk-update-icon-cache \- Icon theme caching utility
 .SH "SYNOPSIS"
 .HP \w'\fBgtk\-update\-icon\-cache\fR\ 'u
-\fBgtk\-update\-icon\-cache\fR [\-\-force] [\-\-ignore\-theme\-index] [\-\-index\-only] [\-\-source\ \fINAME\fR] [\-\-quiet] [\-\-validate] \fIPATH\fR
+\fBgtk\-update\-icon\-cache\fR [\-\-force] [\-\-ignore\-theme\-index] [\-\-index\-only | \-\-include\-image\-data] [\-\-source\ \fINAME\fR] [\-\-quiet] [\-\-validate] \fIPATH\fR
 .SH "DESCRIPTION"
 .PP
 \fBgtk\-update\-icon\-cache\fR
@@ -67,6 +67,11 @@ refuses to create an icon cache in a directory which does not appear to be the t
 \-\-index\-only, \-i
 .RS 4
 Don\*(Aqt include image data in the cache\&.
+.RE
+.PP
+\-\-include\-image\-data
+.RS 4
+Include image data in the cache\&.
 .RE
 .PP
 \-\-source, \-c

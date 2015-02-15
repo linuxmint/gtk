@@ -35,7 +35,7 @@
  * SECTION:events
  * @Short_description: Functions for handling events from the window system
  * @Title: Events
- * @See_also: <link linkend="gdk-Event-Structures">Event Structures</link>
+ * @See_also: [Event Structures][gdk3-Event-Structures]
  *
  * This section describes functions dealing with events from the window
  * system.
@@ -43,7 +43,7 @@
  * In GTK+ applications the events are handled automatically in
  * gtk_main_do_event() and passed on to the appropriate widgets, so these
  * functions are rarely needed. Though some of the fields in the
- * <link linkend="gdk-Event-Structures">Event Structures</link> are useful.
+ * [Event Structures][gdk3-Event-Structures] are useful.
  */
 
 
@@ -80,7 +80,8 @@ _gdk_event_emit (GdkEvent *event)
  * Find the first event on the queue that is not still
  * being filled in.
  * 
- * Return value: Pointer to the list node for that event, or NULL.
+ * Returns: (nullable): Pointer to the list node for that event, or
+ *   %NULL.
  **/
 GList*
 _gdk_event_queue_find_first (GdkDisplay *display)
@@ -88,20 +89,20 @@ _gdk_event_queue_find_first (GdkDisplay *display)
   GList *tmp_list;
   GList *pending_motion = NULL;
 
-  if (display->event_pause_count > 0)
-    return NULL;
+  gboolean paused = display->event_pause_count > 0;
 
   tmp_list = display->queued_events;
   while (tmp_list)
     {
       GdkEventPrivate *event = tmp_list->data;
 
-      if (!(event->flags & GDK_EVENT_PENDING))
+      if ((event->flags & GDK_EVENT_PENDING) == 0 &&
+	  (!paused || (event->flags & GDK_EVENT_FLUSHED) != 0))
         {
           if (pending_motion)
             return pending_motion;
 
-          if (event->event.type == GDK_MOTION_NOTIFY && !display->flushing_events)
+          if (event->event.type == GDK_MOTION_NOTIFY && (event->flags & GDK_EVENT_FLUSHED) == 0)
             pending_motion = tmp_list;
           else
             return tmp_list;
@@ -161,7 +162,7 @@ _gdk_event_queue_append (GdkDisplay *display,
  * @sibling: Append after this event.
  * @event: Event to append.
  *
- * Appends an event after the specified event, or if it isn't in
+ * Appends an event after the specified event, or if it isn’t in
  * the queue, onto the tail of the event queue.
  *
  * Returns: the newly appended list node.
@@ -189,7 +190,7 @@ _gdk_event_queue_insert_after (GdkDisplay *display,
  * @sibling: Append before this event
  * @event: Event to prepend
  *
- * Prepends an event before the specified event, or if it isn't in
+ * Prepends an event before the specified event, or if it isn’t in
  * the queue, onto the head of the event queue.
  *
  * Returns: the newly prepended list node.
@@ -241,7 +242,7 @@ _gdk_event_queue_remove_link (GdkDisplay *display,
  * Removes and returns the first event from the event
  * queue that is not still being filled in.
  * 
- * Return value: the event, or %NULL. Ownership is transferred
+ * Returns: (nullable): the event, or %NULL. Ownership is transferred
  * to the caller.
  **/
 GdkEvent*
@@ -293,6 +294,9 @@ _gdk_event_queue_handle_motion_compression (GdkDisplay *display)
           pending_motion_device != event->event.motion.device)
         break;
 
+      if (!event->event.motion.window->event_compression)
+        break;
+
       pending_motion_window = event->event.motion.window;
       pending_motion_device = event->event.motion.device;
       pending_motions = tmp_list;
@@ -313,7 +317,20 @@ _gdk_event_queue_handle_motion_compression (GdkDisplay *display)
       pending_motions == display->queued_tail)
     {
       GdkFrameClock *clock = gdk_window_get_frame_clock (pending_motion_window);
-      gdk_frame_clock_request_phase (clock, GDK_FRAME_CLOCK_PHASE_FLUSH_EVENTS);
+      if (clock) /* might be NULL if window was destroyed */
+	gdk_frame_clock_request_phase (clock, GDK_FRAME_CLOCK_PHASE_FLUSH_EVENTS);
+    }
+}
+
+void
+_gdk_event_queue_flush (GdkDisplay *display)
+{
+  GList *tmp_list;
+
+  for (tmp_list = display->queued_events; tmp_list; tmp_list = tmp_list->next)
+    {
+      GdkEventPrivate *event = tmp_list->data;
+      event->flags |= GDK_EVENT_FLUSHED;
     }
 }
 
@@ -349,7 +366,7 @@ gdk_event_handler_set (GdkEventFunc   func,
  *
  * Checks if any events are ready to be processed for any display.
  *
- * Return value: %TRUE if any events are pending.
+ * Returns: %TRUE if any events are pending.
  */
 gboolean
 gdk_events_pending (void)
@@ -390,8 +407,9 @@ gdk_events_pending (void)
  * on, fetching events from the windowing system if necessary.
  * See gdk_display_get_event().
  * 
- * Return value: the next #GdkEvent to be processed, or %NULL if no events
- * are pending. The returned #GdkEvent should be freed with gdk_event_free().
+ * Returns: (nullable): the next #GdkEvent to be processed, or %NULL
+ * if no events are pending. The returned #GdkEvent should be freed
+ * with gdk_event_free().
  **/
 GdkEvent*
 gdk_event_get (void)
@@ -419,9 +437,9 @@ gdk_event_get (void)
  * If there is an event waiting in the event queue of some open
  * display, returns a copy of it. See gdk_display_peek_event().
  * 
- * Return value: a copy of the first #GdkEvent on some event queue, or %NULL if no
- * events are in any queues. The returned #GdkEvent should be freed with
- * gdk_event_free().
+ * Returns: (nullable): a copy of the first #GdkEvent on some event
+ * queue, or %NULL if no events are in any queues. The returned
+ * #GdkEvent should be freed with gdk_event_free().
  **/
 GdkEvent*
 gdk_event_peek (void)
@@ -448,7 +466,7 @@ gdk_event_peek (void)
  * @event: a #GdkEvent.
  *
  * Appends a copy of the given event onto the front of the event
- * queue for event->any.window's display, or the default event
+ * queue for event->any.window’s display, or the default event
  * queue if event->any.window is %NULL. See gdk_display_put_event().
  **/
 void
@@ -461,11 +479,7 @@ gdk_event_put (const GdkEvent *event)
   if (event->any.window)
     display = gdk_window_get_display (event->any.window);
   else
-    {
-      GDK_NOTE (MULTIHEAD,
-		g_message ("Falling back to default display for gdk_event_put()"));
-      display = gdk_display_get_default ();
-    }
+    display = gdk_display_get_default ();
 
   gdk_display_put_event (display, event);
 }
@@ -478,7 +492,7 @@ static GHashTable *event_hash = NULL;
  * 
  * Creates a new event of the given type. All fields are set to 0.
  * 
- * Return value: a newly-allocated #GdkEvent. The returned #GdkEvent 
+ * Returns: a newly-allocated #GdkEvent. The returned #GdkEvent 
  * should be freed with gdk_event_free().
  *
  * Since: 2.2
@@ -595,9 +609,9 @@ _gdk_event_get_pointer_emulated (GdkEvent *event)
  * @event: a #GdkEvent
  * 
  * Copies a #GdkEvent, copying or incrementing the reference count of the
- * resources associated with it (e.g. #GdkWindow's and strings).
+ * resources associated with it (e.g. #GdkWindow’s and strings).
  * 
- * Return value: a copy of @event. The returned #GdkEvent should be freed with
+ * Returns: a copy of @event. The returned #GdkEvent should be freed with
  * gdk_event_free().
  **/
 GdkEvent*
@@ -804,7 +818,7 @@ gdk_event_free (GdkEvent *event)
  *
  * Extracts the #GdkWindow associated with an event.
  *
- * Return value: (transfer none): The #GdkWindow associated with the event
+ * Returns: (transfer none): The #GdkWindow associated with the event
  *
  * Since: 3.10
  */
@@ -823,7 +837,7 @@ gdk_event_get_window (const GdkEvent *event)
  * Returns the time stamp from @event, if there is one; otherwise
  * returns #GDK_CURRENT_TIME. If @event is %NULL, returns #GDK_CURRENT_TIME.
  * 
- * Return value: time stamp field from @event
+ * Returns: time stamp field from @event
  **/
 guint32
 gdk_event_get_time (const GdkEvent *event)
@@ -892,15 +906,15 @@ gdk_event_get_time (const GdkEvent *event)
 
 /**
  * gdk_event_get_state:
- * @event: a #GdkEvent or NULL
+ * @event: (allow-none): a #GdkEvent or %NULL
  * @state: (out): return location for state
  * 
- * If the event contains a "state" field, puts that field in @state. Otherwise
+ * If the event contains a “state” field, puts that field in @state. Otherwise
  * stores an empty state (0). Returns %TRUE if there was a state field
- * in the event. @event may be %NULL, in which case it's treated
+ * in the event. @event may be %NULL, in which case it’s treated
  * as if the event had no state field.
  * 
- * Return value: %TRUE if there was a state field in the event 
+ * Returns: %TRUE if there was a state field in the event 
  **/
 gboolean
 gdk_event_get_state (const GdkEvent        *event,
@@ -981,7 +995,7 @@ gdk_event_get_state (const GdkEvent        *event,
  * 
  * Extract the event window relative x/y coordinates from an event.
  * 
- * Return value: %TRUE if the event delivered event window coordinates
+ * Returns: %TRUE if the event delivered event window coordinates
  **/
 gboolean
 gdk_event_get_coords (const GdkEvent *event,
@@ -1047,7 +1061,7 @@ gdk_event_get_coords (const GdkEvent *event,
  * 
  * Extract the root window relative x/y coordinates from an event.
  * 
- * Return value: %TRUE if the event delivered root window coordinates
+ * Returns: %TRUE if the event delivered root window coordinates
  **/
 gboolean
 gdk_event_get_root_coords (const GdkEvent *event,
@@ -1117,7 +1131,7 @@ gdk_event_get_root_coords (const GdkEvent *event,
  *
  * Extract the button number from an event.
  *
- * Return value: %TRUE if the event delivered a button number
+ * Returns: %TRUE if the event delivered a button number
  *
  * Since: 3.2
  **/
@@ -1156,7 +1170,7 @@ gdk_event_get_button (const GdkEvent *event,
  *
  * Extracts the click count from an event.
  *
- * Return value: %TRUE if the event delivered a click count
+ * Returns: %TRUE if the event delivered a click count
  *
  * Since: 3.2
  */
@@ -1199,7 +1213,7 @@ gdk_event_get_click_count (const GdkEvent *event,
  *
  * Extracts the keyval from an event.
  *
- * Return value: %TRUE if the event delivered a key symbol
+ * Returns: %TRUE if the event delivered a key symbol
  *
  * Since: 3.2
  */
@@ -1234,7 +1248,7 @@ gdk_event_get_keyval (const GdkEvent *event,
  *
  * Extracts the hardware keycode from an event.
  *
- * Return value: %TRUE if the event delivered a hardware keycode
+ * Returns: %TRUE if the event delivered a hardware keycode
  *
  * Since: 3.2
  */
@@ -1269,7 +1283,7 @@ gdk_event_get_keycode (const GdkEvent *event,
  *
  * Extracts the scroll direction from an event.
  *
- * Return value: %TRUE if the event delivered a scroll direction
+ * Returns: %TRUE if the event delivered a scroll direction
  *
  * Since: 3.2
  */
@@ -1354,7 +1368,7 @@ gdk_event_get_scroll_deltas (const GdkEvent *event,
  * Extract the axis value for a particular axis use from
  * an event structure.
  * 
- * Return value: %TRUE if the specified axis was found, otherwise %FALSE
+ * Returns: %TRUE if the specified axis was found, otherwise %FALSE
  **/
 gboolean
 gdk_event_get_axis (const GdkEvent *event,
@@ -1490,10 +1504,10 @@ gdk_event_set_device (GdkEvent  *event,
  * gdk_event_get_device:
  * @event: a #GdkEvent.
  *
- * If the event contains a "device" field, this function will return
+ * If the event contains a “device” field, this function will return
  * it, else it will return %NULL.
  *
- * Returns: (transfer none): a #GdkDevice, or %NULL.
+ * Returns: (nullable) (transfer none): a #GdkDevice, or %NULL.
  *
  * Since: 3.0
  **/
@@ -1617,7 +1631,7 @@ gdk_event_set_source_device (GdkEvent  *event,
  *
  * This function returns the hardware (slave) #GdkDevice that has
  * triggered the event, falling back to the virtual (master) device
- * (as in gdk_event_get_device()) if the event wasn't caused by
+ * (as in gdk_event_get_device()) if the event wasn’t caused by
  * interaction with a hardware device. This may happen for example
  * in synthesized crossing events after a #GdkWindow updates its
  * geometry or a grab is acquired/released.
@@ -1625,7 +1639,7 @@ gdk_event_set_source_device (GdkEvent  *event,
  * If the event does not contain a device field, this function will
  * return %NULL.
  *
- * Returns: (transfer none): a #GdkDevice, or %NULL.
+ * Returns: (nullable) (transfer none): a #GdkDevice, or %NULL.
  *
  * Since: 3.0
  **/
@@ -1660,13 +1674,13 @@ gdk_event_get_source_device (const GdkEvent *event)
  * core pointer. Coordinate extraction, processing and requesting more
  * motion events from a %GDK_MOTION_NOTIFY event usually works like this:
  *
- * |[
+ * |[<!-- language="C" -->
  * {
- *   /&ast; motion_event handler &ast;/
+ *   // motion_event handler
  *   x = motion_event->x;
  *   y = motion_event->y;
- *   /&ast; handle (x,y) motion &ast;/
- *   gdk_event_request_motions (motion_event); /&ast; handles is_hint events &ast;/
+ *   // handle (x,y) motion
+ *   gdk_event_request_motions (motion_event); // handles is_hint events
  * }
  * ]|
  *
@@ -1898,14 +1912,14 @@ gdk_event_set_screen (GdkEvent  *event,
  * @event: a #GdkEvent
  * 
  * Returns the screen for the event. The screen is
- * typically the screen for <literal>event->any.window</literal>, but
+ * typically the screen for `event->any.window`, but
  * for events such as mouse events, it is the screen
  * where the pointer was when the event occurs -
  * that is, the screen which has the root window 
- * to which <literal>event->motion.x_root</literal> and
- * <literal>event->motion.y_root</literal> are relative.
+ * to which `event->motion.x_root` and
+ * `event->motion.y_root` are relative.
  * 
- * Return value: (transfer none): the screen for the event
+ * Returns: (transfer none): the screen for the event
  *
  * Since: 2.2
  **/
@@ -1934,7 +1948,7 @@ gdk_event_get_screen (const GdkEvent *event)
  * %GDK_TOUCH_END or %GDK_TOUCH_CANCEL, returns the #GdkEventSequence
  * to which the event belongs. Otherwise, return %NULL.
  *
- * Returns: the event sequence that the event belongs to
+ * Returns: (transfer none): the event sequence that the event belongs to
  *
  * Since: 3.4
  */
@@ -1959,7 +1973,7 @@ gdk_event_get_event_sequence (const GdkEvent *event)
  * 
  * Sets whether a trace of received events is output.
  * Note that GTK+ must be compiled with debugging (that is,
- * configured using the <option>--enable-debug</option> option)
+ * configured using the `--enable-debug` option)
  * to use this option.
  **/
 void
@@ -1976,7 +1990,7 @@ gdk_set_show_events (gboolean show_events)
  * 
  * Gets whether event debugging output is enabled.
  * 
- * Return value: %TRUE if event debugging output is enabled.
+ * Returns: %TRUE if event debugging output is enabled.
  **/
 gboolean
 gdk_get_show_events (void)
@@ -2074,35 +2088,32 @@ _gdk_event_button_generate (GdkDisplay *display,
 }
 
 void
-gdk_synthesize_window_state (GdkWindow     *window,
-                             GdkWindowState unset_flags,
-                             GdkWindowState set_flags)
+_gdk_set_window_state (GdkWindow      *window,
+                       GdkWindowState  new_state)
 {
   GdkEvent temp_event;
   GdkWindowState old;
-  
+
   g_return_if_fail (window != NULL);
-  
+
   temp_event.window_state.window = window;
   temp_event.window_state.type = GDK_WINDOW_STATE;
   temp_event.window_state.send_event = FALSE;
-  
-  old = temp_event.window_state.window->state;
-  
-  temp_event.window_state.new_window_state = old;
-  temp_event.window_state.new_window_state |= set_flags;
-  temp_event.window_state.new_window_state &= ~unset_flags;
-  temp_event.window_state.changed_mask = temp_event.window_state.new_window_state ^ old;
+  temp_event.window_state.new_window_state = new_state;
+
+  old = window->state;
 
   if (temp_event.window_state.new_window_state == old)
     return; /* No actual work to do, nothing changed. */
+
+  temp_event.window_state.changed_mask = new_state ^ old;
 
   /* Actually update the field in GdkWindow, this is sort of an odd
    * place to do it, but seems like the safest since it ensures we expose no
    * inconsistent state to the user.
    */
-  
-  window->state = temp_event.window_state.new_window_state;
+
+  window->state = new_state;
 
   if (temp_event.window_state.changed_mask & GDK_WINDOW_STATE_WITHDRAWN)
     _gdk_window_update_viewable (window);
@@ -2118,12 +2129,21 @@ gdk_synthesize_window_state (GdkWindow     *window,
     case GDK_WINDOW_TEMP: /* ? */
       gdk_display_put_event (gdk_window_get_display (window), &temp_event);
       break;
-      
     case GDK_WINDOW_FOREIGN:
     case GDK_WINDOW_ROOT:
     case GDK_WINDOW_CHILD:
       break;
     }
+}
+
+void
+gdk_synthesize_window_state (GdkWindow     *window,
+                             GdkWindowState unset_flags,
+                             GdkWindowState set_flags)
+{
+  g_return_if_fail (window != NULL);
+
+  _gdk_set_window_state (window, (window->state | set_flags) & ~unset_flags);
 }
 
 /**
@@ -2133,7 +2153,7 @@ gdk_synthesize_window_state (GdkWindow     *window,
  * 
  * Sets the double click time (two clicks within this time interval
  * count as a double click and result in a #GDK_2BUTTON_PRESS event).
- * Applications should <emphasis>not</emphasis> set this, it is a global 
+ * Applications should not set this, it is a global 
  * user-configured setting.
  *
  * Since: 2.2
@@ -2152,7 +2172,7 @@ gdk_display_set_double_click_time (GdkDisplay *display,
  * Set the double click time for the default display. See
  * gdk_display_set_double_click_time(). 
  * See also gdk_display_set_double_click_distance().
- * Applications should <emphasis>not</emphasis> set this, it is a 
+ * Applications should not set this, it is a 
  * global user-configured setting.
  **/
 void
@@ -2169,7 +2189,7 @@ gdk_set_double_click_time (guint msec)
  * Sets the double click distance (two clicks within this distance
  * count as a double click and result in a #GDK_2BUTTON_PRESS event).
  * See also gdk_display_set_double_click_time().
- * Applications should <emphasis>not</emphasis> set this, it is a global 
+ * Applications should not set this, it is a global 
  * user-configured setting.
  *
  * Since: 2.4
@@ -2184,6 +2204,22 @@ gdk_display_set_double_click_distance (GdkDisplay *display,
 G_DEFINE_BOXED_TYPE (GdkEvent, gdk_event,
                      gdk_event_copy,
                      gdk_event_free)
+
+static GdkEventSequence *
+gdk_event_sequence_copy (GdkEventSequence *sequence)
+{
+  return sequence;
+}
+
+static void
+gdk_event_sequence_free (GdkEventSequence *sequence)
+{
+  /* Nothing to free here */
+}
+
+G_DEFINE_BOXED_TYPE (GdkEventSequence, gdk_event_sequence,
+                     gdk_event_sequence_copy,
+                     gdk_event_sequence_free)
 
 /**
  * gdk_setting_get:
@@ -2209,7 +2245,7 @@ gdk_setting_get (const gchar *name,
  *
  * Retrieves the type of the event.
  *
- * Return value: a #GdkEventType
+ * Returns: a #GdkEventType
  *
  * Since: 3.10
  */

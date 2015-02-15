@@ -16,8 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Federico Mena Quintero <federico@gnome.org>
  */
@@ -161,7 +160,7 @@ save_bookmarks (GFile  *bookmarks_file,
     }
   if (!g_file_replace_contents (bookmarks_file,
 				contents->str,
-				strlen (contents->str),
+				contents->len,
 				NULL, FALSE, 0, NULL,
 				NULL, &error))
     goto out;

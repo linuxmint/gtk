@@ -12,9 +12,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
@@ -58,10 +56,11 @@ struct _GdkFrameClockIdleClass
   GdkFrameClockClass parent_class;
 };
 
-GType	   gdk_frame_clock_idle_get_type          (void) G_GNUC_CONST;
+GType           gdk_frame_clock_idle_get_type       (void) G_GNUC_CONST;
 
-void _gdk_frame_clock_idle_freeze_updates (GdkFrameClockIdle *clock_idle);
-void _gdk_frame_clock_idle_thaw_updates (GdkFrameClockIdle *clock_idle);
+GdkFrameClock *_gdk_frame_clock_idle_new            (void);
+void           _gdk_frame_clock_idle_freeze_updates (GdkFrameClockIdle *clock_idle);
+void           _gdk_frame_clock_idle_thaw_updates   (GdkFrameClockIdle *clock_idle);
 
 G_END_DECLS
 

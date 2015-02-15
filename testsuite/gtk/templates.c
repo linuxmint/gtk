@@ -37,7 +37,9 @@ test_dialog_basic (void)
 
   dialog = gtk_dialog_new();
   g_assert (GTK_IS_DIALOG (dialog));
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   g_assert (gtk_dialog_get_action_area (GTK_DIALOG (dialog)) != NULL);
+G_GNUC_END_IGNORE_DEPRECATIONS
   g_assert (gtk_dialog_get_content_area (GTK_DIALOG (dialog)) != NULL);
 
   gtk_widget_destroy (dialog);
@@ -145,6 +147,26 @@ test_statusbar_basic (void)
 }
 
 static void
+test_search_bar_basic (void)
+{
+  GtkWidget *widget;
+
+  widget = gtk_search_bar_new ();
+  g_assert (GTK_IS_SEARCH_BAR (widget));
+  gtk_widget_destroy (widget);
+}
+
+static void
+test_action_bar_basic (void)
+{
+  GtkWidget *widget;
+
+  widget = gtk_action_bar_new ();
+  g_assert (GTK_IS_ACTION_BAR (widget));
+  gtk_widget_destroy (widget);
+}
+
+static void
 test_app_chooser_widget_basic (void)
 {
   GtkWidget *widget;
@@ -209,7 +231,7 @@ test_file_chooser_widget_basic (void)
   /* XXX BUG:
    *
    * Spin the mainloop for a bit, this allows the file operations
-   * to complete, GtkFileChooserDefault has a bug where it leaks
+   * to complete, GtkFileChooserWidget has a bug where it leaks
    * GtkTreeRowReferences to the internal shortcuts_model
    *
    * Since we assert all automated children are finalized we
@@ -349,6 +371,8 @@ main (int argc, char **argv)
   g_test_add_func ("/Template/GtkScaleButton/Basic", test_scale_button_basic);
   g_test_add_func ("/Template/GtkVolumeButton/Basic", test_volume_button_basic);
   g_test_add_func ("/Template/GtkStatusBar/Basic", test_statusbar_basic);
+  g_test_add_func ("/Template/GtkSearchBar/Basic", test_search_bar_basic);
+  g_test_add_func ("/Template/GtkActionBar/Basic", test_action_bar_basic);
   g_test_add_func ("/Template/GtkAppChooserWidget/Basic", test_app_chooser_widget_basic);
   g_test_add_func ("/Template/GtkAppChooserDialog/Basic", test_app_chooser_dialog_basic);
   g_test_add_func ("/Template/GtkColorChooserDialog/Basic", test_color_chooser_dialog_basic);

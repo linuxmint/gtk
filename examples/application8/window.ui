@@ -15,6 +15,7 @@
             <child type="title">
               <object class="GtkStackSwitcher" id="tabs">
                 <property name="visible">True</property>
+                <property name="margin">6</property>
                 <property name="stack">stack</property>
               </object>
             </child>
@@ -22,6 +23,9 @@
               <object class="GtkToggleButton" id="search">
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
+                <style>
+                  <class name="image-button"/>
+                </style>
                 <child>
                   <object class="GtkImage" id="search-icon">
                     <property name="visible">True</property>
@@ -37,13 +41,11 @@
             <child>
               <object class="GtkMenuButton" id="gears">
                 <property name="visible">True</property>
-                <child>
-                  <object class="GtkImage" id="gears-icon">
-                    <property name="visible">True</property>
-                    <property name="icon-name">emblem-system-symbolic</property>
-                    <property name="icon-size">1</property>
-                  </object>
-                </child>
+                <property name="direction">none</property>
+                <property name="use-popover">True</property>
+                <style>
+                  <class name="image-button"/>
+                </style>
               </object>
               <packing>
                 <property name="pack-type">end</property>

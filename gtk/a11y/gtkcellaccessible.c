@@ -23,6 +23,11 @@
 #include "gtkcellaccessibleprivate.h"
 #include "gtkcellaccessibleparent.h"
 
+struct _GtkCellAccessiblePrivate
+{
+  AtkObject *parent;
+};
+
 static const struct {
   AtkState atk_state;
   GtkCellRendererState renderer_state;
@@ -43,37 +48,9 @@ static void atk_action_interface_init    (AtkActionIface    *iface);
 static void atk_component_interface_init (AtkComponentIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GtkCellAccessible, gtk_cell_accessible, GTK_TYPE_ACCESSIBLE,
+                         G_ADD_PRIVATE (GtkCellAccessible)
                          G_IMPLEMENT_INTERFACE (ATK_TYPE_ACTION, atk_action_interface_init)
                          G_IMPLEMENT_INTERFACE (ATK_TYPE_COMPONENT, atk_component_interface_init))
-
-static void
-gtk_cell_accessible_object_finalize (GObject *obj)
-{
-  AtkRelationSet *relation_set;
-  AtkRelation *relation;
-  GPtrArray *target;
-  gpointer target_object;
-  gint i;
-
-  relation_set = atk_object_ref_relation_set (ATK_OBJECT (obj));
-  if (ATK_IS_RELATION_SET (relation_set))
-    {
-      relation = atk_relation_set_get_relation_by_type (relation_set,
-                                                        ATK_RELATION_NODE_CHILD_OF);
-      if (relation)
-        {
-          target = atk_relation_get_target (relation);
-          for (i = 0; i < target->len; i++)
-            {
-              target_object = g_ptr_array_index (target, i);
-              if (GTK_IS_CELL_ACCESSIBLE (target_object))
-                g_object_unref (target_object);
-            }
-        }
-      g_object_unref (relation_set);
-    }
-  G_OBJECT_CLASS (gtk_cell_accessible_parent_class)->finalize (obj);
-}
 
 static gint
 gtk_cell_accessible_get_index_in_parent (AtkObject *obj)
@@ -83,15 +60,35 @@ gtk_cell_accessible_get_index_in_parent (AtkObject *obj)
 
   cell = GTK_CELL_ACCESSIBLE (obj);
 
-  parent = atk_object_get_parent (obj);
-  if (GTK_IS_CONTAINER_CELL_ACCESSIBLE (parent))
-    return g_list_index (gtk_container_cell_accessible_get_children (GTK_CONTAINER_CELL_ACCESSIBLE (parent)), obj);
+  if (GTK_IS_CONTAINER_CELL_ACCESSIBLE (cell->priv->parent))
+    return g_list_index (gtk_container_cell_accessible_get_children (GTK_CONTAINER_CELL_ACCESSIBLE (cell->priv->parent)), obj);
 
   parent = gtk_widget_get_accessible (gtk_accessible_get_widget (GTK_ACCESSIBLE (cell)));
   if (parent == NULL)
     return -1;
 
-  return gtk_cell_accessible_parent_get_child_index (GTK_CELL_ACCESSIBLE_PARENT (parent), cell);
+  return gtk_cell_accessible_parent_get_child_index (GTK_CELL_ACCESSIBLE_PARENT (cell->priv->parent), cell);
+}
+
+static AtkRelationSet *
+gtk_cell_accessible_ref_relation_set (AtkObject *object)
+{
+  GtkCellAccessible *cell;
+  AtkRelationSet *relationset;
+  AtkObject *parent;
+
+  relationset = ATK_OBJECT_CLASS (gtk_cell_accessible_parent_class)->ref_relation_set (object);
+  if (relationset == NULL)
+    relationset = atk_relation_set_new ();
+
+  cell = GTK_CELL_ACCESSIBLE (object);
+  parent = gtk_widget_get_accessible (gtk_accessible_get_widget (GTK_ACCESSIBLE (cell)));
+
+  gtk_cell_accessible_parent_update_relationset (GTK_CELL_ACCESSIBLE_PARENT (parent),
+                                                 cell,
+                                                 relationset);
+
+  return relationset;
 }
 
 static AtkStateSet *
@@ -139,22 +136,29 @@ gtk_cell_accessible_ref_state_set (AtkObject *accessible)
   return state_set;
 }
 
+static AtkObject *
+gtk_cell_accessible_get_parent (AtkObject *object)
+{
+  GtkCellAccessible *cell = GTK_CELL_ACCESSIBLE (object);
+
+  return cell->priv->parent;
+}
 
 static void
 gtk_cell_accessible_class_init (GtkCellAccessibleClass *klass)
 {
   AtkObjectClass *class = ATK_OBJECT_CLASS (klass);
-  GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
-
-  g_object_class->finalize = gtk_cell_accessible_object_finalize;
 
   class->get_index_in_parent = gtk_cell_accessible_get_index_in_parent;
   class->ref_state_set = gtk_cell_accessible_ref_state_set;
+  class->ref_relation_set = gtk_cell_accessible_ref_relation_set;
+  class->get_parent = gtk_cell_accessible_get_parent;
 }
 
 static void
 gtk_cell_accessible_init (GtkCellAccessible *cell)
 {
+  cell->priv = gtk_cell_accessible_get_instance_private (cell);
 }
 
 void
@@ -163,7 +167,7 @@ _gtk_cell_accessible_initialize (GtkCellAccessible *cell,
                                  AtkObject         *parent)
 {
   gtk_accessible_set_widget (GTK_ACCESSIBLE (cell), widget);
-  atk_object_set_parent (ATK_OBJECT (cell), parent);
+  cell->priv->parent = parent;
 }
 
 gboolean
@@ -171,8 +175,6 @@ _gtk_cell_accessible_add_state (GtkCellAccessible *cell,
                                 AtkStateType       state_type,
                                 gboolean           emit_signal)
 {
-  AtkObject *parent;
-
   /* The signal should only be generated if the value changed,
    * not when the cell is set up. So states that are set
    * initially should pass FALSE as the emit_signal argument.
@@ -188,9 +190,8 @@ _gtk_cell_accessible_add_state (GtkCellAccessible *cell,
   /* If the parent is a flyweight container cell, propagate the state
    * change to it also
    */
-  parent = atk_object_get_parent (ATK_OBJECT (cell));
-  if (GTK_IS_CONTAINER_CELL_ACCESSIBLE (parent))
-    _gtk_cell_accessible_add_state (GTK_CELL_ACCESSIBLE (parent), state_type, emit_signal);
+  if (GTK_IS_CONTAINER_CELL_ACCESSIBLE (cell->priv->parent))
+    _gtk_cell_accessible_add_state (GTK_CELL_ACCESSIBLE (cell->priv->parent), state_type, emit_signal);
 
   return TRUE;
 }
@@ -200,10 +201,6 @@ _gtk_cell_accessible_remove_state (GtkCellAccessible *cell,
                                    AtkStateType       state_type,
                                    gboolean           emit_signal)
 {
-  AtkObject *parent;
-
-  parent = atk_object_get_parent (ATK_OBJECT (cell));
-
   /* The signal should only be generated if the value changed,
    * not when the cell is set up.  So states that are set
    * initially should pass FALSE as the emit_signal argument.
@@ -219,8 +216,8 @@ _gtk_cell_accessible_remove_state (GtkCellAccessible *cell,
   /* If the parent is a flyweight container cell, propagate the state
    * change to it also
    */
-  if (GTK_IS_CONTAINER_CELL_ACCESSIBLE (parent))
-    _gtk_cell_accessible_remove_state (GTK_CELL_ACCESSIBLE (parent), state_type, emit_signal);
+  if (GTK_IS_CONTAINER_CELL_ACCESSIBLE (cell->priv->parent))
+    _gtk_cell_accessible_remove_state (GTK_CELL_ACCESSIBLE (cell->priv->parent), state_type, emit_signal);
 
   return TRUE;
 }

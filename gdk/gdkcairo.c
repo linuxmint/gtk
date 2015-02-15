@@ -28,7 +28,7 @@
  * @Short_description: Functions to support using cairo
  * @Title: Cairo Interaction
  *
- * <link href="http://cairographics.org">Cairo</link> is a graphics
+ * [Cairo](http://cairographics.org) is a graphics
  * library that supports vector graphics and image compositing that
  * can be used with GDK. GTK+ does all of its drawing using cairo.
  *
@@ -284,6 +284,10 @@ gdk_cairo_surface_create_from_pixbuf (const GdkPixbuf *pixbuf,
   cairo_format_t format;
   cairo_surface_t *surface;
 
+  g_return_val_if_fail (GDK_IS_PIXBUF (pixbuf), NULL);
+  g_return_val_if_fail (scale >= 0, NULL);
+  g_return_val_if_fail (for_window == NULL || GDK_IS_WINDOW (for_window), NULL);
+
   if (gdk_pixbuf_get_n_channels (pixbuf) == 3)
     format = CAIRO_FORMAT_RGB24;
   else
@@ -472,6 +476,9 @@ gdk_cairo_region_create_from_surface (cairo_surface_t *surface)
     }
   else
     image = cairo_surface_reference (surface);
+
+  /* Flush the surface to make sure that the rendering is up to date. */
+  cairo_surface_flush (image);
 
   data = cairo_image_surface_get_data (image);
   stride = cairo_image_surface_get_stride (image);

@@ -109,6 +109,7 @@ gtk_cell_renderer_pixbuf_init (GtkCellRendererPixbuf *cellpixbuf)
   priv = cellpixbuf->priv;
 
   priv->icon_helper = _gtk_icon_helper_new ();
+  _gtk_icon_helper_set_force_scale_pixbuf (priv->icon_helper, TRUE);
   priv->icon_size = GTK_ICON_SIZE_MENU;
 }
 
@@ -406,11 +407,11 @@ gtk_cell_renderer_pixbuf_set_property (GObject      *object,
  * parameters using object properties. Object properties can be set
  * globally (with g_object_set()). Also, with #GtkTreeViewColumn, you
  * can bind a property to a value in a #GtkTreeModel. For example, you
- * can bind the "pixbuf" property on the cell renderer to a pixbuf value
+ * can bind the “pixbuf” property on the cell renderer to a pixbuf value
  * in the model, thus rendering a different image in each row of the
  * #GtkTreeView.
  * 
- * Return value: the new cell renderer
+ * Returns: the new cell renderer
  **/
 GtkCellRenderer *
 gtk_cell_renderer_pixbuf_new (void)

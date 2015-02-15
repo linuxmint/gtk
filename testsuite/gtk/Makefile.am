@@ -25,22 +25,31 @@ LDADD = \
 
 noinst_PROGRAMS = $(TEST_PROGS)
 
+TESTS_ENVIRONMENT = G_ENABLE_DIAGNOSTIC=0
+
 TEST_PROGS += 			\
 	accel			\
 	accessible		\
 	action			\
+	adjustment		\
 	bitmask			\
 	builder			\
 	cellarea		\
+	check-icon-names	\
 	clipboard		\
 	defaultvalue		\
 	entry			\
 	expander		\
+	firefox-stylecontext	\
 	floating		\
+	focus			\
+	gestures		\
 	grid			\
 	gtkmenu			\
+	icontheme		\
 	keyhash			\
 	listbox			\
+	notify			\
 	no-gtk-init		\
 	object			\
 	objects-finalize	\
@@ -48,6 +57,7 @@ TEST_PROGS += 			\
 	rbtree			\
 	recentmanager		\
 	regression-tests	\
+	spinbutton		\
 	stylecontext		\
 	templates		\
 	textbuffer		\
@@ -55,6 +65,7 @@ TEST_PROGS += 			\
 	treemodel		\
 	treepath		\
 	treeview		\
+	typename		\
 	window			\
 	displayclose		\
 	$(NULL)
@@ -123,10 +134,37 @@ keyhash_SOURCES	=					\
 	$(NULL)
 
 
+test_icontheme =					\
+	icons/index.theme				\
+	icons/16x16/simple.png				\
+	icons/16x16/twosize-fixed.svg			\
+	icons/16x16s/twosize.svg			\
+	icons/32x32/only32-symbolic.svg			\
+	icons/32x32/twosize-fixed.svg			\
+	icons/32x32s/twosize.svg			\
+	icons/scalable/everything-justregular.svg	\
+	icons/scalable/everything-justrtl-rtl.svg	\
+	icons/scalable/everything-rtl.svg		\
+	icons/scalable/everything-symbolic-rtl.svg	\
+	icons/scalable/everything-justsymbolic-symbolic.svg	\
+	icons/scalable/everything.svg			\
+	icons/scalable/everything-symbolic.svg		\
+	icons/15/size-test.png				\
+	icons/16-22/size-test.png			\
+	icons/25+/size-test.svg				\
+	icons/35+/size-test.svg				\
+	icons/scalable/one-two.svg			\
+	icons/scalable/one-two-rtl.svg			\
+	icons2/scalable/one-two-three-symbolic.svg	\
+	icons2/scalable/one-two-symbolic.svg		\
+	icons2/scalable/one-two-symbolic-rtl.svg	\
+	icons2/index.theme				\
+	$(NULL)
 
 EXTRA_DIST +=				\
 	file-chooser-test-dir/empty     \
 	file-chooser-test-dir/text.txt	\
+	$(test_icontheme)		\
 	$(NULL)
 
 GTK_GSETTINGS_SCHEMAS = \
@@ -146,13 +184,14 @@ gschemas.compiled: $(GTK_GSETTINGS_SCHEMAS)
 all-am: gschemas.compiled
 
 if BUILDOPT_INSTALL_TESTS
-insttestdir = $(pkglibexecdir)/installed-tests
+insttestdir = $(libexecdir)/installed-tests/$(PACKAGE)
 insttest_PROGRAMS = $(TEST_PROGS)
+nobase_insttest_DATA = $(test_icontheme)
 
 %.test: %$(EXEEXT) Makefile
 	$(AM_V_GEN) (echo '[Test]' > $@.tmp; \
 	echo 'Type=session' >> $@.tmp; \
-	echo 'Exec=$(insttestdir)/$<' >> $@.tmp; \
+	echo 'Exec=env G_ENABLE_DIAGNOSTIC=0 $(insttestdir)/$<' >> $@.tmp; \
 	mv $@.tmp $@)
 
 test_files = $(TEST_PROGS:=.test)

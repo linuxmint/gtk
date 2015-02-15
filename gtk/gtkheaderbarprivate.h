@@ -20,9 +20,13 @@
 #ifndef __GTK_HEADER_BAR_PRIVATE_H__
 #define __GTK_HEADER_BAR_PRIVATE_H__
 
-GtkWidget * _gtk_header_bar_create_title_box (const char *title,
-                                              const char *subtitle,
-                                              GtkWidget **ret_title_label,
-                                              GtkWidget **ret_subtitle_label);
+G_BEGIN_DECLS
+
+gboolean     _gtk_header_bar_shows_app_menu        (GtkHeaderBar *bar);
+void         _gtk_header_bar_update_window_buttons (GtkHeaderBar *bar);
+gboolean     _gtk_header_bar_update_window_icon    (GtkHeaderBar *bar,
+                                                    GtkWindow    *window);
+
+G_END_DECLS
 
 #endif /* __GTK_HEADER_BAR_PRIVATE_H__ */

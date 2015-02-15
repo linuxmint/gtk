@@ -36,7 +36,7 @@
 #include "gtkadjustment.h"
 #include "gtkorientable.h"
 #include "gtkhsv.h"
-#include "gtkwindow.h"
+#include "gtkwindowgroup.h"
 #include "gtkselection.h"
 #include "gtkcolorutils.h"
 #include "gtkdnd.h"
@@ -727,7 +727,7 @@ gtk_color_selection_unrealize (GtkWidget *widget)
 }
 
 /* We override show-all since we have internal widgets that
- * shouldn't be shown when you call show_all(), like the
+ * shouldn’t be shown when you call show_all(), like the
  * palette and opacity sliders.
  */
 static void
@@ -1485,6 +1485,7 @@ do_popup (GtkColorSelection *colorsel,
                      colorsel);
 
   menu = gtk_menu_new ();
+  g_signal_connect (menu, "hide", G_CALLBACK (gtk_widget_destroy), NULL);
 
   mi = gtk_menu_item_new_with_mnemonic (_("_Save color here"));
 
@@ -2370,7 +2371,7 @@ default_change_palette_func (GdkScreen      *screen,
  *
  * Creates a new GtkColorSelection.
  *
- * Return value: a new #GtkColorSelection
+ * Returns: a new #GtkColorSelection
  */
 GtkWidget *
 gtk_color_selection_new (void)
@@ -2403,7 +2404,7 @@ gtk_color_selection_new (void)
  *
  * Determines whether the colorsel has an opacity control.
  *
- * Return value: %TRUE if the @colorsel has an opacity control,
+ * Returns: %TRUE if the @colorsel has an opacity control,
  *     %FALSE if it does't
  */
 gboolean
@@ -2463,7 +2464,7 @@ gtk_color_selection_set_has_opacity_control (GtkColorSelection *colorsel,
  *
  * Determines whether the color selector has a color palette.
  *
- * Return value: %TRUE if the selector has a palette, %FALSE if it hasn't
+ * Returns: %TRUE if the selector has a palette, %FALSE if it hasn't
  */
 gboolean
 gtk_color_selection_get_has_palette (GtkColorSelection *colorsel)
@@ -2611,7 +2612,7 @@ gtk_color_selection_get_current_color (GtkColorSelection *colorsel,
  *
  * Returns the current alpha value.
  *
- * Return value: an integer between 0 and 65535
+ * Returns: an integer between 0 and 65535
  */
 guint16
 gtk_color_selection_get_current_alpha (GtkColorSelection *colorsel)
@@ -2629,7 +2630,7 @@ gtk_color_selection_get_current_alpha (GtkColorSelection *colorsel)
  * @colorsel: a #GtkColorSelection
  * @color: a #GdkColor to set the previous color with
  *
- * Sets the 'previous' color to be @color.
+ * Sets the “previous” color to be @color.
  *
  * This function should be called with some hesitations,
  * as it might seem confusing to have that color change.
@@ -2668,7 +2669,7 @@ gtk_color_selection_set_previous_color (GtkColorSelection *colorsel,
  * @colorsel: a #GtkColorSelection
  * @alpha: an integer between 0 and 65535
  *
- * Sets the 'previous' alpha to be @alpha.
+ * Sets the “previous” alpha to be @alpha.
  *
  * This function should be called with some hesitations,
  * as it might seem confusing to have that alpha change.
@@ -2720,7 +2721,7 @@ gtk_color_selection_get_previous_color (GtkColorSelection *colorsel,
  *
  * Returns the previous alpha value.
  *
- * Return value: an integer between 0 and 65535
+ * Returns: an integer between 0 and 65535
  */
 guint16
 gtk_color_selection_get_previous_alpha (GtkColorSelection *colorsel)
@@ -2810,7 +2811,7 @@ gtk_color_selection_get_current_rgba (GtkColorSelection *colorsel,
  * @colorsel: a #GtkColorSelection
  * @rgba: a #GdkRGBA to set the previous color with
  *
- * Sets the 'previous' color to be @rgba.
+ * Sets the “previous” color to be @rgba.
  *
  * This function should be called with some hesitations,
  * as it might seem confusing to have that color change.
@@ -2910,7 +2911,7 @@ gtk_color_selection_set_palette_color (GtkColorSelection *colorsel,
  *
  * Gets the current state of the @colorsel.
  *
- * Return value: %TRUE if the user is currently dragging
+ * Returns: %TRUE if the user is currently dragging
  *     a color around, and %FALSE if the selection has stopped
  */
 gboolean
@@ -2936,7 +2937,7 @@ gtk_color_selection_is_adjusting (GtkColorSelection *colorsel)
  * Parses a color palette string; the string is a colon-separated
  * list of color names readable by gdk_color_parse().
  *
- * Return value: %TRUE if a palette was successfully parsed
+ * Returns: %TRUE if a palette was successfully parsed
  */
 gboolean
 gtk_color_selection_palette_from_string (const gchar  *str,
@@ -3020,7 +3021,7 @@ gtk_color_selection_palette_from_string (const gchar  *str,
  *
  * Encodes a palette as a string, useful for persistent storage.
  *
- * Return value: allocated string encoding the palette
+ * Returns: allocated string encoding the palette
  */
 gchar*
 gtk_color_selection_palette_to_string (const GdkColor *colors,
@@ -3071,7 +3072,7 @@ gtk_color_selection_palette_to_string (const GdkColor *colors,
  * the #GtkSettings:gtk-color-palette GtkSettings property so all
  * GtkColorSelection widgets will be modified.
  *
- * Return value: the previous change palette hook (that was replaced)
+ * Returns: the previous change palette hook (that was replaced)
  *
  * Since: 2.2
  */

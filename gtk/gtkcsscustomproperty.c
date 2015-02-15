@@ -26,7 +26,8 @@
 #include "gtkcssstylefuncsprivate.h"
 #include "gtkcsstypedvalueprivate.h"
 #include "gtkstylepropertiesprivate.h"
-#include "gtkthemingengine.h"
+
+#include "deprecated/gtkthemingengine.h"
 
 #include "deprecated/gtksymboliccolor.h"
 
@@ -141,6 +142,8 @@ gtk_css_custom_property_create_initial_value (GParamSpec *pspec)
 
   g_value_init (&value, pspec->value_type);
 
+
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   if (pspec->value_type == GTK_TYPE_THEMING_ENGINE)
     g_value_set_object (&value, gtk_theming_engine_load (NULL));
   else if (pspec->value_type == PANGO_TYPE_FONT_DESCRIPTION)
@@ -151,7 +154,7 @@ gtk_css_custom_property_create_initial_value (GParamSpec *pspec)
       gdk_rgba_parse (&color, "pink");
       g_value_set_boxed (&value, &color);
     }
-  else if (pspec->value_type == GDK_TYPE_COLOR)
+  else if (pspec->value_type == g_type_from_name ("GdkColor"))
     {
       GdkColor color;
       gdk_color_parse ("pink", &color);
@@ -163,6 +166,7 @@ gtk_css_custom_property_create_initial_value (GParamSpec *pspec)
     }
   else
     g_param_value_set_default (pspec, &value);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   result = _gtk_css_typed_value_new (&value);
   g_value_unset (&value);
@@ -175,7 +179,7 @@ gtk_css_custom_property_create_initial_value (GParamSpec *pspec)
 /**
  * gtk_theming_engine_register_property: (skip)
  * @name_space: namespace for the property name
- * @parse_func: parsing function to use, or %NULL
+ * @parse_func: (nullable): parsing function to use, or %NULL
  * @pspec: the #GParamSpec for the new property
  *
  * Registers a property so it can be used in the CSS file format,
@@ -185,30 +189,26 @@ gtk_css_custom_property_create_initial_value (GParamSpec *pspec)
  * be the theme engine name.
  *
  * For any type a @parse_func may be provided, being this function
- * used for turning any property value (between ':' and ';') in
+ * used for turning any property value (between “:” and “;”) in
  * CSS to the #GValue needed. For basic types there is already
  * builtin parsing support, so %NULL may be provided for these
  * cases.
  *
- * <note>
  * Engines must ensure property registration happens exactly once,
  * usually GTK+ deals with theming engines as singletons, so this
  * should be guaranteed to happen once, but bear this in mind
- * when creating #GtkThemeEngine<!-- -->s yourself.
- * </note>
+ * when creating #GtkThemeEngines yourself.
  *
- * <note>
  * In order to make use of the custom registered properties in
  * the CSS file, make sure the engine is loaded first by specifying
  * the engine property, either in a previous rule or within the same
  * one.
- * <programlisting>
- * &ast; {
+ * |[
+ * * {
  *     engine: someengine;
  *     -SomeEngine-custom-property: 2;
  * }
- * </programlisting>
- * </note>
+ * ]|
  *
  * Since: 3.0
  *

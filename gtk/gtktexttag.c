@@ -52,18 +52,19 @@
  * @Title: GtkTextTag
  * @Short_description: A tag that can be applied to text in a GtkTextBuffer
  *
- * You may wish to begin by reading the <link linkend="TextWidget">text widget
- * conceptual overview</link> which gives an overview of all the objects and
+ * You may wish to begin by reading the
+ * [text widget conceptual overview][TextWidget]
+ * which gives an overview of all the objects and
  * data types related to the text widget and how they work together.
  *
  * Tags should be in the #GtkTextTagTable for a given #GtkTextBuffer
  * before using them with that buffer.
  *
  * gtk_text_buffer_create_tag() is the best way to create tags.
- * See <application>gtk3-demo</application> for numerous examples.
+ * See “gtk3-demo” for numerous examples.
  *
- * For each property of #GtkTextTag, there is a "set" property, e.g.
- * "font-set" corresponds to "font". These "set" properties reflect
+ * For each property of #GtkTextTag, there is a “set” property, e.g.
+ * “font-set” corresponds to “font”. These “set” properties reflect
  * whether a property has been set or not.
  * They are maintained by GTK+ and you should not set them independently.
  */
@@ -217,7 +218,7 @@ gtk_text_tag_class_init (GtkTextTagClass *klass)
                                    g_param_spec_boxed ("background-gdk",
                                                        P_("Background color"),
                                                        P_("Background color as a GdkColor"),
-                                                       GDK_TYPE_COLOR,
+                                                       g_type_from_name ("GdkColor"),
                                                        GTK_PARAM_READWRITE | G_PARAM_DEPRECATED));
 
   /**
@@ -263,7 +264,7 @@ gtk_text_tag_class_init (GtkTextTagClass *klass)
                                    g_param_spec_boxed ("foreground-gdk",
                                                        P_("Foreground color"),
                                                        P_("Foreground color as a GdkColor"),
-                                                       GDK_TYPE_COLOR,
+                                                       g_type_from_name ("GdkColor"),
                                                        GTK_PARAM_READWRITE | G_PARAM_DEPRECATED));
 
   /**
@@ -580,7 +581,7 @@ gtk_text_tag_class_init (GtkTextTagClass *klass)
                                    g_param_spec_boxed ("paragraph-background-gdk",
                                                        P_("Paragraph background color"),
                                                        P_("Paragraph background color as a GdkColor"),
-                                                       GDK_TYPE_COLOR,
+                                                       g_type_from_name ("GdkColor"),
                                                        GTK_PARAM_READWRITE | G_PARAM_DEPRECATED));
 
   /**
@@ -766,7 +767,7 @@ gtk_text_tag_init (GtkTextTag *text_tag)
  * Creates a #GtkTextTag. Configure the tag using object arguments,
  * i.e. using g_object_set().
  * 
- * Return value: a new #GtkTextTag
+ * Returns: a new #GtkTextTag
  **/
 GtkTextTag*
 gtk_text_tag_new (const gchar *name)
@@ -889,8 +890,10 @@ set_pg_bg_rgba (GtkTextTag *tag, GdkRGBA *rgba)
   if (priv->values->pg_bg_rgba)
     gdk_rgba_free (priv->values->pg_bg_rgba);
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   if (priv->values->pg_bg_color)
     gdk_color_free (priv->values->pg_bg_color);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   priv->values->pg_bg_rgba = NULL;
   priv->values->pg_bg_color = NULL;
@@ -908,7 +911,9 @@ set_pg_bg_rgba (GtkTextTag *tag, GdkRGBA *rgba)
       priv->values->pg_bg_rgba = gdk_rgba_copy (rgba);
 
       copy_rgba_to_gdk_color (rgba, &color);
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       priv->values->pg_bg_color = gdk_color_copy (&color);
+G_GNUC_END_IGNORE_DEPRECATIONS
     }
   else
     {
@@ -1893,7 +1898,7 @@ delta_priority_foreach (GtkTextTag *tag, gpointer user_data)
  * 
  * Get the tag priority.
  * 
- * Return value: The tag's priority.
+ * Returns: The tag’s priority.
  **/
 gint
 gtk_text_tag_get_priority (GtkTextTag *tag)
@@ -1913,11 +1918,11 @@ gtk_text_tag_get_priority (GtkTextTag *tag)
  * Each tag in a table has a unique priority; setting the priority
  * of one tag shifts the priorities of all the other tags in the
  * table to maintain a unique priority for each tag. Higher priority
- * tags "win" if two tags both set the same text attribute. When adding
+ * tags “win” if two tags both set the same text attribute. When adding
  * a tag to a tag table, it will be assigned the highest priority in
  * the table by default; so normally the precedence of a set of tags
  * is the order in which they were added to the table, or created with
- * gtk_text_buffer_create_tag(), which adds the tag to the buffer's table
+ * gtk_text_buffer_create_tag(), which adds the tag to the buffer’s table
  * automatically.
  **/
 void
@@ -1965,9 +1970,9 @@ gtk_text_tag_set_priority (GtkTextTag *tag,
  * @event: the event
  * @iter: location where the event was received
  * 
- * Emits the "event" signal on the #GtkTextTag.
+ * Emits the “event” signal on the #GtkTextTag.
  * 
- * Return value: result of signal emission (whether the event was handled)
+ * Returns: result of signal emission (whether the event was handled)
  **/
 gboolean
 gtk_text_tag_event (GtkTextTag        *tag,

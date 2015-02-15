@@ -32,7 +32,7 @@
  * types; e.g. a filter for text/plain also matches a file with mime
  * type application/rtf, since application/rtf is a subclass of text/plain.
  * Note that #GtkRecentFilter allows wildcards for the subtype of a
- * mime type, so you can e.g. filter for image/<!-- -->*.
+ * mime type, so you can e.g. filter for image/\*.
  *
  * Normally, filters are used by adding them to a #GtkRecentChooser,
  * see gtk_recent_chooser_add_filter(), but it is also possible to
@@ -40,19 +40,17 @@
  *
  * Recently used files are supported since GTK+ 2.10.
  *
- * <refsect2 id="GtkRecentFilter-BUILDER-UI">
- * <title>GtkRecentFilter as GtkBuildable</title>
- * <para>
- * The GtkRecentFilter implementation of the GtkBuildable interface
- * supports adding rules using the &lt;mime-types&gt;, &lt;patterns&gt; and
- * &lt;applications&gt; elements and listing the rules within. Specifying
- * a &lt;mime-type&gt;, &lt;pattern&gt; or &lt;application&gt; is the same
- * as calling gtk_recent_filter_add_mime_type(), gtk_recent_filter_add_pattern()
- * or gtk_recent_filter_add_application().
+ * ## GtkRecentFilter as GtkBuildable
  *
- * <example>
- * <title>A UI definition fragment specifying GtkRecentFilter rules</title>
- * <programlisting><![CDATA[
+ * The GtkRecentFilter implementation of the GtkBuildable interface
+ * supports adding rules using the <mime-types>, <patterns> and
+ * <applications> elements and listing the rules within. Specifying
+ * a <mime-type>, <pattern> or <application> has the same effect as
+ * calling gtk_recent_filter_add_mime_type(),
+ * gtk_recent_filter_add_pattern() or gtk_recent_filter_add_application().
+ *
+ * An example of a UI definition fragment specifying GtkRecentFilter rules:
+ * |[
  * <object class="GtkRecentFilter">
  *   <mime-types>
  *     <mime-type>text/plain</mime-type>
@@ -68,10 +66,7 @@
  *     <application>glade</application>
  *   </applications>
  * </object>
- * ]]></programlisting>
- * </example>
- * </para>
- * </refsect2>
+ * ]|
  */
 
 #include "config.h"
@@ -406,12 +401,12 @@ gtk_recent_filter_buildable_custom_tag_end (GtkBuildable *buildable,
  * gtk_recent_filter_add_pattern(), gtk_recent_filter_add_mime_type(),
  * gtk_recent_filter_add_application(), gtk_recent_filter_add_age().
  * To create a filter that accepts any recently used resource, use:
- * |[
+ * |[<!-- language="C" -->
  * GtkRecentFilter *filter = gtk_recent_filter_new ();
  * gtk_recent_filter_add_pattern (filter, "*");
  * ]|
  *
- * Return value: a new #GtkRecentFilter
+ * Returns: a new #GtkRecentFilter
  *
  * Since: 2.10
  */
@@ -451,7 +446,7 @@ gtk_recent_filter_set_name (GtkRecentFilter *filter,
  * Gets the human-readable name for the filter.
  * See gtk_recent_filter_set_name().
  *
- * Return value: the name of the filter, or %NULL.  The returned string
+ * Returns: the name of the filter, or %NULL.  The returned string
  *   is owned by the filter object and should not be freed.
  *
  * Since: 2.10
@@ -468,14 +463,14 @@ gtk_recent_filter_get_name (GtkRecentFilter *filter)
  * gtk_recent_filter_get_needed:
  * @filter: a #GtkRecentFilter
  *
- * Gets the fields that need to be filled in for the structure
+ * Gets the fields that need to be filled in for the #GtkRecentFilterInfo
  * passed to gtk_recent_filter_filter()
  * 
  * This function will not typically be used by applications; it
  * is intended principally for use in the implementation of
  * #GtkRecentChooser.
  * 
- * Return value: bitfield of flags indicating needed fields when
+ * Returns: bitfield of flags indicating needed fields when
  *   calling gtk_recent_filter_filter()
  *
  * Since: 2.10
@@ -665,7 +660,7 @@ gtk_recent_filter_add_age (GtkRecentFilter *filter,
  * function. The bitfield @needed which is passed in provides information
  * about what sorts of information that the filter function needs;
  * this allows GTK+ to avoid retrieving expensive information when
- * it isn't needed by the filter.
+ * it isn’t needed by the filter.
  * 
  * Since: 2.10
  **/
@@ -695,18 +690,20 @@ gtk_recent_filter_add_custom (GtkRecentFilter      *filter,
 /**
  * gtk_recent_filter_filter:
  * @filter: a #GtkRecentFilter
- * @filter_info: a #GtkRecentFilterInfo structure containing information
+ * @filter_info: a #GtkRecentFilterInfo containing information
  *   about a recently used resource
  *
  * Tests whether a file should be displayed according to @filter.
- * The #GtkRecentFilterInfo structure @filter_info should include
- * the fields returned from gtk_recent_filter_get_needed().
+ * The #GtkRecentFilterInfo @filter_info should include
+ * the fields returned from gtk_recent_filter_get_needed(), and
+ * must set the #GtkRecentFilterInfo.contains field of @filter_info
+ * to indicate which fields have been set.
  *
  * This function will not typically be used by applications; it
  * is intended principally for use in the implementation of
  * #GtkRecentChooser.
  * 
- * Return value: %TRUE if the file should be displayed
+ * Returns: %TRUE if the file should be displayed
  *
  * Since: 2.10
  */

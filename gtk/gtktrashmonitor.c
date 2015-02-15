@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  * Authors: Federico Mena Quintero <federico@gnome.org>
  */
@@ -53,8 +52,8 @@ G_DEFINE_TYPE (GtkTrashMonitor, _gtk_trash_monitor, G_TYPE_OBJECT)
 
 static GtkTrashMonitor *the_trash_monitor;
 
-#define ICON_NAME_TRASH_EMPTY "user-trash"
-#define ICON_NAME_TRASH_FULL  "user-trash-full"
+#define ICON_NAME_TRASH_EMPTY "user-trash-symbolic"
+#define ICON_NAME_TRASH_FULL  "user-trash-full-symbolic"
 
 static void
 gtk_trash_monitor_dispose (GObject *object)
@@ -209,7 +208,7 @@ _gtk_trash_monitor_init (GtkTrashMonitor *monitor)
 /**
  * _gtk_trash_monitor_get:
  *
- * Return value: (transfer full): a new reference to the singleton
+ * Returns: (transfer full): a new reference to the singleton
  * #GtkTrashMonitor object.  Be sure to call g_object_unref() on it when you are
  * done with the trash monitor.
  */
@@ -233,7 +232,7 @@ _gtk_trash_monitor_get (void)
  * _gtk_trash_monitor_get_icon:
  * @monitor: a #GtkTrashMonitor
  *
- * Return value: (transfer full): the #GIcon that should be used to represent
+ * Returns: (transfer full): the #GIcon that should be used to represent
  * the state of the trash folder on screen, based on whether there is trash or
  * not.
  */
@@ -256,7 +255,7 @@ _gtk_trash_monitor_get_icon (GtkTrashMonitor *monitor)
  * _gtk_trash_monitor_get_has_trash:
  * @monitor: a #GtkTrashMonitor
  *
- * Return value: #TRUE if there is trash in the trash:/// folder, or #FALSE otherwise.
+ * Returns: #TRUE if there is trash in the trash:/// folder, or #FALSE otherwise.
  */
 gboolean
 _gtk_trash_monitor_get_has_trash (GtkTrashMonitor *monitor)

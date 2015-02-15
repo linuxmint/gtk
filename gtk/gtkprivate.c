@@ -71,7 +71,7 @@ _gtk_get_data_prefix (void)
  *
  * Return the Unix-style locale string for the language currently in
  * effect. On Unix systems, this is the return value from
- * <literal>setlocale(LC_CTYPE, NULL)</literal>, and the user can
+ * `setlocale(LC_CTYPE, NULL)`, and the user can
  * affect this through the environment variables LC_ALL, LC_CTYPE or
  * LANG (checked in that order). The locale strings typically is in
  * the form lang_COUNTRY, where lang is an ISO-639 language code, and
@@ -79,17 +79,17 @@ _gtk_get_data_prefix (void)
  * Swedish as written in Finland or pt_BR for Portuguese as written in
  * Brazil.
  *
- * On Windows, the C library doesn't use any such environment
- * variables, and setting them won't affect the behaviour of functions
+ * On Windows, the C library doesn’t use any such environment
+ * variables, and setting them won’t affect the behaviour of functions
  * like ctime(). The user sets the locale through the Regional Options
  * in the Control Panel. The C library (in the setlocale() function)
  * does not use country and language codes, but country and language
  * names spelled out in English.
  * However, this function does check the above environment
  * variables, and does return a Unix-style locale string based on
- * either said environment variables or the thread's current locale.
+ * either said environment variables or the thread’s current locale.
  *
- * Return value: a dynamically allocated string, free with g_free().
+ * Returns: a dynamically allocated string, free with g_free().
  */
 
 gchar *

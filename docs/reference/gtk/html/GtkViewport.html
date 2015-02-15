@@ -8,7 +8,7 @@
 <link rel="up" href="MiscObjects.html" title="Miscellaneous">
 <link rel="prev" href="GtkTooltip.html" title="GtkTooltip">
 <link rel="next" href="GtkAccessible.html" title="GtkAccessible">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -139,16 +139,22 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GtkViewport.html#GtkViewport-struct" title="struct GtkViewport">GtkViewport</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkViewport.html#GtkViewportClass" title="struct GtkViewportClass">GtkViewportClass</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="GtkViewport.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBin.html" title="GtkBin">GtkBin</a>
@@ -180,7 +186,7 @@ widget to a <a class="link" href="GtkViewport.html" title="GtkViewport"><span cl
 implement <a class="link" href="GtkScrollable.html" title="GtkScrollable"><span class="type">GtkScrollable</span></a> is added to a <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>, so you can
 ignore the presence of the viewport.</p>
 <p>The <a class="link" href="GtkViewport.html" title="GtkViewport"><span class="type">GtkViewport</span></a> will start scrolling content only if allocated less
-than the child widget's minimum size in a given orientation.</p>
+than the child widget’s minimum size in a given orientation.</p>
 </div>
 <div class="refsect1">
 <a name="GtkViewport.functions_details"></a><h2>Functions</h2>
@@ -192,7 +198,7 @@ gtk_viewport_new (<em class="parameter"><code><a class="link" href="GtkAdjustmen
 <p>Creates a new <a class="link" href="GtkViewport.html" title="GtkViewport"><span class="type">GtkViewport</span></a> with the given adjustments, or with default
 adjustments if none are given.</p>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.2.5"></a><h4>Parameters</h4>
+<a name="id-1.3.18.11.10.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -203,18 +209,18 @@ adjustments if none are given.</p>
 <tr>
 <td class="parameter_name"><p>hadjustment</p></td>
 <td class="parameter_description"><p> horizontal adjustment. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>vadjustment</p></td>
 <td class="parameter_description"><p> vertical adjustment. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.2.6"></a><h4>Returns</h4>
+<a name="id-1.3.18.11.10.2.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GtkViewport.html" title="GtkViewport"><span class="type">GtkViewport</span></a></p>
 <p></p>
 </div>
@@ -230,7 +236,7 @@ gtk_viewport_get_hadjustment (<em class="parameter"><code><a class="link" href="
 </div>
 <p>Returns the horizontal adjustment of the viewport.</p>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.3.6"></a><h4>Parameters</h4>
+<a name="id-1.3.18.11.10.3.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -245,7 +251,7 @@ gtk_viewport_get_hadjustment (<em class="parameter"><code><a class="link" href="
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.3.7"></a><h4>Returns</h4>
+<a name="id-1.3.18.11.10.3.7"></a><h4>Returns</h4>
 <p> the horizontal adjustment of <em class="parameter"><code>viewport</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
@@ -262,7 +268,7 @@ gtk_viewport_get_vadjustment (<em class="parameter"><code><a class="link" href="
 </div>
 <p>Returns the vertical adjustment of the viewport.</p>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.4.6"></a><h4>Parameters</h4>
+<a name="id-1.3.18.11.10.4.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -277,7 +283,7 @@ gtk_viewport_get_vadjustment (<em class="parameter"><code><a class="link" href="
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.4.7"></a><h4>Returns</h4>
+<a name="id-1.3.18.11.10.4.7"></a><h4>Returns</h4>
 <p> the vertical adjustment of <em class="parameter"><code>viewport</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
@@ -295,7 +301,7 @@ gtk_viewport_set_hadjustment (<em class="parameter"><code><a class="link" href="
 </div>
 <p>Sets the horizontal adjustment of the viewport.</p>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.5.6"></a><h4>Parameters</h4>
+<a name="id-1.3.18.11.10.5.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -311,7 +317,7 @@ gtk_viewport_set_hadjustment (<em class="parameter"><code><a class="link" href="
 <tr>
 <td class="parameter_name"><p>adjustment</p></td>
 <td class="parameter_description"><p> a <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -329,7 +335,7 @@ gtk_viewport_set_vadjustment (<em class="parameter"><code><a class="link" href="
 </div>
 <p>Sets the vertical adjustment of the viewport.</p>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.6.6"></a><h4>Parameters</h4>
+<a name="id-1.3.18.11.10.6.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -345,7 +351,7 @@ gtk_viewport_set_vadjustment (<em class="parameter"><code><a class="link" href="
 <tr>
 <td class="parameter_name"><p>adjustment</p></td>
 <td class="parameter_description"><p> a <a class="link" href="GtkAdjustment.html" title="GtkAdjustment"><span class="type">GtkAdjustment</span></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -359,7 +365,7 @@ gtk_viewport_set_shadow_type (<em class="parameter"><code><a class="link" href="
                               <em class="parameter"><code><a class="link" href="gtk3-Standard-Enumerations.html#GtkShadowType" title="enum GtkShadowType"><span class="type">GtkShadowType</span></a> type</code></em>);</pre>
 <p>Sets the shadow type of the viewport.</p>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.7.5"></a><h4>Parameters</h4>
+<a name="id-1.3.18.11.10.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -389,7 +395,7 @@ gtk_viewport_get_shadow_type (<em class="parameter"><code><a class="link" href="
 <p>Gets the shadow type of the <a class="link" href="GtkViewport.html" title="GtkViewport"><span class="type">GtkViewport</span></a>. See
 <a class="link" href="GtkViewport.html#gtk-viewport-set-shadow-type" title="gtk_viewport_set_shadow_type ()"><code class="function">gtk_viewport_set_shadow_type()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.8.5"></a><h4>Parameters</h4>
+<a name="id-1.3.18.11.10.8.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -404,7 +410,7 @@ gtk_viewport_get_shadow_type (<em class="parameter"><code><a class="link" href="
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.8.6"></a><h4>Returns</h4>
+<a name="id-1.3.18.11.10.8.6"></a><h4>Returns</h4>
 <p> the shadow type </p>
 <p></p>
 </div>
@@ -416,7 +422,7 @@ gtk_viewport_get_shadow_type (<em class="parameter"><code><a class="link" href="
 gtk_viewport_get_bin_window (<em class="parameter"><code><a class="link" href="GtkViewport.html" title="GtkViewport"><span class="type">GtkViewport</span></a> *viewport</code></em>);</pre>
 <p>Gets the bin window of the <a class="link" href="GtkViewport.html" title="GtkViewport"><span class="type">GtkViewport</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.9.5"></a><h4>Parameters</h4>
+<a name="id-1.3.18.11.10.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -431,7 +437,7 @@ gtk_viewport_get_bin_window (<em class="parameter"><code><a class="link" href="G
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.9.6"></a><h4>Returns</h4>
+<a name="id-1.3.18.11.10.9.6"></a><h4>Returns</h4>
 <p> a <a href="http://developer.gnome.org/gdk2/gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -444,7 +450,7 @@ gtk_viewport_get_bin_window (<em class="parameter"><code><a class="link" href="G
 gtk_viewport_get_view_window (<em class="parameter"><code><a class="link" href="GtkViewport.html" title="GtkViewport"><span class="type">GtkViewport</span></a> *viewport</code></em>);</pre>
 <p>Gets the view window of the <a class="link" href="GtkViewport.html" title="GtkViewport"><span class="type">GtkViewport</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.10.5"></a><h4>Parameters</h4>
+<a name="id-1.3.18.11.10.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -459,7 +465,7 @@ gtk_viewport_get_view_window (<em class="parameter"><code><a class="link" href="
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.18.12.10.10.6"></a><h4>Returns</h4>
+<a name="id-1.3.18.11.10.10.6"></a><h4>Returns</h4>
 <p> a <a href="http://developer.gnome.org/gdk2/gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -471,6 +477,29 @@ gtk_viewport_get_view_window (<em class="parameter"><code><a class="link" href="
 <div class="refsect2">
 <a name="GtkViewport-struct"></a><h3>struct GtkViewport</h3>
 <pre class="programlisting">struct GtkViewport;</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GtkViewportClass"></a><h3>struct GtkViewportClass</h3>
+<pre class="programlisting">struct GtkViewportClass {
+  GtkBinClass parent_class;
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.18.11.11.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody><tr>
+<td class="struct_member_name"><p><a class="link" href="GtkBin.html#GtkBinClass" title="struct GtkBinClass"><span class="type">GtkBinClass</span></a> <em class="structfield"><code><a name="GtkViewportClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -490,6 +519,6 @@ gtk_viewport_get_view_window (<em class="parameter"><code><a class="link" href="
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

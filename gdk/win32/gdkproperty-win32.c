@@ -186,6 +186,12 @@ _gdk_win32_window_change_property (GdkWindow    *window,
       format == 8 &&
       mode == GDK_PROP_MODE_REPLACE)
     {
+      if (type == _image_bmp && nelements < sizeof (BITMAPFILEHEADER))
+        {
+           g_warning ("Clipboard contains invalid bitmap data");
+           return;
+        }
+
       if (type == _utf8_string)
 	{
 	  if (!OpenClipboard (GDK_WINDOW_HWND (window)))
@@ -346,11 +352,7 @@ _gdk_win32_screen_get_setting (GdkScreen   *screen,
    * XXX : if these values get changed through the Windoze UI the
    *       respective gdk_events are not generated yet.
    */
-  if (strcmp ("gtk-theme-name", name) == 0) 
-    {
-      g_value_set_string (value, "ms-windows");
-    }
-  else if (strcmp ("gtk-double-click-time", name) == 0)
+  if (strcmp ("gtk-double-click-time", name) == 0)
     {
       gint i = GetDoubleClickTime ();
       GDK_NOTE(MISC, g_print("gdk_screen_get_setting(\"%s\") : %d\n", name, i));
@@ -398,6 +400,36 @@ _gdk_win32_screen_get_setting (GdkScreen   *screen,
   else if (strcmp ("gtk-font-name", name) == 0)
     {
       NONCLIENTMETRICS ncm;
+      CPINFOEX cpinfoex_default, cpinfoex_curr_thread;
+      OSVERSIONINFO info;
+      BOOL result_default, result_curr_thread;
+
+      info.dwOSVersionInfoSize = sizeof (OSVERSIONINFO);
+
+      /* TODO: Fallback to using Pango on Windows 8 and later,
+       * as this method of handling gtk-font-name does not work
+       * well there, where garbled text will be displayed for texts
+       * that are not supported by the default menu font.  Look for
+       * whether there is a better solution for this on Windows 8 and
+       * later
+       */
+      if (!GetVersionEx (&info) ||
+          info.dwMajorVersion > 6 ||
+          (info.dwMajorVersion == 6 && info.dwMinorVersion >= 2))
+        return FALSE;
+
+      /* check whether the system default ANSI codepage matches the
+       * ANSI code page of the running thread.  If so, continue, otherwise
+       * fall back to using Pango to handle gtk-font-name
+       */
+      result_default = GetCPInfoEx (CP_ACP, 0, &cpinfoex_default);
+      result_curr_thread = GetCPInfoEx (CP_THREAD_ACP, 0, &cpinfoex_curr_thread);
+
+      if (!result_default ||
+          !result_curr_thread ||
+          cpinfoex_default.CodePage != cpinfoex_curr_thread.CodePage)
+        return FALSE;
+
       ncm.cbSize = sizeof(NONCLIENTMETRICS);
       if (SystemParametersInfo (SPI_GETNONCLIENTMETRICS, ncm.cbSize, &ncm, FALSE))
         {

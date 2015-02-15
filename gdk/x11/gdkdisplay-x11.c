@@ -189,7 +189,7 @@ static void
 do_net_wm_state_changes (GdkWindow *window)
 {
   GdkToplevelX11 *toplevel = _gdk_x11_window_get_toplevel (window);
-  GdkWindowState old_state;
+  GdkWindowState old_state, set, unset;
 
   if (GDK_WINDOW_DESTROYED (window) ||
       gdk_window_get_window_type (window) != GDK_WINDOW_TOPLEVEL)
@@ -197,37 +197,31 @@ do_net_wm_state_changes (GdkWindow *window)
 
   old_state = gdk_window_get_state (window);
 
+  set = unset = 0;
+
   /* For found_sticky to remain TRUE, we have to also be on desktop
    * 0xFFFFFFFF
    */
   if (old_state & GDK_WINDOW_STATE_STICKY)
     {
       if (!(toplevel->have_sticky && toplevel->on_all_desktops))
-        gdk_synthesize_window_state (window,
-                                     GDK_WINDOW_STATE_STICKY,
-                                     0);
+        unset |= GDK_WINDOW_STATE_STICKY;
     }
   else
     {
       if (toplevel->have_sticky && toplevel->on_all_desktops)
-        gdk_synthesize_window_state (window,
-                                     0,
-                                     GDK_WINDOW_STATE_STICKY);
+        set |= GDK_WINDOW_STATE_STICKY;
     }
 
   if (old_state & GDK_WINDOW_STATE_FULLSCREEN)
     {
       if (!toplevel->have_fullscreen)
-        gdk_synthesize_window_state (window,
-                                     GDK_WINDOW_STATE_FULLSCREEN,
-                                     0);
+        unset |= GDK_WINDOW_STATE_FULLSCREEN;
     }
   else
     {
       if (toplevel->have_fullscreen)
-        gdk_synthesize_window_state (window,
-                                     0,
-                                     GDK_WINDOW_STATE_FULLSCREEN);
+        set |= GDK_WINDOW_STATE_FULLSCREEN;
     }
 
   /* Our "maximized" means both vertical and horizontal; if only one,
@@ -236,16 +230,12 @@ do_net_wm_state_changes (GdkWindow *window)
   if (old_state & GDK_WINDOW_STATE_MAXIMIZED)
     {
       if (!(toplevel->have_maxvert && toplevel->have_maxhorz))
-        gdk_synthesize_window_state (window,
-                                     GDK_WINDOW_STATE_MAXIMIZED,
-                                     0);
+        unset |= GDK_WINDOW_STATE_MAXIMIZED;
     }
   else
     {
       if (toplevel->have_maxvert && toplevel->have_maxhorz)
-        gdk_synthesize_window_state (window,
-                                     0,
-                                     GDK_WINDOW_STATE_MAXIMIZED);
+        set |= GDK_WINDOW_STATE_MAXIMIZED;
     }
 
   /* FIXME: we rely on implementation details of mutter here:
@@ -255,47 +245,37 @@ do_net_wm_state_changes (GdkWindow *window)
   if (old_state & GDK_WINDOW_STATE_TILED)
     {
       if (!toplevel->have_maxvert)
-        gdk_synthesize_window_state (window,
-                                     GDK_WINDOW_STATE_TILED,
-                                     0);
+        unset |= GDK_WINDOW_STATE_TILED;
     }
   else
     {
-      if (toplevel->have_maxvert)
-        gdk_synthesize_window_state (window,
-                                     0,
-                                     GDK_WINDOW_STATE_TILED);
+      if (toplevel->have_maxvert && !toplevel->have_maxhorz)
+        set |= GDK_WINDOW_STATE_TILED;
     }
 
   if (old_state & GDK_WINDOW_STATE_FOCUSED)
     {
       if (!toplevel->have_focused)
-        gdk_synthesize_window_state (window,
-                                     GDK_WINDOW_STATE_FOCUSED,
-                                     0);
+        unset |= GDK_WINDOW_STATE_FOCUSED;
     }
   else
     {
       if (toplevel->have_focused)
-        gdk_synthesize_window_state (window,
-                                     0,
-                                     GDK_WINDOW_STATE_FOCUSED);
+        set |= GDK_WINDOW_STATE_FOCUSED;
     }
 
   if (old_state & GDK_WINDOW_STATE_ICONIFIED)
     {
       if (!toplevel->have_hidden)
-        gdk_synthesize_window_state (window,
-                                     GDK_WINDOW_STATE_ICONIFIED,
-                                     0);
+        unset |= GDK_WINDOW_STATE_ICONIFIED;
     }
   else
     {
       if (toplevel->have_hidden)
-        gdk_synthesize_window_state (window,
-                                     0,
-                                     GDK_WINDOW_STATE_ICONIFIED);
+        set |= GDK_WINDOW_STATE_ICONIFIED;
     }
+
+  gdk_synthesize_window_state (window, unset, set);
 }
 
 static void
@@ -1948,9 +1928,9 @@ gdk_x11_display_finalize (GObject *object)
  * gdk_x11_lookup_xdisplay:
  * @xdisplay: a pointer to an X Display
  * 
- * Find the #GdkDisplay corresponding to @display, if any exists.
+ * Find the #GdkDisplay corresponding to @xdisplay, if any exists.
  * 
- * Return value: (transfer none): the #GdkDisplay, if found, otherwise %NULL.
+ * Returns: (transfer none) (type GdkX11Display): the #GdkDisplay, if found, otherwise %NULL.
  *
  * Since: 2.2
  **/
@@ -1981,12 +1961,12 @@ gdk_x11_lookup_xdisplay (Display *xdisplay)
 /**
  * _gdk_x11_display_screen_for_xrootwin:
  * @display: a #GdkDisplay
- * @xrootwin: window ID for one of of the screen's of the display.
+ * @xrootwin: window ID for one of of the screen’s of the display.
  * 
- * Given the root window ID of one of the screen's of a #GdkDisplay,
+ * Given the root window ID of one of the screen’s of a #GdkDisplay,
  * finds the screen.
  * 
- * Return value: (transfer none): the #GdkScreen corresponding to
+ * Returns: (transfer none): the #GdkScreen corresponding to
  *     @xrootwin, or %NULL.
  **/
 GdkScreen *
@@ -2147,10 +2127,9 @@ broadcast_xmessage (GdkDisplay *display,
  *
  * This is a convenience function for use by code that implements the
  * freedesktop startup notification specification. Applications should
- * not normally need to call it directly. See the <ulink
- * url="http://standards.freedesktop.org/startup-notification-spec/startup-notification-latest.txt">Startup
- * Notification Protocol specification</ulink> for
- * definitions of the message types and keys that can be used.
+ * not normally need to call it directly. See the
+ * [Startup Notification Protocol specification](http://standards.freedesktop.org/startup-notification-spec/startup-notification-latest.txt)
+ * for definitions of the message types and keys that can be used.
  *
  * Since: 2.12
  **/
@@ -2437,12 +2416,12 @@ gdk_x11_display_list_devices (GdkDisplay *display)
 
 /**
  * gdk_x11_register_standard_event_type:
- * @display: a #GdkDisplay
+ * @display: (type GdkX11Display): a #GdkDisplay
  * @event_base: first event type code to register
  * @n_events: number of event type codes to register
  *
  * Registers interest in receiving extension events with type codes
- * between @event_base and <literal>event_base + n_events - 1</literal>.
+ * between @event_base and `event_base + n_events - 1`.
  * The registered events must have the window field in the same place
  * as core X events (this is not the case for e.g. XKB extension events).
  *
@@ -2474,8 +2453,8 @@ gdk_x11_register_standard_event_type (GdkDisplay *display,
 }
 
 /* look up the extension name for a given major opcode.  grubs around in
- * xlib to do it since a) it's already cached there b) XQueryExtension
- * emits protocol so we can't use it in an error handler.
+ * xlib to do it since a) it’s already cached there b) XQueryExtension
+ * emits protocol so we can’t use it in an error handler.
  */
 static const char *
 _gdk_x11_decode_request_code(Display *dpy, int code)
@@ -2715,7 +2694,7 @@ gdk_x11_display_error_trap_pop_internal (GdkDisplay *display,
  */
 void
 gdk_x11_display_set_window_scale (GdkDisplay *display,
-                                  gint scale)
+                                  gint        scale)
 {
   GdkX11Screen *x11_screen;
   gboolean need_reread_settings = FALSE;
@@ -2736,7 +2715,8 @@ gdk_x11_display_set_window_scale (GdkDisplay *display,
       x11_screen->fixed_window_scale = TRUE;
 
       /* We treat screens with a window scale set differently when
-       * reading xsettings, so we need to reread */
+       * reading xsettings, so we need to reread
+       */
       need_reread_settings = TRUE;
     }
 
@@ -2756,7 +2736,7 @@ gdk_x11_display_set_window_scale (GdkDisplay *display,
  * the error is known to have occurred or not occurred,
  * so the error code can be returned.
  *
- * If you don't need to use the return value,
+ * If you don’t need to use the return value,
  * gdk_x11_display_error_trap_pop_ignored() would be more efficient.
  *
  * See gdk_error_trap_pop() for the all-displays-at-once
@@ -2764,7 +2744,7 @@ gdk_x11_display_set_window_scale (GdkDisplay *display,
  *
  * Since: 3.0
  *
- * Return value: X error code or 0 on success
+ * Returns: X error code or 0 on success
  */
 gint
 gdk_x11_display_error_trap_pop (GdkDisplay *display)
@@ -2801,8 +2781,8 @@ gdk_x11_display_error_trap_pop_ignored (GdkDisplay *display)
  * @sm_client_id: the client id assigned by the session manager when the
  *    connection was opened, or %NULL to remove the property.
  *
- * Sets the <literal>SM_CLIENT_ID</literal> property on the application's leader window so that
- * the window manager can save the application's state using the X11R6 ICCCM
+ * Sets the `SM_CLIENT_ID` property on the application’s leader window so that
+ * the window manager can save the application’s state using the X11R6 ICCCM
  * session management protocol.
  *
  * See the X Session Management Library documentation for more information on

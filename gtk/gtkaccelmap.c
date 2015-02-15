@@ -18,6 +18,7 @@
 #include "config.h"
 
 #include "gtkaccelmapprivate.h"
+#include "gtkaccelgroupprivate.h"
 
 #include "gtkmarshalers.h"
 #include "gtkwindowprivate.h"
@@ -45,64 +46,56 @@
  * Accelerator maps are used to define runtime configurable accelerators.
  * Functions for manipulating them are are usually used by higher level
  * convenience mechanisms like #GtkUIManager and are thus considered
- * "low-level". You'll want to use them if you're manually creating menus that
+ * “low-level”. You’ll want to use them if you’re manually creating menus that
  * should have user-configurable accelerators.
  *
- * Accelerator is uniquely defined by:
- *
- * <itemizedlist>
- *   <listitem><para>accelerator path</para></listitem>
- *   <listitem><para>accelerator key</para></listitem>
- *   <listitem><para>accelerator modifiers</para></listitem>
- * </itemizedlist>
+ * An accelerator is uniquely defined by:
+ * - accelerator path
+ * - accelerator key
+ * - accelerator modifiers
  *
  * The accelerator path must consist of
- * "&lt;WINDOWTYPE&gt;/Category1/Category2/.../Action", where WINDOWTYPE
- * should be a unique application-specific identifier that corresponds to the
- * kind of window the accelerator is being used in, e.g. "Gimp-Image",
- * "Abiword-Document" or "Gnumeric-Settings".
- * The "Category1/.../Action" portion is most appropriately chosen by the action
- * the accelerator triggers, i.e. for accelerators on menu items, choose the
- * item's menu path, e.g. "File/Save As", "Image/View/Zoom" or
- * "Edit/Select All". So a full valid accelerator path may look like:
- * "&lt;Gimp-Toolbox&gt;/File/Dialogs/Tool Options...".
+ * “<WINDOWTYPE>/Category1/Category2/.../Action”, where WINDOWTYPE
+ * should be a unique application-specific identifier that corresponds
+ * to the kind of window the accelerator is being used in, e.g.
+ * “Gimp-Image”, “Abiword-Document” or “Gnumeric-Settings”.
+ * The “Category1/.../Action” portion is most appropriately chosen by
+ * the action the accelerator triggers, i.e. for accelerators on menu
+ * items, choose the item’s menu path, e.g. “File/Save As”,
+ * “Image/View/Zoom” or “Edit/Select All”. So a full valid accelerator
+ * path may look like: “<Gimp-Toolbox>/File/Dialogs/Tool Options...”.
  *
- * All accelerators are stored inside one global #GtkAccelMap that can be
- * obtained using gtk_accel_map_get(). See <link
- * linkend="monitoring-changes">Monitoring changes</link> for additional
+ * All accelerators are stored inside one global #GtkAccelMap that can
+ * be obtained using gtk_accel_map_get(). See
+ * [Monitoring changes][monitoring-changes] for additional
  * details.
  *
- * <refsect2 id="manipulating-accelerators">
- * <title>Manipulating accelerators</title>
- * <para>
- * New accelerators can be added using gtk_accel_map_add_entry(). To search for
- * specific accelerator, use gtk_accel_map_lookup_entry(). Modifications of
- * existing accelerators should be done using gtk_accel_map_change_entry().
+ * # Manipulating accelerators
  *
- * In order to avoid having some accelerators changed, they can be locked using
- * gtk_accel_map_lock_path(). Unlocking is done using
+ * New accelerators can be added using gtk_accel_map_add_entry().
+ * To search for specific accelerator, use gtk_accel_map_lookup_entry().
+ * Modifications of existing accelerators should be done using
+ * gtk_accel_map_change_entry().
+ *
+ * In order to avoid having some accelerators changed, they can be
+ * locked using gtk_accel_map_lock_path(). Unlocking is done using
  * gtk_accel_map_unlock_path().
- * </para>
- * </refsect2>
- * <refsect2 id="saving-and-loading">
- * <title>Saving and loading accelerator maps</title>
- * <para>
- * Accelerator maps can be saved to and loaded from some external resource. For
- * simple saving and loading from file, gtk_accel_map_save() and
- * gtk_accel_map_load() are provided. Saving and loading can also be done by
- * providing file descriptor to gtk_accel_map_save_fd() and
- * gtk_accel_map_load_fd().
- * </para>
- * </refsect2>
- * <refsect2 id="monitoring-changes">
- * <title>Monitoring changes</title>
- * <para>
- * #GtkAccelMap object is only useful for monitoring changes of accelerators. By
- * connecting to #GtkAccelMap::changed signal, one can monitor changes of all
- * accelerators. It is also possible to monitor only single accelerator path by
- * using it as a detail of the #GtkAccelMap::changed signal.
- * </para>
- * </refsect2>
+ *
+ * # Saving and loading accelerator maps
+ *
+ * Accelerator maps can be saved to and loaded from some external
+ * resource. For simple saving and loading from file,
+ * gtk_accel_map_save() and gtk_accel_map_load() are provided.
+ * Saving and loading can also be done by providing file descriptor
+ * to gtk_accel_map_save_fd() and gtk_accel_map_load_fd().
+ *
+ * # Monitoring changes
+ *
+ * #GtkAccelMap object is only useful for monitoring changes of
+ * accelerators. By connecting to #GtkAccelMap::changed signal, one
+ * can monitor changes of all accelerators. It is also possible to
+ * monitor only single accelerator path by using it as a detail of
+ * the #GtkAccelMap::changed signal.
  */
 
 
@@ -810,7 +803,7 @@ gtk_accel_map_save (const gchar *file_name)
  *                map entry which is not filtered out
  *
  * Loops over the entries in the accelerator map whose accel path 
- * doesn't match any of the filters added with gtk_accel_map_add_filter(), 
+ * doesn’t match any of the filters added with gtk_accel_map_add_filter(), 
  * and execute @foreach_func on each. The signature of @foreach_func is 
  * that of #GtkAccelMapForeach, the @changed parameter indicates whether
  * this accelerator was changed during runtime (thus, would need
@@ -881,7 +874,7 @@ gtk_accel_map_foreach_unfiltered (gpointer           data,
  * are skipped by gtk_accel_map_foreach().
  *
  * This function is intended for GTK+ modules that create their own
- * menus, but don't want them to be saved into the applications accelerator
+ * menus, but don’t want them to be saved into the applications accelerator
  * map dump.
  */
 void
@@ -938,7 +931,7 @@ _gtk_accel_map_remove_group (const gchar   *accel_path,
  * gtk_accel_map_lock_path:
  * @accel_path: a valid accelerator path
  * 
- * Locks the given accelerator path. If the accelerator map doesn't yet contain
+ * Locks the given accelerator path. If the accelerator map doesn’t yet contain
  * an entry for @accel_path, a new one is created.
  *
  * Locking an accelerator path prevents its accelerator from being changed 
@@ -1013,7 +1006,7 @@ gtk_accel_map_class_init (GtkAccelMapClass *accel_map_class)
    * Notifies of a change in the global accelerator map.
    * The path is also used as the detail for the signal,
    * so it is possible to connect to
-   * changed::<replaceable>accel_path</replaceable>.
+   * changed::`accel_path`.
    *
    * Since: 2.4
    */
@@ -1037,10 +1030,10 @@ gtk_accel_map_init (GtkAccelMap *accel_map)
  * 
  * Gets the singleton global #GtkAccelMap object. This object
  * is useful only for notification of changes to the accelerator
- * map via the ::changed signal; it isn't a parameter to the
+ * map via the ::changed signal; it isn’t a parameter to the
  * other accelerator map functions.
  * 
- * Return value: (transfer none): the global #GtkAccelMap object
+ * Returns: (transfer none): the global #GtkAccelMap object
  *
  * Since: 2.4
  **/

@@ -112,7 +112,10 @@ gtk_icon_view_item_accessible_do_action (AtkAction *action,
     return FALSE;
 
   if (!item->action_idle_handler)
-    item->action_idle_handler = gdk_threads_add_idle (idle_do_action, item);
+    {
+      item->action_idle_handler = gdk_threads_add_idle (idle_do_action, item);
+      g_source_set_name_by_id (item->action_idle_handler, "[gtk+] idle_do_action");
+    }
 
   return TRUE;
 }
@@ -237,6 +240,8 @@ get_pixbuf_box (GtkIconView     *icon_view,
                                &item->cell_area, &item->cell_area,
                                (GtkCellAllocCallback)get_pixbuf_foreach, &data);
 
+  *box = data.box;
+
   return data.pixbuf_found;
 }
 
@@ -308,7 +313,8 @@ gtk_icon_view_item_accessible_get_image_position (AtkImage    *image,
   if (atk_state_set_contains_state (item->state_set, ATK_STATE_DEFUNCT))
     return;
 
-  atk_component_get_position (ATK_COMPONENT (image), x, y, coord_type);
+  atk_component_get_extents (ATK_COMPONENT (image), x, y, NULL, NULL,
+                             coord_type);
 
   if (get_pixbuf_box (GTK_ICON_VIEW (item->widget), item->item, &box))
     {
@@ -592,7 +598,8 @@ gtk_icon_view_item_accessible_get_extents (AtkComponent *component,
   if (gtk_icon_view_item_accessible_is_showing (item))
     {
       parent_obj = gtk_widget_get_accessible (item->widget);
-      atk_component_get_position (ATK_COMPONENT (parent_obj), &l_x, &l_y, coord_type);
+      atk_component_get_extents (ATK_COMPONENT (parent_obj), &l_x, &l_y,
+                                 NULL, NULL, coord_type);
       *x = l_x + item->item->cell_area.x;
       *y = l_y + item->item->cell_area.y;
     }

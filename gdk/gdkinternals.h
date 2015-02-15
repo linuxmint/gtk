@@ -156,7 +156,13 @@ typedef enum
    * 1) touch events emulating pointer events
    * 2) pointer events being emulated by a touch sequence.
    */
-  GDK_EVENT_POINTER_EMULATED = 1 << 1
+  GDK_EVENT_POINTER_EMULATED = 1 << 1,
+
+  /* When we are ready to draw a frame, we pause event delivery,
+   * mark all events in the queue with this flag, and deliver
+   * only those events until we finish the frame.
+   */
+  GDK_EVENT_FLUSHED = 1 << 2
 } GdkEventFlags;
 
 struct _GdkEventPrivate
@@ -186,6 +192,12 @@ struct _GdkWindow
   gint y;
 
   GdkEventMask event_mask;
+  guint8 window_type;
+
+  guint8 depth;
+  guint8 resize_count;
+
+  gint8 toplevel_window_type;
 
   GList *filters;
   GList *children;
@@ -193,19 +205,19 @@ struct _GdkWindow
 
   cairo_pattern_t *background;
 
-  GSList *paint_stack;
+  struct {
+    cairo_region_t *region;
+    cairo_surface_t *surface;
+    gboolean surface_needs_composite;
+  } current_paint;
 
   cairo_region_t *update_area;
   guint update_freeze_count;
 
-  guint8 window_type;
-  guint8 depth;
-  guint8 resize_count;
-
-  gint8 toplevel_window_type;
-  guint8 alpha;
-
   GdkWindowState state;
+
+  guint8 alpha;
+  guint8 fullscreen_mode;
 
   guint guffaw_gravity : 1;
   guint input_only : 1;
@@ -227,7 +239,7 @@ struct _GdkWindow
   guint applied_shape : 1;
   guint in_update : 1;
   guint geometry_dirty : 1;
-  GdkFullscreenMode fullscreen_mode;
+  guint event_compression : 1;
 
   /* The GdkWindow that has the impl, ref:ed if another window.
    * This ref is required to keep the wrapper of the impl window alive
@@ -239,16 +251,12 @@ struct _GdkWindow
   gint abs_x, abs_y; /* Absolute offset in impl */
   gint width, height;
 
+  guint num_offscreen_children;
+
   /* The clip region is the part of the window, in window coordinates
      that is fully or partially (i.e. semi transparently) visible in
      the window hierarchy from the toplevel and down */
   cairo_region_t *clip_region;
-  /* This is the clip region, with additionally all the opaque
-     child windows removed */
-  cairo_region_t *clip_region_with_children;
-  /* The layered region is the subset of clip_region that
-     is covered by non-opaque sibling or ancestor sibling window. */
-  cairo_region_t *layered_region;
 
   GdkCursor *cursor;
   GHashTable *device_cursor;
@@ -256,16 +264,12 @@ struct _GdkWindow
   cairo_region_t *shape;
   cairo_region_t *input_shape;
 
-  cairo_surface_t *cairo_surface;
-
   GList *devices_inside;
   GHashTable *device_events;
 
   GHashTable *source_event_masks;
   gulong device_added_handler_id;
   gulong device_changed_handler_id;
-
-  guint num_offscreen_children;
 
   GdkFrameClock *frame_clock; /* NULL to use from parent or default */
   GdkWindowInvalidateHandlerFunc invalidate_handler;
@@ -304,6 +308,7 @@ GList* _gdk_event_queue_insert_before(GdkDisplay *display,
                                       GdkEvent   *event);
 
 void    _gdk_event_queue_handle_motion_compression (GdkDisplay *display);
+void    _gdk_event_queue_flush                     (GdkDisplay       *display);
 
 void   _gdk_event_button_generate    (GdkDisplay *display,
                                       GdkEvent   *event);
@@ -312,9 +317,8 @@ void _gdk_windowing_event_data_copy (const GdkEvent *src,
                                      GdkEvent       *dst);
 void _gdk_windowing_event_data_free (GdkEvent       *event);
 
-void gdk_synthesize_window_state (GdkWindow     *window,
-                                  GdkWindowState unset_flags,
-                                  GdkWindowState set_flags);
+void _gdk_set_window_state (GdkWindow *window,
+                            GdkWindowState new_state);
 
 gboolean _gdk_cairo_surface_extents (cairo_surface_t *surface,
                                      GdkRectangle *extents);
@@ -335,6 +339,8 @@ gboolean   _gdk_window_update_viewable   (GdkWindow      *window);
 void       _gdk_window_process_updates_recurse (GdkWindow *window,
                                                 cairo_region_t *expose_region);
 
+void       _gdk_screen_set_resolution    (GdkScreen      *screen,
+                                          gdouble         dpi);
 void       _gdk_screen_close             (GdkScreen      *screen);
 
 /*****************************************
@@ -363,9 +369,6 @@ GdkWindow * _gdk_window_find_descendant_at (GdkWindow *toplevel,
                                             double x, double y,
                                             double *found_x,
                                             double *found_y);
-
-void _gdk_window_add_damage (GdkWindow *toplevel,
-                             cairo_region_t *damaged_region);
 
 GdkEvent * _gdk_make_event (GdkWindow    *window,
                             GdkEventType  type,

@@ -70,9 +70,9 @@
  * that button.  This widget does not support setting the
  * #GtkFileChooser:select-multiple property to %TRUE.
  *
- * <example>
- * <title>Create a button to let the user select a file in /etc</title>
- * <programlisting>
+ * ## Create a button to let the user select a file in /etc
+ *
+ * |[<!-- language="C" -->
  * {
  *   GtkWidget *button;
  *
@@ -81,19 +81,17 @@
  *   gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (button),
  *                                        "/etc");
  * }
- * </programlisting>
- * </example>
+ * ]|
  *
- * The #GtkFileChooserButton supports the #GtkFileChooserAction<!-- -->s
+ * The #GtkFileChooserButton supports the #GtkFileChooserActions
  * %GTK_FILE_CHOOSER_ACTION_OPEN and %GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER.
  *
- * <important>
- * The #GtkFileChooserButton will ellipsize the label,
- * and will thus request little horizontal space.  To give the button
- * more space, you should call gtk_widget_get_preferred_size(),
- * gtk_file_chooser_button_set_width_chars(), or pack the button in
- * such a way that other interface elements give space to the widget.
- * </important>
+ * > The #GtkFileChooserButton will ellipsize the label, and will thus
+ * > request little horizontal space.  To give the button more space,
+ * > you should call gtk_widget_get_preferred_size(),
+ * > gtk_file_chooser_button_set_width_chars(), or pack the button in
+ * > such a way that other interface elements give space to the
+ * > widget.
  */
 
 
@@ -101,10 +99,10 @@
  *  Private Macros  *
  * **************** */
 
+#define FALLBACK_ICON_SIZE	16
 #define DEFAULT_TITLE		N_("Select a File")
 #define DESKTOP_DISPLAY_NAME	N_("Desktop")
 #define FALLBACK_DISPLAY_NAME	N_("(None)") /* this string is used in gtk+/gtk/tests/filechooser.c - change it there if you change it here */
-#define FALLBACK_ICON_SIZE	16
 
 
 /* ********************** *
@@ -249,9 +247,7 @@ static gboolean gtk_file_chooser_button_remove_shortcut_folder  (GtkFileChooser 
 								 GError             **error);
 
 /* GObject Functions */
-static GObject *gtk_file_chooser_button_constructor        (GType             type,
-							    guint             n_params,
-							    GObjectConstructParam *params);
+static void     gtk_file_chooser_button_constructed        (GObject          *object);
 static void     gtk_file_chooser_button_set_property       (GObject          *object,
 							    guint             param_id,
 							    const GValue     *value,
@@ -371,7 +367,7 @@ gtk_file_chooser_button_class_init (GtkFileChooserButtonClass * class)
   gobject_class = G_OBJECT_CLASS (class);
   widget_class = GTK_WIDGET_CLASS (class);
 
-  gobject_class->constructor = gtk_file_chooser_button_constructor;
+  gobject_class->constructed = gtk_file_chooser_button_constructed;
   gobject_class->set_property = gtk_file_chooser_button_set_property;
   gobject_class->get_property = gtk_file_chooser_button_get_property;
   gobject_class->finalize = gtk_file_chooser_button_finalize;
@@ -392,7 +388,7 @@ gtk_file_chooser_button_class_init (GtkFileChooserButtonClass * class)
    *
    * The ::file-set signal is emitted when the user selects a file.
    *
-   * Note that this signal is only emitted when the <emphasis>user</emphasis>
+   * Note that this signal is only emitted when the user
    * changes the file.
    *
    * Since: 2.12
@@ -470,7 +466,7 @@ gtk_file_chooser_button_class_init (GtkFileChooserButtonClass * class)
   /* Bind class to template
    */
   gtk_widget_class_set_template_from_resource (widget_class,
-					       "/org/gtk/libgtk/gtkfilechooserbutton.ui");
+					       "/org/gtk/libgtk/ui/gtkfilechooserbutton.ui");
 
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserButton, model);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserButton, button);
@@ -662,7 +658,7 @@ get_selected_file (GtkFileChooserButton *button)
   else if (gtk_file_chooser_get_action (GTK_FILE_CHOOSER (priv->dialog)) == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER)
     {
       /* If there is no "real" selection in SELECT_FOLDER mode, then we'll just return
-       * the current folder, since that is what GtkFileChooserDefault would do.
+       * the current folder, since that is what GtkFileChooserWidget would do.
        */
       if (priv->current_folder_while_inactive)
 	retval = priv->current_folder_while_inactive;
@@ -782,38 +778,31 @@ gtk_file_chooser_button_remove_shortcut_folder (GtkFileChooser  *chooser,
  *  GObject Functions  *
  * ******************* */
 
-static GObject *
-gtk_file_chooser_button_constructor (GType                  type,
-				     guint                  n_params,
-				     GObjectConstructParam *params)
+static void
+gtk_file_chooser_button_constructed (GObject *object)
 {
-  GObject *object;
-  GtkFileChooserButton *button;
-  GtkFileChooserButtonPrivate *priv;
+  GtkFileChooserButton *button = GTK_FILE_CHOOSER_BUTTON (object);
+  GtkFileChooserButtonPrivate *priv = button->priv;
   GSList *list;
 
-  object = G_OBJECT_CLASS (gtk_file_chooser_button_parent_class)->constructor (type,
-									       n_params,
-									       params);
-  button = GTK_FILE_CHOOSER_BUTTON (object);
-  priv = button->priv;
+  G_OBJECT_CLASS (gtk_file_chooser_button_parent_class)->constructed (object);
 
   if (!priv->dialog)
     {
       priv->dialog = gtk_file_chooser_dialog_new (NULL, NULL,
 						  GTK_FILE_CHOOSER_ACTION_OPEN,
-						  _("_Cancel"),
-						  GTK_RESPONSE_CANCEL,
-						  _("_Open"),
-						  GTK_RESPONSE_ACCEPT,
+						  _("_Cancel"), GTK_RESPONSE_CANCEL,
+						  _("_Open"), GTK_RESPONSE_ACCEPT,
 						  NULL);
 
       gtk_dialog_set_default_response (GTK_DIALOG (priv->dialog),
 				       GTK_RESPONSE_ACCEPT);
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       gtk_dialog_set_alternative_button_order (GTK_DIALOG (priv->dialog),
 					       GTK_RESPONSE_ACCEPT,
 					       GTK_RESPONSE_CANCEL,
 					       -1);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
       gtk_file_chooser_button_set_title (button, _(DEFAULT_TITLE));
     }
@@ -879,8 +868,6 @@ gtk_file_chooser_button_constructor (GType                  type,
 
   update_label_and_image (button);
   update_combo_box (button);
-
-  return object;
 }
 
 static void
@@ -2773,8 +2760,8 @@ combo_box_changed_cb (GtkComboBox *combo_box,
 }
 
 /* Calback for the "notify::popup-shown" signal on the combo box.
- * When the combo is popped up, we don't want the ROW_TYPE_EMPTY_SELECTION to be visible
- * at all; otherwise we would be showing a "(None)" item in the combo box's popup.
+ * When the combo is popped up, we don’t want the ROW_TYPE_EMPTY_SELECTION to be visible
+ * at all; otherwise we would be showing a “(None)” item in the combo box’s popup.
  *
  * However, when the combo box is *not* popped up, we want the empty-selection row
  * to be visible depending on the selection.
@@ -2954,7 +2941,7 @@ gtk_file_chooser_button_new (const gchar          *title,
 
 /**
  * gtk_file_chooser_button_new_with_dialog:
- * @dialog: the widget to use as dialog
+ * @dialog: (type Gtk.Dialog): the widget to use as dialog
  *
  * Creates a #GtkFileChooserButton widget which uses @dialog as its
  * file-picking window.
@@ -3007,7 +2994,7 @@ gtk_file_chooser_button_set_title (GtkFileChooserButton *button,
  * Retrieves the title of the browse dialog used by @button. The returned value
  * should not be modified or freed.
  *
- * Returns: a pointer to the browse dialog's title.
+ * Returns: a pointer to the browse dialog’s title.
  *
  * Since: 2.6
  **/
@@ -3023,7 +3010,7 @@ gtk_file_chooser_button_get_title (GtkFileChooserButton *button)
  * gtk_file_chooser_button_get_width_chars:
  * @button: the button widget to examine.
  *
- * Retrieves the width in characters of the @button widget's entry and/or label.
+ * Retrieves the width in characters of the @button widget’s entry and/or label.
  *
  * Returns: an integer width (in characters) that the button will use to size itself.
  *
@@ -3063,7 +3050,7 @@ gtk_file_chooser_button_set_width_chars (GtkFileChooserButton *button,
  *
  * Sets whether the button will grab focus when it is clicked with the mouse.
  * Making mouse clicks not grab focus is useful in places like toolbars where
- * you don't want the keyboard focus removed from the main area of the
+ * you don’t want the keyboard focus removed from the main area of the
  * application.
  *
  * Since: 2.10
@@ -3097,7 +3084,7 @@ gtk_file_chooser_button_set_focus_on_click (GtkFileChooserButton *button,
  * Returns whether the button grabs focus when it is clicked with the mouse.
  * See gtk_file_chooser_button_set_focus_on_click().
  *
- * Return value: %TRUE if the button grabs focus when it is clicked with
+ * Returns: %TRUE if the button grabs focus when it is clicked with
  *               the mouse.
  *
  * Since: 2.10

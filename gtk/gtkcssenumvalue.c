@@ -436,6 +436,60 @@ _gtk_css_font_weight_value_get (const GtkCssValue *value)
   return value->value;
 }
 
+/* PangoStretch */
+
+static const GtkCssValueClass GTK_CSS_VALUE_FONT_STRETCH = {
+  gtk_css_value_enum_free,
+  gtk_css_value_enum_compute,
+  gtk_css_value_enum_equal,
+  gtk_css_value_enum_transition,
+  gtk_css_value_enum_print
+};
+
+static GtkCssValue font_stretch_values[] = {
+  { &GTK_CSS_VALUE_FONT_STRETCH, 1, PANGO_STRETCH_ULTRA_CONDENSED, "ultra-condensed" },
+  { &GTK_CSS_VALUE_FONT_STRETCH, 1, PANGO_STRETCH_EXTRA_CONDENSED, "extra-condensed" },
+  { &GTK_CSS_VALUE_FONT_STRETCH, 1, PANGO_STRETCH_CONDENSED, "condensed" },
+  { &GTK_CSS_VALUE_FONT_STRETCH, 1, PANGO_STRETCH_SEMI_CONDENSED, "semi-condensed" },
+  { &GTK_CSS_VALUE_FONT_STRETCH, 1, PANGO_STRETCH_NORMAL, "normal" },
+  { &GTK_CSS_VALUE_FONT_STRETCH, 1, PANGO_STRETCH_SEMI_EXPANDED, "semi-expanded" },
+  { &GTK_CSS_VALUE_FONT_STRETCH, 1, PANGO_STRETCH_EXPANDED, "expanded" },
+  { &GTK_CSS_VALUE_FONT_STRETCH, 1, PANGO_STRETCH_EXTRA_EXPANDED, "extra-expanded" },
+  { &GTK_CSS_VALUE_FONT_STRETCH, 1, PANGO_STRETCH_ULTRA_EXPANDED, "ultra-expanded" },
+};
+
+GtkCssValue *
+_gtk_css_font_stretch_value_new (PangoStretch font_stretch)
+{
+  g_return_val_if_fail (font_stretch < G_N_ELEMENTS (font_stretch_values), NULL);
+
+  return _gtk_css_value_ref (&font_stretch_values[font_stretch]);
+}
+
+GtkCssValue *
+_gtk_css_font_stretch_value_try_parse (GtkCssParser *parser)
+{
+  guint i;
+
+  g_return_val_if_fail (parser != NULL, NULL);
+
+  for (i = 0; i < G_N_ELEMENTS (font_stretch_values); i++)
+    {
+      if (_gtk_css_parser_try (parser, font_stretch_values[i].name, TRUE))
+        return _gtk_css_value_ref (&font_stretch_values[i]);
+    }
+
+  return NULL;
+}
+
+PangoStretch
+_gtk_css_font_stretch_value_get (const GtkCssValue *value)
+{
+  g_return_val_if_fail (value->class == &GTK_CSS_VALUE_FONT_STRETCH, PANGO_STRETCH_NORMAL);
+
+  return value->value;
+}
+
 /* GtkCssArea */
 
 static const GtkCssValueClass GTK_CSS_VALUE_AREA = {
@@ -524,11 +578,14 @@ _gtk_css_direction_value_new (GtkCssDirection direction)
 GtkCssValue *
 _gtk_css_direction_value_try_parse (GtkCssParser *parser)
 {
-  guint i;
+  int i;
 
   g_return_val_if_fail (parser != NULL, NULL);
 
-  for (i = 0; i < G_N_ELEMENTS (direction_values); i++)
+  /* need to parse backwards here, otherwise "alternate" will also match "alternate-reverse".
+   * Our parser rocks!
+   */
+  for (i = G_N_ELEMENTS (direction_values) - 1; i >= 0; i--)
     {
       if (_gtk_css_parser_try (parser, direction_values[i].name, TRUE))
         return _gtk_css_value_ref (&direction_values[i]);
@@ -703,6 +760,60 @@ GtkCssImageEffect
 _gtk_css_image_effect_value_get (const GtkCssValue *value)
 {
   g_return_val_if_fail (value->class == &GTK_CSS_VALUE_IMAGE_EFFECT, GTK_CSS_IMAGE_EFFECT_NONE);
+
+  return value->value;
+}
+
+/* GtkCssIconStyle */
+
+static const GtkCssValueClass GTK_CSS_VALUE_ICON_STYLE = {
+  gtk_css_value_enum_free,
+  gtk_css_value_enum_compute,
+  gtk_css_value_enum_equal,
+  gtk_css_value_enum_transition,
+  gtk_css_value_enum_print
+};
+
+static GtkCssValue icon_style_values[] = {
+  { &GTK_CSS_VALUE_ICON_STYLE, 1, GTK_CSS_ICON_STYLE_REQUESTED, "requested" },
+  { &GTK_CSS_VALUE_ICON_STYLE, 1, GTK_CSS_ICON_STYLE_REGULAR, "regular" },
+  { &GTK_CSS_VALUE_ICON_STYLE, 1, GTK_CSS_ICON_STYLE_SYMBOLIC, "symbolic" }
+};
+
+GtkCssValue *
+_gtk_css_icon_style_value_new (GtkCssIconStyle icon_style)
+{
+  guint i;
+
+  for (i = 0; i < G_N_ELEMENTS (icon_style_values); i++)
+    {
+      if (icon_style_values[i].value == icon_style)
+        return _gtk_css_value_ref (&icon_style_values[i]);
+    }
+
+  g_return_val_if_reached (NULL);
+}
+
+GtkCssValue *
+_gtk_css_icon_style_value_try_parse (GtkCssParser *parser)
+{
+  guint i;
+
+  g_return_val_if_fail (parser != NULL, NULL);
+
+  for (i = 0; i < G_N_ELEMENTS (icon_style_values); i++)
+    {
+      if (_gtk_css_parser_try (parser, icon_style_values[i].name, TRUE))
+        return _gtk_css_value_ref (&icon_style_values[i]);
+    }
+
+  return NULL;
+}
+
+GtkCssIconStyle
+_gtk_css_icon_style_value_get (const GtkCssValue *value)
+{
+  g_return_val_if_fail (value->class == &GTK_CSS_VALUE_ICON_STYLE, GTK_CSS_ICON_STYLE_REQUESTED);
 
   return value->value;
 }

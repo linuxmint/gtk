@@ -51,19 +51,19 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gtk-gen-sources.props" />
+    <Import Project="gtk-gen-srcs.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gtk-gen-sources.props" />
+    <Import Project="gtk-gen-srcs.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gtk-gen-sources.props" />
+    <Import Project="gtk-gen-srcs.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="gtk-gen-sources.props" />
+    <Import Project="gtk-gen-srcs.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\gdk;..\..\..\gdk\win32;..\..\..\gtk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\gtk;..\..\..\gdk;..\..\..\gdk\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;G_ENABLE_DEBUG;$(GtkDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -96,7 +96,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\gdk;..\..\..\gdk\win32;..\..\..\gtk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\gtk;..\..\..\gdk;..\..\..\gdk\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>$(GtkDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -118,7 +118,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\gdk;..\..\..\gdk\win32;..\..\..\gtk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\gtk;..\..\..\gdk;..\..\..\gdk\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;G_ENABLE_DEBUG;$(GtkDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -139,7 +139,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\gdk;..\..\..\gdk\win32;..\..\..\gtk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\gtk;..\..\..\gdk;..\..\..\gdk\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>$(GtkDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -173,14 +173,84 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(GenerateGtkDbusBuiltSources)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\..\gtk\gtkdbusgenerated.c;..\..\..\gtk\gtkdbusgenerated.h;%(Outputs)</Outputs>
     </CustomBuild>
+    <CustomBuild Include="..\..\..\gtk\gtk-win32.rc.in">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating GTK+ Win32 Version Resource...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(GenerateGtkWin32RC)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\gtk\gtk-win32.rc;..\..\..\gtk\libgtk3.manifest;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating GTK+ Win32 Version Resource...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(GenerateGtkWin32RC)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\..\gtk\gtk-win32.rc;..\..\..\gtk\libgtk3.manifest;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating GTK+ Win32 Version Resource...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(GenerateGtkWin32RC)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\gtk\gtk-win32.rc;..\..\..\gtk\libgtk3.manifest;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating GTK+ Win32 Version Resource...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(GenerateGtkWin32RC)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\..\gtk\gtk-win32.rc;..\..\..\gtk\libgtk3.manifest;%(Outputs)</Outputs>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\..\gtk\gtk-win32.rc" />
   </ItemGroup>
   <ItemGroup>
+   <ClCompile Include="..\..\..\gtk\a11y\gtkaccessibility.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkaccessibilitymisc.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkaccessibilityutil.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkarrowaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkbooleancellaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkbuttonaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkcellaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkcellaccessibleparent.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkcheckmenuitemaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkcolorswatchaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkcomboboxaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkcontaineraccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkcontainercellaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkentryaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkexpanderaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkflowboxaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkflowboxchildaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkframeaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkiconviewaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkimageaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkimagecellaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtklabelaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtklevelbaraccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtklinkbuttonaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtklistboxaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtklistboxrowaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtklockbuttonaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkmenuaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkmenubuttonaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkmenushellaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkmenuitemaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtknotebookaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtknotebookpageaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkpanedaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkpopoveraccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkprogressbaraccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkradiobuttonaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkradiomenuitemaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkrangeaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkrenderercellaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkscaleaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkscalebuttonaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkscrolledwindowaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkspinbuttonaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkspinneraccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkstatusbaraccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkswitchaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtktextcellaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtktextviewaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtktogglebuttonaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtktoplevelaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtktreeviewaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkwidgetaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\a11y\gtkwindowaccessible.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkactivatable.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkaction.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkactiongroup.c" />
+   <ClCompile Include="..\..\..\gtk\deprecated\gtkalignment.c" />
+   <ClCompile Include="..\..\..\gtk\deprecated\gtkarrow.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkcolorsel.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkcolorseldialog.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkfontsel.c" />
@@ -195,14 +265,18 @@
    <ClCompile Include="..\..\..\gtk\deprecated\gtkhsv.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkiconfactory.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkimagemenuitem.c" />
+   <ClCompile Include="..\..\..\gtk\deprecated\gtkmisc.c" />
+   <ClCompile Include="..\..\..\gtk\deprecated\gtknumerableicon.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkradioaction.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkrc.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkrecentaction.c" />
+   <ClCompile Include="..\..\..\gtk\deprecated\gtkstatusicon.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkstock.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkstyle.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtksymboliccolor.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtktable.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtktearoffmenuitem.c" />
+   <ClCompile Include="..\..\..\gtk\deprecated\gtkthemingengine.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtktoggleaction.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkuimanager.c" />
    <ClCompile Include="..\..\..\gtk\deprecated\gtkvbbox.c" />
@@ -226,19 +300,17 @@
    <ClCompile Include="..\..\..\gtk\gtkaccellabel.c" />
    <ClCompile Include="..\..\..\gtk\gtkaccelmap.c" />
    <ClCompile Include="..\..\..\gtk\gtkaccessible.c" />
+   <ClCompile Include="..\..\..\gtk\gtkactionbar.c" />
    <ClCompile Include="..\..\..\gtk\gtkactionhelper.c" />
    <ClCompile Include="..\..\..\gtk\gtkadjustment.c" />
-   <ClCompile Include="..\..\..\gtk\gtkalignment.c" />
    <ClCompile Include="..\..\..\gtk\gtkallocatedbitmask.c" />
    <ClCompile Include="..\..\..\gtk\gtkappchooser.c" />
    <ClCompile Include="..\..\..\gtk\gtkappchooserwidget.c" />
    <ClCompile Include="..\..\..\gtk\gtkappchooserbutton.c" />
    <ClCompile Include="..\..\..\gtk\gtkappchooserdialog.c" />
-   <ClCompile Include="..\..\..\gtk\gtkappchoosermodule.c" />
-   <ClCompile Include="..\..\..\gtk\gtkappchooseronline.c" />
    <ClCompile Include="..\..\..\gtk\gtkapplication.c" />
+   <ClCompile Include="..\..\..\gtk\gtkapplicationimpl.c" />
    <ClCompile Include="..\..\..\gtk\gtkapplicationwindow.c" />
-   <ClCompile Include="..\..\..\gtk\gtkarrow.c" />
    <ClCompile Include="..\..\..\gtk\gtkaspectframe.c" />
    <ClCompile Include="..\..\..\gtk\gtkassistant.c" />
    <ClCompile Include="..\..\..\gtk\gtkbbox.c" />
@@ -248,7 +320,6 @@
    <ClCompile Include="..\..\..\gtk\gtkborder.c" />
    <ClCompile Include="..\..\..\gtk\gtkborderimage.c" />
    <ClCompile Include="..\..\..\gtk\gtkbox.c" />
-   <ClCompile Include="..\..\..\gtk\gtkbubblewindow.c" />
    <ClCompile Include="..\..\..\gtk\gtkbuildable.c" />
    <ClCompile Include="..\..\..\gtk\gtkbuilder.c" />
    <ClCompile Include="..\..\..\gtk\gtkbuilderparser.c" />
@@ -300,6 +371,7 @@
    <ClCompile Include="..\..\..\gtk\gtkcssimage.c" />
    <ClCompile Include="..\..\..\gtk\gtkcssimagecrossfade.c" />
    <ClCompile Include="..\..\..\gtk\gtkcssimagegradient.c" />
+   <ClCompile Include="..\..\..\gtk\gtkcssimageicontheme.c" />
    <ClCompile Include="..\..\..\gtk\gtkcssimagelinear.c" />
    <ClCompile Include="..\..\..\gtk\gtkcssimagesurface.c" />
    <ClCompile Include="..\..\..\gtk\gtkcssimageurl.c" />
@@ -327,8 +399,10 @@
    <ClCompile Include="..\..\..\gtk\gtkcssstylefuncs.c" />
    <ClCompile Include="..\..\..\gtk\gtkcssstyleproperty.c" />
    <ClCompile Include="..\..\..\gtk\gtkcssstylepropertyimpl.c" />
+   <ClCompile Include="..\..\..\gtk\gtkcsstransformvalue.c" />
    <ClCompile Include="..\..\..\gtk\gtkcsstransition.c" />
    <ClCompile Include="..\..\..\gtk\gtkcsstypedvalue.c" />
+   <ClCompile Include="..\..\..\gtk\gtkcssunsetvalue.c" />
    <ClCompile Include="..\..\..\gtk\gtkcssvalue.c" />
    <ClCompile Include="..\..\..\gtk\gtkcsstypes.c" />
    <ClCompile Include="..\..\..\gtk\gtkdialog.c" />
@@ -338,10 +412,10 @@
    <ClCompile Include="..\..\..\gtk\gtkentrybuffer.c" />
    <ClCompile Include="..\..\..\gtk\gtkentrycompletion.c" />
    <ClCompile Include="..\..\..\gtk\gtkeventbox.c" />
+   <ClCompile Include="..\..\..\gtk\gtkeventcontroller.c" />
    <ClCompile Include="..\..\..\gtk\gtkexpander.c" />
    <ClCompile Include="..\..\..\gtk\gtkfilechooser.c" />
    <ClCompile Include="..\..\..\gtk\gtkfilechooserbutton.c" />
-   <ClCompile Include="..\..\..\gtk\gtkfilechooserdefault.c" />
    <ClCompile Include="..\..\..\gtk\gtkfilechooserdialog.c" />
    <ClCompile Include="..\..\..\gtk\gtkfilechooserembed.c" />
    <ClCompile Include="..\..\..\gtk\gtkfilechooserentry.c" />
@@ -351,6 +425,7 @@
    <ClCompile Include="..\..\..\gtk\gtkfilesystem.c" />
    <ClCompile Include="..\..\..\gtk\gtkfilesystemmodel.c" />
    <ClCompile Include="..\..\..\gtk\gtkfixed.c" />
+   <ClCompile Include="..\..\..\gtk\gtkflowbox.c" />
    <ClCompile Include="..\..\..\gtk\gtkfontbutton.c" />
    <ClCompile Include="..\..\..\gtk\gtkfontchooser.c" />
    <ClCompile Include="..\..\..\gtk\gtkfontchooserdialog.c" />
@@ -358,6 +433,15 @@
    <ClCompile Include="..\..\..\gtk\gtkfontchooserwidget.c" />
    <ClCompile Include="..\..\..\gtk\gtkframe.c" />
    <ClCompile Include="..\..\..\gtk\gtkgladecatalog.c" />
+   <ClCompile Include="..\..\..\gtk\gtkgesture.c" />
+   <ClCompile Include="..\..\..\gtk\gtkgesturedrag.c" />
+   <ClCompile Include="..\..\..\gtk\gtkgesturelongpress.c" />
+   <ClCompile Include="..\..\..\gtk\gtkgesturemultipress.c" />
+   <ClCompile Include="..\..\..\gtk\gtkgesturepan.c" />
+   <ClCompile Include="..\..\..\gtk\gtkgesturerotate.c" />
+   <ClCompile Include="..\..\..\gtk\gtkgesturesingle.c" />
+   <ClCompile Include="..\..\..\gtk\gtkgestureswipe.c" />
+   <ClCompile Include="..\..\..\gtk\gtkgesturezoom.c" />
    <ClCompile Include="..\..\..\gtk\gtkgrid.c" />
    <ClCompile Include="..\..\..\gtk\gtkheaderbar.c" />
    <ClCompile Include="..\..\..\gtk\gtkhsla.c" />
@@ -374,6 +458,7 @@
    <ClCompile Include="..\..\..\gtk\gtkinfobar.c" />
    <ClCompile Include="..\..\..\gtk\gtkinvisible.c" />
    <ClCompile Include="..\..\..\gtk\gtkkeyhash.c" />
+   <ClCompile Include="..\..\..\gtk\gtkkineticscrolling.c" />
    <ClCompile Include="..\..\..\gtk\gtklabel.c" />
    <ClCompile Include="..\..\..\gtk\gtklayout.c" />
    <ClCompile Include="..\..\..\gtk\gtklevelbar.c" />
@@ -382,24 +467,25 @@
    <ClCompile Include="..\..\..\gtk\gtkliststore.c" />
    <ClCompile Include="..\..\..\gtk\gtklockbutton.c" />
    <ClCompile Include="..\..\..\gtk\gtkmain.c" />
+   <ClCompile Include="..\..\..\gtk\gtkmagnifier.c" />
    <ClCompile Include="..\..\..\gtk\gtkmarshalers.c" />
    <ClCompile Include="..\..\..\gtk\gtkmenu.c" />
    <ClCompile Include="..\..\..\gtk\gtkmenubar.c" />
    <ClCompile Include="..\..\..\gtk\gtkmenubutton.c" />
    <ClCompile Include="..\..\..\gtk\gtkmenuitem.c" />
+   <ClCompile Include="..\..\..\gtk\gtkmenusectionbox.c" />
    <ClCompile Include="..\..\..\gtk\gtkmenushell.c" />
    <ClCompile Include="..\..\..\gtk\gtkmenutracker.c" />
    <ClCompile Include="..\..\..\gtk\gtkmenutrackeritem.c" />
    <ClCompile Include="..\..\..\gtk\gtkmenutoolbutton.c" />
    <ClCompile Include="..\..\..\gtk\gtkmessagedialog.c" />
-   <ClCompile Include="..\..\..\gtk\gtkmisc.c" />
    <ClCompile Include="..\..\..\gtk\gtkmnemonichash.c" />
    <ClCompile Include="..\..\..\gtk\gtkmodelmenuitem.c" />
+   <ClCompile Include="..\..\..\gtk\gtkmodelbutton.c" />
    <ClCompile Include="..\..\..\gtk\gtkmodifierstyle.c" />
    <ClCompile Include="..\..\..\gtk\gtkmodules.c" />
    <ClCompile Include="..\..\..\gtk\gtkmountoperation.c" />
    <ClCompile Include="..\..\..\gtk\gtknotebook.c" />
-   <ClCompile Include="..\..\..\gtk\gtknumerableicon.c" />
    <ClCompile Include="..\..\..\gtk\gtkoffscreenwindow.c" />
    <ClCompile Include="..\..\..\gtk\gtkorientable.c" />
    <ClCompile Include="..\..\..\gtk\gtkoverlay.c" />
@@ -409,7 +495,6 @@
    <ClCompile Include="..\..\..\gtk\gtkpapersize.c" />
    <ClCompile Include="..\..\..\gtk\gtkpathbar.c" />
    <ClCompile Include="..\..\..\gtk\gtkplacessidebar.c" />
-   <ClCompile Include="..\..\..\gtk\gtkpressandhold.c" />
    <ClCompile Include="..\..\..\gtk\gtkprintcontext.c" />
    <ClCompile Include="..\..\..\gtk\gtkprintoperation.c" />
    <ClCompile Include="..\..\..\gtk\gtkprintoperationpreview.c" />
@@ -419,6 +504,7 @@
    <ClCompile Include="..\..\..\gtk\gtkprivatetypebuiltins.c" />
    <ClCompile Include="..\..\..\gtk\gtkprogressbar.c" />
    <ClCompile Include="..\..\..\gtk\gtkpixelcache.c" />
+   <ClCompile Include="..\..\..\gtk\gtkpopover.c" />
    <ClCompile Include="..\..\..\gtk\gtkradiobutton.c" />
    <ClCompile Include="..\..\..\gtk\gtkradiomenuitem.c" />
    <ClCompile Include="..\..\..\gtk\gtkradiotoolbutton.c" />
@@ -454,7 +540,6 @@
    <ClCompile Include="..\..\..\gtk\gtkstack.c" />
    <ClCompile Include="..\..\..\gtk\gtkstackswitcher.c" />
    <ClCompile Include="..\..\..\gtk\gtkstatusbar.c" />
-   <ClCompile Include="..\..\..\gtk\gtkstatusicon.c" />
    <ClCompile Include="..\..\..\gtk\gtkstyleanimation.c" />
    <ClCompile Include="..\..\..\gtk\gtkstylecascade.c" />
    <ClCompile Include="..\..\..\gtk\gtkstylecontext.c" />
@@ -482,7 +567,6 @@
    <ClCompile Include="..\..\..\gtk\gtktextutil.c" />
    <ClCompile Include="..\..\..\gtk\gtktextview.c" />
    <ClCompile Include="..\..\..\gtk\gtkthemingbackground.c" />
-   <ClCompile Include="..\..\..\gtk\gtkthemingengine.c" />
    <ClCompile Include="..\..\..\gtk\gtktogglebutton.c" />
    <ClCompile Include="..\..\..\gtk\gtktoggletoolbutton.c" />
    <ClCompile Include="..\..\..\gtk\gtktoolbar.c" />
@@ -510,11 +594,10 @@
    <ClCompile Include="..\..\..\gtk\gtkwidget.c" />
    <ClCompile Include="..\..\..\gtk\gtkwidgetpath.c" />
    <ClCompile Include="..\..\..\gtk\gtkwindow.c" />
+   <ClCompile Include="..\..\..\gtk\gtkwindowgroup.c" />
    <ClCompile Include="..\..\..\gtk\gtkwin32theme.c" />
    <ClCompile Include="..\..\..\gtk\gtkclipboard.c" />
-   <ClCompile Include="..\..\..\gtk\gtkclipboard-wayland.c" />
    <ClCompile Include="..\..\..\gtk\gtkdnd.c" />
-   <ClCompile Include="..\..\..\gtk\gtkappchooseronlinepk.c" />
    <ClCompile Include="..\..\..\gtk\gtkprint-win32.c" />
    <ClCompile Include="..\..\..\gtk\gtkprintoperation-win32.c" />
    <ClCompile Include="..\..\..\gtk\gtkwin32.c" />
@@ -539,12 +622,15 @@
     <ClCompile Include="..\..\..\modules\input\thai-charprop.c" />
   </ItemGroup>
   <ItemGroup>
+    <Manifest Include="..\..\..\gtk\libgtk3.manifest" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="gdk.vcxproj">
       <Project>{fc5aadb5-95cd-4bf0-ba8b-0c16fe7073f7}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="gtka11y.vcxproj">
-      <Project>{f756b0db-40a1-4e9f-be1f-8f02cb86ea46}</Project>
+    <ProjectReference Include="gtk-inspector.vcxproj">
+      <Project>{fc5aadb5-95cd-4bf0-ba8b-0c16fe7073fd}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>

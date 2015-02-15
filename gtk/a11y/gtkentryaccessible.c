@@ -24,6 +24,7 @@
 #include "gtkentryaccessible.h"
 #include "gtkentryprivate.h"
 #include "gtkcomboboxaccessible.h"
+#include "gtkstylecontextprivate.h"
 
 #define GTK_TYPE_ENTRY_ICON_ACCESSIBLE      (gtk_entry_icon_accessible_get_type ())
 #define GTK_ENTRY_ICON_ACCESSIBLE(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_ENTRY_ICON_ACCESSIBLE, GtkEntryIconAccessible))
@@ -327,7 +328,8 @@ gtk_entry_icon_accessible_get_position (AtkComponent   *component,
   GtkWidget *widget;
 
   *x = G_MININT;
-  atk_component_get_position (ATK_COMPONENT (icon->entry), x, y, coord_type);
+  atk_component_get_extents (ATK_COMPONENT (icon->entry), x, y, NULL, NULL,
+                             coord_type);
   if (*x == G_MININT)
     return;
 
@@ -455,7 +457,7 @@ gtk_entry_accessible_initialize (AtkObject *obj,
   gtk_entry_accessible->priv->selection_bound = start_pos;
 
   /* Set up signal callbacks */
-  g_signal_connect (entry, "insert-text", G_CALLBACK (insert_text_cb), NULL);
+  g_signal_connect_after (entry, "insert-text", G_CALLBACK (insert_text_cb), NULL);
   g_signal_connect (entry, "delete-text", G_CALLBACK (delete_text_cb), NULL);
 
   if (gtk_entry_get_visibility (entry))
@@ -1377,11 +1379,6 @@ atk_editable_text_interface_init (AtkEditableTextIface *iface)
   iface->set_run_attributes = NULL;
 }
 
-/* We connect to GtkEditable::insert-text, since it carries
- * the information we need. But we delay emitting our own
- * text_changed::insert signal until the entry has update
- * all its internal state and emits GtkEntry::changed.
- */
 static void
 insert_text_cb (GtkEditable *editable,
                 gchar       *new_text,
@@ -1389,16 +1386,18 @@ insert_text_cb (GtkEditable *editable,
                 gint        *position)
 {
   GtkEntryAccessible *accessible;
+  gint length;
 
   if (new_text_length == 0)
     return;
 
   accessible = GTK_ENTRY_ACCESSIBLE (gtk_widget_get_accessible (GTK_WIDGET (editable)));
+  length = g_utf8_strlen (new_text, new_text_length);
 
   g_signal_emit_by_name (accessible,
                          "text-changed::insert",
-                         *position,
-                          g_utf8_strlen (new_text, new_text_length));
+                         *position - length,
+                          length);
 }
 
 /* We connect to GtkEditable::delete-text, since it carries

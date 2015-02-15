@@ -28,13 +28,6 @@ struct _GtkModifierStylePrivate
   GHashTable *color_properties;
 };
 
-enum {
-  CHANGED,
-  LAST_SIGNAL
-};
-
-static guint signals [LAST_SIGNAL] = { 0 };
-
 static void gtk_modifier_style_provider_init         (GtkStyleProviderIface            *iface);
 static void gtk_modifier_style_provider_private_init (GtkStyleProviderPrivateInterface *iface);
 static void gtk_modifier_style_finalize              (GObject                          *object);
@@ -54,14 +47,6 @@ _gtk_modifier_style_class_init (GtkModifierStyleClass *klass)
   object_class = G_OBJECT_CLASS (klass);
 
   object_class->finalize = gtk_modifier_style_finalize;
-
-  signals[CHANGED] =
-    g_signal_new (I_("changed"),
-                  G_TYPE_FROM_CLASS (object_class),
-                  G_SIGNAL_RUN_LAST,
-                  0, NULL, NULL,
-                  g_cclosure_marshal_VOID__VOID,
-                  G_TYPE_NONE, 0);
 }
 
 static void
@@ -90,9 +75,13 @@ gtk_modifier_style_get_style_property (GtkStyleProvider *provider,
   GdkColor color;
   gchar *str;
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
   /* Reject non-color types for now */
   if (pspec->value_type != GDK_TYPE_COLOR)
     return FALSE;
+
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   priv = GTK_MODIFIER_STYLE (provider)->priv;
   str = g_strdup_printf ("-%s-%s",
@@ -195,7 +184,6 @@ modifier_style_set_color (GtkModifierStyle *style,
   else
     gtk_style_properties_unset_property (priv->style, prop, state);
 
-  g_signal_emit (style, signals[CHANGED], 0);
   _gtk_style_provider_private_changed (GTK_STYLE_PROVIDER_PRIVATE (style));
 }
 
@@ -236,7 +224,6 @@ _gtk_modifier_style_set_font (GtkModifierStyle           *style,
   else
     gtk_style_properties_unset_property (priv->style, "font", 0);
 
-  g_signal_emit (style, signals[CHANGED], 0);
   _gtk_style_provider_private_changed (GTK_STYLE_PROVIDER_PRIVATE (style));
 }
 
@@ -263,7 +250,6 @@ _gtk_modifier_style_map_color (GtkModifierStyle *style,
 
   G_GNUC_END_IGNORE_DEPRECATIONS;
 
-  g_signal_emit (style, signals[CHANGED], 0);
   _gtk_style_provider_private_changed (GTK_STYLE_PROVIDER_PRIVATE (style));
 }
 
@@ -304,6 +290,5 @@ _gtk_modifier_style_set_color_property (GtkModifierStyle *style,
       g_free (str);
     }
 
-  g_signal_emit (style, signals[CHANGED], 0);
   _gtk_style_provider_private_changed (GTK_STYLE_PROVIDER_PRIVATE (style));
 }

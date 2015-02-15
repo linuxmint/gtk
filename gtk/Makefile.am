@@ -2,6 +2,8 @@
 include $(top_srcdir)/Makefile.decl
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ENV = \
+	CC="$(CC)"
 INTROSPECTION_SCANNER_ARGS = \
 	--add-include-path=../gdk \
 	--warn-all
@@ -16,8 +18,28 @@ else
 GTK_PRINT_PREVIEW_COMMAND="evince --unlink-tempfile --preview --print-settings %s %f"
 endif
 
-SUBDIRS = a11y native .
+SUBDIRS = inspector native .
+if OS_DARWIN
+  ECHO="echo"
+else
+  ECHO=echo -e
+endif
 
+if HAVE_CLOUDPRINT
+if HAVE_PAPI_CUPS
+GTK_PRINT_BACKENDS=file,papi,cups,cloudprint
+else
+if HAVE_CUPS
+GTK_PRINT_BACKENDS=file,cups,cloudprint
+else
+if HAVE_PAPI
+GTK_PRINT_BACKENDS=file,papi,cloudprint
+else
+GTK_PRINT_BACKENDS=file,lpr,cloudprint
+endif
+endif
+endif
+else
 if HAVE_PAPI_CUPS
 GTK_PRINT_BACKENDS=file,papi,cups
 else
@@ -28,6 +50,7 @@ if HAVE_PAPI
 GTK_PRINT_BACKENDS=file,papi
 else
 GTK_PRINT_BACKENDS=file,lpr
+endif
 endif
 endif
 endif
@@ -56,10 +79,6 @@ AM_CPPFLAGS =						\
 	$(GTK_DEP_CFLAGS)				\
 	$(INCLUDED_IMMODULE_DEFINE)
 
-if PLATFORM_WIN32
-no_undefined = -no-undefined
-endif
-
 if OS_WIN32
 gtk_def = gtk.def
 gtk_win32_symbols = -export-symbols $(srcdir)/gtk.def
@@ -67,11 +86,16 @@ gtk_win32_symbols = -export-symbols $(srcdir)/gtk.def
 gtk_win32_res = gtk-win32-res.o
 gtk_win32_res_ldflag = -Wl,gtk-win32-res.o
 
-gtk-win32-res.o : gtk-win32.rc
+gtk-win32-res.o : gtk-win32.rc libgtk3.manifest
 	$(WINDRES) gtk-win32.rc $@
 
+gtk.def: libgtk-3.la
+	echo "LIBRARY libgtk-$(GTK_MAJOR_VERSION)-@LT_CURRENT_MINUS_AGE@" >$@
+	echo "EXPORTS" >>$@
+	objdump -p .libs/libgtk-$(GTK_MAJOR_VERSION)-@LT_CURRENT_MINUS_AGE@.dll | sed -n -e 's/\t\[\s\+\([0-9]\+\)\]\s\([A-Za-z_][A-Za-z0-9_]\)/\2/p' >>$@
+
 install-def-file: gtk.def
-	$(INSTALL) $(srcdir)/gtk.def $(DESTDIR)$(libdir)/gtk-win32-3.0.def
+	$(INSTALL) gtk.def $(DESTDIR)$(libdir)/gtk-win32-3.0.def
 uninstall-def-file:
 	-rm $(DESTDIR)$(libdir)/gtk-win32-3.0.def
 else
@@ -98,12 +122,12 @@ endif
 libgtkincludedir = $(includedir)/gtk-3.0/gtk
 libadd = \
 	$(top_builddir)/gdk/libgdk-3.la	\
-	$(top_builddir)/gtk/a11y/libgtka11y.la \
+	$(top_builddir)/gtk/inspector/libgtkinspector.la \
 	$(GMODULE_LIBS) \
 	$(GTK_DEP_LIBS)
 deps = \
 	$(top_builddir)/gdk/libgdk-3.la	\
-	$(top_builddir)/gtk/a11y/libgtka11y.la
+	$(top_builddir)/gtk/inspector/libgtkinspector.la
 
 # libtool stuff: set version and export symbols for resolving
 # since automake doesn't support conditionalized libsomething_la_LDFLAGS
@@ -135,10 +159,64 @@ endif
 # GTK+ header files for public installation (non-generated, or generated
 # by configure)
 
+a11y_h_sources =				\
+	a11y/gtkarrowaccessible.h		\
+	a11y/gtkbooleancellaccessible.h		\
+	a11y/gtkbuttonaccessible.h		\
+	a11y/gtkcellaccessible.h		\
+	a11y/gtkcellaccessibleparent.h		\
+	a11y/gtkcheckmenuitemaccessible.h	\
+	a11y/gtkcomboboxaccessible.h		\
+	a11y/gtkcontaineraccessible.h		\
+	a11y/gtkcontainercellaccessible.h	\
+	a11y/gtkentryaccessible.h		\
+	a11y/gtkexpanderaccessible.h		\
+	a11y/gtkflowboxaccessible.h		\
+	a11y/gtkflowboxchildaccessible.h	\
+	a11y/gtkframeaccessible.h		\
+	a11y/gtkiconviewaccessible.h		\
+	a11y/gtkimageaccessible.h		\
+	a11y/gtkimagecellaccessible.h		\
+	a11y/gtklabelaccessible.h		\
+	a11y/gtklevelbaraccessible.h 		\
+	a11y/gtklinkbuttonaccessible.h		\
+	a11y/gtklistboxaccessible.h		\
+	a11y/gtklistboxrowaccessible.h		\
+	a11y/gtklockbuttonaccessible.h		\
+	a11y/gtkmenuaccessible.h		\
+	a11y/gtkmenubuttonaccessible.h		\
+	a11y/gtkmenuitemaccessible.h		\
+	a11y/gtkmenushellaccessible.h		\
+	a11y/gtknotebookaccessible.h		\
+	a11y/gtknotebookpageaccessible.h	\
+	a11y/gtkpanedaccessible.h		\
+	a11y/gtkpopoveraccessible.h		\
+	a11y/gtkprogressbaraccessible.h		\
+	a11y/gtkradiobuttonaccessible.h		\
+	a11y/gtkradiomenuitemaccessible.h	\
+	a11y/gtkrangeaccessible.h		\
+	a11y/gtkrenderercellaccessible.h	\
+	a11y/gtkscaleaccessible.h		\
+	a11y/gtkscalebuttonaccessible.h		\
+	a11y/gtkscrolledwindowaccessible.h	\
+	a11y/gtkspinbuttonaccessible.h		\
+	a11y/gtkspinneraccessible.h		\
+	a11y/gtkstatusbaraccessible.h		\
+	a11y/gtkswitchaccessible.h		\
+	a11y/gtktextcellaccessible.h		\
+	a11y/gtktextviewaccessible.h		\
+	a11y/gtktogglebuttonaccessible.h	\
+	a11y/gtktoplevelaccessible.h		\
+	a11y/gtktreeviewaccessible.h		\
+	a11y/gtkwidgetaccessible.h		\
+	a11y/gtkwindowaccessible.h
+
 deprecated_h_sources = 			\
 	deprecated/gtkactivatable.h	\
 	deprecated/gtkaction.h		\
 	deprecated/gtkactiongroup.h	\
+	deprecated/gtkalignment.h	\
+	deprecated/gtkarrow.h		\
 	deprecated/gtkcolorsel.h	\
 	deprecated/gtkcolorseldialog.h	\
 	deprecated/gtkfontsel.h		\
@@ -153,16 +231,20 @@ deprecated_h_sources = 			\
 	deprecated/gtkhsv.h		\
 	deprecated/gtkiconfactory.h	\
 	deprecated/gtkimagemenuitem.h	\
+	deprecated/gtkmisc.h		\
+	deprecated/gtknumerableicon.h	\
 	deprecated/gtkradioaction.h	\
 	deprecated/gtkrc.h		\
 	deprecated/gtkrecentaction.h	\
+	deprecated/gtkstatusicon.h	\
 	deprecated/gtkstock.h		\
 	deprecated/gtkstyle.h		\
 	deprecated/gtksymboliccolor.h	\
 	deprecated/gtktable.h		\
 	deprecated/gtktearoffmenuitem.h	\
+	deprecated/gtkthemingengine.h	\
 	deprecated/gtktoggleaction.h	\
-	deprecated/gtkuimanager.h		\
+	deprecated/gtkuimanager.h	\
 	deprecated/gtkvbbox.h		\
 	deprecated/gtkvbox.h		\
 	deprecated/gtkvscale.h		\
@@ -170,14 +252,29 @@ deprecated_h_sources = 			\
 	deprecated/gtkvseparator.h	\
 	deprecated/gtkvpaned.h
 
+a11y_private_h_sources =			\
+	a11y/gtkaccessibility.h			\
+	a11y/gtkaccessibilitymisc.h		\
+	a11y/gtkaccessibilityutil.h		\
+	a11y/gtkcellaccessibleprivate.h		\
+	a11y/gtkcolorswatchaccessibleprivate.h	\
+	a11y/gtkcontaineraccessibleprivate.h	\
+	a11y/gtkiconviewaccessibleprivate.h	\
+	a11y/gtklabelaccessibleprivate.h	\
+	a11y/gtkflowboxaccessibleprivate.h	\
+	a11y/gtklistboxaccessibleprivate.h	\
+	a11y/gtklockbuttonaccessibleprivate.h	\
+	a11y/gtktextviewaccessibleprivate.h	\
+	a11y/gtktreeviewaccessibleprivate.h	\
+	a11y/gtkwidgetaccessibleprivate.h
+
 deprecated_private_h_sources =			\
 	deprecated/gtkgradientprivate.h		\
+	deprecated/gtknumerableiconprivate.h	\
 	deprecated/gtksymboliccolorprivate.h
 
 gtk_public_h_sources = 		\
 	gtk.h			\
-	ubuntu-private.h	\
-	ubuntumenuitemfactory.h	\
 	gtkx.h			\
 	gtk-a11y.h		\
 	gtkaboutdialog.h	\
@@ -186,15 +283,14 @@ gtk_public_h_sources = 		\
 	gtkaccelmap.h		\
 	gtkaccessible.h		\
 	gtkactionable.h		\
+	gtkactionbar.h		\
 	gtkadjustment.h		\
-	gtkalignment.h		\
 	gtkappchooser.h		\
 	gtkappchooserbutton.h	\
 	gtkappchooserdialog.h	\
 	gtkappchooserwidget.h	\
 	gtkapplication.h	\
 	gtkapplicationwindow.h	\
-	gtkarrow.h		\
 	gtkaspectframe.h	\
 	gtkassistant.h		\
 	gtkbbox.h		\
@@ -244,6 +340,7 @@ gtk_public_h_sources = 		\
 	gtkentrycompletion.h	\
 	gtkenums.h		\
 	gtkeventbox.h		\
+	gtkeventcontroller.h	\
 	gtkexpander.h		\
 	gtkfilechooser.h	\
 	gtkfilechooserbutton.h	\
@@ -251,11 +348,21 @@ gtk_public_h_sources = 		\
 	gtkfilechooserwidget.h	\
 	gtkfilefilter.h		\
 	gtkfixed.h		\
+	gtkflowbox.h		\
 	gtkfontbutton.h		\
 	gtkfontchooser.h	\
 	gtkfontchooserdialog.h  \
 	gtkfontchooserwidget.h	\
 	gtkframe.h		\
+	gtkgesture.h		\
+	gtkgesturedrag.h	\
+	gtkgesturelongpress.h	\
+	gtkgesturemultipress.h	\
+	gtkgesturepan.h		\
+	gtkgesturerotate.h	\
+	gtkgesturesingle.h	\
+	gtkgestureswipe.h	\
+	gtkgesturezoom.h	\
 	gtkgrid.h		\
 	gtkheaderbar.h		\
 	gtkicontheme.h		\
@@ -283,11 +390,9 @@ gtk_public_h_sources = 		\
 	gtkmenushell.h		\
 	gtkmenutoolbutton.h	\
 	gtkmessagedialog.h	\
-	gtkmisc.h		\
 	gtkmodules.h		\
 	gtkmountoperation.h	\
 	gtknotebook.h		\
-	gtknumerableicon.h	\
 	gtkoffscreenwindow.h	\
 	gtkorientable.h		\
 	gtkoverlay.h		\
@@ -296,6 +401,7 @@ gtk_public_h_sources = 		\
 	gtkpapersize.h		\
 	gtkplacessidebar.h	\
 	gtkplug.h		\
+	gtkpopover.h		\
 	gtkprintcontext.h	\
 	gtkprintoperation.h	\
 	gtkprintoperationpreview.h \
@@ -333,7 +439,6 @@ gtk_public_h_sources = 		\
 	gtkstack.h		\
 	gtkstackswitcher.h	\
 	gtkstatusbar.h		\
-	gtkstatusicon.h		\
 	gtkstylecontext.h	\
 	gtkstyleproperties.h	\
 	gtkstyleprovider.h	\
@@ -349,7 +454,6 @@ gtk_public_h_sources = 		\
 	gtktexttag.h		\
 	gtktexttagtable.h	\
 	gtktextview.h		\
-	gtkthemingengine.h	\
 	gtktogglebutton.h	\
 	gtktoggletoolbutton.h	\
 	gtktoolbar.h		\
@@ -373,7 +477,8 @@ gtk_public_h_sources = 		\
 	gtkvolumebutton.h	\
 	gtkwidget.h		\
 	gtkwidgetpath.h		\
-	gtkwindow.h
+	gtkwindow.h		\
+	gtkwindowgroup.h
 
 if OS_UNIX
 gtk_unix_print_public_h_sources = 	\
@@ -389,16 +494,6 @@ endif
 gtk_semi_private_h_sources = \
 	gtktextlayout.h
 
-if ENABLE_PACKAGEKIT
-gtk_appchooser_impl_h_sources = \
-	gtkappchooseronlinepk.h
-endif
-
-if ENABLE_PACKAGEKIT
-gtk_appchooser_impl_c_sources = \
-	gtkappchooseronlinepk.c
-endif
-
 gtk_private_type_h_sources =	\
 	gtkcsstypesprivate.h	\
 	gtktexthandleprivate.h
@@ -409,32 +504,30 @@ gtk_private_h_sources =		\
 	gtkactionmuxer.h	\
 	gtkactionobserver.h	\
 	gtkactionobservable.h	\
+	gtkadjustmentprivate.h	\
 	gtkapplicationprivate.h	\
 	gtkaccelgroupprivate.h	\
 	gtkaccelmapprivate.h	\
 	gtkactionhelper.h	\
 	gtkallocatedbitmaskprivate.h	\
 	gtkappchooserprivate.h	\
-	gtkappchoosermodule.h	\
-	gtkappchooseronline.h	\
 	gtkbindingsprivate.h	\
 	gtkbitmaskprivate.h	\
 	gtkbitmaskprivateimpl.h	\
 	gtkbookmarksmanager.h	\
 	gtkborderimageprivate.h \
 	gtkboxprivate.h         \
-	gtkbubblewindowprivate.h	\
 	gtkbuilderprivate.h	\
 	gtkbuttonprivate.h	\
 	gtkcairoblurprivate.h	\
 	gtkcellareaboxcontextprivate.h	\
 	gtkclipboardprivate.h		\
-	gtkclipboard-waylandprivate.h	\
 	gtkcolorswatchprivate.h	\
 	gtkcoloreditorprivate.h	\
 	gtkcolorplaneprivate.h	\
 	gtkcolorscaleprivate.h	\
 	gtkcolorchooserprivate.h	\
+	gtkcomboboxprivate.h	\
 	gtkcontainerprivate.h   \
 	gtkcssanimationprivate.h	\
 	gtkcssarrayvalueprivate.h	\
@@ -449,6 +542,7 @@ gtk_private_h_sources =		\
 	gtkcssenumvalueprivate.h	\
 	gtkcssimagecrossfadeprivate.h	\
 	gtkcssimagegradientprivate.h	\
+	gtkcssimageiconthemeprivate.h	\
 	gtkcssimagelinearprivate.h	\
 	gtkcssimageprivate.h	\
 	gtkcssimagesurfaceprivate.h	\
@@ -475,12 +569,15 @@ gtk_private_h_sources =		\
 	gtkcssstringvalueprivate.h	\
 	gtkcssstylefuncsprivate.h \
 	gtkcssstylepropertyprivate.h \
+	gtkcsstransformvalueprivate.h	\
 	gtkcsstransitionprivate.h	\
 	gtkcsstypedvalueprivate.h	\
+	gtkcssunsetvalueprivate.h	\
 	gtkcssvalueprivate.h	\
 	gtkcustompaperunixdialog.h \
+	gtkdialogprivate.h 	\
 	gtkentryprivate.h	\
-	gtkfilechooserdefault.h	\
+	gtkeventcontrollerprivate.h	\
 	gtkfilechooserembed.h	\
 	gtkfilechooserentry.h	\
 	gtkfilechooserprivate.h	\
@@ -489,6 +586,15 @@ gtk_private_h_sources =		\
 	gtkfilesystemmodel.h	\
 	gtkfontchooserprivate.h	\
 	gtkfontchooserutils.h	\
+	gtkgestureprivate.h	\
+	gtkgesturedragprivate.h	\
+	gtkgesturelongpressprivate.h	\
+	gtkgesturemultipressprivate.h	\
+	gtkgesturepanprivate.h	\
+	gtkgesturerotateprivate.h	\
+	gtkgesturesingleprivate.h	\
+	gtkgestureswipeprivate.h	\
+	gtkgesturezoomprivate.h	\
 	gtkheaderbarprivate.h	\
 	gtkhslaprivate.h	\
 	gtkiconcache.h		\
@@ -499,28 +605,33 @@ gtk_private_h_sources =		\
 	gtkimcontextsimpleseqs.h \
 	gtkintl.h		\
 	gtkkeyhash.h		\
+	gtkkineticscrolling.h	\
+	gtklabelprivate.h	\
 	gtklockbuttonprivate.h	\
+	gtkmagnifierprivate.h	\
 	gtkmenubuttonprivate.h	\
 	gtkmenuprivate.h	\
 	gtkmenuitemprivate.h	\
+	gtkmenusectionbox.h	\
 	gtkmenushellprivate.h	\
 	gtkmenutracker.h	\
 	gtkmenutrackeritem.h	\
 	gtkmnemonichash.h	\
 	gtkmodelmenuitem.h	\
+	gtkmodelbutton.h	\
 	gtkmodifierstyle.h	\
 	gtkmodulesprivate.h	\
 	gtkmountoperationprivate.h \
-	gtknumerableiconprivate.h \
 	gtkorientableprivate.h	\
 	gtkpango.h		\
 	gtkpathbar.h		\
-	gtkpressandholdprivate.h \
+	gtkpopoverprivate.h	\
 	gtkprintoperation-private.h \
 	gtkprintutils.h		\
 	gtkprivate.h		\
 	gtkpixelcacheprivate.h	\
 	gtkquery.h		\
+	gtkrangeprivate.h	\
 	gtkrbtree.h		\
 	gtkrecentchooserdefault.h \
 	gtkrecentchooserprivate.h \
@@ -552,8 +663,9 @@ gtk_private_h_sources =		\
 	gtktexttypes.h		\
 	gtktextutil.h		\
 	gtkthemingbackgroundprivate.h \
-	gtkthemingengineprivate.h \
+	deprecated/gtkthemingengineprivate.h \
 	gtktrashmonitor.h	\
+	gtktoolbarprivate.h	\
 	gtktoolpaletteprivate.h	\
 	gtktreedatalist.h	\
 	gtktreeprivate.h	\
@@ -562,14 +674,71 @@ gtk_private_h_sources =		\
 	gtkwindowprivate.h	\
 	gtktreemenu.h		\
 	$(gtk_private_type_h_sources) \
-	$(gtk_clipboard_dnd_h_sources) \
-	$(gtk_appchooser_impl_h_sources)
+	$(gtk_clipboard_dnd_h_sources)
+
+a11y_c_sources =				\
+	a11y/gtkaccessibility.c			\
+	a11y/gtkaccessibilitymisc.c 		\
+	a11y/gtkaccessibilityutil.c		\
+	a11y/gtkarrowaccessible.c		\
+	a11y/gtkbooleancellaccessible.c		\
+	a11y/gtkbuttonaccessible.c		\
+	a11y/gtkcellaccessible.c		\
+	a11y/gtkcellaccessibleparent.c		\
+	a11y/gtkcheckmenuitemaccessible.c	\
+	a11y/gtkcolorswatchaccessible.c		\
+	a11y/gtkcomboboxaccessible.c		\
+	a11y/gtkcontaineraccessible.c		\
+	a11y/gtkcontainercellaccessible.c	\
+	a11y/gtkentryaccessible.c		\
+	a11y/gtkexpanderaccessible.c		\
+	a11y/gtkflowboxaccessible.c		\
+	a11y/gtkflowboxchildaccessible.c	\
+	a11y/gtkframeaccessible.c		\
+	a11y/gtkiconviewaccessible.c		\
+	a11y/gtkimageaccessible.c		\
+	a11y/gtkimagecellaccessible.c		\
+	a11y/gtklabelaccessible.c		\
+	a11y/gtklevelbaraccessible.c		\
+	a11y/gtklinkbuttonaccessible.c		\
+	a11y/gtklistboxaccessible.c		\
+	a11y/gtklistboxrowaccessible.c		\
+	a11y/gtklockbuttonaccessible.c		\
+	a11y/gtkmenuaccessible.c		\
+	a11y/gtkmenubuttonaccessible.c		\
+	a11y/gtkmenushellaccessible.c		\
+	a11y/gtkmenuitemaccessible.c		\
+	a11y/gtknotebookaccessible.c		\
+	a11y/gtknotebookpageaccessible.c	\
+	a11y/gtkpanedaccessible.c		\
+	a11y/gtkpopoveraccessible.c		\
+	a11y/gtkprogressbaraccessible.c		\
+	a11y/gtkradiobuttonaccessible.c		\
+	a11y/gtkradiomenuitemaccessible.c	\
+	a11y/gtkrangeaccessible.c		\
+	a11y/gtkrenderercellaccessible.c	\
+	a11y/gtkscaleaccessible.c		\
+	a11y/gtkscalebuttonaccessible.c		\
+	a11y/gtkscrolledwindowaccessible.c	\
+	a11y/gtkspinbuttonaccessible.c		\
+	a11y/gtkspinneraccessible.c		\
+	a11y/gtkstatusbaraccessible.c		\
+	a11y/gtkswitchaccessible.c		\
+	a11y/gtktextcellaccessible.c		\
+	a11y/gtktextviewaccessible.c		\
+	a11y/gtktogglebuttonaccessible.c	\
+	a11y/gtktoplevelaccessible.c		\
+	a11y/gtktreeviewaccessible.c		\
+	a11y/gtkwidgetaccessible.c		\
+	a11y/gtkwindowaccessible.c
 
 # GTK+ C sources to build the library from
 deprecated_c_sources = 			\
 	deprecated/gtkactivatable.c	\
 	deprecated/gtkaction.c		\
 	deprecated/gtkactiongroup.c	\
+	deprecated/gtkalignment.c	\
+	deprecated/gtkarrow.c		\
 	deprecated/gtkcolorsel.c	\
 	deprecated/gtkcolorseldialog.c	\
 	deprecated/gtkfontsel.c		\
@@ -584,14 +753,18 @@ deprecated_c_sources = 			\
 	deprecated/gtkhsv.c		\
 	deprecated/gtkiconfactory.c	\
 	deprecated/gtkimagemenuitem.c	\
+	deprecated/gtkmisc.c		\
+	deprecated/gtknumerableicon.c	\
 	deprecated/gtkradioaction.c	\
 	deprecated/gtkrc.c		\
 	deprecated/gtkrecentaction.c	\
+	deprecated/gtkstatusicon.c	\
 	deprecated/gtkstock.c		\
 	deprecated/gtkstyle.c		\
 	deprecated/gtksymboliccolor.c	\
 	deprecated/gtktable.c		\
 	deprecated/gtktearoffmenuitem.c	\
+	deprecated/gtkthemingengine.c	\
 	deprecated/gtktoggleaction.c	\
 	deprecated/gtkuimanager.c	\
 	deprecated/gtkvbbox.c		\
@@ -602,8 +775,8 @@ deprecated_c_sources = 			\
 	deprecated/gtkvpaned.c
 
 gtk_base_c_sources = 		\
+	$(a11y_c_sources)	\
 	$(deprecated_c_sources)	\
-	ubuntumenuitemfactory.c	\
 	gtkactionmuxer.c	\
 	gtkactionobserver.c	\
 	gtkactionobservable.c	\
@@ -619,19 +792,17 @@ gtk_base_c_sources = 		\
 	gtkaccellabel.c		\
 	gtkaccelmap.c		\
 	gtkaccessible.c		\
+	gtkactionbar.c		\
 	gtkactionhelper.c	\
 	gtkadjustment.c		\
-	gtkalignment.c		\
 	gtkallocatedbitmask.c	\
 	gtkappchooser.c		\
 	gtkappchooserwidget.c	\
 	gtkappchooserbutton.c	\
 	gtkappchooserdialog.c	\
-	gtkappchoosermodule.c	\
-	gtkappchooseronline.c	\
 	gtkapplication.c	\
+	gtkapplicationimpl.c	\
 	gtkapplicationwindow.c	\
-	gtkarrow.c		\
 	gtkaspectframe.c	\
 	gtkassistant.c		\
 	gtkbbox.c		\
@@ -641,7 +812,6 @@ gtk_base_c_sources = 		\
 	gtkborder.c		\
 	gtkborderimage.c	\
 	gtkbox.c		\
-	gtkbubblewindow.c	\
 	gtkbuildable.c		\
 	gtkbuilder.c		\
 	gtkbuilderparser.c	\
@@ -693,6 +863,7 @@ gtk_base_c_sources = 		\
 	gtkcssimage.c		\
 	gtkcssimagecrossfade.c	\
 	gtkcssimagegradient.c	\
+	gtkcssimageicontheme.c	\
 	gtkcssimagelinear.c	\
 	gtkcssimagesurface.c	\
 	gtkcssimageurl.c	\
@@ -720,8 +891,10 @@ gtk_base_c_sources = 		\
 	gtkcssstylefuncs.c	\
 	gtkcssstyleproperty.c	\
 	gtkcssstylepropertyimpl.c \
+	gtkcsstransformvalue.c	\
 	gtkcsstransition.c	\
 	gtkcsstypedvalue.c	\
+	gtkcssunsetvalue.c	\
 	gtkcssvalue.c		\
 	gtkcsstypes.c		\
 	gtkdialog.c		\
@@ -731,10 +904,10 @@ gtk_base_c_sources = 		\
 	gtkentrybuffer.c	\
 	gtkentrycompletion.c	\
 	gtkeventbox.c		\
+	gtkeventcontroller.c	\
 	gtkexpander.c		\
 	gtkfilechooser.c	\
 	gtkfilechooserbutton.c	\
-	gtkfilechooserdefault.c	\
 	gtkfilechooserdialog.c	\
 	gtkfilechooserembed.c	\
 	gtkfilechooserentry.c	\
@@ -744,6 +917,7 @@ gtk_base_c_sources = 		\
 	gtkfilesystem.c		\
 	gtkfilesystemmodel.c	\
 	gtkfixed.c		\
+	gtkflowbox.c		\
 	gtkfontbutton.c		\
 	gtkfontchooser.c	\
 	gtkfontchooserdialog.c	\
@@ -751,6 +925,15 @@ gtk_base_c_sources = 		\
 	gtkfontchooserwidget.c	\
 	gtkframe.c		\
 	gtkgladecatalog.c	\
+	gtkgesture.c		\
+	gtkgesturedrag.c	\
+	gtkgesturelongpress.c	\
+	gtkgesturemultipress.c	\
+	gtkgesturepan.c		\
+	gtkgesturerotate.c	\
+	gtkgesturesingle.c	\
+	gtkgestureswipe.c	\
+	gtkgesturezoom.c	\
 	gtkgrid.c		\
 	gtkheaderbar.c		\
 	gtkhsla.c		\
@@ -767,6 +950,7 @@ gtk_base_c_sources = 		\
 	gtkinfobar.c		\
 	gtkinvisible.c		\
 	gtkkeyhash.c		\
+	gtkkineticscrolling.c	\
 	gtklabel.c		\
 	gtklayout.c		\
 	gtklevelbar.c		\
@@ -775,24 +959,25 @@ gtk_base_c_sources = 		\
 	gtkliststore.c		\
 	gtklockbutton.c		\
 	gtkmain.c		\
+	gtkmagnifier.c		\
 	gtkmarshalers.c		\
 	gtkmenu.c		\
 	gtkmenubar.c		\
 	gtkmenubutton.c		\
 	gtkmenuitem.c		\
+	gtkmenusectionbox.c	\
 	gtkmenushell.c		\
 	gtkmenutracker.c	\
 	gtkmenutrackeritem.c	\
 	gtkmenutoolbutton.c	\
 	gtkmessagedialog.c	\
-	gtkmisc.c		\
 	gtkmnemonichash.c	\
 	gtkmodelmenuitem.c	\
+	gtkmodelbutton.c	\
 	gtkmodifierstyle.c	\
 	gtkmodules.c		\
 	gtkmountoperation.c	\
 	gtknotebook.c		\
-	gtknumerableicon.c	\
 	gtkoffscreenwindow.c	\
 	gtkorientable.c		\
 	gtkoverlay.c		\
@@ -802,7 +987,6 @@ gtk_base_c_sources = 		\
 	gtkpapersize.c		\
 	gtkpathbar.c		\
 	gtkplacessidebar.c	\
-	gtkpressandhold.c	\
 	gtkprintcontext.c	\
 	gtkprintoperation.c	\
 	gtkprintoperationpreview.c \
@@ -812,6 +996,7 @@ gtk_base_c_sources = 		\
 	gtkprivatetypebuiltins.c \
 	gtkprogressbar.c	\
 	gtkpixelcache.c		\
+	gtkpopover.c		\
 	gtkradiobutton.c	\
 	gtkradiomenuitem.c	\
 	gtkradiotoolbutton.c	\
@@ -847,7 +1032,6 @@ gtk_base_c_sources = 		\
 	gtkstack.c		\
 	gtkstackswitcher.c	\
 	gtkstatusbar.c		\
-	gtkstatusicon.c		\
 	gtkstyleanimation.c	\
 	gtkstylecascade.c	\
 	gtkstylecontext.c	\
@@ -875,7 +1059,6 @@ gtk_base_c_sources = 		\
 	gtktextutil.c		\
 	gtktextview.c		\
 	gtkthemingbackground.c  \
-	gtkthemingengine.c	\
 	gtktogglebutton.c	\
 	gtktoggletoolbutton.c	\
 	gtktoolbar.c		\
@@ -903,9 +1086,9 @@ gtk_base_c_sources = 		\
 	gtkwidget.c		\
 	gtkwidgetpath.c		\
 	gtkwindow.c		\
+	gtkwindowgroup.c	\
 	gtkwin32theme.c		\
-	$(gtk_clipboard_dnd_c_sources) \
-	$(gtk_appchooser_impl_c_sources)
+	$(gtk_clipboard_dnd_c_sources)
 
 nodist_gtk_c_sources =
 gtk_c_sources = $(gtk_base_c_sources)
@@ -962,8 +1145,16 @@ gtk_use_x11_c_sources = 	\
 	gtkplug.c		\
 	gtksocket.c		\
 	gtkxembed.c		\
-	gtktrayicon-x11.c	\
+	deprecated/gtktrayicon-x11.c	\
+	gtkapplication-x11.c	\
 	gtkmountoperation-x11.c
+
+gtk_use_wayland_c_sources = \
+	gtkapplication-wayland.c
+
+gtk_use_wayland_or_x11_c_sources = \
+	gtkapplication-dbus.c
+
 gtk_use_win32_c_sources = 	\
 	gtkwin32embed.c		\
 	gtkwin32embedwidget.c	\
@@ -971,18 +1162,33 @@ gtk_use_win32_c_sources = 	\
 gtk_use_quartz_c_sources = 	\
 	gtksearchenginequartz.c	\
 	gtkmountoperation-stub.c \
-	gtkmodelmenu-quartz.c \
+	gtkapplication-quartz.c \
+	gtkapplication-quartz-menu.c \
 	gtkquartz.c
 gtk_use_stub_c_sources = 	\
 	gtkmountoperation-stub.c
 gtk_all_c_sources += $(gtk_use_x11_c_sources) $(gtk_use_win32_c_sources) $(gtk_use_quartz_c_sources) $(gtk_use_stub_c_sources)
 gtk_use_x11_private_h_sources = 	\
 	gtkxembed.h		\
-	gtktrayicon.h		\
+	deprecated/gtktrayicon.h	\
 	xembed.h
 if USE_X11
 gtk_c_sources += $(gtk_use_x11_c_sources)
 gtk_private_h_sources += $(gtk_use_x11_private_h_sources)
+endif
+
+if USE_WAYLAND
+gtk_c_sources += $(gtk_use_wayland_c_sources)
+endif
+
+# pretty tricky way to write USE_WAYLAND || USE_X11...
+if USE_WAYLAND
+gtk_c_sources += $(gtk_use_wayland_or_x11_c_sources)
+else
+if USE_X11
+gtk_c_sources += $(gtk_use_wayland_or_x11_c_sources)
+else
+endif
 endif
 
 gtk_use_win32_private_h_sources = 	\
@@ -995,7 +1201,6 @@ endif
 
 gtk_use_quartz_private_h_sources = 	\
 	gtksearchenginequartz.h	\
-	gtkmodelmenu-quartz.h \
 	gtkquartz.h
 if USE_QUARTZ
 gtk_c_sources += $(gtk_use_quartz_c_sources)
@@ -1004,6 +1209,7 @@ gtk_private_h_sources += $(gtk_use_quartz_private_h_sources)
 endif
 
 gtk_all_private_h_sources = \
+	$(a11y_private_h_sources) \
 	$(deprecated_private_h_sources) \
 	$(gtk_private_h_sources) \
 	$(gtk_use_x11_private_h_sources) \
@@ -1026,7 +1232,6 @@ else
 # No wayland gtkdnd-wayland.c yet
 gtk_clipboard_dnd_c_sources = 	\
 	gtkclipboard.c \
-	gtkclipboard-wayland.c \
 	gtkdnd.c
 endif
 
@@ -1044,11 +1249,11 @@ gtk_built_public_sources =			\
 gtk_built_private_headers =			\
 	gtkresources.h				\
 	gtkmarshalers.h				\
-	gtkbuiltincache.h			\
 	gtkprivatetypebuiltins.h
 
 gtk_built_sources =				\
 	gtkresources.c				\
+	gtk.gresource.xml			\
 	gtktypebuiltins.c			\
 	gtktypefuncs.c				\
 	gtkmarshalers.c				\
@@ -1059,8 +1264,7 @@ gtk_built_sources =				\
 stamp_files =					\
 	stamp-gtkmarshalers.h			\
 	stamp-gtktypebuiltins.h			\
-	stamp-gtkprivatetypebuiltins.h		\
-	stamp-icons
+	stamp-gtkprivatetypebuiltins.h
 
 # non-header sources (headers should be specified in the above variables)
 # that don't serve as direct make target sources, i.e. they don't have
@@ -1069,11 +1273,7 @@ gtk_extra_sources =				\
 	paper_names.c				\
 	paper_names_offsets.c			\
 	gen-paper-names.c			\
-	gtkstatusicon-quartz.c			\
-	gtk-win32-base.css			\
-	gtk-win32.css				\
-	gtk-win32-xp.css			\
-	gtk-win32-classic.css			\
+	deprecated/gtkstatusicon-quartz.c	\
 	gtkversion.h.in				\
 	gtkmarshalers.list			\
 	fallback-c89.c
@@ -1084,16 +1284,13 @@ gtk_extra_sources =				\
 MAINTAINERCLEANFILES = \
 	$(gtk_built_sources) 			\
 	$(gtk_dbus_built_sources)		\
-	$(stamp_files) 				\
-	$(GENERATED_ICONS) 			\
-	stock-icons/icon-theme.cache
+	$(stamp_files)
 
 DISTCLEANFILES =
 
 EXTRA_HEADERS =
 EXTRA_DIST += $(gtk_all_private_h_sources) $(gtk_extra_sources)
 EXTRA_DIST += $(gtk_built_sources)
-EXTRA_DIST += $(STOCK_ICONS)
 
 
 pkgdatadir=$(datadir)/gtk-$(GTK_API_VERSION)
@@ -1101,43 +1298,39 @@ pkgdata_DATA = gtkbuilder.rng
 
 EXTRA_DIST += gtkbuilder.rnc gtkbuilder.rng
 
-DND_CURSORS = \
-	cursor_dnd_ask.png				\
-	cursor_dnd_copy.png				\
-	cursor_dnd_link.png				\
-	cursor_dnd_move.png				\
-	cursor_dnd_none.png
-
-COMPOSITE_TEMPLATES =			\
-	gtkaboutdialog.ui		\
-	gtkappchooserdialog.ui		\
-	gtkappchooserwidget.ui		\
-	gtkassistant.ui			\
-	gtkcolorchooserdialog.ui	\
-	gtkcoloreditor.ui		\
-	gtkdialog.ui			\
-	gtkfilechooserbutton.ui		\
-	gtkfilechooserdefault.ui	\
-	gtkfilechooserdialog.ui		\
-	gtkfontbutton.ui		\
-	gtkfontchooserdialog.ui		\
-	gtkfontchooserwidget.ui		\
-	gtkinfobar.ui			\
-	gtklockbutton.ui		\
-	gtkmessagedialog.ui		\
-	gtkpagesetupunixdialog.ui	\
-	gtkpathbar.ui			\
-	gtkprintunixdialog.ui		\
-	gtkrecentchooserdefault.ui	\
-	gtksearchbar.ui			\
-	gtkscalebutton.ui		\
-	gtkstatusbar.ui			\
-	gtkvolumebutton.ui
+COMPOSITE_TEMPLATES =				\
+	resources/ui/gtkapplication-quartz.ui	\
+	resources/ui/gtkaboutdialog.ui		\
+	resources/ui/gtkactionbar.ui		\
+	resources/ui/gtkappchooserdialog.ui	\
+	resources/ui/gtkappchooserwidget.ui	\
+	resources/ui/gtkassistant.ui		\
+	resources/ui/gtkcolorchooserdialog.ui	\
+	resources/ui/gtkcoloreditor.ui		\
+	resources/ui/gtkdialog.ui		\
+	resources/ui/gtkfilechooserbutton.ui	\
+	resources/ui/gtkfilechooserwidget.ui	\
+	resources/ui/gtkfilechooserdialog.ui	\
+	resources/ui/gtkfontbutton.ui		\
+	resources/ui/gtkfontchooserdialog.ui	\
+	resources/ui/gtkfontchooserwidget.ui	\
+	resources/ui/gtkinfobar.ui		\
+	resources/ui/gtklockbutton.ui		\
+	resources/ui/gtkmessagedialog.ui	\
+	resources/ui/gtkpagesetupunixdialog.ui	\
+	resources/ui/gtkpathbar.ui		\
+	resources/ui/gtkprintunixdialog.ui	\
+	resources/ui/gtkrecentchooserdefault.ui	\
+	resources/ui/gtksearchbar.ui		\
+	resources/ui/gtkscalebutton.ui		\
+	resources/ui/gtkstatusbar.ui		\
+	resources/ui/gtkvolumebutton.ui
 
 template_headers = $(COMPOSITE_TEMPLATES:.ui=.ui.h)
 
-%.ui.h: %.ui extract-strings$(BUILD_EXEEXT)
-	$(AM_V_GEN) ./extract-strings$(BUILD_EXEEXT) $< > $@
+%.ui.h: %.ui
+	$(AM_V_GEN) mkdir -p $(dir $@) \
+	&& $(top_builddir)/util/extract-strings$(EXEEXT) $< > $@
 
 #
 # rules to generate built sources
@@ -1148,8 +1341,7 @@ CLEANFILES = $(gen_sources)
 
 BUILT_SOURCES = \
 	$(gtk_built_sources) \
-	$(gtk_dbus_built_sources) \
-	stamp-icons
+	$(gtk_dbus_built_sources)
 
 # all autogenerated files need to be generated in the srcdir,
 # so old versions get remade and are not confused with newer
@@ -1171,24 +1363,92 @@ gtkmarshalers.c: gtkmarshalers.list
 
 gtktypebuiltins.h: stamp-gtktypebuiltins.h
 	@true
-stamp-gtktypebuiltins.h: $(gtk_public_h_sources) $(deprecated_h_sources) gtktypebuiltins.h.template
+stamp-gtktypebuiltins.h: $(gtk_public_h_sources) $(a11y_h_sources) $(deprecated_h_sources) gtktypebuiltins.h.template
 	$(AM_V_GEN) ( cd $(srcdir) && $(GLIB_MKENUMS) --template gtktypebuiltins.h.template \
-		$(gtk_public_h_sources) $(deprecated_h_sources) ) > xgen-gtbh \
+		$(gtk_public_h_sources) $(a11y_h_sources) $(deprecated_h_sources) ) > xgen-gtbh \
 	&& (cmp -s xgen-gtbh gtktypebuiltins.h || cp xgen-gtbh gtktypebuiltins.h ) \
 	&& rm -f xgen-gtbh \
 	&& echo timestamp > $(@F)
-gtktypebuiltins.c: $(gtk_public_h_sources) $(deprecated_h_sources) gtktypebuiltins.c.template
+gtktypebuiltins.c: $(gtk_public_h_sources) $(a11y_h_sources) $(deprecated_h_sources) gtktypebuiltins.c.template
 	$(AM_V_GEN) ( cd $(srcdir) && $(GLIB_MKENUMS) --template gtktypebuiltins.c.template \
-		$(gtk_public_h_sources) $(deprecated_h_sources) ) > xgen-gtbc \
+		$(gtk_public_h_sources) $(a11y_h_sources) $(deprecated_h_sources) ) > xgen-gtbc \
 	&& cp xgen-gtbc gtktypebuiltins.c  \
 	&& rm -f xgen-gtbc
 
+gtk.gresource.xml: Makefile.am
+	$(AM_V_GEN) $(ECHO) "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $@; \
+	$(ECHO) "<gresources>" >> $@; \
+	$(ECHO) "  <gresource prefix=\"/org/gtk/libgtk\">" >> $@; \
+	for f in $(srcdir)/resources/theme/Raleigh/*.css; do \
+	  n=`basename $$f`; \
+	  $(ECHO) "    <file alias=\"theme/Raleigh.css\">theme/Raleigh/$$n</file>" >> $@; \
+	done; \
+        $(ECHO) "    <file alias=\"theme/Adwaita.css\">theme/Adwaita/gtk.css</file>" >> $@; \
+        $(ECHO) "    <file alias=\"theme/Adwaita-dark.css\">theme/Adwaita/gtk-dark.css</file>" >> $@; \
+        $(ECHO) "    <file>theme/Adwaita/gtk-contained.css</file>" >> $@; \
+        $(ECHO) "    <file>theme/Adwaita/gtk-contained-dark.css</file>" >> $@; \
+        for f in $(srcdir)/resources/theme/Adwaita/assets/*; do \
+          n=`basename $$f`; \
+          $(ECHO) "    <file preprocess=\"to-pixdata\">theme/Adwaita/assets/$$n</file>" >> $@; \
+        done; \
+	if test "$(win32_theme)" = "yes"; then \
+	  for f in $(srcdir)/resources/theme/win32/*.css; do \
+	    n=`basename $$f`; \
+	    $(ECHO) "    <file alias=\"theme/$$n\">theme/win32/$$n</file>" >> $@; \
+	  done; \
+	fi; \
+	for f in $(srcdir)/resources/cursor/*.png; do \
+	  n=`basename $$f`; \
+	  $(ECHO) "    <file>cursor/$$n</file>" >> $@; \
+	done; \
+	for f in $(srcdir)/resources/ui/*.ui; do \
+	  n=`basename $$f`; \
+	  $(ECHO) "    <file compressed=\"true\">ui/$$n</file>" >> $@; \
+	done; \
+	for s in 16x16 22x22 24x24 32x32; do \
+	  for f in $(srcdir)/resources/icons/$$s/actions/*.png; do \
+	    n=`basename $$f`; \
+	    $(ECHO) "    <file>icons/$$s/actions/$$n</file>" >> $@; \
+	  done; \
+	done; \
+	$(ECHO) "  </gresource>" >> $@; \
+	$(ECHO) "</gresources>" >> $@;
+
+win32_theme_sources = \
+	resources/theme/win32/gtk-win32.css \
+	resources/theme/win32/gtk-win32-base.css \
+	resources/theme/win32/gtk-win32-classic.css \
+	resources/theme/win32/gtk-win32-xp.css
+
+adwaita_sources = \
+	resources/theme/Adwaita/assets.txt \
+	resources/theme/Adwaita/assets.svg \
+	resources/theme/Adwaita/_colors-public.scss \
+	resources/theme/Adwaita/_colors.scss \
+	resources/theme/Adwaita/_common.scss \
+	resources/theme/Adwaita/_drawing.scss \
+	resources/theme/Adwaita/gtk-contained-dark.scss \
+	resources/theme/Adwaita/gtk-contained.scss \
+	resources/theme/Adwaita/parse-sass.sh \
+	resources/theme/Adwaita/render-assets.sh \
+	resources/theme/Adwaita/Gemfile \
+	resources/theme/Adwaita/README \
+	resources/theme/Adwaita/gtk-contained.css \
+	resources/theme/Adwaita/gtk-contained-dark.css \
+	resources/theme/Adwaita/gtk.css \
+	resources/theme/Adwaita/gtk-dark.css
+
+Raleigh_sources = \
+	resources/theme/Raleigh/gtk-default.css
+
+resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(srcdir)/resources --generate-dependencies $(builddir)/gtk.gresource.xml)
+
 gtkresources.h: gtk.gresource.xml
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) $(srcdir)/gtk.gresource.xml \
-		--target=$@ --sourcedir=$(srcdir) --c-name _gtk --generate-header --manual-register
-gtkresources.c: gtk.gresource.xml gtk-default.css gtk-win32.css gtk-win32-xp.css gtk-win32-base.css gtk-win32-classic.css $(DND_CURSORS) $(COMPOSITE_TEMPLATES) $(template_headers)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) $(srcdir)/gtk.gresource.xml \
-		--target=$@ --sourcedir=$(srcdir) --c-name _gtk --generate-source --manual-register
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) $< \
+		--target=$@ --sourcedir=$(srcdir)/resources --c-name _gtk --generate-header --manual-register
+gtkresources.c: gtk.gresource.xml $(resource_files) $(template_headers)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) $< \
+		--target=$@ --sourcedir=$(srcdir)/resources --c-name _gtk --generate-source --manual-register
 
 gtkprivatetypebuiltins.h: stamp-gtkprivatetypebuiltins.h
 	@true
@@ -1205,8 +1465,8 @@ gtkprivatetypebuiltins.c: $(gtk_private_type_h_sources)  gtkprivatetypebuiltins.
 	&& rm -f xgen-gptbc
 
 
-gtktypefuncs.c: stamp-gtktypebuiltins.h stamp-gtkprivatetypebuiltins.h $(top_srcdir)/gtk/*.h $(top_srcdir)/gtk/deprecated/*.h $(top_srcdir)/gdk/*.h Makefile
-	$(AM_V_GEN) echo '#include <gtk/gtkx.h>' > xgen-gtfsrc.c && \
+gtktypefuncs.c: stamp-gtktypebuiltins.h stamp-gtkprivatetypebuiltins.h $(top_srcdir)/gtk/*.h $(top_srcdir)/gtk/a11y/*.h $(top_srcdir)/gtk/deprecated/*.h $(top_srcdir)/gdk/*.h Makefile
+	$(AM_V_GEN) (echo '#undef GTK_COMPILATION' && echo '#include <gtk/gtkx.h>') > xgen-gtfsrc.c && \
 	  echo 'G_GNUC_BEGIN_IGNORE_DEPRECATIONS' > xgen-gtf && \
 	  ${CPP} $(DEFS) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) xgen-gtfsrc.c | \
 	  $(GREP) -o '\bg[td]k_[a-zA-Z0-9_]*_get_type\b' | \
@@ -1221,6 +1481,9 @@ lib_LTLIBRARIES = libgtk-3.la
 gtkincludedir = $(includedir)/gtk-3.0/gtk
 gtkinclude_HEADERS = $(gtk_public_h_sources) $(gtk_semi_private_h_sources) $(gtk_built_public_sources) gtkversion.h
 
+a11yincludedir = $(includedir)/gtk-3.0/gtk/a11y
+a11yinclude_HEADERS= $(a11y_h_sources)
+
 deprecatedincludedir = $(includedir)/gtk-3.0/gtk/deprecated
 deprecatedinclude_HEADERS= $(deprecated_h_sources)
 
@@ -1234,10 +1497,11 @@ libgtk_3_la_LIBADD = $(libadd)
 libgtk_3_la_DEPENDENCIES = $(deps)
 
 if USE_WIN32
+win32_theme=yes
 libgtk_3_la_LIBADD += -lole32 -lgdi32 -lcomdlg32 -lwinspool -lcomctl32
 libgtk_3_la_LDFLAGS += -Wl,-luuid
-libgtk_3_la_DEPENDENCIES += $(gtk_def) $(gtk_win32_res) $(deps)
-libgtk_target_ldflags = $(gtk_win32_res_ldflag) $(gtk_win32_symbols)
+libgtk_3_la_DEPENDENCIES += $(gtk_win32_res) $(deps)
+libgtk_target_ldflags = $(gtk_win32_res_ldflag)
 endif
 
 install-exec-hook:
@@ -1306,7 +1570,6 @@ distclean-local:
 	if test $(srcdir) != .; then \
 	  rm -f $(MAINTAINERCLEANFILES); \
 	  rm -rf stock-icons; \
-	  rm -f extract-strings$(EXEEXT); \
 	  rm -f $(template_headers); \
 	fi
 
@@ -1324,7 +1587,7 @@ if HAVE_INTROSPECTION
 # introspection. Rather than copy the annotations over from the
 # regular files, exclude the quartz ones:
 introspection_files = \
-    $(filter-out %private.h gtktextdisplay.h gtktextlayout.h, $(gtkinclude_HEADERS) $(deprecatedinclude_HEADERS)) \
+    $(filter-out %private.h gtktextdisplay.h gtktextlayout.h gtkx.h, $(gtkinclude_HEADERS) $(a11yinclude_HEADERS) $(deprecatedinclude_HEADERS)) \
     $(filter-out  gtkclipboard-quartz.c gtkdnd-quartz.c, \
     $(gtk_base_c_sources)) \
     gtkprintoperation-unix.c \
@@ -1353,7 +1616,6 @@ if USE_X11
 Gtk_3_0_gir_SCANNERFLAGS += --add-include-path=$(top_builddir)/gdk/x11
 Gtk_3_0_gir_INCLUDES += xlib-2.0
 endif
-Gtk_3_0_gir_SCANNERFLAGS += --c-include="gtk/gtkx.h"
 Gtk_3_0_gir_CFLAGS = \
 		$(AM_CPPFLAGS) \
 		-DGTK_TEXT_USE_INTERNAL_UNSUPPORTED_API
@@ -1376,7 +1638,8 @@ endif
 #
 bin_PROGRAMS = \
 	gtk-query-immodules-3.0	\
-	gtk-launch
+	gtk-launch \
+	gtk-encode-symbolic-svg
 
 if BUILD_ICON_CACHE
 bin_PROGRAMS += gtk-update-icon-cache
@@ -1385,12 +1648,12 @@ if OS_WIN32
 
 # Workaround for UAC silliness: programs with "update" in their name
 # are believed to be installers and require elevated privileges to be
-# used... Use a manifest file to tell Windows that
+# used... Embed a manifest file into executable to tell Windows that
 # gtk-update-icon-cache.exe doesn't require any special privileges.
 
 GTK_UPDATE_ICON_CACHE_MANIFEST = gtk-update-icon-cache.exe.manifest
-
-bin_SCRIPTS = $(GTK_UPDATE_ICON_CACHE_MANIFEST)
+GTK_UPDATE_ICON_CACHE_RC = gtk-update-icon-cache.rc
+GTK_UPDATE_ICON_CACHE_MANIFEST_OBJECT = gtk-update-icon-cache_manifest.o
 
 $(GTK_UPDATE_ICON_CACHE_MANIFEST):
 	(echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' ; \
@@ -1411,6 +1674,12 @@ $(GTK_UPDATE_ICON_CACHE_MANIFEST):
 	 echo '  </trustInfo>' ; \
 	 echo '</assembly>' ) >$@
 
+$(GTK_UPDATE_ICON_CACHE_RC):
+	(echo 'CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST '$(GTK_UPDATE_ICON_CACHE_MANIFEST)) >$@
+
+$(GTK_UPDATE_ICON_CACHE_MANIFEST_OBJECT): $(GTK_UPDATE_ICON_CACHE_RC) $(GTK_UPDATE_ICON_CACHE_MANIFEST)
+	$(WINDRES) --input $< --output $@ --output-format=coff
+
 endif
 endif
 
@@ -1419,23 +1688,17 @@ gtk_query_immodules_3_0_LDADD = $(LDADDS) $(GMODULE_LIBS)
 gtk_query_immodules_3_0_SOURCES = queryimmodules.c
 
 if BUILD_ICON_CACHE
-gtk_update_icon_cache_LDADD = $(GDK_PIXBUF_LIBS)
+gtk_update_icon_cache_LDADD = $(GDK_PIXBUF_LIBS) $(GTK_UPDATE_ICON_CACHE_MANIFEST_OBJECT)
+gtk_update_icon_cache_DEPENDENCIES = $(GTK_UPDATE_ICON_CACHE_MANIFEST_OBJECT)
 gtk_update_icon_cache_SOURCES = updateiconcache.c
 endif
 
+gtk_encode_symbolic_svg_LDADD = $(GDK_PIXBUF_LIBS) $(top_builddir)/gdk/libgdk-3.la $(GTK_DEP_LIBS)
+gtk_encode_symbolic_svg_SOURCES = encodesymbolic.c
+
+
 gtk_launch_LDADD = $(LDADDS)
 gtk_launch_SOURCES = gtk-launch.c
-
-# The extract_strings tool is a build utility that runs on the build system.
-extract_strings_sources = extract-strings.c
-extract_strings_cppflags =
-extract_strings_cflags = $(GLIB_CFLAGS_FOR_BUILD)
-extract_strings_ldadd = $(GLIB_LIBS_FOR_BUILD)
-extract-strings$(BUILD_EXEEXT): $(extract_strings_sources)
-	@rm -f extract-strings$(BUILD_EXEEXT)
-	$(AM_V_CCLD)$(CC_FOR_BUILD) $(extract_strings_cppflags) $(CPPFLAGS_FOR_BUILD) $(extract_strings_cflags) $(CFLAGS_FOR_BUILD) $^ $(LDFLAGS_FOR_BUILD) $(extract_strings_ldadd) $(LIBS_FOR_BUILD) -o $@
-EXTRA_DIST += $(extract_strings_sources)
-DISTCLEANFILES += extract-strings
 
 .PHONY: files test test-debug
 
@@ -1444,326 +1707,21 @@ files:
 	  echo $$p; \
 	done
 
-STOCK_ICONS = \
-	stock-icons/16/document-open-recent.png		\
-	stock-icons/16/help-about.png 			\
-	stock-icons/16/list-add.png 			\
-	stock-icons/16/media-optical.png 		\
-	stock-icons/16/window-close.png 		\
-	stock-icons/16/window-minimize.png 		\
-	stock-icons/16/window-maximize.png 		\
-	stock-icons/16/window-restore.png 		\
-	stock-icons/16/window-delete.png 		\
-	stock-icons/16/gtk-connect.png 			\
-	stock-icons/16/gtk-convert.png 			\
-	stock-icons/16/edit-clear.png 			\
-	stock-icons/16/edit-copy.png 			\
-	stock-icons/16/edit-cut.png 			\
-	stock-icons/16/edit-delete.png 			\
-	stock-icons/16/folder.png 			\
-	stock-icons/16/gtk-disconnect.png 		\
-	stock-icons/16/gtk-edit.png 			\
-	stock-icons/16/system-run.png 			\
-	stock-icons/16/text-x-generic.png 		\
-	stock-icons/16/edit-find-replace.png 		\
-	stock-icons/16/edit-find.png 			\
-	stock-icons/16/media-floppy.png 		\
-	stock-icons/16/view-fullscreen.png 		\
-	stock-icons/16/go-previous-ltr.png 		\
-	stock-icons/16/go-down.png 			\
-	stock-icons/16/go-next-ltr.png 			\
-	stock-icons/16/go-bottom.png 			\
-	stock-icons/16/go-first-ltr.png 		\
-	stock-icons/16/go-last-ltr.png 			\
-	stock-icons/16/go-top.png 			\
-	stock-icons/16/go-up.png 			\
-	stock-icons/16/gtk-caps-lock-warning.png	\
-	stock-icons/16/gtk-color-picker.png		\
-	stock-icons/16/drive-harddisk.png 		\
-	stock-icons/16/help-contents.png 		\
-	stock-icons/16/go-home.png 			\
-	stock-icons/16/format-indent-more-ltr.png 	\
-	stock-icons/16/format-indent-more-rtl.png 	\
-	stock-icons/16/gtk-index.png 			\
-	stock-icons/16/dialog-information.png		\
-	stock-icons/16/go-jump-ltr.png 			\
-	stock-icons/16/go-jump-rtl.png 			\
-	stock-icons/16/format-justify-center.png 	\
-	stock-icons/16/format-justify-fill.png 		\
-	stock-icons/16/format-justify-left.png 		\
-	stock-icons/16/format-justify-right.png 	\
-	stock-icons/16/view-restore.png 		\
-	stock-icons/16/media-seek-forward-ltr.png 	\
-	stock-icons/16/media-skip-forward-ltr.png 	\
-	stock-icons/16/media-playback-pause.png 	\
-	stock-icons/16/media-playback-start-ltr.png 	\
-	stock-icons/16/media-playback-start-rtl.png 	\
-	stock-icons/16/media-skip-backward-ltr.png 	\
-	stock-icons/16/media-record.png 		\
-	stock-icons/16/media-seek-backward-ltr.png 	\
-	stock-icons/16/media-playback-stop.png 		\
-	stock-icons/16/image-missing.png 		\
-	stock-icons/16/network-idle.png 		\
-	stock-icons/16/document-new.png 		\
-	stock-icons/16/document-open.png 		\
-	stock-icons/16/gtk-orientation-landscape.png	\
-	stock-icons/16/gtk-orientation-portrait.png	\
-	stock-icons/16/gtk-orientation-reverse-landscape.png \
-	stock-icons/16/gtk-orientation-reverse-portrait.png \
-	stock-icons/16/gtk-page-setup.png 		\
-	stock-icons/16/edit-paste.png 			\
-	stock-icons/16/gtk-preferences.png 		\
-	stock-icons/16/document-print.png 		\
-	stock-icons/16/printer-error.png 		\
-	stock-icons/16/printer-paused.png 		\
-	stock-icons/16/document-print-preview.png 	\
-	stock-icons/16/printer-info.png 		\
-	stock-icons/16/printer-warning.png 		\
-	stock-icons/16/document-properties.png 		\
-	stock-icons/16/application-exit.png 		\
-	stock-icons/16/edit-redo-ltr.png 		\
-	stock-icons/16/edit-redo-rtl.png 		\
-	stock-icons/16/view-refresh.png 		\
-	stock-icons/16/list-remove.png 			\
-	stock-icons/16/document-revert-ltr.png 		\
-	stock-icons/16/document-revert-rtl.png 		\
-	stock-icons/16/document-save-as.png 		\
-	stock-icons/16/edit-select-all.png 		\
-	stock-icons/16/gtk-select-color.png 		\
-	stock-icons/16/gtk-select-font.png 		\
-	stock-icons/16/view-sort-ascending.png 		\
-	stock-icons/16/view-sort-descending.png 	\
-	stock-icons/16/tools-check-spelling.png 	\
-	stock-icons/16/process-stop.png 		\
-	stock-icons/16/format-text-strikethrough.png 	\
-	stock-icons/16/gtk-font.png 			\
-	stock-icons/16/gtk-undelete-ltr.png 		\
-	stock-icons/16/gtk-undelete-rtl.png 		\
-	stock-icons/16/format-text-underline.png 	\
-	stock-icons/16/edit-undo-ltr.png 		\
-	stock-icons/16/edit-undo-rtl.png 		\
-	stock-icons/16/format-indent-less-ltr.png 	\
-	stock-icons/16/format-indent-less-rtl.png 	\
-	stock-icons/16/zoom-original.png 		\
-	stock-icons/16/zoom-fit-best.png 		\
-	stock-icons/16/zoom-in.png 			\
-	stock-icons/16/zoom-out.png 			\
-	stock-icons/16/format-text-italic.png 		\
-	stock-icons/16/format-text-bold.png 		\
-	stock-icons/20/gtk-apply.png  			\
-	stock-icons/20/gtk-cancel.png 			\
-	stock-icons/20/window-close.png 		\
-	stock-icons/20/gtk-no.png 			\
-	stock-icons/20/gtk-ok.png 			\
-	stock-icons/20/gtk-yes.png 			\
-	stock-icons/24/audio-volume-high.png		\
-	stock-icons/24/audio-volume-low.png		\
-	stock-icons/24/audio-volume-medium.png		\
-	stock-icons/24/audio-volume-muted.png		\
-	stock-icons/24/document-open-recent.png		\
-	stock-icons/24/help-about.png 			\
-	stock-icons/24/list-add.png 			\
-	stock-icons/24/format-text-bold.png 		\
-	stock-icons/24/media-optical.png 		\
-	stock-icons/24/edit-clear.png 			\
-	stock-icons/24/window-close.png 		\
-	stock-icons/24/gtk-caps-lock-warning.png	\
-	stock-icons/24/gtk-color-picker.png 		\
-	stock-icons/24/gtk-connect.png 			\
-	stock-icons/24/gtk-convert.png 			\
-	stock-icons/24/edit-copy.png 			\
-	stock-icons/24/edit-cut.png 			\
-	stock-icons/24/folder.png 			\
-	stock-icons/24/gtk-disconnect.png 		\
-	stock-icons/24/gtk-edit.png 			\
-	stock-icons/24/system-run.png 			\
-	stock-icons/24/text-x-generic.png 		\
-	stock-icons/24/edit-find-replace.png 		\
-	stock-icons/24/edit-find.png 			\
-	stock-icons/24/gtk-font.png 			\
-	stock-icons/24/view-fullscreen.png 		\
-	stock-icons/24/go-previous-ltr.png 		\
-	stock-icons/24/go-top.png 			\
-	stock-icons/24/go-down.png 			\
-	stock-icons/24/go-bottom.png 			\
-	stock-icons/24/go-first-ltr.png 		\
-	stock-icons/24/go-last-ltr.png 			\
-	stock-icons/24/go-up.png 			\
-	stock-icons/24/drive-harddisk.png 		\
-	stock-icons/24/help-contents.png 		\
-	stock-icons/24/go-home.png 			\
-	stock-icons/24/format-indent-more-ltr.png 	\
-	stock-icons/24/format-indent-more-rtl.png 	\
-	stock-icons/24/gtk-index.png  			\
-	stock-icons/24/dialog-information.png		\
-	stock-icons/24/format-text-italic.png 		\
-	stock-icons/24/go-jump-ltr.png 			\
-	stock-icons/24/go-jump-rtl.png 			\
-	stock-icons/24/format-justify-center.png 	\
-	stock-icons/24/format-justify-fill.png 		\
-	stock-icons/24/format-justify-left.png 		\
-	stock-icons/24/format-justify-right.png		\
-	stock-icons/24/view-restore.png 		\
-	stock-icons/24/media-seek-forward-ltr.png 	\
-	stock-icons/24/media-skip-forward-ltr.png 	\
-	stock-icons/24/media-playback-pause.png 	\
-	stock-icons/24/media-playback-start-ltr.png 	\
-	stock-icons/24/media-playback-start-rtl.png 	\
-	stock-icons/24/media-skip-backward-ltr.png 	\
-	stock-icons/24/media-record.png 		\
-	stock-icons/24/media-seek-backward-ltr.png 	\
-	stock-icons/24/media-playback-stop.png 		\
-	stock-icons/24/image-missing.png 		\
-	stock-icons/24/network-idle.png 		\
-	stock-icons/24/document-new.png 		\
-	stock-icons/24/document-open.png 		\
-	stock-icons/24/gtk-orientation-reverse-landscape.png \
-	stock-icons/24/gtk-orientation-landscape.png	\
-	stock-icons/24/gtk-orientation-reverse-portrait.png \
-	stock-icons/24/gtk-orientation-portrait.png	\
-	stock-icons/24/gtk-page-setup.png 		\
-	stock-icons/24/edit-paste.png 			\
-	stock-icons/24/gtk-preferences.png 		\
-	stock-icons/24/document-print.png 		\
-	stock-icons/24/printer-error.png 		\
-	stock-icons/24/printer-paused.png 		\
-	stock-icons/24/document-print-preview.png 	\
-	stock-icons/24/printer-info.png 		\
-	stock-icons/24/printer-warning.png 		\
-	stock-icons/24/document-properties.png 		\
-	stock-icons/24/application-exit.png 		\
-	stock-icons/24/edit-redo-ltr.png 		\
-	stock-icons/24/edit-redo-rtl.png 		\
-	stock-icons/24/view-refresh.png 		\
-	stock-icons/24/list-remove.png 			\
-	stock-icons/24/document-revert-ltr.png 		\
-	stock-icons/24/document-revert-rtl.png 		\
-	stock-icons/24/gtk-select-font.png 		\
-	stock-icons/24/document-save-as.png 		\
-	stock-icons/24/media-floppy.png 		\
-	stock-icons/24/edit-select-all.png 		\
-	stock-icons/24/gtk-select-color.png   		\
-	stock-icons/24/view-sort-ascending.png 		\
-	stock-icons/24/view-sort-descending.png 	\
-	stock-icons/24/tools-check-spelling.png 	\
-	stock-icons/24/process-stop.png 		\
-	stock-icons/24/format-text-strikethrough.png 	\
-	stock-icons/24/edit-delete.png 			\
-	stock-icons/24/gtk-undelete-ltr.png 		\
-	stock-icons/24/gtk-undelete-rtl.png 		\
-	stock-icons/24/format-text-underline.png 	\
-	stock-icons/24/edit-undo-ltr.png 		\
-	stock-icons/24/edit-undo-rtl.png 		\
-	stock-icons/24/format-indent-less-ltr.png 	\
-	stock-icons/24/format-indent-less-rtl.png 	\
-	stock-icons/24/zoom-original.png 		\
-	stock-icons/24/zoom-fit-best.png 		\
-	stock-icons/24/zoom-in.png 			\
-	stock-icons/24/zoom-out.png 			\
-	stock-icons/24/go-next-ltr.png 			\
-	stock-icons/32/gtk-dnd-multiple.png 		\
-	stock-icons/32/gtk-dnd.png 			\
-	stock-icons/48/dialog-password.png 		\
-	stock-icons/48/dialog-error.png 		\
-	stock-icons/48/dialog-information.png		\
-	stock-icons/48/dialog-question.png 		\
-	stock-icons/48/dialog-warning.png
+gsettings_SCHEMAS = \
+	org.gtk.Settings.FileChooser.gschema.xml \
+	org.gtk.Settings.ColorChooser.gschema.xml \
+	org.gtk.Settings.Debug.gschema.xml
 
-GENERATED_ICONS = \
-	stock-icons/16/go-previous-rtl.png 		\
-	stock-icons/16/go-next-rtl.png 			\
-	stock-icons/16/go-first-rtl.png 		\
-	stock-icons/16/go-last-rtl.png 			\
-	stock-icons/16/media-seek-forward-rtl.png 	\
-	stock-icons/16/media-skip-forward-rtl.png 	\
-	stock-icons/16/media-skip-backward-rtl.png 	\
-	stock-icons/16/media-seek-backward-rtl.png 	\
-	stock-icons/16/document-save.png 		\
-	stock-icons/16/folder-remote.png 		\
-	stock-icons/16/user-home.png 			\
-	stock-icons/16/user-desktop.png 		\
-	stock-icons/24/go-previous-rtl.png 		\
-	stock-icons/24/go-next-rtl.png 			\
-	stock-icons/24/go-first-rtl.png 		\
-	stock-icons/24/go-last-rtl.png 			\
-	stock-icons/24/media-seek-forward-rtl.png 	\
-	stock-icons/24/media-skip-forward-rtl.png 	\
-	stock-icons/24/media-skip-backward-rtl.png 	\
-	stock-icons/24/media-seek-backward-rtl.png 	\
-	stock-icons/24/document-save.png 		\
-	stock-icons/24/folder-remote.png 		\
-	stock-icons/24/user-home.png 			\
-	stock-icons/24/user-desktop.png
-
-# need to copy the icons so that we can replace the generated ones with
-# symlinks, even in the readonly srcdir case
-stamp-icons: $(STOCK_ICONS)
-	$(AM_V_GEN) if [ ! -d stock-icons ]; then 			\
-	  for d in 16 20 24 32 48; do 					\
-	    mkdir -p stock-icons/$$d; 					\
-	  done;								\
-	  for f in $(STOCK_ICONS); do					\
-	    cp $(srcdir)/$$f $$(dirname $$f);				\
-	  done;								\
-	  chmod -R u+w stock-icons;					\
-        fi &&								\
-	for i in 16 24; do						\
-	   (cd stock-icons/$$i						\
-	   && $(RM) go-previous-rtl.png 				\
-	   && $(LN_S) go-next-ltr.png go-previous-rtl.png 		\
-	   && $(RM) go-next-rtl.png 					\
-	   && $(LN_S) go-previous-ltr.png go-next-rtl.png 		\
-	   && $(RM) go-first-rtl.png 					\
-	   && $(LN_S) go-last-ltr.png go-first-rtl.png 			\
-	   && $(RM) go-last-rtl.png 					\
-	   && $(LN_S) go-first-ltr.png go-last-rtl.png 			\
-	   && $(RM) media-seek-forward-rtl.png 				\
-	   && $(LN_S) media-seek-backward-ltr.png media-seek-forward-rtl.png \
-	   && $(RM) media-skip-forward-rtl.png 				\
-	   && $(LN_S) media-skip-backward-ltr.png media-skip-forward-rtl.png \
-	   && $(RM) media-skip-backward-rtl.png 			\
-	   && $(LN_S) media-skip-forward-ltr.png media-skip-backward-rtl.png \
-	   && $(RM) media-seek-backward-rtl.png 			\
-	   && $(LN_S) media-seek-forward-ltr.png media-seek-backward-rtl.png \
-	   && $(RM) document-save.png 					\
-	   && $(LN_S) media-floppy.png document-save.png 		\
-	   && $(RM) folder-remote.png 					\
-	   && $(LN_S) folder.png folder-remote.png 			\
-	   && $(RM) user-home.png 					\
-	   && $(LN_S) folder.png user-home.png 				\
-	   && $(RM) user-desktop.png 					\
-	   && $(LN_S) folder.png user-desktop.png 			\
-	) done 								\
-	&& touch stamp-icons
-
-if USE_EXTERNAL_ICON_CACHE
-gtk_update_icon_cache_program = $(GTK_UPDATE_ICON_CACHE)
-else
-if CROSS_COMPILING
-gtk_update_icon_cache_program = ./native/native-update-icon-cache
-else
-gtk_update_icon_cache_program = ./gtk-update-icon-cache$(EXEEXT)
-endif
-endif
-
-gtkbuiltincache.h: stamp-icons
-if !USE_EXTERNAL_ICON_CACHE
-if CROSS_COMPILING
-	$(AM_V_at) $(MAKE) $(AM_MAKEFLAGS) -C native/
-else
-	$(AM_V_at) $(MAKE) $(AM_MAKEFLAGS) gtk-update-icon-cache$(EXEEXT)
-endif
-endif
-	$(AM_V_GEN) $(gtk_update_icon_cache_program) --quiet --force --ignore-theme-index		\
-	   --source builtin_icons stock-icons > gtkbuiltincache.h.tmp &&        \
-	mv gtkbuiltincache.h.tmp gtkbuiltincache.h
+@GSETTINGS_RULES@
 
 EXTRA_DIST +=                   \
-	$(STOCK_ICONS)		\
-	$(COMPOSITE_TEMPLATES)	\
-	$(DND_CURSORS)		\
-	$(GENERATED_ICONS)	\
-	gtk-win32.rc		\
+	$(resource_files)	\
+	$(adwaita_sources)	\
+	$(Raleigh_sources)	\
+	$(win32_theme_sources)	\
+	$(gsettings_SCHEMAS)	\
+	$(template_headers)	\
+	libgtk3.manifest.in	\
 	gtk-win32.rc.in		\
 	gtkwin32embed.h		\
 	gtkwin32embedwidget.h	\
@@ -1771,9 +1729,7 @@ EXTRA_DIST +=                   \
 	gtkprint-win32.h	\
 	gtkprint-win32.c	\
 	gtksearchenginequartz.h \
-	gtk.gresource.xml	\
 	gtkdbusinterfaces.xml	\
-	gtk-default.css		\
 	gtk-keys.css.default	\
 	gtk-keys.css.emacs	\
 	gtk-keys.css.mac	\
@@ -1782,15 +1738,7 @@ EXTRA_DIST +=                   \
 	gtktypebuiltins.c.template \
 	gtktypebuiltins.h.template \
 	gtkprivatetypebuiltins.c.template \
-	gtkprivatetypebuiltins.h.template \
-	org.gtk.Settings.FileChooser.gschema.xml \
-	org.gtk.Settings.ColorChooser.gschema.xml
-
-gsettings_SCHEMAS = \
-	org.gtk.Settings.FileChooser.gschema.xml \
-	org.gtk.Settings.ColorChooser.gschema.xml
-
-@GSETTINGS_RULES@
+	gtkprivatetypebuiltins.h.template
 
 install-data-local:
 

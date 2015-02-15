@@ -23,6 +23,8 @@
 
 #include <gtk/gtk.h>
 
+G_BEGIN_DECLS
+
 void _gtk_tool_palette_get_item_size           (GtkToolPalette   *palette,
                                                 GtkRequisition   *item_size,
                                                 gboolean          homogeneous_only,
@@ -41,8 +43,6 @@ gint _gtk_tool_item_group_get_height_for_width (GtkToolItemGroup *group,
                                                 gint              width);
 gint _gtk_tool_item_group_get_width_for_height (GtkToolItemGroup *group,
                                                 gint              height);
-void _gtk_tool_item_group_paint                (GtkToolItemGroup *group,
-                                                cairo_t          *cr);
 gint _gtk_tool_item_group_get_size_for_limit   (GtkToolItemGroup *group,
                                                 gint              limit,
                                                 gboolean          vertical,
@@ -50,5 +50,7 @@ gint _gtk_tool_item_group_get_size_for_limit   (GtkToolItemGroup *group,
 
 
 GtkSizeGroup *_gtk_tool_palette_get_size_group (GtkToolPalette   *palette);
+
+G_END_DECLS
 
 #endif /* __GTK_TOOL_PALETTE_PRIVATE_H__ */

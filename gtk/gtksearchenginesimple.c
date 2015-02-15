@@ -21,14 +21,6 @@
 
 #include "config.h"
 
-/* these must be defined even when HAVE_GNU_FTW is not defined
- * because (really) old versions of GNU libc have ftw.h but do
- * export ftw() and friends only if _XOPEN_SOURCE and _GNU_SOURCE
- * are defined. see bug #444097.
- */
-#define _XOPEN_SOURCE 600
-#define _GNU_SOURCE
-
 #ifdef HAVE_FTW_H
 #include <ftw.h>
 #endif
@@ -122,6 +114,7 @@ search_thread_data_new (GtkSearchEngineSimple *engine,
   return data;
 }
 
+#ifdef HAVE_FTW_H
 static void 
 search_thread_data_free (SearchThreadData *data)
 {
@@ -153,7 +146,6 @@ typedef struct
   SearchThreadData *thread_data;
 } SearchHits;
 
-
 static gboolean
 search_thread_add_hits_idle (gpointer user_data)
 {
@@ -182,11 +174,14 @@ send_batch (SearchThreadData *data)
   
   if (data->uri_hits) 
     {
+      guint id;
+
       hits = g_new (SearchHits, 1);
       hits->uris = data->uri_hits;
       hits->thread_data = data;
       
-      gdk_threads_add_idle (search_thread_add_hits_idle, hits);
+      id = gdk_threads_add_idle (search_thread_add_hits_idle, hits);
+      g_source_set_name_by_id (id, "[gtk+] search_thread_add_hits_idle");
     }
 
   data->uri_hits = NULL;
@@ -194,7 +189,6 @@ send_batch (SearchThreadData *data)
 
 static GPrivate search_thread_data;
 
-#ifdef HAVE_FTW_H
 static int
 search_visit_func (const char        *fpath,
 		   const struct stat *sb,
@@ -270,6 +264,7 @@ static gpointer
 search_thread_func (gpointer user_data)
 {
 #ifdef HAVE_FTW_H
+  guint id;
   SearchThreadData *data;
   
   data = user_data;
@@ -284,7 +279,8 @@ search_thread_func (gpointer user_data)
 
   send_batch (data);
   
-  gdk_threads_add_idle (search_thread_done_idle, data);
+  id = gdk_threads_add_idle (search_thread_done_idle, data);
+  g_source_set_name_by_id (id, "[gtk+] search_thread_done_idle");
 #endif /* HAVE_FTW_H */
   
   return NULL;

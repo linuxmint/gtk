@@ -137,7 +137,7 @@ gtk_cell_renderer_combo_class_init (GtkCellRendererComboClass *klass)
    * combo box. 
    *
    * Note that this refers to the model specified in the model property, 
-   * <emphasis>not</emphasis> the model backing the tree view to which 
+   * not the model backing the tree view to which 
    * this cell renderer is attached.
    * 
    * #GtkCellRendererCombo automatically adds a text cell renderer for 
@@ -153,7 +153,7 @@ gtk_cell_renderer_combo_class_init (GtkCellRendererComboClass *klass)
                                                      -1,
                                                      G_MAXINT,
                                                      -1,
-                                                     GTK_PARAM_READWRITE));
+                                                     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /** 
    * GtkCellRendererCombo:has-entry:
@@ -169,7 +169,7 @@ gtk_cell_renderer_combo_class_init (GtkCellRendererComboClass *klass)
 							 P_("Has Entry"),
 							 P_("If FALSE, don't allow to enter strings other than the chosen ones"),
 							 TRUE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
 
   /**
@@ -227,7 +227,7 @@ gtk_cell_renderer_combo_init (GtkCellRendererCombo *self)
  * Adjust how text is drawn using object properties. 
  * Object properties can be set globally (with g_object_set()). 
  * Also, with #GtkTreeViewColumn, you can bind a property to a value 
- * in a #GtkTreeModel. For example, you can bind the "text" property 
+ * in a #GtkTreeModel. For example, you can bind the “text” property 
  * on the cell renderer to a string value in the model, thus rendering 
  * a different string in each row of the #GtkTreeView.
  * 
@@ -303,10 +303,18 @@ gtk_cell_renderer_combo_set_property (GObject      *object,
         break;
       }
     case PROP_TEXT_COLUMN:
-      priv->text_column = g_value_get_int (value);
+      if (priv->text_column != g_value_get_int (value))
+        {
+          priv->text_column = g_value_get_int (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_HAS_ENTRY:
-      priv->has_entry = g_value_get_boolean (value);
+      if (priv->has_entry != g_value_get_boolean (value))
+        {
+          priv->has_entry = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);

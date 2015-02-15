@@ -6,9 +6,9 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
 <link rel="up" href="LayoutContainers.html" title="Layout Containers">
-<link rel="prev" href="GtkListBox.html" title="GtkListBox">
+<link rel="prev" href="GtkFlowBox.html" title="GtkFlowBox">
 <link rel="next" href="GtkStackSwitcher.html" title="GtkStackSwitcher">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -23,7 +23,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="LayoutContainers.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="GtkListBox.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="GtkFlowBox.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GtkStackSwitcher.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -69,6 +69,14 @@
 </tr>
 <tr>
 <td class="function_type">
+<a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="GtkStack.html#gtk-stack-get-child-by-name" title="gtk_stack_get_child_by_name ()">gtk_stack_get_child_by_name</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
 <span class="returnvalue">void</span>
 </td>
 <td class="function_name">
@@ -92,7 +100,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<td class="function_type">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GtkStack.html#gtk-stack-get-visible-child-name" title="gtk_stack_get_visible_child_name ()">gtk_stack_get_visible_child_name</a> <span class="c_punctuation">()</span>
@@ -116,7 +124,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkStack.html#gtk-stack-get-homogeneous" title="gtk_stack_get_homogeneous ()">gtk_stack_get_homogeneous</a> <span class="c_punctuation">()</span>
@@ -132,7 +140,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkStack.html#gtk-stack-get-transition-duration" title="gtk_stack_get_transition_duration ()">gtk_stack_get_transition_duration</a> <span class="c_punctuation">()</span>
@@ -154,6 +162,14 @@
 <a class="link" href="GtkStack.html#gtk-stack-get-transition-type" title="gtk_stack_get_transition_type ()">gtk_stack_get_transition_type</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GtkStack.html#gtk-stack-get-transition-running" title="gtk_stack_get_transition_running ()">gtk_stack_get_transition_running</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -167,14 +183,19 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkStack.html#GtkStack--homogeneous" title="The “homogeneous” property">homogeneous</a></td>
 <td class="property_flags">Read / Write / Construct</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
 <td class="property_name"><a class="link" href="GtkStack.html#GtkStack--transition-duration" title="The “transition-duration” property">transition-duration</a></td>
 <td class="property_flags">Read / Write / Construct</td>
+</tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="GtkStack.html#GtkStack--transition-running" title="The “transition-running” property">transition-running</a></td>
+<td class="property_flags">Read</td>
 </tr>
 <tr>
 <td class="property_type"><a class="link" href="GtkStack.html#GtkStackTransitionType" title="enum GtkStackTransitionType"><span class="type">GtkStackTransitionType</span></a></td>
@@ -189,7 +210,7 @@
 </tr>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkStack.html#GtkStack--visible-child-name" title="The “visible-child-name” property">visible-child-name</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -207,24 +228,29 @@
 <tbody>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkStack.html#GtkStack--c-icon-name" title="The “icon-name” child property">icon-name</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkStack.html#GtkStack--c-name" title="The “name” child property">name</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="GtkStack.html#GtkStack--c-needs-attention" title="The “needs-attention” child property">needs-attention</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GtkStack.html#GtkStack--c-position" title="The “position” child property">position</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkStack.html#GtkStack--c-title" title="The “title” child property">title</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -252,8 +278,8 @@
 </div>
 <div class="refsect1">
 <a name="GtkStack.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> GtkStack
@@ -279,7 +305,7 @@ visible child. Instead, the <a class="link" href="GtkStackSwitcher.html" title="
 used with GtkStack to provide this functionality.</p>
 <p>Transitions between pages can be animated as slides or
 fades. This can be controlled with <a class="link" href="GtkStack.html#gtk-stack-set-transition-type" title="gtk_stack_set_transition_type ()"><code class="function">gtk_stack_set_transition_type()</code></a>.
-These animations respect the <span class="type">“gtk-enable-animations”</span>
+These animations respect the <a class="link" href="GtkSettings.html#GtkSettings--gtk-enable-animations" title="The “gtk-enable-animations” property"><span class="type">“gtk-enable-animations”</span></a>
 setting.</p>
 <p>The GtkStack widget was added in GTK+ 3.10.</p>
 </div>
@@ -291,7 +317,7 @@ setting.</p>
 gtk_stack_new (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> container.</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.2.5"></a><h4>Returns</h4>
+<a name="id-1.3.7.7.11.2.5"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a></p>
 <p></p>
 </div>
@@ -303,13 +329,13 @@ gtk_stack_new (<em class="parameter"><code><span class="type">void</span></code>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_stack_add_named (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>,
                      <em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *child</code></em>,
-                     <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+                     <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>Adds a child to <em class="parameter"><code>stack</code></em>
 .
 The child is identified by the <em class="parameter"><code>name</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.3.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -344,8 +370,8 @@ The child is identified by the <em class="parameter"><code>name</code></em>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_stack_add_titled (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>,
                       <em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *child</code></em>,
-                      <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
-                      <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>);</pre>
+                      <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                      <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>);</pre>
 <p>Adds a child to <em class="parameter"><code>stack</code></em>
 .
 The child is identified by the <em class="parameter"><code>name</code></em>
@@ -355,7 +381,7 @@ will be used by <a class="link" href="GtkStackSwitcher.html" title="GtkStackSwit
 <em class="parameter"><code>child</code></em>
  in a tab bar, so it should be short.</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.4.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -392,6 +418,44 @@ will be used by <a class="link" href="GtkStackSwitcher.html" title="GtkStackSwit
 </div>
 <hr>
 <div class="refsect2">
+<a name="gtk-stack-get-child-by-name"></a><h3>gtk_stack_get_child_by_name ()</h3>
+<pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *
+gtk_stack_get_child_by_name (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>,
+                             <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<p>Finds the child of the <a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> with the name given as
+the argument. Returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if there is no child with this
+name.</p>
+<div class="refsect3">
+<a name="id-1.3.7.7.11.5.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>stack</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>name</p></td>
+<td class="parameter_description"><p>the name of the child to find</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.7.7.11.5.6"></a><h4>Returns</h4>
+<p> the requested child of the <a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a>. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+</div>
+<p class="since">Since 3.12</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gtk-stack-set-visible-child"></a><h3>gtk_stack_set_visible_child ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_stack_set_visible_child (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>,
@@ -411,7 +475,7 @@ transition type of <em class="parameter"><code>stack</code></em>
 child of <em class="parameter"><code>stack</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.5.7"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.6.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -441,10 +505,10 @@ child of <em class="parameter"><code>stack</code></em>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *
 gtk_stack_get_visible_child (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>);</pre>
 <p>Gets the currently visible child of <em class="parameter"><code>stack</code></em>
-, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if
+, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if
 there are no visible children.</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.6.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -459,7 +523,7 @@ there are no visible children.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.6.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.7.11.7.6"></a><h4>Returns</h4>
 <p> the visible child of the <a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a>. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -470,7 +534,7 @@ there are no visible children.</p>
 <a name="gtk-stack-set-visible-child-name"></a><h3>gtk_stack_set_visible_child_name ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_stack_set_visible_child_name (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>,
-                                  <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+                                  <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>Makes the child with the given name visible.</p>
 <p>If <em class="parameter"><code>child</code></em>
  is different from the currently
@@ -483,7 +547,7 @@ transition type of <em class="parameter"><code>stack</code></em>
 child of <em class="parameter"><code>stack</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.7.7"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.8.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -509,13 +573,13 @@ child of <em class="parameter"><code>stack</code></em>
 <hr>
 <div class="refsect2">
 <a name="gtk-stack-get-visible-child-name"></a><h3>gtk_stack_get_visible_child_name ()</h3>
-<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gtk_stack_get_visible_child_name (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>);</pre>
 <p>Returns the name of the currently visible child of <em class="parameter"><code>stack</code></em>
 , or
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if there is no visible child.</p>
+<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if there is no visible child.</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.8.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -530,7 +594,7 @@ gtk_stack_get_visible_child_name (<em class="parameter"><code><a class="link" hr
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.8.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.7.11.9.6"></a><h4>Returns</h4>
 <p> the name of the visible child of the <a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a>. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -541,7 +605,7 @@ gtk_stack_get_visible_child_name (<em class="parameter"><code><a class="link" hr
 <a name="gtk-stack-set-visible-child-full"></a><h3>gtk_stack_set_visible_child_full ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_stack_set_visible_child_full (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>,
-                                  <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                  <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                   <em class="parameter"><code><a class="link" href="GtkStack.html#GtkStackTransitionType" title="enum GtkStackTransitionType"><span class="type">GtkStackTransitionType</span></a> transition</code></em>);</pre>
 <p>Makes the child with the given name visible.</p>
 <p>Note that the child widget has to be visible itself
@@ -549,7 +613,7 @@ gtk_stack_set_visible_child_full (<em class="parameter"><code><a class="link" hr
 child of <em class="parameter"><code>stack</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.9.6"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.10.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -582,13 +646,13 @@ child of <em class="parameter"><code>stack</code></em>
 <a name="gtk-stack-set-homogeneous"></a><h3>gtk_stack_set_homogeneous ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_stack_set_homogeneous (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>,
-                           <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> homogeneous</code></em>);</pre>
+                           <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> homogeneous</code></em>);</pre>
 <p>Sets the <a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> to be homogeneous or not. If it
 is homogeneous, the <a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> will request the same
 size for all its children. If it isn't, the stack
 may change size when a different child becomes visible.</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.10.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -603,7 +667,7 @@ may change size when a different child becomes visible.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>homogeneous</p></td>
-<td class="parameter_description"><p><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to make <em class="parameter"><code>stack</code></em>
+<td class="parameter_description"><p><a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to make <em class="parameter"><code>stack</code></em>
 homogeneous</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -615,13 +679,13 @@ homogeneous</p></td>
 <hr>
 <div class="refsect2">
 <a name="gtk-stack-get-homogeneous"></a><h3>gtk_stack_get_homogeneous ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_stack_get_homogeneous (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>);</pre>
 <p>Gets whether <em class="parameter"><code>stack</code></em>
  is homogeneous.
 See <a class="link" href="GtkStack.html#gtk-stack-set-homogeneous" title="gtk_stack_set_homogeneous ()"><code class="function">gtk_stack_set_homogeneous()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.11.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -636,7 +700,7 @@ See <a class="link" href="GtkStack.html#gtk-stack-set-homogeneous" title="gtk_st
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.11.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.7.11.12.6"></a><h4>Returns</h4>
 <p> whether <em class="parameter"><code>stack</code></em>
 is homogeneous.</p>
 <p></p>
@@ -648,12 +712,12 @@ is homogeneous.</p>
 <a name="gtk-stack-set-transition-duration"></a><h3>gtk_stack_set_transition_duration ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_stack_set_transition_duration (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>,
-                                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> duration</code></em>);</pre>
+                                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> duration</code></em>);</pre>
 <p>Sets the duration that transitions between pages in <em class="parameter"><code>stack</code></em>
 
 will take.</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.12.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -679,13 +743,13 @@ will take.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-stack-get-transition-duration"></a><h3>gtk_stack_get_transition_duration ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 gtk_stack_get_transition_duration (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>);</pre>
 <p>Returns the amount of time (in milliseconds) that
 transitions between pages in <em class="parameter"><code>stack</code></em>
  will take.</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.13.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.14.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -700,7 +764,7 @@ transitions between pages in <em class="parameter"><code>stack</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.13.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.7.11.14.6"></a><h4>Returns</h4>
 <p> the transition duration</p>
 <p></p>
 </div>
@@ -720,7 +784,7 @@ types include various kinds of fades and slides.</p>
 at runtime, so it is possible to change the animation
 based on the page that is about to become current.</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.14.6"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.15.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -752,7 +816,7 @@ gtk_stack_get_transition_type (<em class="parameter"><code><a class="link" href=
 for transitions between pages in <em class="parameter"><code>stack</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.15.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.7.11.16.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -767,12 +831,42 @@ for transitions between pages in <em class="parameter"><code>stack</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.6.11.15.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.7.11.16.6"></a><h4>Returns</h4>
 <p> the current transition type of <em class="parameter"><code>stack</code></em>
 </p>
 <p></p>
 </div>
 <p class="since">Since 3.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-stack-get-transition-running"></a><h3>gtk_stack_get_transition_running ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gtk_stack_get_transition_running (<em class="parameter"><code><a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> *stack</code></em>);</pre>
+<p>Returns whether the <em class="parameter"><code>stack</code></em>
+ is currently in a transition from one page to
+another.</p>
+<div class="refsect3">
+<a name="id-1.3.7.7.11.17.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>stack</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.7.7.11.17.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the transition is currently running, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
+<p></p>
+</div>
+<p class="since">Since 3.12</p>
 </div>
 </div>
 <div class="refsect1">
@@ -786,8 +880,9 @@ for transitions between pages in <em class="parameter"><code>stack</code></em>
 <a name="GtkStackTransitionType"></a><h3>enum GtkStackTransitionType</h3>
 <p>These enumeration values describe the possible transitions
 between pages in a <a class="link" href="GtkStack.html" title="GtkStack"><span class="type">GtkStack</span></a> widget.</p>
+<p>New values may be added to this enumeration over time.</p>
 <div class="refsect3">
-<a name="id-1.3.7.6.12.3.4"></a><h4>Members</h4>
+<a name="id-1.3.7.7.12.3.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -851,6 +946,90 @@ between pages in a <a class="link" href="GtkStack.html" title="GtkStack"><span c
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-STACK-TRANSITION-TYPE-OVER-UP:CAPS"></a>GTK_STACK_TRANSITION_TYPE_OVER_UP</p></td>
+<td class="enum_member_description">
+<p>Cover the old page by sliding up. Since 3.12</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-STACK-TRANSITION-TYPE-OVER-DOWN:CAPS"></a>GTK_STACK_TRANSITION_TYPE_OVER_DOWN</p></td>
+<td class="enum_member_description">
+<p>Cover the old page by sliding down. Since: 3.12</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-STACK-TRANSITION-TYPE-OVER-LEFT:CAPS"></a>GTK_STACK_TRANSITION_TYPE_OVER_LEFT</p></td>
+<td class="enum_member_description">
+<p>Cover the old page by sliding to the left. Since: 3.12</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-STACK-TRANSITION-TYPE-OVER-RIGHT:CAPS"></a>GTK_STACK_TRANSITION_TYPE_OVER_RIGHT</p></td>
+<td class="enum_member_description">
+<p>Cover the old page by sliding to the right. Since: 3.12</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-STACK-TRANSITION-TYPE-UNDER-UP:CAPS"></a>GTK_STACK_TRANSITION_TYPE_UNDER_UP</p></td>
+<td class="enum_member_description">
+<p>Uncover the new page by sliding up. Since 3.12</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-STACK-TRANSITION-TYPE-UNDER-DOWN:CAPS"></a>GTK_STACK_TRANSITION_TYPE_UNDER_DOWN</p></td>
+<td class="enum_member_description">
+<p>Uncover the new page by sliding down. Since: 3.12</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-STACK-TRANSITION-TYPE-UNDER-LEFT:CAPS"></a>GTK_STACK_TRANSITION_TYPE_UNDER_LEFT</p></td>
+<td class="enum_member_description">
+<p>Uncover the new page by sliding to the left. Since: 3.12</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-STACK-TRANSITION-TYPE-UNDER-RIGHT:CAPS"></a>GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT</p></td>
+<td class="enum_member_description">
+<p>Uncover the new page by sliding to the right. Since: 3.12</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-STACK-TRANSITION-TYPE-OVER-UP-DOWN:CAPS"></a>GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN</p></td>
+<td class="enum_member_description">
+<p>Cover the old page sliding up or uncover the new page sliding down, according to order. Since: 3.12</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-STACK-TRANSITION-TYPE-OVER-DOWN-UP:CAPS"></a>GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP</p></td>
+<td class="enum_member_description">
+<p>Cover the old page sliding down or uncover the new page sliding up, according to order. Since: 3.14</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-STACK-TRANSITION-TYPE-OVER-LEFT-RIGHT:CAPS"></a>GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT</p></td>
+<td class="enum_member_description">
+<p>Cover the old page sliding left or uncover the new page sliding right, according to order. Since: 3.14</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-STACK-TRANSITION-TYPE-OVER-RIGHT-LEFT:CAPS"></a>GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT</p></td>
+<td class="enum_member_description">
+<p>Cover the old page sliding right or uncover the new page sliding left, according to order. Since: 3.14</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
 </tbody>
 </table></div>
 </div>
@@ -860,7 +1039,7 @@ between pages in a <a class="link" href="GtkStack.html" title="GtkStack"><span c
 <a name="GtkStack.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GtkStack--homogeneous"></a><h3>The <code class="literal">“homogeneous”</code> property</h3>
-<pre class="programlisting">  “homogeneous”              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “homogeneous”              <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>Homogeneous sizing.</p>
 <p>Flags: Read / Write / Construct</p>
 <p>Default value: TRUE</p>
@@ -868,10 +1047,18 @@ between pages in a <a class="link" href="GtkStack.html" title="GtkStack"><span c
 <hr>
 <div class="refsect2">
 <a name="GtkStack--transition-duration"></a><h3>The <code class="literal">“transition-duration”</code> property</h3>
-<pre class="programlisting">  “transition-duration”      <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
+<pre class="programlisting">  “transition-duration”      <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
 <p>The animation duration, in milliseconds.</p>
 <p>Flags: Read / Write / Construct</p>
 <p>Default value: 200</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GtkStack--transition-running"></a><h3>The <code class="literal">“transition-running”</code> property</h3>
+<pre class="programlisting">  “transition-running”       <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Whether or not the transition is currently running.</p>
+<p>Flags: Read</p>
+<p>Default value: FALSE</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -891,7 +1078,7 @@ between pages in a <a class="link" href="GtkStack.html" title="GtkStack"><span c
 <hr>
 <div class="refsect2">
 <a name="GtkStack--visible-child-name"></a><h3>The <code class="literal">“visible-child-name”</code> property</h3>
-<pre class="programlisting">  “visible-child-name”       <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “visible-child-name”       <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The name of the widget currently visible in the stack.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: NULL</p>
@@ -901,7 +1088,7 @@ between pages in a <a class="link" href="GtkStack.html" title="GtkStack"><span c
 <a name="GtkStack.child-property-details"></a><h2>Child Property Details</h2>
 <div class="refsect2">
 <a name="GtkStack--c-icon-name"></a><h3>The <code class="literal">“icon-name”</code> child property</h3>
-<pre class="programlisting">  “icon-name”                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “icon-name”                <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The icon name of the child page.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: NULL</p>
@@ -909,15 +1096,27 @@ between pages in a <a class="link" href="GtkStack.html" title="GtkStack"><span c
 <hr>
 <div class="refsect2">
 <a name="GtkStack--c-name"></a><h3>The <code class="literal">“name”</code> child property</h3>
-<pre class="programlisting">  “name”                     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “name”                     <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The name of the child page.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: NULL</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GtkStack--c-needs-attention"></a><h3>The <code class="literal">“needs-attention”</code> child property</h3>
+<pre class="programlisting">  “needs-attention”          <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Sets a flag specifying whether the child requires the user attention.
+This is used by the <a class="link" href="GtkStackSwitcher.html" title="GtkStackSwitcher"><span class="type">GtkStackSwitcher</span></a> to change the appearance of the
+corresponding button when a page needs attention and it is not the
+current one.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: FALSE</p>
+<p class="since">Since 3.12</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GtkStack--c-position"></a><h3>The <code class="literal">“position”</code> child property</h3>
-<pre class="programlisting">  “position”                 <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “position”                 <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>The index of the child in the parent.</p>
 <p>Flags: Read / Write</p>
 <p>Allowed values: &gt;= -1</p>
@@ -926,7 +1125,7 @@ between pages in a <a class="link" href="GtkStack.html" title="GtkStack"><span c
 <hr>
 <div class="refsect2">
 <a name="GtkStack--c-title"></a><h3>The <code class="literal">“title”</code> child property</h3>
-<pre class="programlisting">  “title”                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “title”                    <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The title of the child page.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: NULL</p>
@@ -939,6 +1138,6 @@ between pages in a <a class="link" href="GtkStack.html" title="GtkStack"><span c
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

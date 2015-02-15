@@ -3,9 +3,6 @@
 /* always defined to indicate that i18n is enabled */
 #undef ENABLE_NLS
 
-/* define to enable packagekit */
-#undef ENABLE_PACKAGEKIT
-
 /* The prefix for our gettext translation domains. */
 #undef GETTEXT_PACKAGE
 
@@ -110,8 +107,8 @@
 /* Define to 1 if libpapi available */
 #undef HAVE_PAPI
 
-/* Define to 1 if you have the <pwd.h> header file. */
-#undef HAVE_PWD_H
+/* Define to 1 if you have the `posix_fallocate' function. */
+#undef HAVE_POSIX_FALLOCATE
 
 /* Have the Xrandr extension library */
 #undef HAVE_RANDR
@@ -244,6 +241,28 @@
 /* Define to 1 if gmodule works and should be used */
 #undef USE_GMODULE
 
+/* Enable extensions on AIX 3, Interix.  */
+#ifndef _ALL_SOURCE
+# undef _ALL_SOURCE
+#endif
+/* Enable GNU extensions on systems that have them.  */
+#ifndef _GNU_SOURCE
+# undef _GNU_SOURCE
+#endif
+/* Enable threading extensions on Solaris.  */
+#ifndef _POSIX_PTHREAD_SEMANTICS
+# undef _POSIX_PTHREAD_SEMANTICS
+#endif
+/* Enable extensions on HP NonStop.  */
+#ifndef _TANDEM_SOURCE
+# undef _TANDEM_SOURCE
+#endif
+/* Enable general extensions on Solaris.  */
+#ifndef __EXTENSIONS__
+# undef __EXTENSIONS__
+#endif
+
+
 /* Define to 1 if XInput 2.0 is available */
 #undef XINPUT_2
 
@@ -266,6 +285,16 @@
 
 /* Define for large files, on AIX-style hosts. */
 #undef _LARGE_FILES
+
+/* Define to 1 if on MINIX. */
+#undef _MINIX
+
+/* Define to 2 if the system does not provide POSIX.1 features except with
+   this defined. */
+#undef _POSIX_1_SOURCE
+
+/* Define to 1 if you need to in order for `stat' and other things to work. */
+#undef _POSIX_SOURCE
 
 /* Define to `int' if <sys/types.h> doesn't define. */
 #undef gid_t

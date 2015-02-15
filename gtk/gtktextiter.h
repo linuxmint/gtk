@@ -131,7 +131,7 @@ gint gtk_text_iter_get_visible_line_index (const GtkTextIter *iter);
 
 
 /*
- * "Dereference" operators
+ * “Dereference” operators
  */
 GDK_AVAILABLE_IN_ALL
 gunichar gtk_text_iter_get_char          (const GtkTextIter  *iter);
@@ -297,8 +297,8 @@ GDK_AVAILABLE_IN_ALL
 gboolean gtk_text_iter_backward_sentence_starts (GtkTextIter *iter,
                                                  gint         count);
 /* cursor positions are almost equivalent to chars, but not quite;
- * in some languages, you can't put the cursor between certain
- * chars. Also, you can't put the cursor between \r\n at the end
+ * in some languages, you can’t put the cursor between certain
+ * chars. Also, you can’t put the cursor between \r\n at the end
  * of a line.
  */
 GDK_AVAILABLE_IN_ALL
@@ -348,7 +348,7 @@ void     gtk_text_iter_set_visible_line_index  (GtkTextIter *iter,
                                                 gint         byte_on_line);
 
 /* returns TRUE if a toggle was found; NULL for the tag pointer
- * means "any tag toggle", otherwise the next toggle of the
+ * means “any tag toggle”, otherwise the next toggle of the
  * specified tag is located.
  */
 GDK_AVAILABLE_IN_ALL

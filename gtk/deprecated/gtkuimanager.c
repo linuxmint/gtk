@@ -60,20 +60,15 @@
  * one or more UI definitions, which reference actions from one or more
  * action groups.
  *
- * <refsect2 id="XML-UI">
- * <title>UI Definitions</title>
- * <para>
+ * # UI Definitions # {#XML-UI}
+ *
  * The UI definitions are specified in an XML format which can be
  * roughly described by the following DTD.
  *
- * <note><para>
- * Do not confuse the GtkUIManager UI Definitions described here with
- * the similarly named <link linkend="BUILDER-UI">GtkBuilder UI
- * Definitions</link>.
- * </para></note>
+ * > Do not confuse the GtkUIManager UI Definitions described here with
+ * > the similarly named [GtkBuilder UI Definitions][BUILDER-UI].
  *
- * <programlisting>
- * <![CDATA[
+ * |[
  * <!ELEMENT ui          (menubar|toolbar|popup|accelerator)* >
  * <!ELEMENT menubar     (menuitem|separator|placeholder|menu)* >
  * <!ELEMENT menu        (menuitem|separator|placeholder|menu)* >
@@ -108,24 +103,24 @@
  *                        position     (top|bot)    #IMPLIED >
  * <!ATTLIST accelerator  name                      #IMPLIED
  *                        action                    #REQUIRED >
- * ]]>
- * </programlisting>
+ * ]|
+ *
  * There are some additional restrictions beyond those specified in the
  * DTD, e.g. every toolitem must have a toolbar in its anchestry and
  * every menuitem must have a menubar or popup in its anchestry. Since
- * a #GMarkup parser is used to parse the UI description, it must not only
- * be valid XML, but valid #GMarkup.
+ * a #GMarkupParser is used to parse the UI description, it must not only
+ * be valid XML, but valid markup.
  *
  * If a name is not specified, it defaults to the action. If an action is
  * not specified either, the element name is used. The name and action
- * attributes must not contain '/' characters after parsing (since that
+ * attributes must not contain “/” characters after parsing (since that
  * would mess up path lookup) and must be usable as XML attributes when
- * enclosed in doublequotes, thus they must not '"' characters or references
+ * enclosed in doublequotes, thus they must not “"” characters or references
  * to the &quot; entity.
  *
- * <example>
- * <title>A UI definition</title>
- * <programlisting><![CDATA[
+ * # A UI definition #
+ *
+ * |[
  * <ui>
  *   <menubar>
  *     <menu name="FileMenu" action="FileMenuAction">
@@ -150,84 +145,74 @@
  *     </placeholder>
  *   </toolbar>
  * </ui>
- * ]]></programlisting>
- * </example>
+ * ]|
  *
  * The constructed widget hierarchy is very similar to the element tree
  * of the XML, with the exception that placeholders are merged into their
  * parents. The correspondence of XML elements to widgets should be
  * almost obvious:
- * <variablelist>
- * <varlistentry>
- * <term>menubar</term>
- * <listitem><para>a #GtkMenuBar</para></listitem>
- * </varlistentry>
- * <varlistentry>
- * <term>toolbar</term>
- * <listitem><para>a #GtkToolbar</para></listitem>
- * </varlistentry>
- * <varlistentry>
- * <term>popup</term>
- * <listitem><para>a toplevel #GtkMenu</para></listitem>
- * </varlistentry>
- * <varlistentry>
- * <term>menu</term>
- * <listitem><para>a #GtkMenu attached to a menuitem</para></listitem>
- * </varlistentry>
- * <varlistentry>
- * <term>menuitem</term>
- * <listitem><para>a #GtkMenuItem subclass, the exact type depends on the
- * action</para></listitem>
- * </varlistentry>
- * <varlistentry>
- * <term>toolitem</term>
- * <listitem><para>a #GtkToolItem subclass, the exact type depends on the
- * action. Note that toolitem elements may contain a menu element, but only
- * if their associated action specifies a #GtkMenuToolButton as proxy.</para></listitem>
- * </varlistentry>
- * <varlistentry>
- * <term>separator</term>
- * <listitem><para>a #GtkSeparatorMenuItem or
- * #GtkSeparatorToolItem</para></listitem>
- * </varlistentry>
- * <varlistentry>
- * <term>accelerator</term>
- * <listitem><para>a keyboard accelerator</para></listitem>
- * </varlistentry>
- * </variablelist>
  *
- * The "position" attribute determines where a constructed widget is positioned
+ * - menubar
+ *
+ *    a #GtkMenuBar
+ *
+ * - toolbar
+ *
+ *    a #GtkToolbar
+ *
+ * - popup
+ *
+ *    a toplevel #GtkMenu
+ *
+ * - menu
+ *
+ *    a #GtkMenu attached to a menuitem
+ *
+ * - menuitem
+ *
+ *    a #GtkMenuItem subclass, the exact type depends on the action
+ *
+ * - toolitem
+ *
+ *    a #GtkToolItem subclass, the exact type depends on the
+ *    action. Note that toolitem elements may contain a menu element,
+ *    but only if their associated action specifies a
+ *    #GtkMenuToolButton as proxy.
+ *
+ * - separator
+ *
+ *    a #GtkSeparatorMenuItem or #GtkSeparatorToolItem
+ *
+ * - accelerator
+ *
+ *    a keyboard accelerator
+ *
+ * The “position” attribute determines where a constructed widget is positioned
  * wrt. to its siblings in the partially constructed tree. If it is
- * "top", the widget is prepended, otherwise it is appended.
- * </para>
- * </refsect2>
- * <refsect2 id="UI-Merging">
- * <title>UI Merging</title>
- * <para>
+ * “top”, the widget is prepended, otherwise it is appended.
+ *
+ * # UI Merging # {#UI-Merging}
+ *
  * The most remarkable feature of #GtkUIManager is that it can overlay a set
  * of menuitems and toolitems over another one, and demerge them later.
  *
  * Merging is done based on the names of the XML elements. Each element is
  * identified by a path which consists of the names of its anchestors, separated
- * by slashes. For example, the menuitem named "Left" in the example above
- * has the path <literal>/ui/menubar/JustifyMenu/Left</literal> and the
+ * by slashes. For example, the menuitem named “Left” in the example above
+ * has the path `/ui/menubar/JustifyMenu/Left` and the
  * toolitem with the same name has path
- * <literal>/ui/toolbar1/JustifyToolItems/Left</literal>.
- * </para>
- * </refsect2>
- * <refsect2>
- * <title>Accelerators</title>
- * <para>
- * Every action has an accelerator path. Accelerators are installed together with
- * menuitem proxies, but they can also be explicitly added with &lt;accelerator&gt;
- * elements in the UI definition. This makes it possible to have accelerators for
- * actions even if they have no visible proxies.
- * </para>
- * </refsect2>
- * <refsect2 id="Smart-Separators">
- * <title>Smart Separators</title>
- * <para>
- * The separators created by #GtkUIManager are "smart", i.e. they do not show up
+ * `/ui/toolbar1/JustifyToolItems/Left`.
+ *
+ * # Accelerators #
+ *
+ * Every action has an accelerator path. Accelerators are installed together
+ * with menuitem proxies, but they can also be explicitly added with
+ * <accelerator> elements in the UI definition. This makes it possible to
+ * have accelerators for actions even if they have no visible proxies.
+ *
+ * # Smart Separators # {#Smart-Separators}
+ *
+ * The separators created by #GtkUIManager are “smart”, i.e. they do not show up
  * in the UI unless they end up between two visible menu or tool items. Separators
  * which are located at the very beginning or end of the menu or toolbar
  * containing them, or multiple separators next to each other, are hidden. This
@@ -235,45 +220,38 @@
  * can make it hard or impossible to determine in advance whether a separator
  * will end up in such an unfortunate position.
  *
- * For separators in toolbars, you can set <literal>expand="true"</literal> to
+ * For separators in toolbars, you can set `expand="true"` to
  * turn them from a small, visible separator to an expanding, invisible one.
  * Toolitems following an expanding separator are effectively right-aligned.
- * </para>
- * </refsect2>
- * <refsect2>
- * <title>Empty Menus</title>
- * <para>
+ *
+ * # Empty Menus
+ *
  * Submenus pose similar problems to separators inconnection with merging. It is
  * impossible to know in advance whether they will end up empty after merging.
  * #GtkUIManager offers two ways to treat empty submenus:
- * <itemizedlist>
- * <listitem>
- * <para>make them disappear by hiding the menu item they're attached to</para>
- * </listitem>
- * <listitem>
- * <para>add an insensitive "Empty" item</para>
- * </listitem>
- * </itemizedlist>
- * The behaviour is chosen based on the "hide_if_empty" property of the action
+ *
+ * - make them disappear by hiding the menu item they’re attached to
+ *
+ * - add an insensitive “Empty” item
+ *
+ * The behaviour is chosen based on the “hide_if_empty” property of the action
  * to which the submenu is associated.
- * </para>
- * </refsect2>
- * <refsect2 id="GtkUIManager-BUILDER-UI">
- * <title>GtkUIManager as GtkBuildable</title>
- * <para>
+ *
+ * # GtkUIManager as GtkBuildable # {#GtkUIManager-BUILDER-UI}
+ *
  * The GtkUIManager implementation of the GtkBuildable interface accepts
- * GtkActionGroup objects as &lt;child&gt; elements in UI definitions.
+ * GtkActionGroup objects as <child> elements in UI definitions.
  *
  * A GtkUIManager UI definition as described above can be embedded in
- * an GtkUIManager &lt;object&gt; element in a GtkBuilder UI definition.
+ * an GtkUIManager <object> element in a GtkBuilder UI definition.
  *
  * The widgets that are constructed by a GtkUIManager can be embedded in
  * other parts of the constructed user interface with the help of the
- * "constructor" attribute. See the example below.
+ * “constructor” attribute. See the example below.
  *
- * <example>
- * <title>An embedded GtkUIManager UI definition</title>
- * <programlisting><![CDATA[
+ * ## An embedded GtkUIManager UI definition
+ *
+ * |[
  * <object class="GtkUIManager" id="uiman">
  *   <child>
  *     <object class="GtkActionGroup" id="actiongroup">
@@ -296,10 +274,7 @@
  *     <object class="GtkMenuBar" id="menubar1" constructor="uiman"/>
  *   </child>
  * </object>
- * ]]></programlisting>
- * </example>
- * </para>
- * </refsect2>
+ * ]|
  */
 
 
@@ -351,7 +326,6 @@ struct _GtkUIManagerPrivate
   GList *action_groups;
 
   guint last_merge_id;
-  guint last_update_id;
 
   guint update_tag;  
 
@@ -855,7 +829,7 @@ gtk_ui_manager_real_get_action (GtkUIManager *manager,
  * 
  * Creates a new ui manager object.
  * 
- * Return value: a new ui manager object.
+ * Returns: a new ui manager object.
  *
  * Since: 2.4
  *
@@ -875,7 +849,7 @@ gtk_ui_manager_new (void)
  * Returns whether menus generated by this #GtkUIManager
  * will have tearoff menu items. 
  * 
- * Return value: whether tearoff menu items are added
+ * Returns: whether tearoff menu items are added
  *
  * Since: 2.4
  *
@@ -896,7 +870,7 @@ gtk_ui_manager_get_add_tearoffs (GtkUIManager *manager)
  * @manager: a #GtkUIManager
  * @add_tearoffs: whether tearoff menu items are added
  * 
- * Sets the "add_tearoffs" property, which controls whether menus 
+ * Sets the “add_tearoffs” property, which controls whether menus 
  * generated by this #GtkUIManager will have tearoff menu items. 
  *
  * Note that this only affects regular menus. Generated popup 
@@ -1075,7 +1049,7 @@ gtk_ui_manager_remove_action_group (GtkUIManager   *manager,
  * 
  * Returns the list of action groups associated with @manager.
  *
- * Return value:  (element-type GtkActionGroup) (transfer none): a #GList of
+ * Returns:  (element-type GtkActionGroup) (transfer none): a #GList of
  *   action groups. The list is owned by GTK+
  *   and should not be modified.
  *
@@ -1097,7 +1071,7 @@ gtk_ui_manager_get_action_groups (GtkUIManager *manager)
  * 
  * Returns the #GtkAccelGroup associated with @manager.
  *
- * Return value: (transfer none): the #GtkAccelGroup.
+ * Returns: (transfer none): the #GtkAccelGroup.
  *
  * Since: 2.4
  *
@@ -1118,20 +1092,21 @@ gtk_ui_manager_get_accel_group (GtkUIManager *manager)
  * 
  * Looks up a widget by following a path. 
  * The path consists of the names specified in the XML description of the UI. 
- * separated by '/'. Elements which don't have a name or action attribute in 
- * the XML (e.g. &lt;popup&gt;) can be addressed by their XML element name 
+ * separated by “/”. Elements which don’t have a name or action attribute in 
+ * the XML (e.g. <popup>) can be addressed by their XML element name 
  * (e.g. "popup"). The root element ("/ui") can be omitted in the path.
  *
- * Note that the widget found by following a path that ends in a &lt;menu&gt;
- * element is the menuitem to which the menu is attached, not the menu itmanager.
+ * Note that the widget found by following a path that ends in a <menu>;
+ * element is the menuitem to which the menu is attached, not the menu it
+ * manages.
  *
  * Also note that the widgets constructed by a ui manager are not tied to 
  * the lifecycle of the ui manager. If you add the widgets returned by this 
  * function to some container or explicitly ref them, they will survive the
  * destruction of the ui manager.
  *
- * Return value: (transfer none): the widget found by following the path, or %NULL if no widget
- *   was found.
+ * Returns: (transfer none): the widget found by following the path,
+ *     or %NULL if no widget was found
  *
  * Since: 2.4
  *
@@ -1188,7 +1163,7 @@ collect_toplevels (GNode   *node,
  * 
  * Obtains a list of all toplevel widgets of the requested types.
  *
- * Return value: (element-type GtkWidget) (transfer container): a newly-allocated #GSList of
+ * Returns: (element-type GtkWidget) (transfer container): a newly-allocated #GSList of
  * all toplevel widgets of the requested types.  Free the returned list with g_slist_free().
  *
  * Since: 2.4
@@ -1226,7 +1201,7 @@ gtk_ui_manager_get_toplevels (GtkUIManager         *manager,
  * Looks up an action by following a path. See gtk_ui_manager_get_widget()
  * for more information about paths.
  * 
- * Return value: (transfer none): the action whose proxy widget is found by following the path, 
+ * Returns: (transfer none): the action whose proxy widget is found by following the path, 
  *     or %NULL if no widget was found.
  *
  * Since: 2.4
@@ -1438,7 +1413,7 @@ free_node (GNode *node)
  * Returns an unused merge id, suitable for use with 
  * gtk_ui_manager_add_ui().
  * 
- * Return value: an unused merge id.
+ * Returns: an unused merge id.
  *
  * Since: 2.4
  *
@@ -1958,11 +1933,11 @@ add_ui_from_string (GtkUIManager *manager,
  * @length: the length of @buffer (may be -1 if @buffer is nul-terminated)
  * @error: return location for an error
  * 
- * Parses a string containing a <link linkend="XML-UI">UI definition</link> and 
- * merges it with the current contents of @manager. An enclosing &lt;ui&gt; 
- * element is added if it is missing.
+ * Parses a string containing a [UI definition][XML-UI] and merges it with
+ * the current contents of @manager. An enclosing <ui> element is added if
+ * it is missing.
  * 
- * Return value: The merge id for the merged UI. The merge id can be used
+ * Returns: The merge id for the merged UI. The merge id can be used
  *   to unmerge the UI with gtk_ui_manager_remove_ui(). If an error occurred,
  *   the return value is 0.
  *
@@ -2003,10 +1978,10 @@ gtk_ui_manager_add_ui_from_string (GtkUIManager *manager,
  * @filename: (type filename): the name of the file to parse 
  * @error: return location for an error
  * 
- * Parses a file containing a <link linkend="XML-UI">UI definition</link> and 
+ * Parses a file containing a [UI definition][XML-UI] and 
  * merges it with the current contents of @manager. 
  * 
- * Return value: The merge id for the merged UI. The merge id can be used
+ * Returns: The merge id for the merged UI. The merge id can be used
  *   to unmerge the UI with gtk_ui_manager_remove_ui(). If an error occurred,
  *   the return value is 0.
  *
@@ -2040,10 +2015,10 @@ gtk_ui_manager_add_ui_from_file (GtkUIManager *manager,
  * @resource_path: the resource path of the file to parse
  * @error: return location for an error
  *
- * Parses a resource file containing a <link linkend="XML-UI">UI definition</link> and
+ * Parses a resource file containing a [UI definition][XML-UI] and
  * merges it with the current contents of @manager.
  *
- * Return value: The merge id for the merged UI. The merge id can be used
+ * Returns: The merge id for the merged UI. The merge id can be used
  *   to unmerge the UI with gtk_ui_manager_remove_ui(). If an error occurred,
  *   the return value is 0.
  *
@@ -2250,7 +2225,7 @@ remove_ui (GNode   *node,
  * @manager: a #GtkUIManager object
  * @merge_id: a merge id as returned by gtk_ui_manager_add_ui_from_string()
  * 
- * Unmerges the part of @manager<!-- -->s content identified by @merge_id.
+ * Unmerges the part of @manager's content identified by @merge_id.
  *
  * Since: 2.4
  *
@@ -2575,7 +2550,6 @@ update_node (GtkUIManager *manager,
   GtkAction *action;
   const gchar *action_name;
   NodeUIReference *ref;
-  guint update_id;
   
 #ifdef DEBUG_UI_MANAGER
   GList *tmp;
@@ -2588,8 +2562,6 @@ update_node (GtkUIManager *manager,
   
   if (!info->dirty)
     return;
-
-  update_id = manager->private_data->last_update_id;
 
   if (info->type == NODE_TYPE_POPUP)
     {
@@ -3118,8 +3090,6 @@ G_GNUC_END_IGNORE_DEPRECATIONS
       current = child;
       child = current->next;
       update_node (manager, current, in_popup, popup_accels);
-      if (manager->private_data->last_update_id != update_id)
-        return; /* stop now if we have started a new update */
     }
   
   if (info->proxy) 
@@ -3135,7 +3105,6 @@ G_GNUC_END_IGNORE_DEPRECATIONS
   /* handle cleanup of dead nodes */
   if (node->children == NULL && info->uifiles == NULL)
     {
-      g_node_unlink (node);
       if (info->proxy)
 	gtk_widget_destroy (info->proxy);
       if (info->extra)
@@ -3162,7 +3131,6 @@ do_updates (GtkUIManager *manager)
    *    the proxy is reconnected to the new action (or a new proxy widget
    *    is created and added to the parent container).
    */
-  manager->private_data->last_update_id++;
   update_node (manager, manager->private_data->root_node, FALSE, FALSE);
 
   manager->private_data->update_tag = 0;
@@ -3187,6 +3155,7 @@ queue_update (GtkUIManager *manager)
   manager->private_data->update_tag = gdk_threads_add_idle (
 					       (GSourceFunc)do_updates_idle, 
 					       manager);
+  g_source_set_name_by_id (manager->private_data->update_tag, "[gtk+] do_updates_idle");
 }
 
 
@@ -3200,7 +3169,7 @@ queue_update (GtkUIManager *manager)
  * UI in an idle function. A typical example where this function is
  * useful is to enforce that the menubar and toolbar have been added to 
  * the main window before showing it:
- * |[
+ * |[<!-- language="C" -->
  * gtk_container_add (GTK_CONTAINER (window), vbox); 
  * g_signal_connect (merge, "add-widget", 
  *                   G_CALLBACK (add_widget), vbox);
@@ -3373,9 +3342,9 @@ gtk_ui_manager_buildable_custom_tag_end (GtkBuildable *buildable,
  * gtk_ui_manager_get_ui:
  * @manager: a #GtkUIManager
  * 
- * Creates a <link linkend="XML-UI">UI definition</link> of the merged UI.
+ * Creates a [UI definition][XML-UI] of the merged UI.
  * 
- * Return value: A newly allocated string containing an XML representation of 
+ * Returns: A newly allocated string containing an XML representation of 
  * the merged UI.
  *
  * Since: 2.4

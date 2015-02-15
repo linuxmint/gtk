@@ -70,12 +70,13 @@ main (int argc, char *argv[])
 
   builder = gtk_builder_new ();
   gtk_builder_add_from_file (builder, filename, NULL);
+  gtk_builder_connect_signals (builder, NULL);
 
   window = GTK_WIDGET (gtk_builder_get_object (builder, "window1"));
   g_object_unref (G_OBJECT (builder));
   g_signal_connect (window, "destroy",
                     G_CALLBACK (gtk_main_quit), NULL);
-  gtk_widget_show_all (window);
+  gtk_widget_show (window);
 
   create_dark_popup (window);
   gtk_main ();

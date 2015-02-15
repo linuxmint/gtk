@@ -9,7 +9,7 @@ requires = element requires {
 }
 
 object = element object {
-  attribute id { xsd:ID },
+  attribute id { xsd:ID } ?,
   attribute class { text },
   attribute type-func { text } ?,
   attribute constructor { text } ?,
@@ -27,6 +27,9 @@ property = element property {
   attribute translatable { "yes" | "no" } ?,
   attribute comments { text } ?,
   attribute context { text } ?,
+  (attribute bind-source { text },
+   attribute bind-property { text },
+   attribute bind-flags { text } ?) ?,
   text ?
 }
 

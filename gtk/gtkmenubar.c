@@ -185,13 +185,13 @@ gtk_menu_bar_class_init (GtkMenuBarClass *class)
    * Since: 2.8
    */
   g_object_class_install_property (gobject_class,
-				   PROP_PACK_DIRECTION,
-				   g_param_spec_enum ("pack-direction",
- 						      P_("Pack direction"),
- 						      P_("The pack direction of the menubar"),
- 						      GTK_TYPE_PACK_DIRECTION,
- 						      GTK_PACK_DIRECTION_LTR,
- 						      GTK_PARAM_READWRITE));
+                                   PROP_PACK_DIRECTION,
+                                   g_param_spec_enum ("pack-direction",
+                                                      P_("Pack direction"),
+                                                      P_("The pack direction of the menubar"),
+                                                      GTK_TYPE_PACK_DIRECTION,
+                                                      GTK_PACK_DIRECTION_LTR,
+                                                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   /**
    * GtkMenuBar:child-pack-direction:
@@ -202,13 +202,13 @@ gtk_menu_bar_class_init (GtkMenuBarClass *class)
    * Since: 2.8
    */
   g_object_class_install_property (gobject_class,
-				   PROP_CHILD_PACK_DIRECTION,
-				   g_param_spec_enum ("child-pack-direction",
- 						      P_("Child Pack direction"),
- 						      P_("The child pack direction of the menubar"),
- 						      GTK_TYPE_PACK_DIRECTION,
- 						      GTK_PACK_DIRECTION_LTR,
- 						      GTK_PARAM_READWRITE));
+                                   PROP_CHILD_PACK_DIRECTION,
+                                   g_param_spec_enum ("child-pack-direction",
+                                                      P_("Child Pack direction"),
+                                                      P_("The child pack direction of the menubar"),
+                                                      GTK_TYPE_PACK_DIRECTION,
+                                                      GTK_PACK_DIRECTION_LTR,
+                                                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
 
   gtk_widget_class_install_style_property (widget_class,
@@ -494,9 +494,9 @@ gtk_menu_bar_size_allocate (GtkWidget     *widget,
       remaining_space.x = (border_width + border.left);
       remaining_space.y = (border_width + border.top);
       remaining_space.width = allocation->width -
-        2 * (border_width) - border.left - border.right;
+        2 * border_width - border.left - border.right;
       remaining_space.height = allocation->height -
-        2 * (border_width) - border.top - border.bottom;
+        2 * border_width - border.top - border.bottom;
 
       if (get_shadow_type (menu_bar) != GTK_SHADOW_NONE)
 	{
@@ -656,8 +656,8 @@ get_menu_bars (GtkWindow *window)
   return g_object_get_data (G_OBJECT (window), "gtk-menu-bar-list");
 }
 
-static GList *
-get_viewable_menu_bars (GtkWindow *window)
+GList *
+_gtk_menu_bar_get_viewable_menu_bars (GtkWindow *window)
 {
   GList *menu_bars;
   GList *viewable_menu_bars = NULL;
@@ -691,75 +691,11 @@ set_menu_bars (GtkWindow *window,
   g_object_set_data (G_OBJECT (window), I_("gtk-menu-bar-list"), menubars);
 }
 
-static gboolean
-window_key_press_handler (GtkWidget   *widget,
-                          GdkEventKey *event,
-                          gpointer     data)
-{
-  gchar *accel = NULL;
-  gboolean retval = FALSE;
-
-  g_object_get (gtk_widget_get_settings (widget),
-                "gtk-menu-bar-accel", &accel,
-                NULL);
-
-  if (accel && *accel)
-    {
-      guint keyval = 0;
-      GdkModifierType mods = 0;
-
-      gtk_accelerator_parse (accel, &keyval, &mods);
-
-      if (keyval == 0)
-        g_warning ("Failed to parse menu bar accelerator '%s'\n", accel);
-
-      /* FIXME this is wrong, needs to be in the global accel resolution
-       * thing, to properly consider i18n etc., but that probably requires
-       * AccelGroup changes etc.
-       */
-      if (event->keyval == keyval &&
-          ((event->state & gtk_accelerator_get_default_mod_mask ()) ==
-          (mods & gtk_accelerator_get_default_mod_mask ())))
-        {
-          GList *tmp_menubars = get_viewable_menu_bars (GTK_WINDOW (widget));
-          GList *menubars;
-
-          menubars = _gtk_container_focus_sort (GTK_CONTAINER (widget), tmp_menubars,
-                                                GTK_DIR_TAB_FORWARD, NULL);
-          g_list_free (tmp_menubars);
-
-          if (menubars)
-            {
-              GtkMenuShell *menu_shell = GTK_MENU_SHELL (menubars->data);
-
-              _gtk_menu_shell_set_keyboard_mode (menu_shell, TRUE);
-              gtk_menu_shell_select_first (menu_shell, FALSE);
-
-              g_list_free (menubars);
-
-              retval = TRUE;
-            }
-        }
-    }
-
-  g_free (accel);
-
-  return retval;
-}
-
 static void
 add_to_window (GtkWindow  *window,
                GtkMenuBar *menubar)
 {
   GList *menubars = get_menu_bars (window);
-
-  if (!menubars)
-    {
-      g_signal_connect (window,
-			"key-press-event",
-			G_CALLBACK (window_key_press_handler),
-			NULL);
-    }
 
   set_menu_bars (window, g_list_prepend (menubars, menubar));
 }
@@ -771,14 +707,6 @@ remove_from_window (GtkWindow  *window,
   GList *menubars = get_menu_bars (window);
 
   menubars = g_list_remove (menubars, menubar);
-
-  if (!menubars)
-    {
-      g_signal_handlers_disconnect_by_func (window,
-					    window_key_press_handler,
-					    NULL);
-    }
-
   set_menu_bars (window, menubars);
 }
 
@@ -816,7 +744,7 @@ _gtk_menu_bar_cycle_focus (GtkMenuBar       *menubar,
 
   if (gtk_widget_is_toplevel (toplevel))
     {
-      GList *tmp_menubars = get_viewable_menu_bars (GTK_WINDOW (toplevel));
+      GList *tmp_menubars = _gtk_menu_bar_get_viewable_menu_bars (GTK_WINDOW (toplevel));
       GList *menubars;
       GList *current;
 
@@ -932,7 +860,7 @@ gtk_menu_bar_move_current (GtkMenuShell         *menu_shell,
  * Retrieves the current pack direction of the menubar. 
  * See gtk_menu_bar_set_pack_direction().
  *
- * Return value: the pack direction
+ * Returns: the pack direction
  *
  * Since: 2.8
  */
@@ -985,7 +913,7 @@ gtk_menu_bar_set_pack_direction (GtkMenuBar       *menubar,
  * Retrieves the current child pack direction of the menubar.
  * See gtk_menu_bar_set_child_pack_direction().
  *
- * Return value: the child pack direction
+ * Returns: the child pack direction
  *
  * Since: 2.8
  */

@@ -40,7 +40,7 @@ Prebuilt common menu/toolbar items and corresponding icons
  * @Title: Stock Items
  *
  * Stock items represent commonly-used menu or toolbar items such as
- * "Open" or "Exit". Each stock item is identified by a stock ID;
+ * “Open” or “Exit”. Each stock item is identified by a stock ID;
  * stock IDs are just strings, but macros such as #GTK_STOCK_OPEN are
  * provided to avoid typing mistakes in the strings.
  * Applications can register their own stock items in addition to those
@@ -49,11 +49,9 @@ Prebuilt common menu/toolbar items and corresponding icons
  * Each stock ID can be associated with a #GtkStockItem, which contains
  * the user-visible label, keyboard accelerator, and translation domain
  * of the menu or toolbar item; and/or with an icon stored in a
- * #GtkIconFactory. See <link
- * linkend="gtk3-Themeable-Stock-Images">GtkIconFactory</link> for
- * more information on stock icons. The connection between a
+ * #GtkIconFactory. The connection between a
  * #GtkStockItem and stock icons is purely conventional (by virtue of
- * using the same stock ID); it's possible to register a stock item but
+ * using the same stock ID); it’s possible to register a stock item but
  * no icon, and vice versa. Stock icons may have a RTL variant which gets
  * used for right-to-left locales.
  */
@@ -161,7 +159,7 @@ gtk_stock_add (const GtkStockItem *items,
  * @items: (array length=n_items): a #GtkStockItem or array of #GtkStockItem
  * @n_items: number of items
  *
- * Same as gtk_stock_add(), but doesn't copy @items, so
+ * Same as gtk_stock_add(), but doesn’t copy @items, so
  * @items must persist until application exit.
  *
  * Deprecated: 3.10
@@ -183,7 +181,7 @@ gtk_stock_add_static (const GtkStockItem *items,
  * Fills @item with the registered values for @stock_id, returning %TRUE
  * if @stock_id was known.
  *
- * Return value: %TRUE if @item was initialized
+ * Returns: %TRUE if @item was initialized
  *
  * Deprecated: 3.10
  **/
@@ -231,7 +229,7 @@ gtk_stock_lookup (const gchar  *stock_id,
  * or registered with gtk_stock_add(). The list must be freed with g_slist_free(),
  * and each string in the list must be freed with g_free().
  *
- * Return value: (element-type utf8) (transfer full): a list of known stock IDs
+ * Returns: (element-type utf8) (transfer full): a list of known stock IDs
  *
  * Deprecated: 3.10
  **/
@@ -283,7 +281,7 @@ gtk_stock_list_ids (void)
  * 
  * Copies a stock item, mostly useful for language bindings and not in applications.
  * 
- * Return value: a new #GtkStockItem
+ * Returns: a new #GtkStockItem
  *
  * Deprecated: 3.10
  **/
@@ -483,7 +481,7 @@ static const GtkStockItem builtin_items [] =
  * the correct domain when calling dgettext(). This can be useful, e.g.
  * when dealing with message contexts:
  *
- * |[
+ * |[<!-- language="C" -->
  * GtkStockItem items[] = { 
  *  { MY_ITEM1, NC_("odd items", "Item 1"), 0, 0, "odd-item-domain" },
  *  { MY_ITEM2, NC_("even items", "Item 2"), 0, 0, "even-item-domain" },
@@ -498,7 +496,7 @@ static const GtkStockItem builtin_items [] =
  *   return (gchar*)g_dpgettext2 (GETTEXT_PACKAGE, msgctxt, msgid);
  * }
  *
- * /&ast; ... &ast;/
+ * ...
  *
  * gtk_stock_add (items, G_N_ELEMENTS (items));
  * gtk_stock_set_translate_func ("odd-item-domain", my_translate_func, "odd items"); 

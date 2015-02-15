@@ -57,8 +57,8 @@
  * #GdkDeviceManager implementation will be used as the input source.
  * Otherwise either the core or XInput 1 implementations will be used.
  *
- * For simple applications that don't have any special interest in
- * input devices, the so-called <firstterm>client pointer</firstterm>
+ * For simple applications that don’t have any special interest in
+ * input devices, the so-called “client pointer”
  * provides a reasonable approximation to a simple setup with a single
  * pointer and keyboard. The device that has been set as the client
  * pointer can be accessed via gdk_device_manager_get_client_pointer().
@@ -75,10 +75,11 @@
  *
  * There may be several virtual devices, and several physical devices could
  * be controlling each of these virtual devices. Physical devices may also
- * be "floating", which means they are not attached to any virtual device.
+ * be “floating”, which means they are not attached to any virtual device.
  *
- * <example><title>Master and slave devices</title>
- * <screen>
+ * # Master and slave devices
+ *
+ * |[
  * carlos@sacarino:~$ xinput list
  * ⎡ Virtual core pointer                          id=2    [master pointer  (3)]
  * ⎜   ↳ Virtual core XTEST pointer                id=4    [slave  pointer  (2)]
@@ -95,8 +96,7 @@
  *     ↳ Integrated Camera                         id=9    [slave  keyboard (3)]
  *     ↳ AT Translated Set 2 keyboard              id=12   [slave  keyboard (3)]
  *     ↳ ThinkPad Extra Buttons                    id=15   [slave  keyboard (3)]
- * </screen>
- * </example>
+ * ]|
  *
  * By default, GDK will automatically listen for events coming from all
  * master devices, setting the #GdkDevice for all events coming from input
@@ -109,6 +109,17 @@
  * and #GDK_GRAB_BROKEN. When dealing with an event on a master device,
  * it is possible to get the source (slave) device that the event originated
  * from via gdk_event_get_source_device().
+ *
+ * On a standard session, all physical devices are connected by default to
+ * the "Virtual Core Pointer/Keyboard" master devices, hence routing all events
+ * through these. This behavior is only modified by device grabs, where the
+ * slave device is temporarily detached for as long as the grab is held, and
+ * more permanently by user modifications to the device hierarchy.
+ *
+ * On certain application specific setups, it may make sense
+ * to detach a physical device from its master pointer, and mapping it to
+ * an specific window. This can be achieved by the combination of
+ * gdk_device_grab() and gdk_device_set_mode().
  *
  * In order to listen for events coming from devices
  * other than a virtual device, gdk_window_set_device_events() must be
@@ -124,7 +135,7 @@
  * changes, the #GdkDevice:n-axes property will be notified, and
  * gdk_device_list_axes() will return the new device axes.
  *
- * Devices may also have associated <firstterm>keys</firstterm> or
+ * Devices may also have associated “keys” or
  * macro buttons. Such keys can be globally set to map into normal X
  * keyboard events. The mapping is set using gdk_device_set_key().
  */
@@ -284,9 +295,9 @@ gdk_device_manager_get_property (GObject      *object,
  *
  * Gets the #GdkDisplay associated to @device_manager.
  *
- * Returns: (transfer none): the #GdkDisplay to which @device_manager is
- *          associated to, or #NULL. This memory is owned by GDK and
- *          must not be freed or unreferenced.
+ * Returns: (nullable) (transfer none): the #GdkDisplay to which
+ *          @device_manager is associated to, or #NULL. This memory is
+ *          owned by GDK and must not be freed or unreferenced.
  *
  * Since: 3.0
  **/
@@ -307,7 +318,7 @@ gdk_device_manager_get_display (GdkDeviceManager *device_manager)
  * @device_manager.
  *
  * Returns: (transfer container) (element-type Gdk.Device): a list of 
- *          #GdkDevice<!-- -->s. The returned list must be
+ *          #GdkDevices. The returned list must be
  *          freed with g_list_free (). The list elements are owned by
  *          GTK+ and must not be freed or unreffed.
  *
@@ -330,8 +341,8 @@ gdk_device_manager_list_devices (GdkDeviceManager *device_manager,
  * for this application. In X11, window managers may change this depending on the interaction
  * pattern under the presence of several pointers.
  *
- * You should use this function seldomly, only in code that isn't triggered by a #GdkEvent
- * and there aren't other means to get a meaningful #GdkDevice to operate on.
+ * You should use this function seldomly, only in code that isn’t triggered by a #GdkEvent
+ * and there aren’t other means to get a meaningful #GdkDevice to operate on.
  *
  * Returns: (transfer none): The client pointer. This memory is
  *          owned by GDK and must not be freed or unreferenced.

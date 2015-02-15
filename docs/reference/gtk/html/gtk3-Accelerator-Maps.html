@@ -8,7 +8,7 @@
 <link rel="up" href="gtkbase.html" title="Part III. GTK+ Core Reference">
 <link rel="prev" href="gtk3-Keyboard-Accelerators.html" title="Accelerator Groups">
 <link rel="next" href="gtk3-Clipboards.html" title="Clipboards">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -59,7 +59,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-lookup-entry" title="gtk_accel_map_lookup_entry ()">gtk_accel_map_lookup_entry</a> <span class="c_punctuation">()</span>
@@ -67,7 +67,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-change-entry" title="gtk_accel_map_change_entry ()">gtk_accel_map_change_entry</a> <span class="c_punctuation">()</span>
@@ -194,7 +194,7 @@
 </div>
 <div class="refsect1">
 <a name="gtk3-Accelerator-Maps.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
     <span class="lineart">╰──</span> GtkAccelMap
 </pre>
 </div>
@@ -208,59 +208,55 @@
 <p>Accelerator maps are used to define runtime configurable accelerators.
 Functions for manipulating them are are usually used by higher level
 convenience mechanisms like <a class="link" href="GtkUIManager.html" title="GtkUIManager"><span class="type">GtkUIManager</span></a> and are thus considered
-"low-level". You'll want to use them if you're manually creating menus that
+“low-level”. You’ll want to use them if you’re manually creating menus that
 should have user-configurable accelerators.</p>
-<p>Accelerator is uniquely defined by:</p>
+<p>An accelerator is uniquely defined by:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>accelerator path</p></li>
 <li class="listitem"><p>accelerator key</p></li>
 <li class="listitem"><p>accelerator modifiers</p></li>
 </ul></div>
 <p>The accelerator path must consist of
-"&lt;WINDOWTYPE&gt;/Category1/Category2/.../Action", where WINDOWTYPE
-should be a unique application-specific identifier that corresponds to the
-kind of window the accelerator is being used in, e.g. "Gimp-Image",
-"Abiword-Document" or "Gnumeric-Settings".
-The "Category1/.../Action" portion is most appropriately chosen by the action
-the accelerator triggers, i.e. for accelerators on menu items, choose the
-item's menu path, e.g. "File/Save As", "Image/View/Zoom" or
-"Edit/Select All". So a full valid accelerator path may look like:
-"&lt;Gimp-Toolbox&gt;/File/Dialogs/Tool Options...".</p>
-<p>All accelerators are stored inside one global <a class="link" href="gtk3-Accelerator-Maps.html#GtkAccelMap"><span class="type">GtkAccelMap</span></a> that can be
-obtained using <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-get" title="gtk_accel_map_get ()"><code class="function">gtk_accel_map_get()</code></a>. See <a class="link" href="gtk3-Accelerator-Maps.html#monitoring-changes" title="Monitoring changes">Monitoring changes</a> for additional
+“&lt;WINDOWTYPE&gt;/Category1/Category2/.../Action”, where WINDOWTYPE
+should be a unique application-specific identifier that corresponds
+to the kind of window the accelerator is being used in, e.g.
+“Gimp-Image”, “Abiword-Document” or “Gnumeric-Settings”.
+The “Category1/.../Action” portion is most appropriately chosen by
+the action the accelerator triggers, i.e. for accelerators on menu
+items, choose the item’s menu path, e.g. “File/Save As”,
+“Image/View/Zoom” or “Edit/Select All”. So a full valid accelerator
+path may look like: “&lt;Gimp-Toolbox&gt;/File/Dialogs/Tool Options...”.</p>
+<p>All accelerators are stored inside one global <a class="link" href="gtk3-Accelerator-Maps.html#GtkAccelMap"><span class="type">GtkAccelMap</span></a> that can
+be obtained using <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-get" title="gtk_accel_map_get ()"><code class="function">gtk_accel_map_get()</code></a>. See
+Monitoring changes for additional
 details.</p>
 <div class="refsect2">
-<a name="manipulating-accelerators"></a><h3>Manipulating accelerators</h3>
-<p>
-New accelerators can be added using <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-add-entry" title="gtk_accel_map_add_entry ()"><code class="function">gtk_accel_map_add_entry()</code></a>. To search for
-specific accelerator, use <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-lookup-entry" title="gtk_accel_map_lookup_entry ()"><code class="function">gtk_accel_map_lookup_entry()</code></a>. Modifications of
-existing accelerators should be done using <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-change-entry" title="gtk_accel_map_change_entry ()"><code class="function">gtk_accel_map_change_entry()</code></a>.
-
-In order to avoid having some accelerators changed, they can be locked using
-<a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-lock-path" title="gtk_accel_map_lock_path ()"><code class="function">gtk_accel_map_lock_path()</code></a>. Unlocking is done using
-<a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-unlock-path" title="gtk_accel_map_unlock_path ()"><code class="function">gtk_accel_map_unlock_path()</code></a>.
-</p>
+<a name="id-1.4.5.9.7"></a><h3>Manipulating accelerators</h3>
+<p>New accelerators can be added using <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-add-entry" title="gtk_accel_map_add_entry ()"><code class="function">gtk_accel_map_add_entry()</code></a>.
+To search for specific accelerator, use <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-lookup-entry" title="gtk_accel_map_lookup_entry ()"><code class="function">gtk_accel_map_lookup_entry()</code></a>.
+Modifications of existing accelerators should be done using
+<a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-change-entry" title="gtk_accel_map_change_entry ()"><code class="function">gtk_accel_map_change_entry()</code></a>.</p>
+<p>In order to avoid having some accelerators changed, they can be
+locked using <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-lock-path" title="gtk_accel_map_lock_path ()"><code class="function">gtk_accel_map_lock_path()</code></a>. Unlocking is done using
+<a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-unlock-path" title="gtk_accel_map_unlock_path ()"><code class="function">gtk_accel_map_unlock_path()</code></a>.</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="saving-and-loading"></a><h3>Saving and loading accelerator maps</h3>
-<p>
-Accelerator maps can be saved to and loaded from some external resource. For
-simple saving and loading from file, <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-save" title="gtk_accel_map_save ()"><code class="function">gtk_accel_map_save()</code></a> and
-<a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-load" title="gtk_accel_map_load ()"><code class="function">gtk_accel_map_load()</code></a> are provided. Saving and loading can also be done by
-providing file descriptor to <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-save-fd" title="gtk_accel_map_save_fd ()"><code class="function">gtk_accel_map_save_fd()</code></a> and
-<a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-load-fd" title="gtk_accel_map_load_fd ()"><code class="function">gtk_accel_map_load_fd()</code></a>.
-</p>
+<a name="id-1.4.5.9.8"></a><h3>Saving and loading accelerator maps</h3>
+<p>Accelerator maps can be saved to and loaded from some external
+resource. For simple saving and loading from file,
+<a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-save" title="gtk_accel_map_save ()"><code class="function">gtk_accel_map_save()</code></a> and <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-load" title="gtk_accel_map_load ()"><code class="function">gtk_accel_map_load()</code></a> are provided.
+Saving and loading can also be done by providing file descriptor
+to <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-save-fd" title="gtk_accel_map_save_fd ()"><code class="function">gtk_accel_map_save_fd()</code></a> and <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-load-fd" title="gtk_accel_map_load_fd ()"><code class="function">gtk_accel_map_load_fd()</code></a>.</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="monitoring-changes"></a><h3>Monitoring changes</h3>
-<p>
-<a class="link" href="gtk3-Accelerator-Maps.html#GtkAccelMap"><span class="type">GtkAccelMap</span></a> object is only useful for monitoring changes of accelerators. By
-connecting to <a class="link" href="gtk3-Accelerator-Maps.html#GtkAccelMap-changed" title="The “changed” signal"><span class="type">“changed”</span></a> signal, one can monitor changes of all
-accelerators. It is also possible to monitor only single accelerator path by
-using it as a detail of the <a class="link" href="gtk3-Accelerator-Maps.html#GtkAccelMap-changed" title="The “changed” signal"><span class="type">“changed”</span></a> signal.
-</p>
+<a name="id-1.4.5.9.9"></a><h3>Monitoring changes</h3>
+<p><a class="link" href="gtk3-Accelerator-Maps.html#GtkAccelMap"><span class="type">GtkAccelMap</span></a> object is only useful for monitoring changes of
+accelerators. By connecting to <a class="link" href="gtk3-Accelerator-Maps.html#GtkAccelMap-changed" title="The “changed” signal"><span class="type">“changed”</span></a> signal, one
+can monitor changes of all accelerators. It is also possible to
+monitor only single accelerator path by using it as a detail of
+the <a class="link" href="gtk3-Accelerator-Maps.html#GtkAccelMap-changed" title="The “changed” signal"><span class="type">“changed”</span></a> signal.</p>
 </div>
 </div>
 <div class="refsect1">
@@ -268,11 +264,11 @@ using it as a detail of the <a class="link" href="gtk3-Accelerator-Maps.html#Gtk
 <div class="refsect2">
 <a name="GtkAccelMapForeach"></a><h3>GtkAccelMapForeach ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-<span class="c_punctuation">(</span>*GtkAccelMapForeach<span class="c_punctuation">)</span> (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
-                       <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *accel_path</code></em>,
-                       <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> accel_key</code></em>,
+<span class="c_punctuation">(</span>*GtkAccelMapForeach<span class="c_punctuation">)</span> (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
+                       <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *accel_path</code></em>,
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> accel_key</code></em>,
                        <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Windows.html#GdkModifierType"><span class="type">GdkModifierType</span></a> accel_mods</code></em>,
-                       <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> changed</code></em>);</pre>
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> changed</code></em>);</pre>
 <div class="refsect3">
 <a name="id-1.4.5.10.2.4"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -305,7 +301,7 @@ using it as a detail of the <a class="link" href="gtk3-Accelerator-Maps.html#Gtk
 </tr>
 <tr>
 <td class="parameter_name"><p>changed</p></td>
-<td class="parameter_description"><p>Changed flag of the accelerator (if <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, accelerator has changed
+<td class="parameter_description"><p>Changed flag of the accelerator (if <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, accelerator has changed
 during runtime and would need to be saved during an accelerator dump)</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -317,8 +313,8 @@ during runtime and would need to be saved during an accelerator dump)</p></td>
 <div class="refsect2">
 <a name="gtk-accel-map-add-entry"></a><h3>gtk_accel_map_add_entry ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_accel_map_add_entry (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *accel_path</code></em>,
-                         <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> accel_key</code></em>,
+gtk_accel_map_add_entry (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *accel_path</code></em>,
+                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> accel_key</code></em>,
                          <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Windows.html#GdkModifierType"><span class="type">GdkModifierType</span></a> accel_mods</code></em>);</pre>
 <p>Registers a new accelerator with the global accelerator map.
 This function should only be called once per <em class="parameter"><code>accel_path</code></em>
@@ -333,9 +329,9 @@ To change the accelerator during runtime programatically, use
  to 0 to request a removal of
 the accelerator.</p>
 <p>Note that <em class="parameter"><code>accel_path</code></em>
- string will be stored in a <a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a>. Therefore, if you
+ string will be stored in a <a href="https://developer.gnome.org/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a>. Therefore, if you
 pass a static string, you can save some memory by interning it first with 
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#g-intern-static-string"><code class="function">g_intern_static_string()</code></a>.</p>
+<a href="https://developer.gnome.org/glib/unstable/glib-Quarks.html#g-intern-static-string"><code class="function">g_intern_static_string()</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.4.5.10.3.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -367,8 +363,8 @@ pass a static string, you can save some memory by interning it first with
 <hr>
 <div class="refsect2">
 <a name="gtk-accel-map-lookup-entry"></a><h3>gtk_accel_map_lookup_entry ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gtk_accel_map_lookup_entry (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *accel_path</code></em>,
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gtk_accel_map_lookup_entry (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *accel_path</code></em>,
                             <em class="parameter"><code><a class="link" href="gtk3-Keyboard-Accelerators.html#GtkAccelKey" title="struct GtkAccelKey"><span class="type">GtkAccelKey</span></a> *key</code></em>);</pre>
 <p>Looks up the accelerator entry for <em class="parameter"><code>accel_path</code></em>
  and fills in <em class="parameter"><code>key</code></em>
@@ -390,26 +386,26 @@ gtk_accel_map_lookup_entry (<em class="parameter"><code>const <a href="http://li
 <tr>
 <td class="parameter_name"><p>key</p></td>
 <td class="parameter_description"><p> the accelerator key to be filled in (optional). </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>][<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
 <a name="id-1.4.5.10.4.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>accel_path</code></em>
-is known, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>accel_path</code></em>
+is known, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
 <p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gtk-accel-map-change-entry"></a><h3>gtk_accel_map_change_entry ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-gtk_accel_map_change_entry (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *accel_path</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> accel_key</code></em>,
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gtk_accel_map_change_entry (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *accel_path</code></em>,
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> accel_key</code></em>,
                             <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Windows.html#GdkModifierType"><span class="type">GdkModifierType</span></a> accel_mods</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> replace</code></em>);</pre>
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> replace</code></em>);</pre>
 <p>Changes the <em class="parameter"><code>accel_key</code></em>
  and <em class="parameter"><code>accel_mods</code></em>
  currently associated with <em class="parameter"><code>accel_path</code></em>
@@ -419,11 +415,11 @@ Due to conflicts with other accelerators, a change may not always be possible,
  indicates whether other accelerators may be deleted to resolve such
 conflicts. A change will only occur if all conflicts could be resolved (which
 might not be the case if conflicting accelerators are locked). Successful
-changes are indicated by a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> return value.</p>
+changes are indicated by a <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> return value.</p>
 <p>Note that <em class="parameter"><code>accel_path</code></em>
- string will be stored in a <a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a>. Therefore, if you
+ string will be stored in a <a href="https://developer.gnome.org/glib/unstable/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a>. Therefore, if you
 pass a static string, you can save some memory by interning it first with
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Quarks.html#g-intern-static-string"><code class="function">g_intern_static_string()</code></a>.</p>
+<a href="https://developer.gnome.org/glib/unstable/glib-Quarks.html#g-intern-static-string"><code class="function">g_intern_static_string()</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.4.5.10.5.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -450,7 +446,7 @@ pass a static string, you can save some memory by interning it first with
 </tr>
 <tr>
 <td class="parameter_name"><p>replace</p></td>
-<td class="parameter_description"><p><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if other accelerators may be deleted upon conflicts</p></td>
+<td class="parameter_description"><p><a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if other accelerators may be deleted upon conflicts</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -458,7 +454,7 @@ pass a static string, you can save some memory by interning it first with
 </div>
 <div class="refsect3">
 <a name="id-1.4.5.10.5.7"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the accelerator could be changed, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the accelerator could be changed, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
 <p></p>
 </div>
 </div>
@@ -466,7 +462,7 @@ pass a static string, you can save some memory by interning it first with
 <div class="refsect2">
 <a name="gtk-accel-map-load"></a><h3>gtk_accel_map_load ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_accel_map_load (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
+gtk_accel_map_load (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
 <p>Parses a file previously saved with <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-save" title="gtk_accel_map_save ()"><code class="function">gtk_accel_map_save()</code></a> for
 accelerator specifications, and propagates them accordingly.</p>
 <div class="refsect3">
@@ -490,7 +486,7 @@ in the GLib file name encoding. </p></td>
 <div class="refsect2">
 <a name="gtk-accel-map-save"></a><h3>gtk_accel_map_save ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_accel_map_save (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
+gtk_accel_map_save (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
 <p>Saves current accelerator specifications (accelerator path, key
 and modifiers) to <em class="parameter"><code>file_name</code></em>
 .
@@ -517,10 +513,10 @@ accelerator specifications, in the GLib file name encoding. </p></td>
 <div class="refsect2">
 <a name="gtk-accel-map-foreach"></a><h3>gtk_accel_map_foreach ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_accel_map_foreach (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
+gtk_accel_map_foreach (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
                        <em class="parameter"><code><a class="link" href="gtk3-Accelerator-Maps.html#GtkAccelMapForeach" title="GtkAccelMapForeach ()"><span class="type">GtkAccelMapForeach</span></a> foreach_func</code></em>);</pre>
 <p>Loops over the entries in the accelerator map whose accel path 
-doesn't match any of the filters added with <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-add-filter" title="gtk_accel_map_add_filter ()"><code class="function">gtk_accel_map_add_filter()</code></a>, 
+doesn’t match any of the filters added with <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-add-filter" title="gtk_accel_map_add_filter ()"><code class="function">gtk_accel_map_add_filter()</code></a>, 
 and execute <em class="parameter"><code>foreach_func</code></em>
  on each. The signature of <em class="parameter"><code>foreach_func</code></em>
  is 
@@ -541,7 +537,7 @@ saving during an accelerator map dump).</p>
 <td class="parameter_name"><p>data</p></td>
 <td class="parameter_description"><p> data to be passed into <em class="parameter"><code>foreach_func</code></em>
 . </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>foreach_func</p></td>
@@ -557,7 +553,7 @@ map entry which is not filtered out. </p></td>
 <div class="refsect2">
 <a name="gtk-accel-map-load-fd"></a><h3>gtk_accel_map_load_fd ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_accel_map_load_fd (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> fd</code></em>);</pre>
+gtk_accel_map_load_fd (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> fd</code></em>);</pre>
 <p>Filedescriptor variant of <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-load" title="gtk_accel_map_load ()"><code class="function">gtk_accel_map_load()</code></a>.</p>
 <p>Note that the file descriptor will not be closed by this function.</p>
 <div class="refsect3">
@@ -580,7 +576,7 @@ gtk_accel_map_load_fd (<em class="parameter"><code><a href="http://library.gnome
 <div class="refsect2">
 <a name="gtk-accel-map-save-fd"></a><h3>gtk_accel_map_save_fd ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_accel_map_save_fd (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> fd</code></em>);</pre>
+gtk_accel_map_save_fd (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> fd</code></em>);</pre>
 <p>Filedescriptor variant of <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-save" title="gtk_accel_map_save ()"><code class="function">gtk_accel_map_save()</code></a>.</p>
 <p>Note that the file descriptor will not be closed by this function.</p>
 <div class="refsect3">
@@ -603,8 +599,8 @@ gtk_accel_map_save_fd (<em class="parameter"><code><a href="http://library.gnome
 <div class="refsect2">
 <a name="gtk-accel-map-load-scanner"></a><h3>gtk_accel_map_load_scanner ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_accel_map_load_scanner (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Lexical-Scanner.html#GScanner"><span class="type">GScanner</span></a> *scanner</code></em>);</pre>
-<p><a href="http://library.gnome.org/devel/glib/unstable/glib-Lexical-Scanner.html#GScanner"><span class="type">GScanner</span></a> variant of <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-load" title="gtk_accel_map_load ()"><code class="function">gtk_accel_map_load()</code></a>.</p>
+gtk_accel_map_load_scanner (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Lexical-Scanner.html#GScanner"><span class="type">GScanner</span></a> *scanner</code></em>);</pre>
+<p><a href="https://developer.gnome.org/glib/unstable/glib-Lexical-Scanner.html#GScanner"><span class="type">GScanner</span></a> variant of <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-load" title="gtk_accel_map_load ()"><code class="function">gtk_accel_map_load()</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.4.5.10.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -615,7 +611,7 @@ gtk_accel_map_load_scanner (<em class="parameter"><code><a href="http://library.
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>scanner</p></td>
-<td class="parameter_description"><p>a <a href="http://library.gnome.org/devel/glib/unstable/glib-Lexical-Scanner.html#GScanner"><span class="type">GScanner</span></a> which has already been provided with an input file</p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-Lexical-Scanner.html#GScanner"><span class="type">GScanner</span></a> which has already been provided with an input file</p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -625,12 +621,12 @@ gtk_accel_map_load_scanner (<em class="parameter"><code><a href="http://library.
 <div class="refsect2">
 <a name="gtk-accel-map-add-filter"></a><h3>gtk_accel_map_add_filter ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_accel_map_add_filter (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filter_pattern</code></em>);</pre>
+gtk_accel_map_add_filter (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filter_pattern</code></em>);</pre>
 <p>Adds a filter to the global list of accel path filters.</p>
 <p>Accel map entries whose accel path matches one of the filters
 are skipped by <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-foreach" title="gtk_accel_map_foreach ()"><code class="function">gtk_accel_map_foreach()</code></a>.</p>
 <p>This function is intended for GTK+ modules that create their own
-menus, but don't want them to be saved into the applications accelerator
+menus, but don’t want them to be saved into the applications accelerator
 map dump.</p>
 <div class="refsect3">
 <a name="id-1.4.5.10.12.7"></a><h4>Parameters</h4>
@@ -642,7 +638,7 @@ map dump.</p>
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>filter_pattern</p></td>
-<td class="parameter_description"><p>a pattern (see <a href="http://library.gnome.org/devel/glib/unstable/glib-Glob-style-pattern-matching.html#GPatternSpec"><span class="type">GPatternSpec</span></a>)</p></td>
+<td class="parameter_description"><p>a pattern (see <a href="https://developer.gnome.org/glib/unstable/glib-Glob-style-pattern-matching.html#GPatternSpec"><span class="type">GPatternSpec</span></a>)</p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
@@ -652,7 +648,7 @@ map dump.</p>
 <div class="refsect2">
 <a name="gtk-accel-map-foreach-unfiltered"></a><h3>gtk_accel_map_foreach_unfiltered ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_accel_map_foreach_unfiltered (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
+gtk_accel_map_foreach_unfiltered (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
                                   <em class="parameter"><code><a class="link" href="gtk3-Accelerator-Maps.html#GtkAccelMapForeach" title="GtkAccelMapForeach ()"><span class="type">GtkAccelMapForeach</span></a> foreach_func</code></em>);</pre>
 <p>Loops over all entries in the accelerator map, and execute
 <em class="parameter"><code>foreach_func</code></em>
@@ -694,7 +690,7 @@ map entry. </p></td>
 gtk_accel_map_get (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Gets the singleton global <a class="link" href="gtk3-Accelerator-Maps.html#GtkAccelMap"><span class="type">GtkAccelMap</span></a> object. This object
 is useful only for notification of changes to the accelerator
-map via the ::changed signal; it isn't a parameter to the
+map via the ::changed signal; it isn’t a parameter to the
 other accelerator map functions.</p>
 <div class="refsect3">
 <a name="id-1.4.5.10.14.5"></a><h4>Returns</h4>
@@ -707,8 +703,8 @@ other accelerator map functions.</p>
 <div class="refsect2">
 <a name="gtk-accel-map-lock-path"></a><h3>gtk_accel_map_lock_path ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_accel_map_lock_path (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *accel_path</code></em>);</pre>
-<p>Locks the given accelerator path. If the accelerator map doesn't yet contain
+gtk_accel_map_lock_path (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *accel_path</code></em>);</pre>
+<p>Locks the given accelerator path. If the accelerator map doesn’t yet contain
 an entry for <em class="parameter"><code>accel_path</code></em>
 , a new one is created.</p>
 <p>Locking an accelerator path prevents its accelerator from being changed 
@@ -744,7 +740,7 @@ have to be unlocked.</p>
 <div class="refsect2">
 <a name="gtk-accel-map-unlock-path"></a><h3>gtk_accel_map_unlock_path ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gtk_accel_map_unlock_path (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *accel_path</code></em>);</pre>
+gtk_accel_map_unlock_path (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *accel_path</code></em>);</pre>
 <p>Undoes the last call to <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-lock-path" title="gtk_accel_map_lock_path ()"><code class="function">gtk_accel_map_lock_path()</code></a> on this <em class="parameter"><code>accel_path</code></em>
 .
 Refer to <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-lock-path" title="gtk_accel_map_lock_path ()"><code class="function">gtk_accel_map_lock_path()</code></a> for information about accelerator path locking.</p>
@@ -779,14 +775,14 @@ Refer to <a class="link" href="gtk3-Accelerator-Maps.html#gtk-accel-map-lock-pat
 <a name="GtkAccelMap-changed"></a><h3>The <code class="literal">“changed”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="gtk3-Accelerator-Maps.html#GtkAccelMap"><span class="type">GtkAccelMap</span></a>    *object,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>          *accel_path,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>           accel_key,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>          *accel_path,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>           accel_key,
                <a href="http://developer.gnome.org/gdk2/gdk3-Windows.html#GdkModifierType"><span class="type">GdkModifierType</span></a> accel_mods,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>        user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>        user_data)</pre>
 <p>Notifies of a change in the global accelerator map.
 The path is also used as the detail for the signal,
 so it is possible to connect to
-changed::<em class="replaceable"><code>accel_path</code></em>.</p>
+changed::<code class="literal">accel_path</code>.</p>
 <div class="refsect3">
 <a name="id-1.4.5.12.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -835,6 +831,6 @@ changed::<em class="replaceable"><code>accel_path</code></em>.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

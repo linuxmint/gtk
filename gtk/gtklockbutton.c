@@ -39,16 +39,22 @@
  * #GPermission, use polkit_permission_new().
  *
  * If the user is not currently allowed to perform the action, but can obtain
- * the permission, the widget looks like this
- * <informalexample><inlinegraphic fileref="lockbutton-locked.png"></inlinegraphic></informalexample>
+ * the permission, the widget looks like this:
+ *
+ * ![](lockbutton-locked.png)
+ *
  * and the user can click the button to request the permission. Depending
  * on the platform, this may pop up an authentication dialog or ask the user
  * to authenticate in some other way. Once the user has obtained the permission,
- * the widget changes to this
- * <informalexample><inlinegraphic fileref="lockbutton-unlocked.png"></inlinegraphic></informalexample>
+ * the widget changes to this:
+ *
+ * ![](lockbutton-unlocked.png)
+ *
  * and the permission can be dropped again by clicking the button. If the user
- * is not able to obtain the permission at all, the widget looks like this
- * <informalexample><inlinegraphic fileref="lockbutton-sorry.png"></inlinegraphic></informalexample>
+ * is not able to obtain the permission at all, the widget looks like this:
+ *
+ * ![](lockbutton-sorry.png)
+ *
  * If the user has the permission and cannot drop it, the button is hidden.
  *
  * The text (and tooltips) that are shown in the various cases can be adjusted
@@ -306,7 +312,7 @@ gtk_lock_button_class_init (GtkLockButtonClass *klass)
 
   /* Bind class to template
    */
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/libgtk/gtklockbutton.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/libgtk/ui/gtklockbutton.ui");
   gtk_widget_class_bind_template_child_private (widget_class, GtkLockButton, box);
   gtk_widget_class_bind_template_child_private (widget_class, GtkLockButton, image);
   gtk_widget_class_bind_template_child_private (widget_class, GtkLockButton, label_lock);
@@ -446,8 +452,8 @@ gtk_lock_button_clicked (GtkButton *button)
   GtkLockButtonPrivate *priv = GTK_LOCK_BUTTON (button)->priv;
 
   /* if we already have a pending interactive check or permission is not set,
-  * then do nothing
-  */
+   * then do nothing
+   */
   if (priv->cancellable != NULL || priv->permission == NULL)
     return;
 

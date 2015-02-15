@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/">
-    <file>gtk-logo-old.png</file>
+  <gresource prefix="/ui">
+    <file preprocess="xml-stripblanks">main.ui</file>
   </gresource>
   <gresource prefix="/application">
-    <file preprocess="to-pixdata">gtk-logo-24.png</file>
-    <file preprocess="to-pixdata">gtk-logo-48.png</file>
     <file>application.ui</file>
     <file>menus.ui</file>
   </gresource>
@@ -62,7 +60,6 @@
   <gresource prefix="/images">
     <file>alphatest.png</file>
     <file>floppybuddy.gif</file>
-    <file>gtk-logo-old.png</file>
   </gresource>
   <gresource prefix="/pixbufs">
     <file>apple-red.png</file>
@@ -94,7 +91,11 @@
     <file>editable_cells.c</file>
     <file>entry_buffer.c</file>
     <file>entry_completion.c</file>
+    <file>event_axes.c</file>
     <file>expander.c</file>
+    <file>flowbox.c</file>
+    <file>gestures.c</file>
+    <file>headerbar.c</file>
     <file>hypertext.c</file>
     <file>iconview.c</file>
     <file>iconview_edit.c</file>
@@ -110,6 +111,7 @@
     <file>panes.c</file>
     <file>pickers.c</file>
     <file>pixbufs.c</file>
+    <file>popover.c</file>
     <file>printing.c</file>
     <file>revealer.c</file>
     <file>rotated_text.c</file>
@@ -127,12 +129,13 @@
   </gresource>
   <gresource prefix="/textview">
     <file>floppybuddy.gif</file>
-    <file>gtk-logo-old.png</file>
   </gresource>
   <gresource prefix="/listbox">
     <file>listbox.ui</file>
     <file>messages.txt</file>
-    <file>gtk-logo-48.png</file>
     <file>apple-red.png</file>
+  </gresource>
+  <gresource prefix="/popover">
+    <file>popover.ui</file>
   </gresource>
 </gresources>

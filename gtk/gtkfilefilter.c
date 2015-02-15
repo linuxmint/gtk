@@ -32,38 +32,34 @@
  * types; e.g. a filter for text/plain also matches a file with mime
  * type application/rtf, since application/rtf is a subclass of
  * text/plain. Note that #GtkFileFilter allows wildcards for the
- * subtype of a mime type, so you can e.g. filter for image/&ast;.
+ * subtype of a mime type, so you can e.g. filter for image/\*.
  *
  * Normally, filters are used by adding them to a #GtkFileChooser,
  * see gtk_file_chooser_add_filter(), but it is also possible
  * to manually use a filter on a file with gtk_file_filter_filter().
  *
- * <refsect2 id="GtkFileFilter-BUILDER-UI">
- * <title>GtkFileFilter as GtkBuildable</title>
- * <para>
- * The GtkFileFilter implementation of the GtkBuildable interface
- * supports adding rules using the &lt;mime-types&gt;, &lt;patterns&gt; and
- * &lt;applications&gt; elements and listing the rules within. Specifying
- * a &lt;mime-type&gt; or &lt;pattern&gt; is the same
- * as calling gtk_recent_filter_add_mime_type() or gtk_recent_filter_add_pattern()
+ * # GtkFileFilter as GtkBuildable
  *
- * <example>
- * <title>A UI definition fragment specifying GtkFileFilter rules</title>
- * <programlisting><![CDATA[
+ * The GtkFileFilter implementation of the GtkBuildable interface
+ * supports adding rules using the <mime-types>, <patterns> and
+ * <applications> elements and listing the rules within. Specifying
+ * a <mime-type> or <pattern> has the same effect as as calling
+ * gtk_file_filter_add_mime_type() or gtk_file_filter_add_pattern().
+ *
+ * An example of a UI definition fragment specifying GtkFileFilter
+ * rules:
+ * |[
  * <object class="GtkFileFilter">
  *   <mime-types>
  *     <mime-type>text/plain</mime-type>
- *     <mime-type>image/&ast;</mime-type>
+ *     <mime-type>image/ *</mime-type>
  *   </mime-types>
  *   <patterns>
  *     <pattern>*.txt</pattern>
  *     <pattern>*.png</pattern>
  *   </patterns>
  * </object>
- * ]]></programlisting>
- * </example>
- * </para>
- * </refsect2>
+ * ]|
  */
 
 #include "config.h"
@@ -346,17 +342,17 @@ gtk_file_filter_buildable_custom_tag_end (GtkBuildable *buildable,
  * gtk_file_filter_new:
  * 
  * Creates a new #GtkFileFilter with no rules added to it.
- * Such a filter doesn't accept any files, so is not
+ * Such a filter doesn’t accept any files, so is not
  * particularly useful until you add rules with
  * gtk_file_filter_add_mime_type(), gtk_file_filter_add_pattern(),
  * or gtk_file_filter_add_custom(). To create a filter
  * that accepts any file, use:
- * |[
+ * |[<!-- language="C" -->
  * GtkFileFilter *filter = gtk_file_filter_new ();
  * gtk_file_filter_add_pattern (filter, "*");
  * ]|
  * 
- * Return value: a new #GtkFileFilter
+ * Returns: a new #GtkFileFilter
  * 
  * Since: 2.4
  **/
@@ -395,7 +391,7 @@ gtk_file_filter_set_name (GtkFileFilter *filter,
  * 
  * Gets the human-readable name for the filter. See gtk_file_filter_set_name().
  * 
- * Return value: The human-readable name of the filter,
+ * Returns: The human-readable name of the filter,
  *   or %NULL. This value is owned by GTK+ and must not
  *   be modified or freed.
  * 
@@ -507,7 +503,7 @@ gtk_file_filter_add_pixbuf_formats (GtkFileFilter *filter)
  * function. The bitfield @needed which is passed in provides information
  * about what sorts of information that the filter function needs;
  * this allows GTK+ to avoid retrieving expensive information when
- * it isn't needed by the filter.
+ * it isn’t needed by the filter.
  * 
  * Since: 2.4
  **/
@@ -537,14 +533,14 @@ gtk_file_filter_add_custom (GtkFileFilter         *filter,
  * gtk_file_filter_get_needed:
  * @filter: a #GtkFileFilter
  * 
- * Gets the fields that need to be filled in for the structure
+ * Gets the fields that need to be filled in for the #GtkFileFilterInfo
  * passed to gtk_file_filter_filter()
  * 
  * This function will not typically be used by applications; it
  * is intended principally for use in the implementation of
  * #GtkFileChooser.
  * 
- * Return value: bitfield of flags indicating needed fields when
+ * Returns: bitfield of flags indicating needed fields when
  *   calling gtk_file_filter_filter()
  * 
  * Since: 2.4
@@ -558,18 +554,18 @@ gtk_file_filter_get_needed (GtkFileFilter *filter)
 /**
  * gtk_file_filter_filter:
  * @filter: a #GtkFileFilter
- * @filter_info: a #GtkFileFilterInfo structure containing information
+ * @filter_info: a #GtkFileFilterInfo containing information
  *  about a file.
  * 
  * Tests whether a file should be displayed according to @filter.
- * The #GtkFileFilterInfo structure @filter_info should include
+ * The #GtkFileFilterInfo @filter_info should include
  * the fields returned from gtk_file_filter_get_needed().
  *
  * This function will not typically be used by applications; it
  * is intended principally for use in the implementation of
  * #GtkFileChooser.
  * 
- * Return value: %TRUE if the file should be displayed
+ * Returns: %TRUE if the file should be displayed
  * 
  * Since: 2.4
  **/

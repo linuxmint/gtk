@@ -1,7 +1,7 @@
 ## Makefile.am for GTK+
 include $(top_srcdir)/Makefile.decl
 
-SRC_SUBDIRS = gdk gtk libgail-util modules demos tests testsuite examples
+SRC_SUBDIRS = util gdk gtk libgail-util modules demos tests testsuite examples
 SUBDIRS = po po-properties $(SRC_SUBDIRS) docs m4macros build
 
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
@@ -9,7 +9,6 @@ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 EXTRA_DIST +=			\
 	autogen.sh		\
 	HACKING			\
-	makecopyright		\
 	NEWS.pre-1-0		\
 	README.commits	\
 	README.win32		\
@@ -24,6 +23,7 @@ MAINTAINERCLEANFILES = \
 	$(GITIGNORE_MAINTAINERCLEANFILES_TOPLEVEL) \
 	$(GITIGNORE_MAINTAINERCLEANFILES_M4_LIBTOOL) \
 	$(GITIGNORE_MAINTAINERCLEANFILES_MAKEFILE_IN) \
+	$(srcdir)/m4/gtk-doc.m4 \
 	$(srcdir)/INSTALL \
 	$(srcdir)/README \
 	$(srcdir)/omf.make \
@@ -97,36 +97,15 @@ dist-hook:
 	     && cp INSTALL README $(distdir) ; \
 	fi
 
-.PHONY: files release sanity snapshot ChangeLog
-
-files:
-	@files=`ls $(DISTFILES) 2> /dev/null `; for p in $$files; do \
-	  echo $$p; \
-	done
-	@for subdir in $(SUBDIRS); do \
-	  files=`cd $$subdir; $(MAKE) files | grep -v "make\[[1-9]\]"`; \
-	  for file in $$files; do \
-	    echo $$subdir/$$file; \
-	  done; \
-	done
-
-release:
-	rm -rf .deps */.deps
-	$(MAKE) distcheck
-
-sanity:
-	./sanity_check $(VERSION)
-
-
-snapshot:
-	$(MAKE) dist distdir=$(PACKAGE)-snap`date +"%Y%m%d"`
+.PHONY: ChangeLog
 
 DISTCHECK_CONFIGURE_FLAGS =		\
-		--enable-gtk-doc 	\
-		--enable-man 		\
-		--disable-rebuilds 	\
-		--disable-maintainer-mode \
-		--enable-introspection
+	--enable-gtk-doc 		\
+	--disable-doc-cross-references  \
+	--enable-man 			\
+	--disable-maintainer-mode 	\
+	--enable-introspection  	\
+	--enable-installed-tests
 
 GITIGNOREFILES = \
 	po-properties/Makefile.in.in \

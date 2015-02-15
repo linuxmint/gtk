@@ -31,11 +31,12 @@ typedef struct {
 
 typedef struct {
   TagInfo tag;
-  gchar *class_name;
+  GType type;
   gchar *id;
   gchar *constructor;
   GSList *properties;
   GSList *signals;
+  GSList *bindings;
   GObject *object;
   CommonInfo *parent;
   gboolean applied_properties;
@@ -59,21 +60,32 @@ typedef struct {
 
 typedef struct {
   TagInfo tag;
-  gchar *name;
+  GParamSpec *pspec;
   GString *text;
   gchar *data;
-  gboolean translatable;
+  gboolean translatable:1;
+  gboolean bound:1;
   gchar *context;
 } PropertyInfo;
 
 typedef struct {
   TagInfo tag;
   gchar *object_name;
-  gchar *name;
+  guint  id;
+  GQuark detail;
   gchar *handler;
   GConnectFlags flags;
   gchar *connect_object_name;
 } SignalInfo;
+
+typedef struct
+{
+  GObject *target;
+  GParamSpec *target_pspec;
+  gchar *source;
+  gchar *source_property;
+  GBindingFlags flags;
+} BindingInfo;
 
 typedef struct {
   TagInfo  tag;
@@ -106,6 +118,8 @@ typedef struct {
   gboolean inside_requested_object;
   gint requested_object_level;
   gint cur_object_level;
+
+  gint object_counter;
 
   GHashTable *object_ids;
 } ParserData;

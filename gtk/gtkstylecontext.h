@@ -86,9 +86,9 @@ struct _GtkStyleContextClass
 /**
  * GTK_STYLE_PROPERTY_PADDING:
  *
- * A property holding the rendered element's padding as a #GtkBorder. The
+ * A property holding the rendered element’s padding as a #GtkBorder. The
  * padding is defined as the spacing between the inner part of the element border
- * and its child. It's the innermost spacing property of the padding/border/margin
+ * and its child. It’s the innermost spacing property of the padding/border/margin
  * series.
  */
 #define GTK_STYLE_PROPERTY_PADDING "padding"
@@ -96,12 +96,12 @@ struct _GtkStyleContextClass
 /**
  * GTK_STYLE_PROPERTY_BORDER_WIDTH:
  *
- * A property holding the rendered element's border width in pixels as
+ * A property holding the rendered element’s border width in pixels as
  * a #GtkBorder. The border is the intermediary spacing property of the
  * padding/border/margin series.
  *
  * gtk_render_frame() uses this property to find out the frame line width,
- * so #GtkWidget<!-- -->s rendering frames may need to add up this padding when
+ * so #GtkWidgets rendering frames may need to add up this padding when
  * requesting size
  */
 #define GTK_STYLE_PROPERTY_BORDER_WIDTH "border-width"
@@ -109,9 +109,9 @@ struct _GtkStyleContextClass
 /**
  * GTK_STYLE_PROPERTY_MARGIN:
  *
- * A property holding the rendered element's margin as a #GtkBorder. The
+ * A property holding the rendered element’s margin as a #GtkBorder. The
  * margin is defined as the spacing between the border of the element
- * and its surrounding elements. It is external to #GtkWidget<!-- -->s's
+ * and its surrounding elements. It is external to #GtkWidget's
  * size allocations, and the most external spacing property of the
  * padding/border/margin series.
  */
@@ -120,28 +120,28 @@ struct _GtkStyleContextClass
 /**
  * GTK_STYLE_PROPERTY_BORDER_RADIUS:
  *
- * A property holding the rendered element's border radius in pixels as a #gint.
+ * A property holding the rendered element’s border radius in pixels as a #gint.
  */
 #define GTK_STYLE_PROPERTY_BORDER_RADIUS "border-radius"
 
 /**
  * GTK_STYLE_PROPERTY_BORDER_STYLE:
  *
- * A property holding the element's border style as a #GtkBorderStyle.
+ * A property holding the element’s border style as a #GtkBorderStyle.
  */
 #define GTK_STYLE_PROPERTY_BORDER_STYLE "border-style"
 
 /**
  * GTK_STYLE_PROPERTY_BORDER_COLOR:
  *
- * A property holding the element's border color as a #GdkRGBA.
+ * A property holding the element’s border color as a #GdkRGBA.
  */
 #define GTK_STYLE_PROPERTY_BORDER_COLOR "border-color"
 
 /**
  * GTK_STYLE_PROPERTY_BACKGROUND_IMAGE:
  *
- * A property holding the element's background as a #cairo_pattern_t.
+ * A property holding the element’s background as a #cairo_pattern_t.
  */
 #define GTK_STYLE_PROPERTY_BACKGROUND_IMAGE "background-image"
 
@@ -249,6 +249,16 @@ struct _GtkStyleContextClass
 #define GTK_STYLE_CLASS_RUBBERBAND "rubberband"
 
 /**
+ * GTK_STYLE_CLASS_CSD:
+ *
+ * A CSS class that gets added to windows which have
+ * client-side decorations.
+ *
+ * Since: 3.14
+ */
+#define GTK_STYLE_CLASS_CSD "csd"
+
+/**
  * GTK_STYLE_CLASS_TOOLTIP:
  *
  * A CSS class to match tooltip windows.
@@ -307,7 +317,7 @@ struct _GtkStyleContextClass
  *
  * A CSS class to match primary toolbars.
  *
- * This should be used for the 'main' toolbar of an application,
+ * This should be used for the “main” toolbar of an application,
  * right below its menubar.
  */
 #define GTK_STYLE_CLASS_PRIMARY_TOOLBAR "primary-toolbar"
@@ -373,7 +383,7 @@ struct _GtkStyleContextClass
  * GTK_STYLE_CLASS_SCROLLBARS_JUNCTION:
  *
  * A CSS class to match the junction area between an horizontal
- * and vertical scrollbar, when they're both shown.
+ * and vertical scrollbar, when they’re both shown.
  * 
  * This is used in #GtkScrolledWindow.
  */
@@ -473,7 +483,7 @@ struct _GtkStyleContextClass
 /**
  * GTK_STYLE_CLASS_SPINNER:
  *
- * A CSS class to use when rendering activity as a 'spinner'.
+ * A CSS class to use when rendering activity as a “spinner”.
  *
  * This is used by #GtkSpinner and #GtkCellRendererSpinner.
  */
@@ -754,7 +764,114 @@ struct _GtkStyleContextClass
  */
 #define GTK_STYLE_CLASS_TITLEBAR "titlebar"
 
+/**
+ * GTK_STYLE_CLASS_TITLE:
+ *
+ * A CSS class used for the title label in a titlebar in
+ * a toplevel window.
+ *
+ * Since: 3.14
+ */
+#define GTK_STYLE_CLASS_TITLE "title"
+
+/**
+ * GTK_STYLE_CLASS_SUBTITLE:
+ *
+ * A CSS class used for the subtitle label in a titlebar in
+ * a toplevel window.
+ *
+ * Since: 3.14
+ */
+#define GTK_STYLE_CLASS_SUBTITLE "subtitle"
+
+/**
+ * GTK_STYLE_CLASS_NEEDS_ATTENTION:
+ *
+ * A CSS class used when an element needs the user attention,
+ * for instance a button in a stack switcher corresponding to
+ * a hidden page that changed state.
+*
+ * Since: 3.12
+ */
+#define GTK_STYLE_CLASS_NEEDS_ATTENTION "needs-attention"
+
+/**
+ * GTK_STYLE_CLASS_SUGGESTED_ACTION:
+ *
+ * A CSS class used when an action (usually a button) is the
+ * primary suggested action in a specific context.
+ *
+ * Since: 3.12
+ */
+#define GTK_STYLE_CLASS_SUGGESTED_ACTION "suggested-action"
+
+/**
+ * GTK_STYLE_CLASS_DESTRUCTIVE_ACTION:
+ *
+ * A CSS class used when an action (usually a button) is
+ * one that is expected to remove or destroy something visible
+ * to the user.
+ *
+ * Since: 3.12
+ */
+#define GTK_STYLE_CLASS_DESTRUCTIVE_ACTION "destructive-action"
+
+/**
+ * GTK_STYLE_CLASS_POPOVER:
+ *
+ * A CSS class that matches popovers. Used by #GtkPopover.
+ *
+ * Since: 3.14
+ */
+#define GTK_STYLE_CLASS_POPOVER "popover"
+
 /* Predefined set of widget regions */
+
+/**
+ * GTK_STYLE_CLASS_POPUP:
+ *
+ * A CSS class that is added to the toplevel windows used for menus.
+ *
+ * Since: 3.14
+ */
+#define GTK_STYLE_CLASS_POPUP "popup"
+
+/**
+ * GTK_STYLE_CLASS_MESSAGE_DIALOG:
+ *
+ * A CSS class that is added to message dialogs.
+ *
+ * Since: 3.14
+ */
+#define GTK_STYLE_CLASS_MESSAGE_DIALOG "message-dialog"
+
+/**
+ * GTK_STYLE_CLASS_FLAT:
+ *
+ * A CSS class that is added when widgets that usually have
+ * a frame or border (like buttons or entries) should appear
+ * without it.
+ *
+ * Since: 3.14
+ */
+#define GTK_STYLE_CLASS_FLAT "flat"
+
+/**
+ * GTK_STYLE_CLASS_READ_ONLY:
+ *
+ * A CSS class used to indicate a read-only state.
+ */
+#define GTK_STYLE_CLASS_READ_ONLY "read-only"
+
+/*
+ * GTK_STYLE_CLASS_OVERSHOOT:
+ * A CSS class that is added on the visual hints that happen
+ * when scrolling is attempted past the limits of a scrollable
+ * area.
+ *
+ * Since: 3.14
+ */
+#define GTK_STYLE_CLASS_OVERSHOOT "overshoot"
 
 /**
  * GTK_STYLE_REGION_ROW:
@@ -870,17 +987,17 @@ GDK_AVAILABLE_IN_ALL
 gboolean gtk_style_context_has_class    (GtkStyleContext *context,
                                          const gchar     *class_name);
 
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 GList *  gtk_style_context_list_regions (GtkStyleContext *context);
 
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 void     gtk_style_context_add_region    (GtkStyleContext    *context,
                                           const gchar        *region_name,
                                           GtkRegionFlags      flags);
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 void     gtk_style_context_remove_region (GtkStyleContext    *context,
                                           const gchar        *region_name);
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 gboolean gtk_style_context_has_region    (GtkStyleContext    *context,
                                           const gchar        *region_name,
                                           GtkRegionFlags     *flags_return);
@@ -922,13 +1039,6 @@ void           gtk_style_context_set_frame_clock (GtkStyleContext *context,
                                                   GdkFrameClock   *frame_clock);
 GDK_AVAILABLE_IN_3_8
 GdkFrameClock *gtk_style_context_get_frame_clock (GtkStyleContext *context);
-
-/**
- * GTK_STYLE_CLASS_READ_ONLY:
- *
- * A CSS class used to indicate a read-only state.
- */
-#define GTK_STYLE_CLASS_READ_ONLY "read-only"
 
 GDK_DEPRECATED_IN_3_8_FOR(gtk_style_context_set_state)
 void             gtk_style_context_set_direction (GtkStyleContext  *context,
@@ -999,7 +1109,7 @@ void gtk_style_context_get_margin           (GtkStyleContext *context,
                                              GtkStateFlags    state,
                                              GtkBorder       *margin);
 
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_12
 void gtk_style_context_invalidate           (GtkStyleContext *context);
 GDK_AVAILABLE_IN_ALL
 void gtk_style_context_reset_widgets        (GdkScreen       *screen);
@@ -1143,11 +1253,6 @@ void   gtk_draw_insertion_cursor    (GtkWidget          *widget,
                                      gboolean            is_primary,
                                      GtkTextDirection    direction,
                                      gboolean            draw_arrow);
-
-/* Accessibility support */
-AtkAttributeSet *_gtk_style_context_get_attributes (AtkAttributeSet *attributes,
-                                                    GtkStyleContext *context,
-                                                    GtkStateFlags    flags);
 
 G_END_DECLS
 

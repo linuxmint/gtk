@@ -20,6 +20,7 @@
 #define __GTK_BUTTON_PRIVATE_H__
 
 #include "gtkactionhelper.h"
+#include "gtkgesturesingle.h"
 #include "deprecated/gtkaction.h"
 
 G_BEGIN_DECLS
@@ -36,6 +37,8 @@ struct _GtkButtonPrivate
 
   gchar                 *label_text;
 
+  GtkGesture            *gesture;
+
   gfloat                 xalign;
   gfloat                 yalign;
 
@@ -50,20 +53,14 @@ struct _GtkButtonPrivate
   guint          align_set             : 1;
   guint          button_down           : 1;
   guint          constructed           : 1;
-  guint          depressed             : 1;
-  guint          depress_on_activate   : 1;
   guint          focus_on_click        : 1;
   guint          image_is_stock        : 1;
   guint          in_button             : 1;
-  guint          relief                : 2;
   guint          use_action_appearance : 1;
   guint          use_stock             : 1;
   guint          use_underline         : 1;
   guint          always_show_image     : 1;
 };
-
-void _gtk_button_set_depressed             (GtkButton          *button,
-                                            gboolean            depressed);
 
 
 G_END_DECLS

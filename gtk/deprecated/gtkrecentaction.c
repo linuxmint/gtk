@@ -41,9 +41,9 @@
  * #GtkRecentChooserMenu.
  *
  * To construct a submenu showing recently used files, use a #GtkRecentAction
- * as the action for a &lt;menuitem&gt;. To construct a menu toolbutton showing
+ * as the action for a <menuitem>. To construct a menu toolbutton showing
  * the recently used files in the popup menu, use a #GtkRecentAction as the
- * action for a &lt;toolitem&gt; element.
+ * action for a <toolitem> element.
  */
 
 
@@ -521,28 +521,60 @@ gtk_recent_action_set_property (GObject      *gobject,
   switch (prop_id)
     {
     case PROP_SHOW_NUMBERS:
-      priv->show_numbers = g_value_get_boolean (value);
+      if (priv->show_numbers != g_value_get_boolean (value))
+        {
+          priv->show_numbers = g_value_get_boolean (value);
+          g_object_notify_by_pspec (gobject, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SHOW_PRIVATE:
-      priv->show_private = g_value_get_boolean (value);
+      if (priv->show_private != g_value_get_boolean (value))
+        {
+          priv->show_private = g_value_get_boolean (value);
+          g_object_notify_by_pspec (gobject, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SHOW_NOT_FOUND:
-      priv->show_not_found = g_value_get_boolean (value);
+      if (priv->show_not_found != g_value_get_boolean (value))
+        {
+          priv->show_not_found = g_value_get_boolean (value);
+          g_object_notify_by_pspec (gobject, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SHOW_TIPS:
-      priv->show_tips = g_value_get_boolean (value);
+      if (priv->show_tips != g_value_get_boolean (value))
+        {
+          priv->show_tips = g_value_get_boolean (value);
+          g_object_notify_by_pspec (gobject, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SHOW_ICONS:
-      priv->show_icons = g_value_get_boolean (value);
+      if (priv->show_icons != g_value_get_boolean (value))
+        {
+          priv->show_icons = g_value_get_boolean (value);
+          g_object_notify_by_pspec (gobject, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_LIMIT:
-      priv->limit = g_value_get_int (value);
+      if (priv->limit != g_value_get_int (value))
+        {
+          priv->limit = g_value_get_int (value);
+          g_object_notify_by_pspec (gobject, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_LOCAL_ONLY:
-      priv->local_only = g_value_get_boolean (value);
+      if (priv->local_only != g_value_get_boolean (value))
+        {
+          priv->local_only = g_value_get_boolean (value);
+          g_object_notify_by_pspec (gobject, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SORT_TYPE:
-      priv->sort_type = g_value_get_enum (value);
+      if (priv->sort_type != g_value_get_enum (value))
+        {
+          priv->sort_type = g_value_get_enum (value);
+          g_object_notify_by_pspec (gobject, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_FILTER:
       set_current_filter (action, g_value_get_object (value));
@@ -645,7 +677,7 @@ gtk_recent_action_class_init (GtkRecentActionClass *klass)
                                                          P_("Show Numbers"),
                                                          P_("Whether the items should be displayed with a number"),
                                                          FALSE,
-                                                         G_PARAM_READWRITE));
+                                                         G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
 }
 
@@ -688,7 +720,7 @@ gtk_recent_action_init (GtkRecentAction *action)
  * a #GtkActionGroup and set the accelerator for the action,
  * call gtk_action_group_add_action_with_accel().
  *
- * Return value: the newly created #GtkRecentAction.
+ * Returns: the newly created #GtkRecentAction.
  *
  * Since: 2.12
  *
@@ -725,7 +757,7 @@ gtk_recent_action_new (const gchar *name,
  * a #GtkActionGroup and set the accelerator for the action,
  * call gtk_action_group_add_action_with_accel().
  *
- * Return value: the newly created #GtkRecentAction
+ * Returns: the newly created #GtkRecentAction
  * 
  * Since: 2.12
  *
@@ -756,7 +788,7 @@ gtk_recent_action_new_for_manager (const gchar      *name,
  *
  * Returns the value set by gtk_recent_chooser_menu_set_show_numbers().
  *
- * Return value: %TRUE if numbers should be shown.
+ * Returns: %TRUE if numbers should be shown.
  *
  * Since: 2.12
  *

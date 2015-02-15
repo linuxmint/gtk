@@ -73,9 +73,9 @@
  * The application can set the position of the slider as if it were set
  * by the user, by calling gtk_paned_set_position().
  *
- * <example>
- * <title>Creating a paned widget with minimum sizes.</title>
- * <programlisting>
+ * ## Creating a paned widget with minimum sizes.
+ *
+ * |[<!-- language="C" -->
  * GtkWidget *hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
  * GtkWidget *frame1 = gtk_frame_new (NULL);
  * GtkWidget *frame2 = gtk_frame_new (NULL);
@@ -89,8 +89,7 @@
  *
  * gtk_paned_pack2 (GTK_PANED (hpaned), frame2, FALSE, FALSE);
  * gtk_widget_set_size_request (frame2, 50, -1);
- * </programlisting>
- * </example>
+ * ]|
  */
 
 enum {
@@ -111,9 +110,10 @@ struct _GtkPanedPrivate
   GtkOrientation  orientation;
 
   GdkCursorType  cursor_type;
-  GdkDevice     *grab_device;
   GdkRectangle   handle_pos;
   GdkWindow     *handle;
+
+  GtkGesture    *pan_gesture;
 
   gint          child1_size;
   gint          drag_pos;
@@ -122,16 +122,14 @@ struct _GtkPanedPrivate
   gint          min_position;
   gint          original_position;
 
-  guint32       grab_time;
-
   guint         handle_prelit : 1;
-  guint         in_drag       : 1;
   guint         in_recursion  : 1;
   guint         child1_resize : 1;
   guint         child1_shrink : 1;
   guint         child2_resize : 1;
   guint         child2_shrink : 1;
   guint         position_set  : 1;
+  guint         panning       : 1;
 };
 
 enum {
@@ -210,16 +208,8 @@ static gboolean gtk_paned_enter                 (GtkWidget        *widget,
 						 GdkEventCrossing *event);
 static gboolean gtk_paned_leave                 (GtkWidget        *widget,
 						 GdkEventCrossing *event);
-static gboolean gtk_paned_button_press          (GtkWidget        *widget,
-						 GdkEventButton   *event);
-static gboolean gtk_paned_button_release        (GtkWidget        *widget,
-						 GdkEventButton   *event);
-static gboolean gtk_paned_motion                (GtkWidget        *widget,
-						 GdkEventMotion   *event);
 static gboolean gtk_paned_focus                 (GtkWidget        *widget,
 						 GtkDirectionType  direction);
-static gboolean gtk_paned_grab_broken           (GtkWidget          *widget,
-						 GdkEventGrabBroken *event);
 static void     gtk_paned_add                   (GtkContainer     *container,
 						 GtkWidget        *widget);
 static void     gtk_paned_remove                (GtkContainer     *container,
@@ -253,9 +243,10 @@ static gboolean gtk_paned_cancel_position       (GtkPaned         *paned);
 static gboolean gtk_paned_toggle_handle_focus   (GtkPaned         *paned);
 
 static GType    gtk_paned_child_type            (GtkContainer     *container);
-static void     gtk_paned_grab_notify           (GtkWidget        *widget,
-		                                 gboolean          was_grabbed);
 
+static void     update_drag                     (GtkPaned         *paned,
+                                                 int               xpos,
+                                                 int               ypos);
 
 G_DEFINE_TYPE_WITH_CODE (GtkPaned, gtk_paned, GTK_TYPE_CONTAINER,
                          G_ADD_PRIVATE (GtkPaned)
@@ -317,11 +308,6 @@ gtk_paned_class_init (GtkPanedClass *class)
   widget_class->focus = gtk_paned_focus;
   widget_class->enter_notify_event = gtk_paned_enter;
   widget_class->leave_notify_event = gtk_paned_leave;
-  widget_class->button_press_event = gtk_paned_button_press;
-  widget_class->button_release_event = gtk_paned_button_release;
-  widget_class->motion_notify_event = gtk_paned_motion;
-  widget_class->grab_broken_event = gtk_paned_grab_broken;
-  widget_class->grab_notify = gtk_paned_grab_notify;
   widget_class->state_flags_changed = gtk_paned_state_flags_changed;
 
   container_class->add = gtk_paned_add;
@@ -345,22 +331,54 @@ gtk_paned_class_init (GtkPanedClass *class)
                                     "orientation");
 
   g_object_class_install_property (object_class,
-				   PROP_POSITION,
-				   g_param_spec_int ("position",
-						     P_("Position"),
-						     P_("Position of paned separator in pixels (0 means all the way to the left/top)"),
-						     0,
-						     G_MAXINT,
-						     0,
-						     GTK_PARAM_READWRITE));
+                                   PROP_POSITION,
+                                   g_param_spec_int ("position",
+                                                     P_("Position"),
+                                                     P_("Position of paned separator in pixels (0 means all the way to the left/top)"),
+                                                     0, G_MAXINT, 0,
+                                                     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
-				   PROP_POSITION_SET,
-				   g_param_spec_boolean ("position-set",
-							 P_("Position Set"),
-							 P_("TRUE if the Position property should be used"),
-							 FALSE,
-							 GTK_PARAM_READWRITE));
+                                   PROP_POSITION_SET,
+                                   g_param_spec_boolean ("position-set",
+                                                         P_("Position Set"),
+                                                         P_("TRUE if the Position property should be used"),
+                                                         FALSE,
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
+
+  /**
+   * GtkPaned:min-position:
+   *
+   * The smallest possible value for the position property.
+   * This property is derived from the size and shrinkability
+   * of the widget's children.
+   *
+   * Since: 2.4
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_MIN_POSITION,
+                                   g_param_spec_int ("min-position",
+                                                     P_("Minimal Position"),
+                                                     P_("Smallest possible value for the \"position\" property"),
+                                                     0, G_MAXINT, 0,
+                                                     GTK_PARAM_READABLE|G_PARAM_EXPLICIT_NOTIFY));
+
+  /**
+   * GtkPaned:max-position:
+   *
+   * The largest possible value for the position property.
+   * This property is derived from the size and shrinkability
+   * of the widget's children.
+   *
+   * Since: 2.4
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_MAX_POSITION,
+                                   g_param_spec_int ("max-position",
+                                                     P_("Maximal Position"),
+                                                     P_("Largest possible value for the \"position\" property"),
+                                                     0, G_MAXINT, G_MAXINT,
+                                                     GTK_PARAM_READABLE|G_PARAM_EXPLICIT_NOTIFY));
 
   gtk_widget_class_install_style_property (widget_class,
 					   g_param_spec_int ("handle-size",
@@ -370,41 +388,6 @@ gtk_paned_class_init (GtkPanedClass *class)
 							     G_MAXINT,
 							     5,
 							     GTK_PARAM_READABLE));
-  /**
-   * GtkPaned:min-position:
-   *
-   * The smallest possible value for the position property. This property is derived from the
-   * size and shrinkability of the widget's children.
-   *
-   * Since: 2.4
-   */
-  g_object_class_install_property (object_class,
-				   PROP_MIN_POSITION,
-				   g_param_spec_int ("min-position",
-						     P_("Minimal Position"),
-						     P_("Smallest possible value for the \"position\" property"),
-						     0,
-						     G_MAXINT,
-						     0,
-						     GTK_PARAM_READABLE));
-
-  /**
-   * GtkPaned:max-position:
-   *
-   * The largest possible value for the position property. This property is derived from the
-   * size and shrinkability of the widget's children.
-   *
-   * Since: 2.4
-   */
-  g_object_class_install_property (object_class,
-				   PROP_MAX_POSITION,
-				   g_param_spec_int ("max-position",
-						     P_("Maximal Position"),
-						     P_("Largest possible value for the \"position\" property"),
-						     0,
-						     G_MAXINT,
-						     G_MAXINT,
-						     GTK_PARAM_READABLE));
 
   /**
    * GtkPaned:resize:
@@ -444,7 +427,7 @@ gtk_paned_class_init (GtkPanedClass *class)
    * @reversed: whether cycling backward or forward
    *
    * The ::cycle-child-focus signal is a 
-   * <link linkend="keybinding-signals">keybinding signal</link>
+   * [keybinding signal][GtkBindingSignal]
    * which gets emitted to cycle the focus between the children of the paned.
    *
    * The default binding is f6.
@@ -466,7 +449,7 @@ gtk_paned_class_init (GtkPanedClass *class)
    * @widget: the object that received the signal
    *
    * The ::toggle-handle-focus is a 
-   * <link linkend="keybinding-signals">keybinding signal</link>
+   * [keybinding signal][GtkBindingSignal]
    * which gets emitted to accept the current position of the handle and then 
    * move focus to the next widget in the focus chain.
    *
@@ -489,7 +472,7 @@ gtk_paned_class_init (GtkPanedClass *class)
    * @scroll_type: a #GtkScrollType
    *
    * The ::move-handle signal is a 
-   * <link linkend="keybinding-signals">keybinding signal</link>
+   * [keybinding signal][GtkBindingSignal]
    * which gets emitted to move the handle when the user is using key bindings 
    * to move it.
    *
@@ -511,7 +494,7 @@ gtk_paned_class_init (GtkPanedClass *class)
    * @reversed: whether cycling backward or forward
    *
    * The ::cycle-handle-focus signal is a 
-   * <link linkend="keybinding-signals">keybinding signal</link>
+   * [keybinding signal][GtkBindingSignal]
    * which gets emitted to cycle whether the paned should grab focus to allow
    * the user to change position of the handle by using key bindings.
    *
@@ -534,7 +517,7 @@ gtk_paned_class_init (GtkPanedClass *class)
    * @widget: the object that received the signal
    *
    * The ::accept-position signal is a 
-   * <link linkend="keybinding-signals">keybinding signal</link>
+   * [keybinding signal][GtkBindingSignal]
    * which gets emitted to accept the current position of the handle when 
    * moving it using key bindings.
    *
@@ -556,7 +539,7 @@ gtk_paned_class_init (GtkPanedClass *class)
    * @widget: the object that received the signal
    *
    * The ::cancel-position signal is a 
-   * <link linkend="keybinding-signals">keybinding signal</link>
+   * [keybinding signal][GtkBindingSignal]
    * which gets emitted to cancel moving the position of the handle using key 
    * bindings. The position of the handle will be reset to the value prior to 
    * moving it.
@@ -668,10 +651,111 @@ gtk_paned_child_type (GtkContainer *container)
     return G_TYPE_NONE;
 }
 
+static gboolean
+initiates_touch_drag (GtkPaned *paned,
+                      gdouble   start_x,
+                      gdouble   start_y)
+{
+  gint handle_size, handle_pos, drag_pos;
+  GtkPanedPrivate *priv = paned->priv;
+  GtkAllocation allocation;
+
+#define TOUCH_EXTRA_AREA_WIDTH 50
+  gtk_widget_get_allocation (GTK_WIDGET (paned), &allocation);
+  gtk_widget_style_get (GTK_WIDGET (paned), "handle-size", &handle_size, NULL);
+
+  if (priv->orientation == GTK_ORIENTATION_HORIZONTAL)
+    {
+      handle_pos = priv->handle_pos.x - allocation.x;
+      drag_pos = start_x;
+    }
+  else
+    {
+      handle_pos = priv->handle_pos.y - allocation.y;
+      drag_pos = start_y;
+    }
+
+  if (drag_pos < handle_pos - TOUCH_EXTRA_AREA_WIDTH ||
+      drag_pos > handle_pos + handle_size + TOUCH_EXTRA_AREA_WIDTH)
+    return FALSE;
+
+#undef TOUCH_EXTRA_AREA_WIDTH
+
+  return TRUE;
+}
+
+static void
+pan_gesture_drag_begin_cb (GtkGestureDrag *gesture,
+                           gdouble         start_x,
+                           gdouble         start_y,
+                           GtkPaned       *paned)
+{
+  GtkPanedPrivate *priv = paned->priv;
+  GdkEventSequence *sequence;
+  GtkAllocation allocation;
+  const GdkEvent *event;
+  GdkDevice *device;
+  gboolean is_touch;
+
+  sequence = gtk_gesture_single_get_current_sequence (GTK_GESTURE_SINGLE (gesture));
+  event = gtk_gesture_get_last_event (GTK_GESTURE (gesture), sequence);
+  device = gdk_event_get_source_device (event);
+  gtk_widget_get_allocation (GTK_WIDGET (paned), &allocation);
+  paned->priv->panning = FALSE;
+
+  is_touch = (event->type == GDK_TOUCH_BEGIN ||
+              gdk_device_get_source (device) == GDK_SOURCE_TOUCHSCREEN);
+
+  if (event->any.window == priv->handle ||
+      (is_touch && initiates_touch_drag (paned, start_x, start_y)))
+    {
+      if (priv->orientation == GTK_ORIENTATION_HORIZONTAL)
+        priv->drag_pos = start_x - (priv->handle_pos.x - allocation.x);
+      else
+        priv->drag_pos = start_y - (priv->handle_pos.y - allocation.y);
+
+      gtk_gesture_set_state (GTK_GESTURE (gesture),
+                             GTK_EVENT_SEQUENCE_CLAIMED);
+    }
+  else
+    {
+      gtk_gesture_set_state (GTK_GESTURE (gesture),
+                             GTK_EVENT_SEQUENCE_DENIED);
+    }
+}
+
+static void
+pan_gesture_pan_cb (GtkGesturePan   *gesture,
+                    GtkPanDirection  direction,
+                    gdouble          offset,
+                    GtkPaned        *paned)
+{
+  gdouble start_x, start_y, offset_x, offset_y;
+
+  paned->priv->panning = TRUE;
+
+  gtk_gesture_drag_get_start_point (GTK_GESTURE_DRAG (gesture),
+                               &start_x, &start_y);
+  gtk_gesture_drag_get_offset (GTK_GESTURE_DRAG (gesture),
+                               &offset_x, &offset_y);
+  update_drag (paned, start_x + offset_x, start_y + offset_y);
+}
+
+static void
+pan_gesture_drag_end_cb (GtkGestureDrag *gesture,
+                         gdouble         offset_x,
+                         gdouble         offset_y,
+                         GtkPaned       *paned)
+{
+  if (!paned->priv->panning)
+    gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_DENIED);
+}
+
 static void
 gtk_paned_init (GtkPaned *paned)
 {
   GtkPanedPrivate *priv;
+  GtkGesture *gesture;
 
   gtk_widget_set_has_window (GTK_WIDGET (paned), FALSE);
   gtk_widget_set_can_focus (GTK_WIDGET (paned), TRUE);
@@ -695,7 +779,6 @@ gtk_paned_init (GtkPaned *paned)
   priv->handle_pos.height = 5;
   priv->position_set = FALSE;
   priv->last_allocation = -1;
-  priv->in_drag = FALSE;
 
   priv->last_child1_focus = NULL;
   priv->last_child2_focus = NULL;
@@ -706,7 +789,20 @@ gtk_paned_init (GtkPaned *paned)
   priv->handle_pos.x = -1;
   priv->handle_pos.y = -1;
 
-  priv->drag_pos = -1;
+  _gtk_orientable_set_style_classes (GTK_ORIENTABLE (paned));
+
+  gesture = gtk_gesture_pan_new (GTK_WIDGET (paned),
+                                 GTK_ORIENTATION_HORIZONTAL);
+  gtk_gesture_single_set_touch_only (GTK_GESTURE_SINGLE (gesture), FALSE);
+  g_signal_connect (gesture, "drag-begin",
+                    G_CALLBACK (pan_gesture_drag_begin_cb), paned);
+  g_signal_connect (gesture, "pan",
+                    G_CALLBACK (pan_gesture_pan_cb), paned);
+  g_signal_connect (gesture, "drag-end",
+                    G_CALLBACK (pan_gesture_drag_end_cb), paned);
+  gtk_event_controller_set_propagation_phase (GTK_EVENT_CONTROLLER (gesture),
+                                              GTK_PHASE_CAPTURE);
+  priv->pan_gesture = gesture;
 }
 
 static void
@@ -721,24 +817,40 @@ gtk_paned_set_property (GObject        *object,
   switch (prop_id)
     {
     case PROP_ORIENTATION:
-      priv->orientation = g_value_get_enum (value);
-      _gtk_orientable_set_style_classes (GTK_ORIENTABLE (paned));
+      if (priv->orientation != g_value_get_enum (value))
+        {
+          priv->orientation = g_value_get_enum (value);
+          _gtk_orientable_set_style_classes (GTK_ORIENTABLE (paned));
 
-      if (priv->orientation == GTK_ORIENTATION_HORIZONTAL)
-        priv->cursor_type = GDK_SB_H_DOUBLE_ARROW;
-      else
-        priv->cursor_type = GDK_SB_V_DOUBLE_ARROW;
+          if (priv->orientation == GTK_ORIENTATION_HORIZONTAL)
+            {
+              priv->cursor_type = GDK_SB_H_DOUBLE_ARROW;
+              gtk_gesture_pan_set_orientation (GTK_GESTURE_PAN (priv->pan_gesture),
+                                               GTK_ORIENTATION_HORIZONTAL);
+            }
+          else
+            {
+              priv->cursor_type = GDK_SB_V_DOUBLE_ARROW;
+              gtk_gesture_pan_set_orientation (GTK_GESTURE_PAN (priv->pan_gesture),
+                                               GTK_ORIENTATION_VERTICAL);
+            }
 
-      /* state_flags_changed updates the cursor */
-      gtk_paned_state_flags_changed (GTK_WIDGET (paned), 0);
-      gtk_widget_queue_resize (GTK_WIDGET (paned));
+          /* state_flags_changed updates the cursor */
+          gtk_paned_state_flags_changed (GTK_WIDGET (paned), 0);
+          gtk_widget_queue_resize (GTK_WIDGET (paned));
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_POSITION:
       gtk_paned_set_position (paned, g_value_get_int (value));
       break;
     case PROP_POSITION_SET:
-      priv->position_set = g_value_get_boolean (value);
-      gtk_widget_queue_resize_no_redraw (GTK_WIDGET (paned));
+      if (priv->position_set != g_value_get_boolean (value))
+        {
+          priv->position_set = g_value_get_boolean (value);
+          gtk_widget_queue_resize_no_redraw (GTK_WIDGET (paned));
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -866,6 +978,8 @@ gtk_paned_finalize (GObject *object)
   
   gtk_paned_set_saved_focus (paned, NULL);
   gtk_paned_set_first_paned (paned, NULL);
+
+  g_clear_object (&paned->priv->pan_gesture);
 
   G_OBJECT_CLASS (gtk_paned_parent_class)->finalize (object);
 }
@@ -1278,24 +1392,30 @@ gtk_paned_size_allocate (GtkWidget     *widget,
 
       if (gtk_widget_get_realized (widget))
 	{
+          GtkBorder margin;
+
+          gtk_style_context_get_margin (gtk_widget_get_style_context (widget),
+                                        gtk_widget_get_state_flags (widget),
+                                        &margin);
+
 	  if (gtk_widget_get_mapped (widget))
 	    gdk_window_show (priv->handle);
 
           if (priv->orientation == GTK_ORIENTATION_HORIZONTAL)
             {
               gdk_window_move_resize (priv->handle,
-                                      priv->handle_pos.x,
+                                      priv->handle_pos.x - margin.left,
                                       priv->handle_pos.y,
-                                      handle_size,
+                                      handle_size + margin.left + margin.right,
                                       priv->handle_pos.height);
             }
           else
             {
               gdk_window_move_resize (priv->handle,
                                       priv->handle_pos.x,
-                                      priv->handle_pos.y,
+                                      priv->handle_pos.y - margin.top,
                                       priv->handle_pos.width,
-                                      handle_size);
+                                      handle_size + margin.top + margin.bottom);
             }
 	}
 
@@ -1520,14 +1640,14 @@ gtk_paned_map (GtkWidget *widget)
   GtkPaned *paned = GTK_PANED (widget);
   GtkPanedPrivate *priv = paned->priv;
 
-  if (priv->child1 && gtk_widget_get_visible (priv->child1) &&
-      priv->child2 && gtk_widget_get_visible (priv->child2))
-    gdk_window_show (priv->handle);
-
   if (priv->child1 && gtk_widget_get_visible (priv->child1) && gtk_widget_get_child_visible (priv->child1))
     gdk_window_show (priv->child1_window);
   if (priv->child2 && gtk_widget_get_visible (priv->child2) && gtk_widget_get_child_visible (priv->child2))
     gdk_window_show (priv->child2_window);
+
+  if (priv->child1 && gtk_widget_get_visible (priv->child1) &&
+      priv->child2 && gtk_widget_get_visible (priv->child2))
+    gdk_window_show (priv->handle);
 
   GTK_WIDGET_CLASS (gtk_paned_parent_class)->map (widget);
 }
@@ -1629,10 +1749,9 @@ is_rtl (GtkPaned *paned)
 }
 
 static void
-update_drag (GtkPaned         *paned,
-             /* relative to priv->handle */
-             int               xpos,
-             int               ypos)
+update_drag (GtkPaned *paned,
+             int       xpos,
+             int       ypos)
 {
   GtkPanedPrivate *priv = paned->priv;
   GtkAllocation allocation;
@@ -1645,13 +1764,9 @@ update_drag (GtkPaned         *paned,
   gdk_window_get_position (priv->handle, &x, &y);
   gtk_widget_get_allocation (widget, &allocation);
   if (priv->orientation == GTK_ORIENTATION_HORIZONTAL)
-    {
-      pos = xpos + x - allocation.x;
-    }
+    pos = xpos;
   else
-    {
-      pos = ypos + y - allocation.y;
-    }
+    pos = ypos;
 
   pos -= priv->drag_pos;
 
@@ -1681,9 +1796,7 @@ gtk_paned_enter (GtkWidget        *widget,
   GtkPaned *paned = GTK_PANED (widget);
   GtkPanedPrivate *priv = paned->priv;
 
-  if (priv->in_drag)
-    update_drag (paned, event->x, event->y);
-  else
+  if (!gtk_gesture_is_active (priv->pan_gesture))
     {
       priv->handle_prelit = TRUE;
       gtk_widget_queue_draw_area (widget,
@@ -1703,9 +1816,7 @@ gtk_paned_leave (GtkWidget        *widget,
   GtkPaned *paned = GTK_PANED (widget);
   GtkPanedPrivate *priv = paned->priv;
 
-  if (priv->in_drag)
-    update_drag (paned, event->x, event->y);
-  else
+  if (!gtk_gesture_is_active (priv->pan_gesture))
     {
       priv->handle_prelit = FALSE;
       gtk_widget_queue_draw_area (widget,
@@ -1736,86 +1847,6 @@ gtk_paned_focus (GtkWidget        *widget,
   return retval;
 }
 
-static gboolean
-gtk_paned_button_press (GtkWidget      *widget,
-			GdkEventButton *event)
-{
-  GtkPaned *paned = GTK_PANED (widget);
-  GtkPanedPrivate *priv = paned->priv;
-
-  if (!priv->in_drag &&
-      (event->window == priv->handle) && (event->button == GDK_BUTTON_PRIMARY))
-    {
-      /* We need a server grab here, not gtk_grab_add(), since
-       * we don't want to pass events on to the widget's children */
-      if (gdk_device_grab (event->device,
-                           priv->handle,
-                           GDK_OWNERSHIP_WINDOW, FALSE,
-                           GDK_BUTTON1_MOTION_MASK
-                           | GDK_BUTTON_RELEASE_MASK
-                           | GDK_ENTER_NOTIFY_MASK
-                           | GDK_LEAVE_NOTIFY_MASK,
-                           NULL, event->time) != GDK_GRAB_SUCCESS)
-	return FALSE;
-
-      priv->in_drag = TRUE;
-      priv->grab_time = event->time;
-      priv->grab_device = event->device;
-
-      if (priv->orientation == GTK_ORIENTATION_HORIZONTAL)
-	priv->drag_pos = event->x;
-      else
-	priv->drag_pos = event->y;
-
-      return TRUE;
-    }
-
-  return FALSE;
-}
-
-static gboolean
-gtk_paned_grab_broken (GtkWidget          *widget,
-		       GdkEventGrabBroken *event)
-{
-  GtkPaned *paned = GTK_PANED (widget);
-  GtkPanedPrivate *priv = paned->priv;
-
-  priv->in_drag = FALSE;
-  priv->drag_pos = -1;
-  priv->position_set = TRUE;
-
-  return TRUE;
-}
-
-static void
-stop_drag (GtkPaned *paned)
-{
-  GtkPanedPrivate *priv = paned->priv;
-
-  priv->in_drag = FALSE;
-  priv->drag_pos = -1;
-  priv->position_set = TRUE;
-
-  gdk_device_ungrab (priv->grab_device,
-                     priv->grab_time);
-  priv->grab_device = NULL;
-}
-
-static void
-gtk_paned_grab_notify (GtkWidget *widget,
-		       gboolean   was_grabbed)
-{
-  GtkPaned *paned = GTK_PANED (widget);
-  GtkPanedPrivate *priv = paned->priv;
-  GdkDevice *grab_device;
-
-  grab_device = priv->grab_device;
-
-  if (priv->in_drag && grab_device &&
-      gtk_widget_device_is_shadowed (widget, grab_device))
-    stop_drag (paned);
-}
-
 static void
 gtk_paned_state_flags_changed (GtkWidget     *widget,
                                GtkStateFlags  previous_state)
@@ -1839,46 +1870,13 @@ gtk_paned_state_flags_changed (GtkWidget     *widget,
     }
 }
 
-static gboolean
-gtk_paned_button_release (GtkWidget      *widget,
-			  GdkEventButton *event)
-{
-  GtkPaned *paned = GTK_PANED (widget);
-  GtkPanedPrivate *priv = paned->priv;
-
-  if (priv->in_drag && (event->button == GDK_BUTTON_PRIMARY))
-    {
-      stop_drag (paned);
-
-      return TRUE;
-    }
-
-  return FALSE;
-}
-
-static gboolean
-gtk_paned_motion (GtkWidget      *widget,
-		  GdkEventMotion *event)
-{
-  GtkPaned *paned = GTK_PANED (widget);
-  GtkPanedPrivate *priv = paned->priv;
-
-  if (priv->in_drag)
-    {
-      update_drag (paned, event->x, event->y);
-      return TRUE;
-    }
-  
-  return FALSE;
-}
-
 /**
  * gtk_paned_new:
- * @orientation: the paned's orientation.
+ * @orientation: the paned’s orientation.
  *
  * Creates a new #GtkPaned widget.
  *
- * Return value: a new #GtkPaned.
+ * Returns: a new #GtkPaned.
  *
  * Since: 3.0
  **/
@@ -1897,7 +1895,7 @@ gtk_paned_new (GtkOrientation orientation)
  *
  * Adds a child to the top or left pane with default parameters. This is
  * equivalent to
- * <literal>gtk_paned_pack1 (paned, child, FALSE, TRUE)</literal>.
+ * `gtk_paned_pack1 (paned, child, FALSE, TRUE)`.
  */
 void
 gtk_paned_add1 (GtkPaned  *paned,
@@ -1913,7 +1911,7 @@ gtk_paned_add1 (GtkPaned  *paned,
  *
  * Adds a child to the bottom or right pane with default parameters. This
  * is equivalent to
- * <literal>gtk_paned_pack2 (paned, child, TRUE, TRUE)</literal>.
+ * `gtk_paned_pack2 (paned, child, TRUE, TRUE)`.
  */
 void
 gtk_paned_add2 (GtkPaned  *paned,
@@ -2071,7 +2069,7 @@ gtk_paned_forall (GtkContainer *container,
  * 
  * Obtains the position of the divider between the two panes.
  * 
- * Return value: position of the divider
+ * Returns: position of the divider
  **/
 gint
 gtk_paned_get_position (GtkPaned  *paned)
@@ -2144,7 +2142,7 @@ gtk_paned_set_position (GtkPaned *paned,
  * 
  * Obtains the first child of the paned widget.
  * 
- * Return value: (transfer none): first child, or %NULL if it is not set.
+ * Returns: (transfer none): first child, or %NULL if it is not set.
  *
  * Since: 2.4
  **/
@@ -2162,7 +2160,7 @@ gtk_paned_get_child1 (GtkPaned *paned)
  * 
  * Obtains the second child of the paned widget.
  * 
- * Return value: (transfer none): second child, or %NULL if it is not set.
+ * Returns: (transfer none): second child, or %NULL if it is not set.
  *
  * Since: 2.4
  **/
@@ -2833,7 +2831,7 @@ gtk_paned_toggle_handle_focus (GtkPaned *paned)
  * enables the callback to distinguish between the window
  * of the paned, a child and the handle.
  *
- * Return value: (transfer none): the paned's handle window.
+ * Returns: (transfer none): the paned’s handle window.
  *
  * Since: 2.20
  **/

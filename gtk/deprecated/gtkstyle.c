@@ -54,9 +54,8 @@
  * A #GtkStyle object encapsulates the information that provides the look and
  * feel for a widget.
  *
- * <warning>
- * In GTK+ 3.0, GtkStyle has been deprecated and replaced by #GtkStyleContext.
- * </warning>
+ * > In GTK+ 3.0, GtkStyle has been deprecated and replaced by
+ * > #GtkStyleContext.
  *
  * Each #GtkWidget has an associated #GtkStyle object that is used when
  * rendering that widget. Also, a #GtkStyle holds information for the five
@@ -911,14 +910,14 @@ gtk_style_has_context (GtkStyle *style)
  * @window: a #GdkWindow.
  *
  * Attaches a style to a window; this process allocates the
- * colors and creates the GC's for the style - it specializes
+ * colors and creates the GC’s for the style - it specializes
  * it to a particular visual. The process may involve the creation
  * of a new style if the style has already been attached to a
  * window with a different style and visual.
  *
  * Since this function may return a new object, you have to use it
  * in the following way:
- * <literal>style = gtk_style_attach (style, window)</literal>
+ * `style = gtk_style_attach (style, window)`
  *
  * Returns: Either @style, or a newly-created #GtkStyle.
  *   If the style is newly created, the style parameter
@@ -961,7 +960,7 @@ gtk_style_detach (GtkStyle *style)
  * and the default icon factory, returning an icon set if found,
  * otherwise %NULL.
  *
- * Return value: (transfer none): icon set of @stock_id
+ * Returns: (transfer none): icon set of @stock_id
  *
  * Deprecated:3.0: Use gtk_style_context_lookup_icon_set() instead
  */
@@ -988,13 +987,13 @@ gtk_style_lookup_icon_set (GtkStyle   *style,
  * @color_name: the name of the logical color to look up
  * @color: (out): the #GdkColor to fill in
  *
- * Looks up @color_name in the style's logical color mappings,
+ * Looks up @color_name in the style’s logical color mappings,
  * filling in @color and returning %TRUE if found, otherwise
  * returning %FALSE. Do not cache the found mapping, because
  * it depends on the #GtkStyle and might change when a theme
  * switch occurs.
  *
- * Return value: %TRUE if the mapping was found.
+ * Returns: %TRUE if the mapping was found.
  *
  * Since: 2.10
  *
@@ -1119,7 +1118,7 @@ gtk_style_real_init_from_rc (GtkStyle   *style,
  * @style: a #GtkStyle
  * @widget_type: the #GType of a descendant of #GtkWidget
  * @property_name: the name of the style property to get
- * @value: a #GValue where the value of the property being
+ * @value: (out): a #GValue where the value of the property being
  *     queried will be stored
  *
  * Queries the value of a style property corresponding to a
@@ -1154,7 +1153,7 @@ gtk_style_get_style_property (GtkStyle     *style,
   priv = GTK_STYLE_GET_PRIVATE (style);
   peek_value = _gtk_style_context_peek_style_property (priv->context,
                                                        widget_type,
-                                                       0, pspec);
+                                                       pspec);
 
   if (G_VALUE_TYPE (value) == G_PARAM_SPEC_VALUE_TYPE (pspec))
     g_value_copy (peek_value, value);
@@ -1172,7 +1171,7 @@ gtk_style_get_style_property (GtkStyle     *style,
  * @style: a #GtkStyle
  * @widget_type: the #GType of a descendant of #GtkWidget
  * @first_property_name: the name of the first style property to get
- * @var_args: a <type>va_list</type> of pairs of property names and
+ * @var_args: a va_list of pairs of property names and
  *     locations to return the property values, starting with the
  *     location for @first_property_name.
  *
@@ -1215,7 +1214,7 @@ gtk_style_get_valist (GtkStyle    *style,
         }
 
       peek_value = _gtk_style_context_peek_style_property (priv->context, widget_type,
-                                                           0, pspec);
+                                                           pspec);
       G_VALUE_LCOPY (peek_value, var_args, 0, &error);
       if (error)
         {
@@ -1283,7 +1282,7 @@ gtk_style_real_set_background (GtkStyle    *style,
  * @state: a state
  * @size: (type int): the size to render the icon at. A size of
  *     (GtkIconSize)-1 means render at the size of the source and
- *     don't scale.
+ *     don’t scale.
  * @widget: (allow-none): the widget
  * @detail: (allow-none): a style detail
  *
@@ -1291,7 +1290,7 @@ gtk_style_real_set_background (GtkStyle    *style,
  * according to the given parameters and returns the result in a
  * pixbuf.
  *
- * Return value: (transfer full): a newly-created #GdkPixbuf
+ * Returns: (transfer full): a newly-created #GdkPixbuf
  *     containing the rendered icon
  *
  * Deprecated:3.0: Use gtk_render_icon_pixbuf() instead
@@ -2046,15 +2045,10 @@ gtk_default_draw_box (GtkStyle      *style,
 
   cairo_save (cr);
 
-  if (gtk_style_context_has_class (context, GTK_STYLE_CLASS_PROGRESSBAR))
-    gtk_render_activity (context, cr, x, y, width, height);
-  else
-    {
-      gtk_render_background (context, cr, x, y, width, height);
+  gtk_render_background (context, cr, x, y, width, height);
 
-      if (shadow_type != GTK_SHADOW_NONE)
-	gtk_render_frame (context, cr, x, y, width, height);
-    }
+  if (shadow_type != GTK_SHADOW_NONE)
+    gtk_render_frame (context, cr, x, y, width, height);
 
   cairo_restore (cr);
   gtk_style_context_restore (context);
@@ -3853,8 +3847,8 @@ gtk_paint_handle (GtkStyle           *style,
  *
  * Draws an expander as used in #GtkTreeView. @x and @y specify the
  * center the expander. The size of the expander is determined by the
- * "expander-size" style property of @widget.  (If widget is not
- * specified or doesn't have an "expander-size" property, an
+ * “expander-size” style property of @widget.  (If widget is not
+ * specified or doesn’t have an “expander-size” property, an
  * unspecified default size will be used, since the caller doesn't
  * have sufficient information to position the expander, this is
  * likely not useful.) The expander is expander_size pixels tall
@@ -3976,7 +3970,7 @@ gtk_paint_resize_grip (GtkStyle           *style,
  * @state_type: a state
  * @widget: (allow-none): the widget (may be %NULL)
  * @detail: (allow-none): a style detail (may be %NULL)
- * @step: the nth step, a value between 0 and #GtkSpinner:num-steps
+ * @step: the nth step
  * @x: the x origin of the rectangle in which to draw the spinner
  * @y: the y origin of the rectangle in which to draw the spinner
  * @width: the width of the rectangle in which to draw the spinner
@@ -4064,21 +4058,21 @@ gtk_widget_get_default_style (void)
  * gtk_widget_style_attach:
  * @widget: a #GtkWidget
  *
- * This function attaches the widget's #GtkStyle to the widget's
+ * This function attaches the widget’s #GtkStyle to the widget's
  * #GdkWindow. It is a replacement for
  *
- * <programlisting>
+ * |[
  * widget->style = gtk_style_attach (widget->style, widget->window);
- * </programlisting>
+ * ]|
  *
- * and should only ever be called in a derived widget's "realize"
+ * and should only ever be called in a derived widget’s “realize”
  * implementation which does not chain up to its parent class'
- * "realize" implementation, because one of the parent classes
+ * “realize” implementation, because one of the parent classes
  * (finally #GtkWidget) would attach the style itself.
  *
  * Since: 2.20
  *
- * Deprecated: 3.0. This step is unnecessary with #GtkStyleContext.
+ * Deprecated: 3.0: This step is unnecessary with #GtkStyleContext.
  **/
 void
 gtk_widget_style_attach (GtkWidget *widget)
@@ -4161,7 +4155,7 @@ gtk_widget_ensure_style (GtkWidget *widget)
  *
  * Simply an accessor function that returns @widget->style.
  *
- * Return value: (transfer none): the widget's #GtkStyle
+ * Returns: (transfer none): the widget’s #GtkStyle
  *
  * Deprecated:3.0: Use #GtkStyleContext instead
  */
@@ -4187,14 +4181,14 @@ gtk_widget_get_style (GtkWidget *widget)
 /**
  * gtk_widget_modify_style:
  * @widget: a #GtkWidget
- * @style: the #GtkRcStyle holding the style modifications
+ * @style: the #GtkRcStyle-struct holding the style modifications
  *
  * Modifies style values on the widget.
  *
  * Modifications made using this technique take precedence over
  * style values set via an RC file, however, they will be overridden
- * if a style is explicitely set on the widget using gtk_widget_set_style().
- * The #GtkRcStyle structure is designed so each field can either be
+ * if a style is explicitly set on the widget using gtk_widget_set_style().
+ * The #GtkRcStyle-struct is designed so each field can either be
  * set or unset, so it is possible, using this function, to modify some
  * style values and leave the others unchanged.
  *
@@ -4240,7 +4234,7 @@ gtk_widget_modify_style (GtkWidget      *widget,
  * thus dropping any reference to the old modifier style. Add a reference
  * to the modifier style if you want to keep it alive.
  *
- * Return value: (transfer none): the modifier style for the widget.
+ * Returns: (transfer none): the modifier style for the widget.
  *     This rc style is owned by the widget. If you want to keep a
  *     pointer to value this around, you must add a refcount using
  *     g_object_ref().
@@ -4375,17 +4369,15 @@ gtk_widget_modify_fg (GtkWidget      *widget,
  * All other style values are left untouched.
  * See also gtk_widget_modify_style().
  *
- * <note><para>
- * Note that "no window" widgets (which have the %GTK_NO_WINDOW
- * flag set) draw on their parent container's window and thus may
- * not draw any background themselves. This is the case for e.g.
- * #GtkLabel.
- * </para><para>
- * To modify the background of such widgets, you have to set the
- * background color on their parent; if you want to set the background
- * of a rectangular area around a label, try placing the label in
- * a #GtkEventBox widget and setting the background color on that.
- * </para></note>
+ * > Note that “no window” widgets (which have the %GTK_NO_WINDOW
+ * > flag set) draw on their parent container’s window and thus may
+ * > not draw any background themselves. This is the case for e.g.
+ * > #GtkLabel.
+ * >
+ * > To modify the background of such widgets, you have to set the
+ * > background color on their parent; if you want to set the background
+ * > of a rectangular area around a label, try placing the label in
+ * > a #GtkEventBox widget and setting the background color on that.
  *
  * Deprecated:3.0: Use gtk_widget_override_background_color() instead
  */
@@ -4475,17 +4467,15 @@ gtk_widget_modify_text (GtkWidget      *widget,
  * (see gtk_widget_modify_text()) for widgets such as #GtkEntry
  * and #GtkTextView. See also gtk_widget_modify_style().
  *
- * <note><para>
- * Note that "no window" widgets (which have the %GTK_NO_WINDOW
- * flag set) draw on their parent container's window and thus may
- * not draw any background themselves. This is the case for e.g.
- * #GtkLabel.
- * </para><para>
- * To modify the background of such widgets, you have to set the
- * base color on their parent; if you want to set the background
- * of a rectangular area around a label, try placing the label in
- * a #GtkEventBox widget and setting the base color on that.
- * </para></note>
+ * > Note that “no window” widgets (which have the %GTK_NO_WINDOW
+ * > flag set) draw on their parent container’s window and thus may
+ * > not draw any background themselves. This is the case for e.g.
+ * > #GtkLabel.
+ * >
+ * > To modify the background of such widgets, you have to set the
+ * > base color on their parent; if you want to set the background
+ * > of a rectangular area around a label, try placing the label in
+ * > a #GtkEventBox widget and setting the base color on that.
  *
  * Deprecated:3.0: Use gtk_widget_override_background_color() instead
  */
@@ -4503,15 +4493,15 @@ gtk_widget_modify_base (GtkWidget      *widget,
 /**
  * gtk_widget_modify_cursor:
  * @widget: a #GtkWidget
- * @primary: the color to use for primary cursor (does not need to be
- *     allocated), or %NULL to undo the effect of previous calls to
- *     of gtk_widget_modify_cursor().
- * @secondary: the color to use for secondary cursor (does not need to be
- *     allocated), or %NULL to undo the effect of previous calls to
- *     of gtk_widget_modify_cursor().
+ * @primary: (nullable): the color to use for primary cursor (does not
+ *     need to be allocated), or %NULL to undo the effect of previous
+ *     calls to of gtk_widget_modify_cursor().
+ * @secondary: (nullable): the color to use for secondary cursor (does
+ *     not need to be allocated), or %NULL to undo the effect of
+ *     previous calls to of gtk_widget_modify_cursor().
  *
- * Sets the cursor color to use in a widget, overriding the
- * #GtkWidget:cursor-color and #GtkWidget:secondary-cursor-color
+ * Sets the cursor color to use in a widget, overriding the #GtkWidget
+ * cursor-color and secondary-cursor-color
  * style properties.
  *
  * All other style values are left untouched.
@@ -4519,7 +4509,7 @@ gtk_widget_modify_base (GtkWidget      *widget,
  *
  * Since: 2.12
  *
- * Deprecated: 3.0. Use gtk_widget_override_cursor() instead.
+ * Deprecated: 3.0: Use gtk_widget_override_cursor() instead.
  */
 void
 gtk_widget_modify_cursor (GtkWidget      *widget,
@@ -4600,13 +4590,13 @@ gtk_widget_reset_rc_styles (GtkWidget *widget)
  * periods. The name of a widget comes from
  * gtk_widget_get_name(). Paths are used to apply styles to a widget
  * in gtkrc configuration files. Widget names are the type of the
- * widget by default (e.g. "GtkButton") or can be set to an
+ * widget by default (e.g. “GtkButton”) or can be set to an
  * application-specific value with gtk_widget_set_name(). By setting
  * the name of a widget, you allow users or theme authors to apply
  * styles to that specific widget in their gtkrc
  * file. @path_reversed_p fills in the path in reverse order,
- * i.e. starting with @widget's name instead of starting with the name
- * of @widget's outermost ancestor.
+ * i.e. starting with @widget’s name instead of starting with the name
+ * of @widget’s outermost ancestor.
  *
  * Deprecated:3.0: Use gtk_widget_get_path() instead
  **/
@@ -4668,14 +4658,14 @@ gtk_widget_path (GtkWidget *widget,
 /**
  * gtk_widget_class_path:
  * @widget: a #GtkWidget
- * @path_length: (out) (allow-none): location to store the length of the
+ * @path_length: (out) (optional): location to store the length of the
  *     class path, or %NULL
- * @path: (out) (allow-none): location to store the class path as an
+ * @path: (out) (optional): location to store the class path as an
  *     allocated string, or %NULL
- * @path_reversed: (out) (allow-none): location to store the reverse
+ * @path_reversed: (out) (optional): location to store the reverse
  *     class path as an allocated string, or %NULL
  *
- * Same as gtk_widget_path(), but always uses the name of a widget's type,
+ * Same as gtk_widget_path(), but always uses the name of a widget’s type,
  * never uses a custom name set with gtk_widget_set_name().
  *
  * Deprecated:3.0: Use gtk_widget_get_path() instead
@@ -4738,7 +4728,7 @@ gtk_widget_class_path (GtkWidget *widget,
  * @widget: a #GtkWidget
  * @stock_id: a stock ID
  * @size: (type int): a stock size. A size of (GtkIconSize)-1 means
- *     render at the size of the source and don't scale (if there are
+ *     render at the size of the source and don’t scale (if there are
  *     multiple source sizes, GTK+ picks one of the available sizes).
  * @detail: (allow-none): render detail to pass to theme engine
  *
@@ -4754,8 +4744,8 @@ gtk_widget_class_path (GtkWidget *widget,
  * the application and should not be modified. The pixbuf should be
  * freed after use with g_object_unref().
  *
- * Return value: (transfer full): a new pixbuf, or %NULL if the
- *     stock ID wasn't known
+ * Returns: (transfer full): a new pixbuf, or %NULL if the
+ *     stock ID wasn’t known
  *
  * Deprecated: 3.0: Use gtk_widget_render_icon_pixbuf() instead.
  **/

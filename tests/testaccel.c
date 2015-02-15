@@ -42,6 +42,20 @@ accel_edited_callback (GtkCellRendererText *cell,
   gtk_tree_path_free (path);
 }
 
+static void
+accel_cleared_callback (GtkCellRendererText *cell,
+                        const char          *path_string,
+                        gpointer             data)
+{
+  GtkTreeModel *model = (GtkTreeModel *)data;
+  GtkTreePath *path;
+  GtkTreeIter iter;
+
+  path = gtk_tree_path_new_from_string (path_string);
+  gtk_tree_model_get_iter (model, &iter, path);
+  gtk_list_store_set (GTK_LIST_STORE (model), &iter, 0, 0, 1, 0, 2, 0, -1);
+  gtk_tree_path_free (path);
+}
 static GtkWidget *
 key_test (void)
 {
@@ -50,13 +64,17 @@ key_test (void)
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *rend;
 	gint i;
+        GtkWidget *box, *entry;
 
 	/* create window */
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-
+        gtk_window_set_default_size (GTK_WINDOW (window), 400, 400);
 
 	sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_container_add (GTK_CONTAINER (window), sw);
+        box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 10);
+        gtk_widget_show (box);
+	gtk_container_add (GTK_CONTAINER (window), box);
+        gtk_box_pack_start (GTK_BOX (box), sw, TRUE, TRUE, 0);
 
 	store = gtk_list_store_new (3, G_TYPE_INT, G_TYPE_UINT, G_TYPE_UINT);
 	tv = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
@@ -70,6 +88,10 @@ key_test (void)
 	g_signal_connect (G_OBJECT (rend),
 			  "accel-edited",
 			  G_CALLBACK (accel_edited_callback),
+			  store);
+	g_signal_connect (G_OBJECT (rend),
+			  "accel-cleared",
+			  G_CALLBACK (accel_cleared_callback),
 			  store);
 
 	gtk_tree_view_column_pack_start (column, rend,
@@ -87,8 +109,10 @@ key_test (void)
 		gtk_list_store_append (store, &iter);
 	}
 
-	/* done */
-
+        entry = gtk_entry_new ();
+        gtk_widget_show (entry);
+        gtk_container_add (GTK_CONTAINER (box), entry);
+ 
 	return window;
 }
 

@@ -2,6 +2,8 @@
 include $(top_srcdir)/Makefile.decl
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ENV = \
+   CC="$(CC)"
 INTROSPECTION_SCANNER_ARGS = \
 	--add-include-path=../gdk \
 	--warn-all
@@ -40,10 +42,6 @@ AM_CPPFLAGS = 				\
 	$(GTK_DEBUG_FLAGS)		\
 	$(GDK_DEP_CFLAGS)
 
-if PLATFORM_WIN32
-no_undefined = -no-undefined
-endif
-
 # libtool stuff: set version and export symbols for resolving
 # since automake doesn't support conditionalized libsomething_la_LDFLAGS
 # we use the general approach here
@@ -60,11 +58,11 @@ LDADD = 					\
 #
 # GDK header files for public installation (non-generated)
 #
+#
 gdk_public_h_sources = 				\
 	gdk.h					\
 	gdkapplaunchcontext.h			\
 	gdkcairo.h				\
-	gdkcolor.h				\
 	gdkcursor.h				\
 	gdkdevice.h				\
 	gdkdevicemanager.h			\
@@ -92,6 +90,13 @@ gdk_public_h_sources = 				\
 	gdkvisual.h				\
 	gdkwindow.h
 
+deprecated_h_sources =				\
+	deprecated/gdkcolor.h
+
+gdk_h_sources =					\
+	$(gdk_public_h_sources)			\
+	$(deprecated_h_sources)
+
 gdk_private_headers = 				\
 	gdkapplaunchcontextprivate.h		\
 	gdkcursorprivate.h			\
@@ -109,11 +114,14 @@ gdk_private_headers = 				\
 	gdkvisualprivate.h			\
 	gdkx.h
 
+deprecated_c_sources =				\
+	deprecated/gdkcolor.c
+
 gdk_c_sources = 				\
+	$(deprecated_c_sources)			\
 	gdk.c					\
 	gdkapplaunchcontext.c			\
 	gdkcairo.c				\
-	gdkcolor.c				\
 	gdkcursor.c				\
 	gdkdeprecated.c				\
 	gdkdevice.c				\
@@ -155,6 +163,9 @@ gdkincludedir = $(includedir)/gtk-3.0/gdk
 gdkinclude_HEADERS = $(gdk_public_h_sources) gdkenumtypes.h gdkversionmacros.h
 nodist_gdkinclude_HEADERS = gdkconfig.h
 
+deprecatedincludedir = $(includedir)/gtk-3.0/gdk/deprecated
+deprecatedinclude_HEADERS = $(deprecated_h_sources)
+
 common_sources = 		\
 	$(gdk_private_headers)	\
 	$(gdk_c_sources)	\
@@ -177,10 +188,9 @@ libgdk_3_la_LIBADD += quartz/libgdk-quartz.la
 endif # USE_QUARTZ
 
 if USE_WIN32
-libgdk_3_la_SOURCES += gdkkeynames.c
 libgdk_3_la_LIBADD += win32/libgdk-win32.la
-libgdk_3_la_DEPENDENCIES = win32/libgdk-win32.la win32/rc/gdk-win32-res.o gdk.def
-libgdk_3_la_LDFLAGS += -Wl,win32/rc/gdk-win32-res.o -export-symbols $(srcdir)/gdk.def
+libgdk_3_la_DEPENDENCIES = win32/libgdk-win32.la win32/rc/gdk-win32-res.o
+libgdk_3_la_LDFLAGS += -Wl,win32/rc/gdk-win32-res.o
 endif # USE_WIN32
 
 if USE_BROADWAY
@@ -194,7 +204,7 @@ endif
 if HAVE_INTROSPECTION
 
 introspection_files = 		\
-	$(filter-out gdkkeysyms-compat.h, $(gdk_public_h_sources))	\
+	$(filter-out gdkkeysyms-compat.h, $(gdk_h_sources))	\
 	$(gdk_c_sources)	\
         $(srcdir)/gdkenumtypes.c	\
         $(srcdir)/gdkenumtypes.h
@@ -208,7 +218,9 @@ Gdk_3_0_gir_FILES = $(introspection_files)
 Gdk_3_0_gir_CFLAGS = $(AM_CPPFLAGS)
 Gdk_3_0_gir_EXPORT_PACKAGES = gdk-3.0
 INTROSPECTION_GIRS += Gdk-3.0.gir
-
+if OS_WIN32
+Gdk_3_0_gir_CFLAGS += -I$(srcdir)/win32 -I$(srcdir)
+endif
 if USE_X11
 x11_introspection_files = 		\
 	x11/gdkapplaunchcontext-x11.c	\
@@ -220,6 +232,7 @@ x11_introspection_files = 		\
 	x11/gdkdevicemanager-xi2.c	\
 	x11/gdkdevice-xi2.c		\
 	x11/gdkdisplay-x11.c		\
+	x11/gdkdisplaymanager-x11.c	\
 	x11/gdkdnd-x11.c		\
 	x11/gdkeventsource.c		\
 	x11/gdkeventtranslator.c	\
@@ -237,8 +250,18 @@ x11_introspection_files = 		\
 	x11/gdkxid.c			\
 	x11/xsettings-client.c		\
 	x11/gdkx.h			\
+	x11/gdkx11applaunchcontext.h	\
 	x11/gdkx11cursor.h		\
+	x11/gdkx11device.h		\
+	x11/gdkx11device-core.h		\
+	x11/gdkx11device-xi2.h		\
+	x11/gdkx11devicemanager.h	\
+	x11/gdkx11devicemanager-core.h	\
+	x11/gdkx11devicemanager-xi2.h	\
 	x11/gdkx11display.h		\
+	x11/gdkx11displaymanager.h	\
+	x11/gdkx11dnd.h			\
+	x11/gdkx11keys.h		\
 	x11/gdkx11property.h		\
 	x11/gdkx11screen.h		\
 	x11/gdkx11selection.h		\
@@ -260,6 +283,53 @@ INTROSPECTION_GIRS += GdkX11-3.0.gir
 
 endif # USE_X11
 
+if OS_WIN32
+w32_introspection_files =		\
+	win32/gdkcursor-win32.c		\
+	win32/gdkdevicemanager-win32.c	\
+	win32/gdkdevice-virtual.c	\
+	win32/gdkdevice-win32.c		\
+	win32/gdkdevice-wintab.c	\
+	win32/gdkdisplaymanager-win32.c	\
+	win32/gdkdisplay-win32.c	\
+	win32/gdkdnd-win32.c		\
+	win32/gdkevents-win32.c		\
+	win32/gdkgeometry-win32.c	\
+	win32/gdkglobals-win32.c	\
+	win32/gdkinput.c		\
+	win32/gdkkeys-win32.c		\
+	win32/gdkmain-win32.c		\
+	win32/gdkproperty-win32.c	\
+	win32/gdkscreen-win32.c		\
+	win32/gdkselection-win32.c	\
+	win32/gdktestutils-win32.c	\
+	win32/gdkvisual-win32.c		\
+	win32/gdkwin32.h		\
+	win32/gdkwin32cursor.h		\
+	win32/gdkwin32display.h		\
+	win32/gdkwin32displaymanager.h	\
+	win32/gdkwin32dnd.h		\
+	win32/gdkwin32id.c		\
+	win32/gdkwin32keys.h		\
+	win32/gdkwin32misc.h		\
+	win32/gdkwin32screen.h		\
+	win32/gdkwin32window.h		\
+	win32/gdkwindow-win32.c
+
+
+GdkWin32-3.0.gir: libgdk-3.la Gdk-3.0.gir Makefile
+GdkWin32_3_0_gir_SCANNERFLAGS = \
+	--identifier-prefix=Gdk		\
+	--c-include="gdk/gdkwin32.h"	\
+	--include-uninstalled=$(top_builddir)/gdk/Gdk-3.0.gir
+GdkWin32_3_0_gir_INCLUDES = Gio-2.0 GdkPixbuf-2.0 Pango-1.0
+GdkWin32_3_0_gir_LIBS = libgdk-3.la
+GdkWin32_3_0_gir_FILES = $(w32_introspection_files)
+GdkWin32_3_0_gir_CFLAGS = $(AM_CPPFLAGS) -L$(top_builddir)/gdk -I$(srcdir)/win32 -I$(srcdir)
+INTROSPECTION_GIRS += GdkWin32-3.0.gir
+
+endif # OS_WIN32
+
 girdir = $(datadir)/gir-1.0
 gir_DATA = $(INTROSPECTION_GIRS)
 
@@ -271,9 +341,13 @@ CLEANFILES += $(gir_DATA) $(typelibs_DATA)
 endif # HAVE_INTROSPECTION
 
 if OS_WIN32
+gdk.def: libgdk-3.la
+	echo "LIBRARY libgdk-$(GTK_MAJOR_VERSION)-@LT_CURRENT_MINUS_AGE@" >$@
+	echo "EXPORTS" >>$@
+	objdump -p .libs/libgdk-$(GTK_MAJOR_VERSION)-@LT_CURRENT_MINUS_AGE@.dll | sed -n -e 's/\t\[\s\+\([0-9]\+\)\]\s\([A-Za-z_][A-Za-z0-9_]\)/\2/p' >>$@
 install-def-file: gdk.def
 	mkdir -p $(DESTDIR)$(libdir)
-	$(INSTALL) $(srcdir)/gdk.def $(DESTDIR)$(libdir)/gdk-win32-3.0.def
+	$(INSTALL) gdk.def $(DESTDIR)$(libdir)/gdk-win32-3.0.def
 uninstall-def-file:
 	-rm $(DESTDIR)$(libdir)/gdk-win32-3.0.def
 else
@@ -316,12 +390,12 @@ BUILT_SOURCES = \
 
 gdkenumtypes.h: $(gdk_public_h_sources) $(srcdir)/gdkenumtypes.h.template
 	$(AM_V_GEN) ( cd $(srcdir) && $(GLIB_MKENUMS) --template gdkenumtypes.h.template \
-		$(gdk_public_h_sources) ) >> xgen-geth \
+		$(gdk_h_sources) ) >> xgen-geth \
 	&& (cmp -s xgen-geth gdkenumtypes.h || cp xgen-geth $(srcdir)/gdkenumtypes.h ) \
 	&& rm -f xgen-geth 
-gdkenumtypes.c: $(gdk_public_h_sources) gdkenumtypes.c.template
+gdkenumtypes.c: $(gdk_h_sources) gdkenumtypes.c.template
 	$(AM_V_GEN) ( cd $(srcdir) && $(GLIB_MKENUMS) --template gdkenumtypes.c.template \
-		$(gdk_public_h_sources) ) > xgen-getc \
+		$(gdk_h_sources) ) > xgen-getc \
 	&& cp xgen-getc $(srcdir)/gdkenumtypes.c  \
 	&& rm -f xgen-getc
 
@@ -348,7 +422,7 @@ stamp-gc-h: $(top_builddir)/config.status
 dist-hook: ../build/win32/vs9/gdk.vcproj ../build/win32/vs10/gdk.vcxproj ../build/win32/vs10/gdk.vcxproj.filters
 
 ../build/win32/vs9/gdk.vcproj: ../build/win32/vs9/gdk.vcprojin
-	for F in $(libgdk_3_la_SOURCES); do \
+	for F in `echo $(libgdk_3_la_SOURCES) | tr '/' '\\'`; do \
 		case $$F in \
 		*.c) echo '   <File RelativePath="..\..\..\gdk\'$$F'" />' \
 		     ;; \
@@ -358,7 +432,7 @@ dist-hook: ../build/win32/vs9/gdk.vcproj ../build/win32/vs10/gdk.vcxproj ../buil
 	rm libgdk.sourcefiles
 
 ../build/win32/vs10/gdk.vcxproj: ../build/win32/vs10/gdk.vcxprojin
-	for F in $(libgdk_3_la_SOURCES); do \
+	for F in `echo $(libgdk_3_la_SOURCES) | tr '/' '\\'`; do \
 		case $$F in \
 		*.c) echo '   <ClCompile Include="..\..\..\gdk\'$$F'" />' \
 		     ;; \
@@ -368,7 +442,7 @@ dist-hook: ../build/win32/vs9/gdk.vcproj ../build/win32/vs10/gdk.vcxproj ../buil
 	rm libgdk.vs10.sourcefiles
 
 ../build/win32/vs10/gdk.vcxproj.filters: ../build/win32/vs10/gdk.vcxproj.filtersin
-	for F in $(libgdk_3_la_SOURCES); do \
+	for F in `echo $(libgdk_3_la_SOURCES) | tr '/' '\\'`; do \
 		case $$F in \
 		*.c) echo '   <ClCompile Include="..\..\..\gdk\'$$F'"><Filter>Source Files</Filter></ClCompile>' \
 		     ;; \

@@ -314,7 +314,7 @@ get_work_area (GdkScreen    *screen,
   gulong          num;
   gulong          leftovers;
   gulong          max_len = 4 * 32;
-  guchar         *ret_workarea;
+  guchar         *ret_workarea = NULL;
   long           *workareas;
   int             result;
   int             disp_screen;
@@ -356,9 +356,11 @@ get_work_area (GdkScreen    *screen,
       format == 0 ||
       leftovers ||
       num % 4 != 0)
-    return;
+    goto out;
 
   desktop = get_current_desktop (screen);
+  if (desktop + 1 > num / 4) /* fvwm gets this wrong */
+    goto out;
 
   workareas = (long *) ret_workarea;
   area->x = workareas[desktop * 4];
@@ -371,7 +373,41 @@ get_work_area (GdkScreen    *screen,
   area->width /= x11_screen->window_scale;
   area->height /= x11_screen->window_scale;
 
-  XFree (ret_workarea);
+out:
+  if (ret_workarea)
+    XFree (ret_workarea);
+}
+
+static gboolean
+gdk_x11_screen_monitor_has_fullscreen_window (GdkScreen *screen,
+                                              gint       monitor)
+{
+  GList *toplevels, *l;
+  GdkWindow *window;
+  gboolean has_fullscreen;
+
+  toplevels = gdk_screen_get_toplevel_windows (screen);
+
+  has_fullscreen = FALSE;
+
+  for (l = toplevels; l; l = l->next)
+    {
+      window = l->data;
+
+      if ((gdk_window_get_state (window) & GDK_WINDOW_STATE_FULLSCREEN) == 0)
+        continue;
+
+      if (gdk_window_get_fullscreen_mode (window) == GDK_FULLSCREEN_ON_ALL_MONITORS ||
+          gdk_screen_get_monitor_at_window (screen, window) == monitor)
+        {
+          has_fullscreen = TRUE;
+          break;
+        }
+    }
+
+  g_list_free (toplevels);
+
+  return has_fullscreen;
 }
 
 static void
@@ -389,7 +425,8 @@ gdk_x11_screen_get_monitor_workarea (GdkScreen    *screen,
    * but the primary monitor. Since that is where the 'desktop
    * chrome' usually lives, this works ok in practice.
    */
-  if (monitor_num == GDK_X11_SCREEN (screen)->primary_monitor)
+  if (monitor_num == GDK_X11_SCREEN (screen)->primary_monitor &&
+      !gdk_x11_screen_monitor_has_fullscreen_window (screen, monitor_num))
     {
       get_work_area (screen, &workarea);
       if (gdk_rectangle_intersect (dest, &workarea, &workarea))
@@ -420,7 +457,7 @@ gdk_x11_screen_get_rgba_visual (GdkScreen *screen)
  *
  * Returns the screen of a #GdkScreen.
  *
- * Returns: (transfer none): an Xlib <type>Screen*</type>
+ * Returns: (transfer none): an Xlib Screen*
  *
  * Since: 2.2
  */
@@ -1118,7 +1155,7 @@ _gdk_x11_screen_new (GdkDisplay *display,
 
 void
 _gdk_x11_screen_set_window_scale (GdkX11Screen *x11_screen,
-				  int scale)
+				  gint          scale)
 {
   GList *toplevels, *l;
   GdkWindow *root;
@@ -1539,12 +1576,10 @@ fetch_net_wm_check_window (GdkScreen *screen)
  *
  * This function is specific to the X11 backend of GDK, and indicates
  * whether the window manager supports a certain hint from the
- * Extended Window Manager Hints Specification. You can find this
- * specification on
- * <ulink url="http://www.freedesktop.org">http://www.freedesktop.org</ulink>.
+ * [Extended Window Manager Hints](http://www.freedesktop.org/Standards/wm-spec) specification.
  *
  * When using this function, keep in mind that the window manager
- * can change over time; so you shouldn't use this function in
+ * can change over time; so you shouldn’t use this function in
  * a way that impacts persistent application state. A common bug
  * is that your application can start up before the window manager
  * does when the user logs in, and before the window manager starts
@@ -1552,7 +1587,7 @@ fetch_net_wm_check_window (GdkScreen *screen)
  * You can monitor the window_manager_changed signal on #GdkScreen to detect
  * a window manager change.
  *
- * Return value: %TRUE if the window manager supports @property
+ * Returns: %TRUE if the window manager supports @property
  *
  * Since: 2.2
  **/
@@ -1633,7 +1668,7 @@ gdk_x11_screen_supports_net_wm_hint (GdkScreen *screen,
  *
  * Returns the name of the window manager for @screen.
  *
- * Return value: the name of the window manager screen @screen, or
+ * Returns: the name of the window manager screen @screen, or
  * "unknown" if the window manager is unknown. The string is owned by GDK
  * and should not be freed.
  *
@@ -1785,12 +1820,12 @@ get_netwm_cardinal_property (GdkScreen   *screen,
 
 /**
  * gdk_x11_screen_get_number_of_desktops:
- * @screen: a #GdkScreen
+ * @screen: (type GdkX11Screen): a #GdkScreen
  *
  * Returns the number of workspaces for @screen when running under a
  * window manager that supports multiple workspaces, as described
- * in the <ulink url="http://www.freedesktop.org/Standards/wm-spec">Extended 
- * Window Manager Hints</ulink>.
+ * in the
+ * [Extended Window Manager Hints](http://www.freedesktop.org/Standards/wm-spec) specification.
  *
  * Returns: the number of workspaces, or 0 if workspaces are not supported
  *
@@ -1804,12 +1839,12 @@ gdk_x11_screen_get_number_of_desktops (GdkScreen *screen)
 
 /**
  * gdk_x11_screen_get_current_desktop:
- * @screen: a #GdkScreen
+ * @screen: (type GdkX11Screen): a #GdkScreen
  *
  * Returns the current workspace for @screen when running under a
  * window manager that supports multiple workspaces, as described
- * in the <ulink url="http://www.freedesktop.org/Standards/wm-spec">Extended 
- * Window Manager Hints</ulink>.
+ * in the
+ * [Extended Window Manager Hints](http://www.freedesktop.org/Standards/wm-spec) specification.
  *
  * Returns: the current workspace, or 0 if workspaces are not supported
  *

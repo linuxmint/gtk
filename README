@@ -1,7 +1,7 @@
 General Information
 ===================
 
-This is GTK+ version 3.10.8. GTK+ is a multi-platform toolkit for
+This is GTK+ version 3.14.5. GTK+ is a multi-platform toolkit for
 creating graphical user interfaces. Offering a complete set of widgets,
 GTK+ is suitable for projects ranging from small one-off projects to
 complete application suites.
@@ -73,11 +73,58 @@ Patches should be in unified diff form. (The -up option to GNU diff)
 Even better are git-formatted patches. (Use git format-patch)
 
 
-Release notes for 3.10
+Release notes for 3.14
 ======================
 
-* A number of GTK+ settings that have accumulated of the years
-  have been deprecated and are now ignored.
+* A new state, GTK_STATE_FLAG_CHECKED, has been added for checked states
+  of radio and check buttons and menuitems. Applications that are using
+  GTK+ styles without widgets will need adjustments.
+
+* Adwaita is now the default theme on all platforms.
+
+* The icon theme code has become a little pickier about sizes and is not
+  automatically scaling icons beyond the limits defined in the icon theme
+  unless explicitly asked to do so with GTK_ICON_LOOKUP_FORCE_SIZE.
+
+* GTK+ now includes an interactive debugger which can be activated with
+  the keyboard shortcuts Ctrl-Shift-d or Ctrl-Shift-i. If these shortcuts
+  interfere with application keybindings, they can be disabled with the
+  setting org.gtk.Settings.Debug.enable-inspector-keybinding.
+
+* Most widgets have been ported to use the new gesture framework internally
+  for event handling. Traditional event handlers in derived widgets are still
+  being called.
+
+* Using GTK+ under X11 without the X Render extension has been observed
+  to be problematic. This combination is using code paths in cairo and
+  graphics drivers which are rarely tested and likely buggy.
+
+Release notes for 3.12
+======================
+
+* GtkWidget had a hack where if opacity is 0.999 we set up an opacity
+  group when rendering the widget. This is no longer needed in 3.10,
+  and GtkStack doesn't use it anymore. It has been removed in 3.12.
+  GdStack is using it, so applications should be ported from GdStack
+  to GtkStack in 3.12.
+
+* GtkHeaderBar in 3.10 was not ordering its pack-end children in
+  the right way. This has been fixed in 3.12. Applications which
+  pack multiple widgets at the end of a headerbar will have to
+  be updated.
+
+* gtk_text_view_add_child_in_window has changed behaviour a bit.
+  It now always positions the child in buffer coordinates, where
+  it used to inconsistently scroll with the buffer but then go
+  reposition to a window-relative position on redraw.
+
+* A number of container widgets have been made more compliant with
+  the uniform CSS rendering model by making them render backgrounds
+  and borders. This may require some adjustments in applications that
+  were making assumptions about containers never rendering backgrounds.
+
+Release notes for 3.10
+======================
 
 * GDK has been changed to allow only a single screen per display.
   Only the X11 backend had multiple screens before, and multi-screen
@@ -191,7 +238,6 @@ Release notes for 3.4
 * Excessive dependencies have been culled from Requires: lines
   in .pc files. Dependent modules may have to declare dependencies
   that there were getting 'for free' in the past.
-
 
 Release notes for 3.2
 =====================

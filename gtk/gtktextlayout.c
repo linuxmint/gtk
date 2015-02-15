@@ -477,7 +477,7 @@ gtk_text_layout_set_keyboard_direction (GtkTextLayout   *layout,
  * Gets the text buffer used by the layout. See
  * gtk_text_layout_set_buffer().
  *
- * Return value: the text buffer used by the layout.
+ * Returns: the text buffer used by the layout.
  */
 GtkTextBuffer *
 gtk_text_layout_get_buffer (GtkTextLayout *layout)
@@ -544,7 +544,7 @@ gtk_text_layout_set_cursor_visible (GtkTextLayout *layout,
  *
  * Returns whether the insertion cursor will be shown.
  *
- * Return value: if %FALSE, the insertion cursor will not be
+ * Returns: if %FALSE, the insertion cursor will not be
  *     shown, even if the text is editable.
  */
 gboolean
@@ -707,7 +707,7 @@ gtk_text_layout_wrap (GtkTextLayout *layout,
 /**
  * gtk_text_layout_get_lines:
  *
- * Return value: (element-type GtkTextLine) (transfer container):
+ * Returns: (element-type GtkTextLine) (transfer container):
  */
 GSList*
 gtk_text_layout_get_lines (GtkTextLayout *layout,
@@ -769,7 +769,7 @@ invalidate_cached_style (GtkTextLayout *layout)
 }
 
 /* These should be called around a loop which wraps a CONTIGUOUS bunch
- * of display lines. If the lines aren't contiguous you can't call
+ * of display lines. If the lines aren’t contiguous you can’t call
  * these.
  */
 void
@@ -964,16 +964,16 @@ gtk_text_layout_real_free_line_data (GtkTextLayout     *layout,
 {
   gtk_text_layout_invalidate_cache (layout, line, FALSE);
 
-  g_free (line_data);
+  g_slice_free (GtkTextLineData, line_data);
 }
 
 /**
  * gtk_text_layout_is_valid:
  * @layout: a #GtkTextLayout
  *
- * Check if there are any invalid regions in a #GtkTextLayout's buffer
+ * Check if there are any invalid regions in a #GtkTextLayout’s buffer
  *
- * Return value: %TRUE if any invalid regions were found
+ * Returns: %TRUE if any invalid regions were found
  */
 gboolean
 gtk_text_layout_is_valid (GtkTextLayout *layout)
@@ -1400,10 +1400,12 @@ set_para_values (GtkTextLayout      *layout,
 
   display->total_width = MAX (layout->screen_width, layout->width) - display->left_margin - display->right_margin;
   
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   if (style->pg_bg_color)
     display->pg_bg_color = gdk_color_copy (style->pg_bg_color);
   else
     display->pg_bg_color = NULL;
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   if (style->pg_bg_rgba)
     display->pg_bg_rgba = gdk_rgba_copy (style->pg_bg_rgba);
@@ -1467,7 +1469,7 @@ gtk_text_attr_appearance_compare (const PangoAttribute *attr1,
  * allows setting family, style, weight, variant, stretch,
  * and size simultaneously.)
  *
- * Return value:
+ * Returns:
  */
 static PangoAttribute *
 gtk_text_attr_appearance_new (const GtkTextAppearance *appearance)
@@ -1681,8 +1683,8 @@ add_child_attrs (GtkTextLayout      *layout,
  * @layout: a #GtkTextLayout
  * @display: a #GtkTextLineDisplay
  * @insert_iter: iter pointing to the cursor location
- * @insert_index: cursor offset in the @display's layout, it may
- * be different from @insert_iter's offset in case when preedit
+ * @insert_index: cursor offset in the @display’s layout, it may
+ * be different from @insert_iter’s offset in case when preedit
  * string is present.
  * @pos: location to store cursor position
  * @cursor_at_line_end: whether cursor is at the end of line
@@ -1963,7 +1965,7 @@ add_preedit_attrs (GtkTextLayout     *layout,
 }
 
 /* Iterate over the line and fill in display->cursors.
- * It's a stripped copy of gtk_text_layout_get_line_display() */
+ * It’s a stripped copy of gtk_text_layout_get_line_display() */
 static void
 update_text_display_cursors (GtkTextLayout      *layout,
 			     GtkTextLine        *line,
@@ -2497,8 +2499,10 @@ gtk_text_layout_free_line_display (GtkTextLayout      *layout,
       if (display->cursors)
         g_array_free (display->cursors, TRUE);
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       if (display->pg_bg_color)
         gdk_color_free (display->pg_bg_color);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
       if (display->pg_bg_rgba)
         gdk_rgba_free (display->pg_bg_rgba);

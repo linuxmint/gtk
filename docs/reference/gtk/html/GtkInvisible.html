@@ -6,9 +6,9 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
 <link rel="up" href="WindowWidgets.html" title="Windows">
-<link rel="prev" href="GtkWindowGroup.html" title="GtkWindowGroup">
+<link rel="prev" href="GtkAssistant.html" title="GtkAssistant">
 <link rel="next" href="GtkOffscreenWindow.html" title="GtkOffscreenWindow">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -22,7 +22,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="WindowWidgets.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="GtkWindowGroup.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="GtkAssistant.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GtkOffscreenWindow.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -108,8 +108,8 @@
 </div>
 <div class="refsect1">
 <a name="GtkInvisible.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> GtkInvisible
 </pre>
@@ -140,7 +140,7 @@ for drag-and-drop.</p>
 gtk_invisible_new (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkInvisible.html" title="GtkInvisible"><span class="type">GtkInvisible</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.6.8.10.2.5"></a><h4>Returns</h4>
+<a name="id-1.3.6.7.10.2.5"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GtkInvisible.html" title="GtkInvisible"><span class="type">GtkInvisible</span></a>.</p>
 <p></p>
 </div>
@@ -152,7 +152,7 @@ gtk_invisible_new (<em class="parameter"><code><span class="type">void</span></c
 gtk_invisible_new_for_screen (<em class="parameter"><code><a href="http://developer.gnome.org/gdk2/GdkScreen.html"><span class="type">GdkScreen</span></a> *screen</code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkInvisible.html" title="GtkInvisible"><span class="type">GtkInvisible</span></a> object for a specified screen</p>
 <div class="refsect3">
-<a name="id-1.3.6.8.10.3.5"></a><h4>Parameters</h4>
+<a name="id-1.3.6.7.10.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -168,7 +168,7 @@ the new <a class="link" href="GtkInvisible.html" title="GtkInvisible"><span clas
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.6.8.10.3.6"></a><h4>Returns</h4>
+<a name="id-1.3.6.7.10.3.6"></a><h4>Returns</h4>
 <p> a newly created <a class="link" href="GtkInvisible.html" title="GtkInvisible"><span class="type">GtkInvisible</span></a> object</p>
 <p></p>
 </div>
@@ -182,7 +182,7 @@ gtk_invisible_set_screen (<em class="parameter"><code><a class="link" href="GtkI
                           <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/GdkScreen.html"><span class="type">GdkScreen</span></a> *screen</code></em>);</pre>
 <p>Sets the <a href="http://developer.gnome.org/gdk2/GdkScreen.html"><span class="type">GdkScreen</span></a> where the <a class="link" href="GtkInvisible.html" title="GtkInvisible"><span class="type">GtkInvisible</span></a> object will be displayed.</p>
 <div class="refsect3">
-<a name="id-1.3.6.8.10.4.5"></a><h4>Parameters</h4>
+<a name="id-1.3.6.7.10.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -213,7 +213,7 @@ gtk_invisible_get_screen (<em class="parameter"><code><a class="link" href="GtkI
 <p>Returns the <a href="http://developer.gnome.org/gdk2/GdkScreen.html"><span class="type">GdkScreen</span></a> object associated with <em class="parameter"><code>invisible</code></em>
 </p>
 <div class="refsect3">
-<a name="id-1.3.6.8.10.5.5"></a><h4>Parameters</h4>
+<a name="id-1.3.6.7.10.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -228,7 +228,7 @@ gtk_invisible_get_screen (<em class="parameter"><code><a class="link" href="GtkI
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.6.8.10.5.6"></a><h4>Returns</h4>
+<a name="id-1.3.6.7.10.5.6"></a><h4>Returns</h4>
 <p> the associated <a href="http://developer.gnome.org/gdk2/GdkScreen.html"><span class="type">GdkScreen</span></a>. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -254,6 +254,6 @@ gtk_invisible_get_screen (<em class="parameter"><code><a class="link" href="GtkI
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

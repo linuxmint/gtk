@@ -1,4 +1,6 @@
+usr/share/man/man1/broadwayd.1
 usr/share/man/man1/gtk-update-icon-cache.1
 usr/share/man/man1/gtk-query-immodules-3.0.1
 usr/share/man/man1/gtk-launch.1
+usr/bin/broadwayd
 usr/bin/gtk-launch

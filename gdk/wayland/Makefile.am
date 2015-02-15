@@ -20,14 +20,15 @@ noinst_LTLIBRARIES =				\
 	libgdk-wayland.la
 
 BUILT_SOURCES = 				\
-	gtk-shell-client-protocol.h		\
-	gtk-shell-protocol.c
-
-DISTCLEANFILES =				\
+	xdg-shell-client-protocol.h		\
+	xdg-shell-protocol.c			\
 	gtk-shell-client-protocol.h		\
 	gtk-shell-protocol.c
 
 nodist_libgdk_wayland_la_SOURCES =		\
+	$(BUILT_SOURCES)
+
+DISTCLEANFILES =				\
 	$(BUILT_SOURCES)
 
 libgdk_wayland_la_SOURCES =			\
@@ -43,7 +44,9 @@ libgdk_wayland_la_SOURCES =			\
 	gdkselection-wayland.c			\
 	gdkwindow-wayland.c			\
 	gdkwayland.h				\
-	gdkprivate-wayland.h
+	gdkprivate-wayland.h			\
+	wm-button-layout-translation.c		\
+	wm-button-layout-translation.h
 
 libgdkinclude_HEADERS =				\
 	gdkwayland.h
@@ -63,6 +66,8 @@ libgdkwaylandinclude_HEADERS = 			\
 %-client-protocol.h : $(srcdir)/protocol/%.xml
 	$(AM_V_GEN)$(WAYLAND_SCANNER) client-header < $< > $@
 
-EXTRA_DIST += protocol/gtk-shell.xml
+EXTRA_DIST += 					\
+	protocol/xdg-shell.xml			\
+	protocol/gtk-shell.xml
 
 -include $(top_srcdir)/git.mk

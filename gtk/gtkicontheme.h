@@ -62,7 +62,7 @@ typedef struct _GtkIconThemePrivate GtkIconThemePrivate;
  * screen using gtk_icon_theme_get_for_screen() and it
  * will contain information about current icon theme for
  * that screen, but you can also create a new #GtkIconTheme
- * object and set the icon theme name explicitely using
+ * object and set the icon theme name explicitly using
  * gtk_icon_theme_set_custom_theme().
  */
 struct _GtkIconTheme
@@ -73,11 +73,22 @@ struct _GtkIconTheme
   GtkIconThemePrivate *priv;
 };
 
+/**
+ * GtkIconThemeClass:
+ * @parent_class: The parent class.
+ * @changed: Signal emitted when the current icon theme is switched or
+ *    GTK+ detects that a change has occurred in the contents of the
+ *    current icon theme.
+ */
 struct _GtkIconThemeClass
 {
   GObjectClass parent_class;
 
+  /*< public >*/
+
   void (* changed)  (GtkIconTheme *icon_theme);
+
+  /*< private >*/
 
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);
@@ -88,30 +99,42 @@ struct _GtkIconThemeClass
 
 /**
  * GtkIconLookupFlags:
- * @GTK_ICON_LOOKUP_NO_SVG: Never return SVG icons, even if gdk-pixbuf
+ * @GTK_ICON_LOOKUP_NO_SVG: Never get SVG icons, even if gdk-pixbuf
  *   supports them. Cannot be used together with %GTK_ICON_LOOKUP_FORCE_SVG.
- * @GTK_ICON_LOOKUP_FORCE_SVG: Return SVG icons, even if gdk-pixbuf
- *   doesn't support them.
+ * @GTK_ICON_LOOKUP_FORCE_SVG: Get SVG icons, even if gdk-pixbuf
+ *   doesn’t support them.
  *   Cannot be used together with %GTK_ICON_LOOKUP_NO_SVG.
  * @GTK_ICON_LOOKUP_USE_BUILTIN: When passed to
  *   gtk_icon_theme_lookup_icon() includes builtin icons
  *   as well as files. For a builtin icon, gtk_icon_info_get_filename()
- *   returns %NULL and you need to call gtk_icon_info_get_builtin_pixbuf().
+ *   is %NULL and you need to call gtk_icon_info_get_builtin_pixbuf().
  * @GTK_ICON_LOOKUP_GENERIC_FALLBACK: Try to shorten icon name at '-'
  *   characters before looking at inherited themes. For more general
  *   fallback, see gtk_icon_theme_choose_icon(). Since 2.12.
- * @GTK_ICON_LOOKUP_FORCE_SIZE: Always return the icon scaled to the
+ * @GTK_ICON_LOOKUP_FORCE_SIZE: Always get the icon scaled to the
  *   requested size. Since 2.14.
+ * @GTK_ICON_LOOKUP_FORCE_REGULAR: Try to always load regular icons, even
+ *   when symbolic icon names are given. Since 3.14.
+ * @GTK_ICON_LOOKUP_FORCE_SYMBOLIC: Try to always load symbolic icons, even
+ *   when regular icon names are given. Since 3.14.
+ * @GTK_ICON_LOOKUP_DIR_LTR: Try to load a variant of the icon for left-to-right
+ *   text direction. Since 3.14.
+ * @GTK_ICON_LOOKUP_DIR_RTL: Try to load a variant of the icon for right-to-left
+ *   text direction. Since 3.14.
  * 
  * Used to specify options for gtk_icon_theme_lookup_icon()
- **/
+ */
 typedef enum
 {
   GTK_ICON_LOOKUP_NO_SVG           = 1 << 0,
   GTK_ICON_LOOKUP_FORCE_SVG        = 1 << 1,
   GTK_ICON_LOOKUP_USE_BUILTIN      = 1 << 2,
   GTK_ICON_LOOKUP_GENERIC_FALLBACK = 1 << 3,
-  GTK_ICON_LOOKUP_FORCE_SIZE       = 1 << 4
+  GTK_ICON_LOOKUP_FORCE_SIZE       = 1 << 4,
+  GTK_ICON_LOOKUP_FORCE_REGULAR    = 1 << 5,
+  GTK_ICON_LOOKUP_FORCE_SYMBOLIC   = 1 << 6,
+  GTK_ICON_LOOKUP_DIR_LTR          = 1 << 7,
+  GTK_ICON_LOOKUP_DIR_RTL          = 1 << 8
 } GtkIconLookupFlags;
 
 /**
@@ -163,6 +186,10 @@ void          gtk_icon_theme_append_search_path    (GtkIconTheme                
 GDK_AVAILABLE_IN_ALL
 void          gtk_icon_theme_prepend_search_path   (GtkIconTheme                *icon_theme,
 						    const gchar                 *path);
+
+GDK_AVAILABLE_IN_3_14
+void          gtk_icon_theme_add_resource_path     (GtkIconTheme                *icon_theme,
+                                                    const gchar                 *path);
 
 GDK_AVAILABLE_IN_ALL
 void          gtk_icon_theme_set_custom_theme      (GtkIconTheme                *icon_theme,
@@ -243,7 +270,7 @@ char *        gtk_icon_theme_get_example_icon_name (GtkIconTheme                
 GDK_AVAILABLE_IN_ALL
 gboolean      gtk_icon_theme_rescan_if_needed      (GtkIconTheme                *icon_theme);
 
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14_FOR(gtk_icon_theme_add_resource_path)
 void          gtk_icon_theme_add_builtin_icon      (const gchar *icon_name,
 					            gint         size,
 					            GdkPixbuf   *pixbuf);
@@ -265,8 +292,10 @@ GDK_AVAILABLE_IN_3_10
 gint                  gtk_icon_info_get_base_scale     (GtkIconInfo   *icon_info);
 GDK_AVAILABLE_IN_ALL
 const gchar *         gtk_icon_info_get_filename       (GtkIconInfo   *icon_info);
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 GdkPixbuf *           gtk_icon_info_get_builtin_pixbuf (GtkIconInfo   *icon_info);
+GDK_AVAILABLE_IN_3_12
+gboolean              gtk_icon_info_is_symbolic        (GtkIconInfo   *icon_info);
 GDK_AVAILABLE_IN_ALL
 GdkPixbuf *           gtk_icon_info_load_icon          (GtkIconInfo   *icon_info,
 							GError       **error);
@@ -327,22 +356,19 @@ GdkPixbuf *           gtk_icon_info_load_symbolic_for_style  (GtkIconInfo   *ico
                                                               GtkStateType   state,
                                                               gboolean      *was_symbolic,
                                                               GError       **error);
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 void                  gtk_icon_info_set_raw_coordinates (GtkIconInfo  *icon_info,
 							 gboolean      raw_coordinates);
 
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 gboolean              gtk_icon_info_get_embedded_rect (GtkIconInfo    *icon_info,
 						       GdkRectangle   *rectangle);
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 gboolean              gtk_icon_info_get_attach_points (GtkIconInfo    *icon_info,
 						       GdkPoint      **points,
 						       gint           *n_points);
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 const gchar *         gtk_icon_info_get_display_name  (GtkIconInfo    *icon_info);
-
-/* Non-public methods */
-void _gtk_icon_theme_ensure_builtin_cache             (void);
 
 G_END_DECLS
 

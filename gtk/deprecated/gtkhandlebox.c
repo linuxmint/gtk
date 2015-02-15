@@ -46,16 +46,16 @@
  *
  * The #GtkHandleBox widget allows a portion of a window to be "torn
  * off". It is a bin widget which displays its child and a handle that
- * the user can drag to tear off a separate window (the <firstterm>float
- * window</firstterm>) containing the child widget. A thin
- * <firstterm>ghost</firstterm> is drawn in the original location of the
+ * the user can drag to tear off a separate window (the “float
+ * window”) containing the child widget. A thin
+ * “ghost” is drawn in the original location of the
  * handlebox. By dragging the separate window back to its original
  * location, it can be reattached.
  *
  * When reattaching, the ghost and float window, must be aligned
- * along one of the edges, the <firstterm>snap edge</firstterm>.
+ * along one of the edges, the “snap edge”.
  * This either can be specified by the application programmer
- * explicitely, or GTK+ will pick a reasonable default based
+ * explicitly, or GTK+ will pick a reasonable default based
  * on the handle position.
  *
  * To make detaching and reattaching the handlebox as minimally confusing
@@ -66,11 +66,9 @@
  * allocation will remain fixed as the height of the handlebox shrinks,
  * so the snap edge should be set to %GTK_POS_BOTTOM.
  *
- * <note>
- * #GtkHandleBox has been deprecated. It is very specialized, lacks features
- * to make it useful and most importantly does not fit well into modern
- * application design. Do not use it. There is no replacement.
- * </note>
+ * > #GtkHandleBox has been deprecated. It is very specialized, lacks features
+ * > to make it useful and most importantly does not fit well into modern
+ * > application design. Do not use it. There is no replacement.
  */
 
 
@@ -145,7 +143,7 @@ enum {
  *    of the drag offset by the distance that the cursor
  *    has moved.
  *
- * 2) These rectangles must have one edge, the "snap_edge"
+ * 2) These rectangles must have one edge, the “snap_edge”
  *    of the handlebox, aligned within TOLERANCE.
  * 
  * 3) On the other dimension, the extents of one rectangle
@@ -542,7 +540,7 @@ gtk_handle_box_realize (GtkWidget *widget)
                            | GDK_STRUCTURE_MASK);
   attributes.type_hint = GDK_WINDOW_TYPE_HINT_TOOLBAR;
   attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_TYPE_HINT;
-  priv->float_window = gdk_window_new (gtk_widget_get_root_window (widget),
+  priv->float_window = gdk_window_new (gdk_screen_get_root_window (gtk_widget_get_screen (widget)),
                                        &attributes, attributes_mask);
   gdk_window_set_user_data (priv->float_window, widget);
   gdk_window_set_decorations (priv->float_window, 0);
@@ -932,7 +930,7 @@ gtk_handle_box_set_shadow_type (GtkHandleBox  *handle_box,
  * Gets the type of shadow drawn around the handle box. See
  * gtk_handle_box_set_shadow_type().
  *
- * Return value: the type of shadow currently drawn around the handle box.
+ * Returns: the type of shadow currently drawn around the handle box.
  *
  * Deprecated: 3.4: #GtkHandleBox has been deprecated.
  **/
@@ -978,7 +976,7 @@ gtk_handle_box_set_handle_position  (GtkHandleBox    *handle_box,
  * Gets the handle position of the handle box. See
  * gtk_handle_box_set_handle_position().
  *
- * Return value: the current handle position.
+ * Returns: the current handle position.
  *
  * Deprecated: 3.4: #GtkHandleBox has been deprecated.
  **/
@@ -999,7 +997,7 @@ gtk_handle_box_get_handle_position (GtkHandleBox *handle_box)
  *
  * Sets the snap edge of a handlebox. The snap edge is
  * the edge of the detached child that must be aligned
- * with the corresponding edge of the "ghost" left
+ * with the corresponding edge of the “ghost” left
  * behind when the child was detached to reattach
  * the torn-off window. Usually, the snap edge should
  * be chosen so that it stays in the same place on
@@ -1041,7 +1039,7 @@ gtk_handle_box_set_snap_edge        (GtkHandleBox    *handle_box,
  * Gets the edge used for determining reattachment of the handle box.
  * See gtk_handle_box_set_snap_edge().
  *
- * Return value: the edge used for determining reattachment, or
+ * Returns: the edge used for determining reattachment, or
  *   (GtkPositionType)-1 if this is determined (as per default)
  *   from the handle position.
  *
@@ -1059,9 +1057,9 @@ gtk_handle_box_get_snap_edge (GtkHandleBox *handle_box)
  * gtk_handle_box_get_child_detached:
  * @handle_box: a #GtkHandleBox
  *
- * Whether the handlebox's child is currently detached.
+ * Whether the handlebox’s child is currently detached.
  *
- * Return value: %TRUE if the child is currently detached, otherwise %FALSE
+ * Returns: %TRUE if the child is currently detached, otherwise %FALSE
  *
  * Since: 2.14
  *

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface domain="gtk30">
+  <template class="GtkInspectorDataList" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkToolbar" id="toolbar">
+        <property name="visible">True</property>
+        <property name="icon-size">small-toolbar</property>
+        <child>
+          <object class="GtkToggleToolButton" id="show_button">
+            <property name="visible">True</property>
+            <property name="icon-name">view-refresh-symbolic</property>
+            <property name="tooltip-text" translatable="yes">Show data</property>
+            <signal name="toggled" handler="toggle_show"/>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="visible">True</property>
+        <property name="expand">True</property>
+        <property name="hscrollbar-policy">automatic</property>
+        <property name="vscrollbar-policy">always</property>
+        <property name="shadow-type">in</property>
+        <child>
+          <object class= "GtkTreeView" id="view">
+            <property name="visible">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

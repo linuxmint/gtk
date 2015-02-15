@@ -6,9 +6,9 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GDK 3 Reference Manual">
 <link rel="up" href="index.html" title="GDK 3 Reference Manual">
-<link rel="prev" href="gdk3-Testing.html" title="Testing">
+<link rel="prev" href="gdk3-Colors.html" title="Colors">
 <link rel="next" href="api-index-deprecated.html" title="Index of deprecated symbols">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -58,7 +58,7 @@
                   <a class="shortcut" href="#idxX">X</a></span></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><img src="up-insensitive.png" width="16" height="16" border="0"></td>
-<td><a accesskey="p" href="gdk3-Testing.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gdk3-Colors.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="api-index-deprecated.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="index">
@@ -401,6 +401,10 @@
 </dt>
 <dd></dd>
 <dt>
+<a class="link" href="GdkDevice.html#gdk-device-get-last-event-window" title="gdk_device_get_last_event_window ()">gdk_device_get_last_event_window</a>, function in <a class="link" href="GdkDevice.html" title="GdkDevice">GdkDevice</a>
+</dt>
+<dd></dd>
+<dt>
 <a class="link" href="GdkDevice.html#gdk-device-get-mode" title="gdk_device_get_mode ()">gdk_device_get_mode</a>, function in <a class="link" href="GdkDevice.html" title="GdkDevice">GdkDevice</a>
 </dt>
 <dd></dd>
@@ -482,6 +486,10 @@
 <dd></dd>
 <dt>
 <a class="link" href="GdkDevice.html#gdk-device-warp" title="gdk_device_warp ()">gdk_device_warp</a>, function in <a class="link" href="GdkDevice.html" title="GdkDevice">GdkDevice</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gdk3-General.html#GDK-DISABLE-DEPRECATION-WARNINGS:CAPS" title="GDK_DISABLE_DEPRECATION_WARNINGS">GDK_DISABLE_DEPRECATION_WARNINGS</a>, macro in <a class="link" href="gdk3-General.html" title="General">General</a>
 </dt>
 <dd></dd>
 <dt>
@@ -1051,11 +1059,39 @@
 </dt>
 <dd></dd>
 <dt>
-<a class="link" href="gdk3-GdkFrameClock.html#GdkFrameClock" title="GdkFrameClock">GdkFrameClock</a>, struct in <a class="link" href="gdk3-GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+<a class="link" href="GdkFrameClock.html#GdkFrameClock-struct" title="GdkFrameClock">GdkFrameClock</a>, struct in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
 </dt>
 <dd></dd>
 <dt>
-<a class="link" href="gdk3-GdkFrameClock.html#GdkFrameClockPhase" title="enum GdkFrameClockPhase">GdkFrameClockPhase</a>, enum in <a class="link" href="gdk3-GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+<a class="link" href="GdkFrameClock.html#GdkFrameClock-after-paint" title="The “after-paint” signal">GdkFrameClock::after-paint</a>, object signal in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GdkFrameClock.html#GdkFrameClock-before-paint" title="The “before-paint” signal">GdkFrameClock::before-paint</a>, object signal in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GdkFrameClock.html#GdkFrameClock-flush-events" title="The “flush-events” signal">GdkFrameClock::flush-events</a>, object signal in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GdkFrameClock.html#GdkFrameClock-layout" title="The “layout” signal">GdkFrameClock::layout</a>, object signal in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GdkFrameClock.html#GdkFrameClock-paint" title="The “paint” signal">GdkFrameClock::paint</a>, object signal in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GdkFrameClock.html#GdkFrameClock-resume-events" title="The “resume-events” signal">GdkFrameClock::resume-events</a>, object signal in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GdkFrameClock.html#GdkFrameClock-update" title="The “update” signal">GdkFrameClock::update</a>, object signal in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="GdkFrameClock.html#GdkFrameClockPhase" title="enum GdkFrameClockPhase">GdkFrameClockPhase</a>, enum in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
 </dt>
 <dd></dd>
 <dt>
@@ -1063,39 +1099,39 @@
 </dt>
 <dd></dd>
 <dt>
-<a class="link" href="gdk3-GdkFrameClock.html#gdk-frame-clock-begin-updating" title="gdk_frame_clock_begin_updating ()">gdk_frame_clock_begin_updating</a>, function in <a class="link" href="gdk3-GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+<a class="link" href="GdkFrameClock.html#gdk-frame-clock-begin-updating" title="gdk_frame_clock_begin_updating ()">gdk_frame_clock_begin_updating</a>, function in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
 </dt>
 <dd></dd>
 <dt>
-<a class="link" href="gdk3-GdkFrameClock.html#gdk-frame-clock-end-updating" title="gdk_frame_clock_end_updating ()">gdk_frame_clock_end_updating</a>, function in <a class="link" href="gdk3-GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+<a class="link" href="GdkFrameClock.html#gdk-frame-clock-end-updating" title="gdk_frame_clock_end_updating ()">gdk_frame_clock_end_updating</a>, function in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
 </dt>
 <dd></dd>
 <dt>
-<a class="link" href="gdk3-GdkFrameClock.html#gdk-frame-clock-get-current-timings" title="gdk_frame_clock_get_current_timings ()">gdk_frame_clock_get_current_timings</a>, function in <a class="link" href="gdk3-GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+<a class="link" href="GdkFrameClock.html#gdk-frame-clock-get-current-timings" title="gdk_frame_clock_get_current_timings ()">gdk_frame_clock_get_current_timings</a>, function in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
 </dt>
 <dd></dd>
 <dt>
-<a class="link" href="gdk3-GdkFrameClock.html#gdk-frame-clock-get-frame-counter" title="gdk_frame_clock_get_frame_counter ()">gdk_frame_clock_get_frame_counter</a>, function in <a class="link" href="gdk3-GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+<a class="link" href="GdkFrameClock.html#gdk-frame-clock-get-frame-counter" title="gdk_frame_clock_get_frame_counter ()">gdk_frame_clock_get_frame_counter</a>, function in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
 </dt>
 <dd></dd>
 <dt>
-<a class="link" href="gdk3-GdkFrameClock.html#gdk-frame-clock-get-frame-time" title="gdk_frame_clock_get_frame_time ()">gdk_frame_clock_get_frame_time</a>, function in <a class="link" href="gdk3-GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+<a class="link" href="GdkFrameClock.html#gdk-frame-clock-get-frame-time" title="gdk_frame_clock_get_frame_time ()">gdk_frame_clock_get_frame_time</a>, function in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
 </dt>
 <dd></dd>
 <dt>
-<a class="link" href="gdk3-GdkFrameClock.html#gdk-frame-clock-get-history-start" title="gdk_frame_clock_get_history_start ()">gdk_frame_clock_get_history_start</a>, function in <a class="link" href="gdk3-GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+<a class="link" href="GdkFrameClock.html#gdk-frame-clock-get-history-start" title="gdk_frame_clock_get_history_start ()">gdk_frame_clock_get_history_start</a>, function in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
 </dt>
 <dd></dd>
 <dt>
-<a class="link" href="gdk3-GdkFrameClock.html#gdk-frame-clock-get-refresh-info" title="gdk_frame_clock_get_refresh_info ()">gdk_frame_clock_get_refresh_info</a>, function in <a class="link" href="gdk3-GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+<a class="link" href="GdkFrameClock.html#gdk-frame-clock-get-refresh-info" title="gdk_frame_clock_get_refresh_info ()">gdk_frame_clock_get_refresh_info</a>, function in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
 </dt>
 <dd></dd>
 <dt>
-<a class="link" href="gdk3-GdkFrameClock.html#gdk-frame-clock-get-timings" title="gdk_frame_clock_get_timings ()">gdk_frame_clock_get_timings</a>, function in <a class="link" href="gdk3-GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+<a class="link" href="GdkFrameClock.html#gdk-frame-clock-get-timings" title="gdk_frame_clock_get_timings ()">gdk_frame_clock_get_timings</a>, function in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
 </dt>
 <dd></dd>
 <dt>
-<a class="link" href="gdk3-GdkFrameClock.html#gdk-frame-clock-request-phase" title="gdk_frame_clock_request_phase ()">gdk_frame_clock_request_phase</a>, function in <a class="link" href="gdk3-GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
+<a class="link" href="GdkFrameClock.html#gdk-frame-clock-request-phase" title="gdk_frame_clock_request_phase ()">gdk_frame_clock_request_phase</a>, function in <a class="link" href="GdkFrameClock.html" title="Frame clock">GdkFrameClock</a>
 </dt>
 <dd></dd>
 <dt>
@@ -1311,6 +1347,10 @@
 </dt>
 <dd></dd>
 <a name="idxM"></a><h3 class="title">M</h3>
+<dt>
+<a class="link" href="gdk3-Windows.html#GdkModifierIntent" title="enum GdkModifierIntent">GdkModifierIntent</a>, enum in <a class="link" href="gdk3-Windows.html" title="Windows">Windows</a>
+</dt>
+<dd></dd>
 <dt>
 <a class="link" href="gdk3-Windows.html#GdkModifierType" title="enum GdkModifierType">GdkModifierType</a>, enum in <a class="link" href="gdk3-Windows.html" title="Windows">Windows</a>
 </dt>
@@ -1873,11 +1913,31 @@
 </dt>
 <dd></dd>
 <dt>
+<a class="link" href="gdk3-General.html#GDK-VERSION-3-10:CAPS" title="GDK_VERSION_3_10">GDK_VERSION_3_10</a>, macro in <a class="link" href="gdk3-General.html" title="General">General</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gdk3-General.html#GDK-VERSION-3-12:CAPS" title="GDK_VERSION_3_12">GDK_VERSION_3_12</a>, macro in <a class="link" href="gdk3-General.html" title="General">General</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gdk3-General.html#GDK-VERSION-3-14:CAPS" title="GDK_VERSION_3_14">GDK_VERSION_3_14</a>, macro in <a class="link" href="gdk3-General.html" title="General">General</a>
+</dt>
+<dd></dd>
+<dt>
 <a class="link" href="gdk3-General.html#GDK-VERSION-3-2:CAPS" title="GDK_VERSION_3_2">GDK_VERSION_3_2</a>, macro in <a class="link" href="gdk3-General.html" title="General">General</a>
 </dt>
 <dd></dd>
 <dt>
 <a class="link" href="gdk3-General.html#GDK-VERSION-3-4:CAPS" title="GDK_VERSION_3_4">GDK_VERSION_3_4</a>, macro in <a class="link" href="gdk3-General.html" title="General">General</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gdk3-General.html#GDK-VERSION-3-6:CAPS" title="GDK_VERSION_3_6">GDK_VERSION_3_6</a>, macro in <a class="link" href="gdk3-General.html" title="General">General</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gdk3-General.html#GDK-VERSION-3-8:CAPS" title="GDK_VERSION_3_8">GDK_VERSION_3_8</a>, macro in <a class="link" href="gdk3-General.html" title="General">General</a>
 </dt>
 <dd></dd>
 <dt>
@@ -1986,11 +2046,7 @@
 </dt>
 <dd></dd>
 <dt>
-<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-display-get-wl-shell" title="gdk_wayland_display_get_wl_shell ()">gdk_wayland_display_get_wl_shell</a>, function in <a class="link" href="gdk3-Wayland-Interaction.html" title="Wayland Interaction">Wayland Interaction</a>
-</dt>
-<dd></dd>
-<dt>
-<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-window-get-wl-shell-surface" title="gdk_wayland_window_get_wl_shell_surface ()">gdk_wayland_window_get_wl_shell_surface</a>, function in <a class="link" href="gdk3-Wayland-Interaction.html" title="Wayland Interaction">Wayland Interaction</a>
+<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-display-get-xdg-shell" title="gdk_wayland_display_get_xdg_shell ()">gdk_wayland_display_get_xdg_shell</a>, function in <a class="link" href="gdk3-Wayland-Interaction.html" title="Wayland Interaction">Wayland Interaction</a>
 </dt>
 <dd></dd>
 <dt>
@@ -2043,6 +2099,10 @@
 <dd></dd>
 <dt>
 <a class="link" href="gdk3-Windows.html#GdkWindowHints" title="enum GdkWindowHints">GdkWindowHints</a>, enum in <a class="link" href="gdk3-Windows.html" title="Windows">Windows</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gdk3-General.html#GDK-WINDOWING-QUARTZ:CAPS" title="GDK_WINDOWING_QUARTZ">GDK_WINDOWING_QUARTZ</a>, macro in <a class="link" href="gdk3-General.html" title="General">General</a>
 </dt>
 <dd></dd>
 <dt>
@@ -2243,6 +2303,10 @@
 <dd></dd>
 <dt>
 <a class="link" href="gdk3-Windows.html#gdk-window-get-events" title="gdk_window_get_events ()">gdk_window_get_events</a>, function in <a class="link" href="gdk3-Windows.html" title="Windows">Windows</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gdk3-Windows.html#gdk-window-get-event-compression" title="gdk_window_get_event_compression ()">gdk_window_get_event_compression</a>, function in <a class="link" href="gdk3-Windows.html" title="Windows">Windows</a>
 </dt>
 <dd></dd>
 <dt>
@@ -2526,6 +2590,10 @@
 </dt>
 <dd></dd>
 <dt>
+<a class="link" href="gdk3-Windows.html#gdk-window-set-event-compression" title="gdk_window_set_event_compression ()">gdk_window_set_event_compression</a>, function in <a class="link" href="gdk3-Windows.html" title="Windows">Windows</a>
+</dt>
+<dd></dd>
+<dt>
 <a class="link" href="gdk3-Windows.html#gdk-window-set-focus-on-map" title="gdk_window_set_focus_on_map ()">gdk_window_set_focus_on_map</a>, function in <a class="link" href="gdk3-Windows.html" title="Windows">Windows</a>
 </dt>
 <dd></dd>
@@ -2586,6 +2654,10 @@
 </dt>
 <dd></dd>
 <dt>
+<a class="link" href="gdk3-Windows.html#gdk-window-set-shadow-width" title="gdk_window_set_shadow_width ()">gdk_window_set_shadow_width</a>, function in <a class="link" href="gdk3-Windows.html" title="Windows">Windows</a>
+</dt>
+<dd></dd>
+<dt>
 <a class="link" href="gdk3-Windows.html#gdk-window-set-skip-pager-hint" title="gdk_window_set_skip_pager_hint ()">gdk_window_set_skip_pager_hint</a>, function in <a class="link" href="gdk3-Windows.html" title="Windows">Windows</a>
 </dt>
 <dd></dd>
@@ -2639,6 +2711,10 @@
 <dd></dd>
 <dt>
 <a class="link" href="gdk3-Windows.html#gdk-window-show-unraised" title="gdk_window_show_unraised ()">gdk_window_show_unraised</a>, function in <a class="link" href="gdk3-Windows.html" title="Windows">Windows</a>
+</dt>
+<dd></dd>
+<dt>
+<a class="link" href="gdk3-Windows.html#gdk-window-show-window-menu" title="gdk_window_show_window_menu ()">gdk_window_show_window_menu</a>, function in <a class="link" href="gdk3-Windows.html" title="Windows">Windows</a>
 </dt>
 <dd></dd>
 <dt>
@@ -2933,6 +3009,6 @@
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

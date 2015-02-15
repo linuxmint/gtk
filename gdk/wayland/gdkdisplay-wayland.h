@@ -27,6 +27,7 @@
 #include <wayland-client.h>
 #include <wayland-cursor.h>
 #include <gdk/wayland/gtk-shell-client-protocol.h>
+#include <gdk/wayland/xdg-shell-client-protocol.h>
 
 #include <glib.h>
 #include <gdk/gdkkeys.h>
@@ -37,6 +38,8 @@
 #include "gdkdisplayprivate.h"
 
 G_BEGIN_DECLS
+
+typedef struct _GdkWaylandSelection GdkWaylandSelection;
 
 struct _GdkWaylandDisplay
 {
@@ -49,8 +52,7 @@ struct _GdkWaylandDisplay
   /* Startup notification */
   gchar *startup_notification_id;
 
-  /* Time of most recent user interaction and most recent serial */
-  gulong user_time;
+  /* Most recent serial */
   guint32 serial;
 
   /* Wayland fields below */
@@ -58,20 +60,22 @@ struct _GdkWaylandDisplay
   struct wl_registry *wl_registry;
   struct wl_compositor *compositor;
   struct wl_shm *shm;
-  struct wl_shell *shell;
+  struct xdg_shell *xdg_shell;
   struct gtk_shell *gtk_shell;
   struct wl_input_device *input_device;
   struct wl_data_device_manager *data_device_manager;
+  struct wl_subcompositor *subcompositor;
 
   struct wl_cursor_theme *cursor_theme;
-  GSList *cursor_cache;
+  GHashTable *cursor_cache;
 
   GSource *event_source;
 
-  int init_ref_count;
   int compositor_version;
 
   struct xkb_context *xkb_context;
+
+  GdkWaylandSelection *selection;
 };
 
 struct _GdkWaylandDisplayClass

@@ -47,90 +47,90 @@
  * with high key  binding configurability which requires no application
  * or toolkit side changes.
  *
- * <refsect2 id="gtk-bindings-install">
- * <title>Installing a key binding</title>
- * <para>
- * A CSS file binding consists of a 'binding-set' definition and a match
+ * # Installing a key binding
+ *
+ * A CSS file binding consists of a “binding-set” definition and a match
  * statement to apply the binding set to specific widget types. Details
  * on the matching mechanism are described under
- * <link linkend="gtkcssprovider-selectors">Selectors</link>
- * in the #GtkCssProvider documentation. Inside the binding set definition,
- * key combinations are bound to one or more specific signal emissions on
- * the target widget. Key combinations are strings consisting of an optional
- * #GdkModifierType name and <link linkend="gdk-Keyboard-Handling">key names</link>
- * such as those defined in <filename>&lt;gdk/gdkkeysyms.h&gt;</filename>
+ * [Selectors][gtkcssprovider-selectors]
+ * in the #GtkCssProvider documentation. Inside the binding set
+ * definition, key combinations are bound to one or more specific
+ * signal emissions on the target widget. Key combinations are strings
+ * consisting of an optional #GdkModifierType name and
+ * [key names][gdk3-Keyboard-Handling]
+ * such as those defined in `gdk/gdkkeysyms.h`
  * or returned from gdk_keyval_name(), they have to be parsable by
  * gtk_accelerator_parse(). Specifications of signal emissions consist
  * of a string identifying the signal name, and a list of signal specific
  * arguments in parenthesis.
- * </para>
- * <para>
+ *
  * For example for binding Control and the left or right cursor keys
- * of a #GtkEntry widget to the #GtkEntry::move-cursor signal (so movement
- * occurs in 3-character steps), the following binding can be used:
- * <informalexample><programlisting>
+ * of a #GtkEntry widget to the #GtkEntry::move-cursor signal (so
+ * movement occurs in 3-character steps), the following binding can be
+ * used:
+ *
+ * |[
  * @binding-set MoveCursor3
  * {
- *   bind "&lt;Control&gt;Right" { "move-cursor" (visual-positions, 3, 0) };
- *   bind "&lt;Control&gt;Left" { "move-cursor" (visual-positions, -3, 0) };
+ *   bind "<Control>Right" { "move-cursor" (visual-positions, 3, 0) };
+ *   bind "<Control>Left" { "move-cursor" (visual-positions, -3, 0) };
  * }
  * GtkEntry
  * {
  *   gtk-key-bindings: MoveCursor3;
  * }
- * </programlisting></informalexample>
- * </para>
- * </refsect2>
- * <refsect2 id="gtk-bindings-unbind">
- * <title>Unbinding existing key bindings</title>
- * <para>
+ * ]|
+ *
+ * # Unbinding existing key bindings
+ *
  * GTK+ already defines a number of useful bindings for the widgets
  * it provides. Because custom bindings set up in CSS files take
  * precedence over the default bindings shipped with GTK+, overriding
  * existing bindings as demonstrated in
- * <link linkend="gtk-bindings-install">Installing a key binding</link>
- * works as expected. The same mechanism can not be used to "unbind"
+ * [Installing a key binding][gtk-bindings-install]
+ * works as expected. The same mechanism can not be used to “unbind”
  * existing bindings, however.
- * <informalexample><programlisting>
+ *
+ * |[
  * @binding-set MoveCursor3
  * {
- *   bind "&lt;Control&gt;Right" {  };
- *   bind "&lt;Control&gt;Left" {  };
+ *   bind "<Control>Right" {  };
+ *   bind "<Control>Left" {  };
  * }
  * GtkEntry
  * {
  *   gtk-key-bindings: MoveCursor3;
  * }
- * </programlisting></informalexample>
+ * ]|
+ *
  * The above example will not have the desired effect of causing
- * "&lt;Control&gt;Right" and "&lt;Control&gt;Left" key presses to
- * be ignored by GTK+. Instead, it just causes any existing bindings
- * from the bindings set "MoveCursor3" to be deleted, so when
- * "&lt;Control&gt;Right" or "&lt;Control&gt;Left" are pressed, no
- * binding for these keys is found in binding set "MoveCursor3".
- * GTK+ will thus continue to search for matching key bindings, and will
- * eventually lookup and find the default GTK+ bindings for entries which
- * implement word movement. To keep GTK+ from activating its default
- * bindings, the "unbind" keyword can be used like this:
- * <informalexample><programlisting>
+ * “<Control>Right” and “<Control>Left” key presses to be ignored by GTK+.
+ * Instead, it just causes any existing bindings from the bindings set
+ * “MoveCursor3” to be deleted, so when “<Control>Right” or
+ * “<Control>Left” are pressed, no binding for these keys is found in
+ * binding set “MoveCursor3”. GTK+ will thus continue to search for
+ * matching key bindings, and will eventually lookup and find the default
+ * GTK+ bindings for entries which implement word movement. To keep GTK+
+ * from activating its default bindings, the “unbind” keyword can be used
+ * like this:
+ *
+ * |[
  * @binding-set MoveCursor3
  * {
- *   unbind "&lt;Control&gt;Right";
- *   unbind "&lt;Control&gt;Left";
+ *   unbind "<Control>Right";
+ *   unbind "<Control>Left";
  * }
  * GtkEntry
  * {
  *   gtk-key-bindings: MoveCursor3;
  * }
- * </programlisting></informalexample>
- * Now, GTK+ will find a match when looking up "&lt;Control&gt;Right"
- * and "&lt;Control&gt;Left" key presses before it resorts to its default
- * bindings, and the match instructs it to abort ("unbind") the search,
- * so the key presses are not consumed by this widget. As usual, further
- * processing of the key presses, e.g. by an entry's parent widget, is
- * now possible.
- * </para>
- * </refsect2>
+ * ]|
+ *
+ * Now, GTK+ will find a match when looking up “<Control>Right” and
+ * “<Control>Left” key presses before it resorts to its default bindings,
+ * and the match instructs it to abort (“unbind”) the search, so the key
+ * presses are not consumed by this widget. As usual, further processing
+ * of the key presses, e.g. by an entry’s parent widget, is now possible.
  */
 
 /* --- defines --- */
@@ -143,13 +143,6 @@ GType gtk_identifier_get_type (void) G_GNUC_CONST;
 
 
 /* --- structures --- */
-typedef struct {
-  GtkPathType   type;
-  GPatternSpec *pspec;
-  gpointer      user_data;
-  guint         seq_id;
-} PatternSpec;
-
 typedef enum {
   GTK_BINDING_TOKEN_BIND,
   GTK_BINDING_TOKEN_UNBIND
@@ -176,14 +169,6 @@ gtk_identifier_get_type (void)
     }
 
   return our_type;
-}
-
-static void
-pattern_spec_free (PatternSpec *pspec)
-{
-  if (pspec->pspec)
-    g_pattern_spec_free (pspec->pspec);
-  g_free (pspec);
 }
 
 static GtkBindingSignal*
@@ -684,7 +669,7 @@ gtk_binding_entry_activate (GtkBindingEntry *entry,
  * GTK+ maintains a global list of binding sets. Each binding set has
  * a unique name which needs to be specified upon creation.
  *
- * Return value: (transfer full): new binding set
+ * Returns: (transfer none): new binding set
  */
 GtkBindingSet*
 gtk_binding_set_new (const gchar *set_name)
@@ -715,7 +700,7 @@ gtk_binding_set_new (const gchar *set_name)
  * the passed in class structure. New binding sets are created on
  * demand by this function.
  *
- * Return value: (transfer full): the binding set corresponding to
+ * Returns: (transfer none): the binding set corresponding to
  *     @object_class
  */
 GtkBindingSet*
@@ -766,7 +751,7 @@ gtk_binding_set_find_interned (const gchar *set_name)
  * The @set_name can either be a name used for gtk_binding_set_new()
  * or the type name of a class used in gtk_binding_set_by_class().
  *
- * Return value: (transfer none): %NULL or the specified binding set
+ * Returns: (transfer none): %NULL or the specified binding set
  */
 GtkBindingSet*
 gtk_binding_set_find (const gchar *set_name)
@@ -786,7 +771,7 @@ gtk_binding_set_find (const gchar *set_name)
  * Find a key binding matching @keyval and @modifiers within
  * @binding_set and activate the binding on @object.
  *
- * Return value: %TRUE if a binding was found and activated
+ * Returns: %TRUE if a binding was found and activated
  */
 gboolean
 gtk_binding_set_activate (GtkBindingSet  *binding_set,
@@ -1357,17 +1342,17 @@ create_signal_scanner (void)
  *
  * Signal descriptions may either bind a key combination to
  * one or more signals:
- * <informalexample><programlisting>
+ * |[
  *   bind "key" {
  *     "signalname" (param, ...)
  *     ...
  *   }
- * </programlisting></informalexample>
+ * ]|
  *
  * Or they may also unbind a key combination:
- * <informalexample><programlisting>
+ * |[
  *   unbind "key"
- * </programlisting></informalexample>
+ * ]|
  *
  * Key combinations must be in a format that can be parsed by
  * gtk_accelerator_parse().
@@ -1399,92 +1384,6 @@ gtk_binding_entry_add_signal_from_string (GtkBindingSet *binding_set,
   g_scanner_set_scope (scanner, 0);
 
   return ret;
-}
-
-/**
- * gtk_binding_set_add_path:
- * @binding_set: a #GtkBindingSet to add a path to
- * @path_type: path type the pattern applies to
- * @path_pattern: the actual match pattern
- * @priority: binding priority
- *
- * This function was used internally by the GtkRC parsing mechanism
- * to assign match patterns to #GtkBindingSet structures.
- *
- * In GTK+ 3, these match patterns are unused.
- *
- * Deprecated: 3.0
- */
-void
-gtk_binding_set_add_path (GtkBindingSet       *binding_set,
-                          GtkPathType          path_type,
-                          const gchar         *path_pattern,
-                          GtkPathPriorityType  priority)
-{
-  PatternSpec *pspec;
-  GSList **slist_p, *slist;
-  static guint seq_id = 0;
-
-  g_return_if_fail (binding_set != NULL);
-  g_return_if_fail (path_pattern != NULL);
-  g_return_if_fail (priority <= GTK_PATH_PRIO_MASK);
-
-  priority &= GTK_PATH_PRIO_MASK;
-
-  switch (path_type)
-    {
-    case  GTK_PATH_WIDGET:
-      slist_p = &binding_set->widget_path_pspecs;
-      break;
-    case  GTK_PATH_WIDGET_CLASS:
-      slist_p = &binding_set->widget_class_pspecs;
-      break;
-    case  GTK_PATH_CLASS:
-      slist_p = &binding_set->class_branch_pspecs;
-      break;
-    default:
-      g_assert_not_reached ();
-      slist_p = NULL;
-      break;
-    }
-
-  pspec = g_new (PatternSpec, 1);
-  pspec->type = path_type;
-  if (path_type == GTK_PATH_WIDGET_CLASS)
-    pspec->pspec = NULL;
-  else
-    pspec->pspec = g_pattern_spec_new (path_pattern);
-
-  pspec->seq_id = priority << 28;
-  pspec->user_data = binding_set;
-
-  slist = *slist_p;
-  while (slist)
-    {
-      PatternSpec *tmp_pspec;
-
-      tmp_pspec = slist->data;
-      slist = slist->next;
-
-      if (g_pattern_spec_equal (tmp_pspec->pspec, pspec->pspec))
-        {
-          GtkPathPriorityType lprio = tmp_pspec->seq_id >> 28;
-
-          pattern_spec_free (pspec);
-          pspec = NULL;
-          if (lprio < priority)
-            {
-              tmp_pspec->seq_id &= 0x0fffffff;
-              tmp_pspec->seq_id |= priority << 28;
-            }
-          break;
-        }
-    }
-  if (pspec)
-    {
-      pspec->seq_id |= seq_id++ & 0x0fffffff;
-      *slist_p = g_slist_prepend (*slist_p, pspec);
-    }
 }
 
 static gint
@@ -1605,7 +1504,7 @@ gtk_bindings_activate_list (GObject  *object,
  * Find a key binding matching @keyval and @modifiers and activate the
  * binding on @object.
  *
- * Return value: %TRUE if a binding was found and activated
+ * Returns: %TRUE if a binding was found and activated
  */
 gboolean
 gtk_bindings_activate (GObject         *object,
@@ -1644,7 +1543,7 @@ gtk_bindings_activate (GObject         *object,
  * Looks up key bindings for @object to find one matching
  * @event, and if one was found, activate it.
  *
- * Return value: %TRUE if a matching key binding was found
+ * Returns: %TRUE if a matching key binding was found
  *
  * Since: 2.4
  */

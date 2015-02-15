@@ -49,10 +49,8 @@
  * they all share the same height but may have variable widths).
  */
 
-static GObject    *gtk_cell_view_constructor              (GType                  type,
-							   guint                  n_construct_properties,
-							   GObjectConstructParam *construct_properties);
-static void        gtk_cell_view_get_property             (GObject           *object,
+static void        gtk_cell_view_constructed              (GObject          *object);
+static void        gtk_cell_view_get_property             (GObject          *object,
                                                            guint             param_id,
                                                            GValue           *value,
                                                            GParamSpec       *pspec);
@@ -167,7 +165,7 @@ gtk_cell_view_class_init (GtkCellViewClass *klass)
   GObjectClass   *gobject_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  gobject_class->constructor = gtk_cell_view_constructor;
+  gobject_class->constructed = gtk_cell_view_constructed;
   gobject_class->get_property = gtk_cell_view_get_property;
   gobject_class->set_property = gtk_cell_view_set_property;
   gobject_class->finalize = gtk_cell_view_finalize;
@@ -199,6 +197,7 @@ gtk_cell_view_class_init (GtkCellViewClass *klass)
    *
    * Deprecated: 3.4: Use #GtkCellView:background-rgba instead.
    */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   g_object_class_install_property (gobject_class,
                                    PROP_BACKGROUND_GDK,
                                    g_param_spec_boxed ("background-gdk",
@@ -206,6 +205,7 @@ gtk_cell_view_class_init (GtkCellViewClass *klass)
                                                       P_("Background color as a GdkColor"),
                                                       GDK_TYPE_COLOR,
                                                       GTK_PARAM_READWRITE | G_PARAM_DEPRECATED));
+G_GNUC_END_IGNORE_DEPRECATIONS
   /**
    * GtkCellView:background-rgba:
    *
@@ -296,7 +296,7 @@ gtk_cell_view_class_init (GtkCellViewClass *klass)
 							  P_("Whether to force cells to be drawn in a "
 							     "sensitive state"),
 							  FALSE,
-							  GTK_PARAM_READWRITE));
+							  GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkCellView:fit-model:
@@ -315,7 +315,7 @@ gtk_cell_view_class_init (GtkCellViewClass *klass)
 							  P_("Whether to request enough space for "
 							     "every row in the model"),
 							  FALSE,
-							  GTK_PARAM_READWRITE));
+							  GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   
 #define ADD_SET_PROP(propname, propval, nick, blurb) g_object_class_install_property (gobject_class, propval, g_param_spec_boolean (propname, nick, blurb, FALSE, GTK_PARAM_READWRITE))
@@ -340,20 +340,13 @@ gtk_cell_view_cell_layout_init (GtkCellLayoutIface *iface)
   iface->get_area = gtk_cell_view_cell_layout_get_area;
 }
 
-static GObject *
-gtk_cell_view_constructor (GType                  type,
-			   guint                  n_construct_properties,
-			   GObjectConstructParam *construct_properties)
+static void
+gtk_cell_view_constructed (GObject *object)
 {
-  GObject            *object;
-  GtkCellView        *view;
-  GtkCellViewPrivate *priv;
+  GtkCellView *view = GTK_CELL_VIEW (object);
+  GtkCellViewPrivate *priv = view->priv;
 
-  object = G_OBJECT_CLASS (gtk_cell_view_parent_class)->constructor
-    (type, n_construct_properties, construct_properties);
-
-  view = GTK_CELL_VIEW (object);
-  priv = view->priv;
+  G_OBJECT_CLASS (gtk_cell_view_parent_class)->constructed (object);
 
   if (!priv->area)
     {
@@ -367,8 +360,6 @@ gtk_cell_view_constructor (GType                  type,
   priv->size_changed_id =
     g_signal_connect (priv->context, "notify",
 		      G_CALLBACK (context_size_changed_cb), view);
-
-  return object;
 }
 
 static void
@@ -437,11 +428,14 @@ gtk_cell_view_set_property (GObject      *object,
   switch (param_id)
     {
     case PROP_ORIENTATION:
-      priv->orientation = g_value_get_enum (value);
-      if (priv->context)
-        gtk_cell_area_context_reset (priv->context);
-
-      _gtk_orientable_set_style_classes (GTK_ORIENTABLE (object));
+      if (priv->orientation != g_value_get_enum (value))
+        {
+          priv->orientation = g_value_get_enum (value);
+          if (priv->context)
+            gtk_cell_area_context_reset (priv->context);
+          _gtk_orientable_set_style_classes (GTK_ORIENTABLE (object));
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_BACKGROUND:
       {
@@ -936,7 +930,7 @@ row_changed_cb (GtkTreeModel         *model,
  *
  * Creates a new #GtkCellView widget.
  *
- * Return value: A newly created #GtkCellView widget.
+ * Returns: A newly created #GtkCellView widget.
  *
  * Since: 2.6
  */
@@ -964,7 +958,7 @@ gtk_cell_view_new (void)
  * in this way alignments with cellviews for other rows are
  * possible.
  *
- * Return value: A newly created #GtkCellView widget.
+ * Returns: A newly created #GtkCellView widget.
  *
  * Since: 2.6
  */
@@ -988,7 +982,7 @@ gtk_cell_view_new_with_context (GtkCellArea        *area,
  * Creates a new #GtkCellView widget, adds a #GtkCellRendererText 
  * to it, and makes it show @text.
  *
- * Return value: A newly created #GtkCellView widget.
+ * Returns: A newly created #GtkCellView widget.
  *
  * Since: 2.6
  */
@@ -1019,10 +1013,9 @@ gtk_cell_view_new_with_text (const gchar *text)
  *
  * Creates a new #GtkCellView widget, adds a #GtkCellRendererText 
  * to it, and makes it show @markup. The text can be
- * marked up with the <link linkend="PangoMarkupFormat">Pango text 
- * markup language</link>.
+ * marked up with the [Pango text markup language][PangoMarkupFormat].
  *
- * Return value: A newly created #GtkCellView widget.
+ * Returns: A newly created #GtkCellView widget.
  *
  * Since: 2.6
  */
@@ -1054,7 +1047,7 @@ gtk_cell_view_new_with_markup (const gchar *markup)
  * Creates a new #GtkCellView widget, adds a #GtkCellRendererPixbuf
  * to it, and makes it show @pixbuf.
  *
- * Return value: A newly created #GtkCellView widget.
+ * Returns: A newly created #GtkCellView widget.
  *
  * Since: 2.6
  */
@@ -1173,7 +1166,7 @@ gtk_cell_view_get_model (GtkCellView *cell_view)
  *
  * Sets the row of the model that is currently displayed
  * by the #GtkCellView. If the path is unset, then the
- * contents of the cellview "stick" at their last value;
+ * contents of the cellview “stick” at their last value;
  * this is not normally a desired result, but may be
  * a needed intermediate state if say, the model for
  * the #GtkCellView becomes temporarily empty.
@@ -1235,7 +1228,7 @@ gtk_cell_view_get_displayed_row (GtkCellView *cell_view)
  * Sets @requisition to the size needed by @cell_view to display 
  * the model row pointed to by @path.
  * 
- * Return value: %TRUE
+ * Returns: %TRUE
  *
  * Since: 2.6
  * 
@@ -1357,7 +1350,7 @@ gtk_cell_view_set_background_rgba (GtkCellView   *cell_view,
  * Gets whether @cell_view is configured to draw all of its
  * cells in a sensitive state.
  *
- * Return value: whether @cell_view draws all of its
+ * Returns: whether @cell_view draws all of its
  * cells in a sensitive state
  *
  * Since: 3.0
@@ -1411,7 +1404,7 @@ gtk_cell_view_set_draw_sensitive (GtkCellView     *cell_view,
  * Gets whether @cell_view is configured to request space
  * to fit the entire #GtkTreeModel.
  *
- * Return value: whether @cell_view requests space to fit
+ * Returns: whether @cell_view requests space to fit
  * the entire #GtkTreeModel.
  *
  * Since: 3.0
@@ -1436,7 +1429,7 @@ gtk_cell_view_get_fit_model (GtkCellView     *cell_view)
  * Sets whether @cell_view should request space to fit the entire #GtkTreeModel.
  *
  * This is used by #GtkComboBox to ensure that the cell view displayed on
- * the combo box's button always gets enough space and does not resize
+ * the combo box’s button always gets enough space and does not resize
  * when selection changes.
  *
  * Since: 3.0

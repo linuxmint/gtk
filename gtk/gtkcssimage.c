@@ -26,6 +26,7 @@
 /* for the types only */
 #include "gtk/gtkcssimagecrossfadeprivate.h"
 #include "gtk/gtkcssimagegradientprivate.h"
+#include "gtk/gtkcssimageiconthemeprivate.h"
 #include "gtk/gtkcssimagelinearprivate.h"
 #include "gtk/gtkcssimageurlprivate.h"
 #include "gtk/gtkcssimagescaledprivate.h"
@@ -319,30 +320,32 @@ _gtk_css_image_get_concrete_size (GtkCssImage *image,
               *concrete_height = default_width / image_aspect;
             }
         }
-
-      /* Otherwise, the width and height of the concrete object
-       * size is the same as the object's intrinsic width and
-       * intrinsic height, if they exist.
-       * If the concrete object size is still missing a width or
-       * height, and the object has an intrinsic aspect ratio,
-       * the missing dimension is calculated from the present
-       * dimension and the intrinsic aspect ratio.
-       * Otherwise, the missing dimension is taken from the default
-       * object size. 
-       */
-      if (image_width)
-        *concrete_width = image_width;
-      else if (image_aspect)
-        *concrete_width = image_height * image_aspect;
       else
-        *concrete_width = default_width;
+        {
+          /* Otherwise, the width and height of the concrete object
+           * size is the same as the object's intrinsic width and
+           * intrinsic height, if they exist.
+           * If the concrete object size is still missing a width or
+           * height, and the object has an intrinsic aspect ratio,
+           * the missing dimension is calculated from the present
+           * dimension and the intrinsic aspect ratio.
+           * Otherwise, the missing dimension is taken from the default
+           * object size. 
+           */
+          if (image_width)
+            *concrete_width = image_width;
+          else if (image_aspect)
+            *concrete_width = image_height * image_aspect;
+          else
+            *concrete_width = default_width;
 
-      if (image_height)
-        *concrete_height = image_height;
-      else if (image_aspect)
-        *concrete_height = image_width / image_aspect;
-      else
-        *concrete_height = default_height;
+          if (image_height)
+            *concrete_height = image_height;
+          else if (image_aspect)
+            *concrete_height = image_width / image_aspect;
+          else
+            *concrete_height = default_height;
+        }
 
       return;
     }
@@ -423,6 +426,7 @@ gtk_css_image_get_parser_type (GtkCssParser *parser)
   } image_types[] = {
     { "url", _gtk_css_image_url_get_type },
     { "-gtk-gradient", _gtk_css_image_gradient_get_type },
+    { "-gtk-icontheme", _gtk_css_image_icon_theme_get_type },
     { "-gtk-scaled", _gtk_css_image_scaled_get_type },
     { "-gtk-win32-theme-part", _gtk_css_image_win32_get_type },
     { "linear-gradient", _gtk_css_image_linear_get_type },

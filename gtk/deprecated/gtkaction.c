@@ -32,11 +32,9 @@
  * @Title: GtkAction
  * @See_also: #GtkActionGroup, #GtkUIManager, #GtkActivatable
  *
- * <warning>
- * In GTK+ 3.10, GtkAction has been deprecated. Use #GAction instead, and
- * associate actions with #GtkActionable widgets. Use #GMenuModel for creating
- * menus with gtk_menu_new_from_model().
- * </warning>
+ * > In GTK+ 3.10, GtkAction has been deprecated. Use #GAction
+ * > instead, and associate actions with #GtkActionable widgets. Use
+ * > #GMenuModel for creating menus with gtk_menu_new_from_model().
  *
  * Actions represent operations that the user can be perform, along with
  * some information how it should be presented in the interface. Each action
@@ -45,28 +43,35 @@
  *
  * As well as the callback that is called when the action gets activated,
  * the following also gets associated with the action:
- * <itemizedlist>
- *   <listitem><para>a name (not translated, for path lookup)</para></listitem>
- *   <listitem><para>a label (translated, for display)</para></listitem>
- *   <listitem><para>an accelerator</para></listitem>
- *   <listitem><para>whether label indicates a stock id</para></listitem>
- *   <listitem><para>a tooltip (optional, translated)</para></listitem>
- *   <listitem><para>a toolbar label (optional, shorter than label)</para></listitem>
- * </itemizedlist>
+ *
+ * - a name (not translated, for path lookup)
+ *
+ * - a label (translated, for display)
+ *
+ * - an accelerator
+ *
+ * - whether label indicates a stock id
+ *
+ * - a tooltip (optional, translated)
+ *
+ * - a toolbar label (optional, shorter than label)
+ *
+ *
  * The action will also have some state information:
- * <itemizedlist>
- *   <listitem><para>visible (shown/hidden)</para></listitem>
- *   <listitem><para>sensitive (enabled/disabled)</para></listitem>
- * </itemizedlist>
- * Apart from regular actions, there are <link linkend="GtkToggleAction">toggle
- * actions</link>, which can be toggled between two states and <link
- * linkend="GtkRadioAction">radio actions</link>, of which only one in a group
- * can be in the "active" state. Other actions can be implemented as #GtkAction
+ *
+ * - visible (shown/hidden)
+ *
+ * - sensitive (enabled/disabled)
+ *
+ * Apart from regular actions, there are [toggle actions][GtkToggleAction],
+ * which can be toggled between two states and
+ * [radio actions][GtkRadioAction], of which only one in a group
+ * can be in the “active” state. Other actions can be implemented as #GtkAction
  * subclasses.
  *
  * Each action can have one or more proxy widgets. To act as an action proxy,
  * widget needs to implement #GtkActivatable interface. Proxies mirror the state
- * of the action and should change when the action's state changes. Properties
+ * of the action and should change when the action’s state changes. Properties
  * that are always mirrored by proxies are #GtkAction:sensitive and
  * #GtkAction:visible. #GtkAction:gicon, #GtkAction:icon-name, #GtkAction:label,
  * #GtkAction:short-label and #GtkAction:stock-id properties are only mirorred
@@ -230,7 +235,7 @@ gtk_action_class_init (GtkActionClass *klass)
    *
    * A unique name for the action.
    *
-   * Deprecated: 3.10: Use #GAction::name instead
+   * Deprecated: 3.10: Use #GAction:name instead
    */
   g_object_class_install_property (gobject_class,
 				   PROP_NAME,
@@ -452,7 +457,7 @@ gtk_action_class_init (GtkActionClass *klass)
    *
    * Whether the action is enabled.
    *
-   * Deprecated: 3.10: Use #GAction::enabled and #GSimpleAction::enabled
+   * Deprecated: 3.10: Use #GAction:enabled and #GSimpleAction:enabled
    * instead
    */
   g_object_class_install_property (gobject_class,
@@ -524,7 +529,7 @@ gtk_action_class_init (GtkActionClass *klass)
    *
    * Since: 2.4
    *
-   * Deprecated: 3.10: Use #GSimpleAction:activate instead
+   * Deprecated: 3.10: Use #GSimpleAction::activate instead
    */
   action_signals[ACTIVATE] =
     g_signal_new (I_("activate"),
@@ -613,10 +618,10 @@ gtk_action_buildable_get_name (GtkBuildable *buildable)
  * Creates a new #GtkAction object. To add the action to a
  * #GtkActionGroup and set the accelerator for the action,
  * call gtk_action_group_add_action_with_accel().
- * See <xref linkend="XML-UI"/> for information on allowed action
+ * See the [UI Definition section][XML-UI] for information on allowed action
  * names.
  *
- * Return value: a new #GtkAction
+ * Returns: a new #GtkAction
  *
  * Since: 2.4
  *
@@ -852,14 +857,12 @@ disconnect_proxy (GtkAction *action,
  * 
  * Updates the visibility of @proxy from the visibility of @action
  * according to the following rules:
- * <itemizedlist>
- * <listitem><para>if @action is invisible, @proxy is too
- * </para></listitem>
- * <listitem><para>if @empty is %TRUE, hide @proxy unless the "hide-if-empty" 
+
+ * - if @action is invisible, @proxy is too
+ *
+ * - if @empty is %TRUE, hide @proxy unless the “hide-if-empty”
  *   property of @action indicates otherwise
- * </para></listitem>
- * </itemizedlist>
- * 
+ *
  * This function is used in the implementation of #GtkUIManager.
  *
  * Deprecated: 3.10
@@ -917,7 +920,7 @@ _gtk_action_emit_activate (GtkAction *action)
  * gtk_action_activate:
  * @action: the action object
  *
- * Emits the "activate" signal on the specified action, if it isn't 
+ * Emits the “activate” signal on the specified action, if it isn't
  * insensitive. This gets called by the proxy widgets when they get 
  * activated.
  *
@@ -1102,7 +1105,7 @@ _gtk_action_remove_from_proxy_list (GtkAction     *action,
  * Returns the proxy widgets for an action.
  * See also gtk_activatable_get_related_action().
  *
- * Return value: (element-type GtkWidget) (transfer none): a #GSList of proxy widgets. The list is owned by GTK+
+ * Returns: (element-type GtkWidget) (transfer none): a #GSList of proxy widgets. The list is owned by GTK+
  * and must not be modified.
  *
  * Since: 2.4
@@ -1123,7 +1126,7 @@ gtk_action_get_proxies (GtkAction *action)
  * 
  * Returns the name of the action.
  * 
- * Return value: the name of the action. The string belongs to GTK+ and should not
+ * Returns: the name of the action. The string belongs to GTK+ and should not
  *   be freed.
  *
  * Since: 2.4
@@ -1144,12 +1147,12 @@ gtk_action_get_name (GtkAction *action)
  * 
  * Returns whether the action is effectively sensitive.
  *
- * Return value: %TRUE if the action and its associated action group 
+ * Returns: %TRUE if the action and its associated action group 
  * are both sensitive.
  *
  * Since: 2.4
  *
- * Deprecated: 3.10: Use g_simple_action_get_enabled() on a #GSimpleAction
+ * Deprecated: 3.10: Use g_action_get_enabled() on a #GAction
  * instead
  **/
 gboolean
@@ -1168,15 +1171,15 @@ gtk_action_is_sensitive (GtkAction *action)
  * gtk_action_get_sensitive:
  * @action: the action object
  * 
- * Returns whether the action itself is sensitive. Note that this doesn't 
+ * Returns whether the action itself is sensitive. Note that this doesn’t 
  * necessarily mean effective sensitivity. See gtk_action_is_sensitive() 
  * for that.
  *
- * Return value: %TRUE if the action itself is sensitive.
+ * Returns: %TRUE if the action itself is sensitive.
  *
  * Since: 2.4
  *
- * Deprecated: 3.10: Use g_simple_action_get_enabled() on a #GSimpleAction
+ * Deprecated: 3.10: Use g_action_get_enabled() on a #GAction
  * instead
  **/
 gboolean
@@ -1192,8 +1195,8 @@ gtk_action_get_sensitive (GtkAction *action)
  * @action: the action object
  * @sensitive: %TRUE to make the action sensitive
  * 
- * Sets the ::sensitive property of the action to @sensitive. Note that 
- * this doesn't necessarily mean effective sensitivity. See 
+ * Sets the :sensitive property of the action to @sensitive. Note that 
+ * this doesn’t necessarily mean effective sensitivity. See 
  * gtk_action_is_sensitive() 
  * for that.
  *
@@ -1224,7 +1227,7 @@ gtk_action_set_sensitive (GtkAction *action,
  * 
  * Returns whether the action is effectively visible.
  *
- * Return value: %TRUE if the action and its associated action group 
+ * Returns: %TRUE if the action and its associated action group 
  * are both visible.
  *
  * Since: 2.4
@@ -1248,11 +1251,11 @@ gtk_action_is_visible (GtkAction *action)
  * gtk_action_get_visible:
  * @action: the action object
  * 
- * Returns whether the action itself is visible. Note that this doesn't 
+ * Returns whether the action itself is visible. Note that this doesn’t 
  * necessarily mean effective visibility. See gtk_action_is_sensitive() 
  * for that.
  *
- * Return value: %TRUE if the action itself is visible.
+ * Returns: %TRUE if the action itself is visible.
  *
  * Since: 2.4
  *
@@ -1272,8 +1275,8 @@ gtk_action_get_visible (GtkAction *action)
  * @action: the action object
  * @visible: %TRUE to make the action visible
  * 
- * Sets the ::visible property of the action to @visible. Note that 
- * this doesn't necessarily mean effective visibility. See 
+ * Sets the :visible property of the action to @visible. Note that 
+ * this doesn’t necessarily mean effective visibility. See 
  * gtk_action_is_visible() 
  * for that.
  *
@@ -1353,7 +1356,7 @@ gtk_action_get_is_important (GtkAction *action)
  * @action: a #GtkAction
  * @always_show: %TRUE if menuitem proxies should always show their image
  *
- * Sets whether @action<!-- -->'s menu item proxies will ignore the
+ * Sets whether @action's menu item proxies will ignore the
  * #GtkSettings:gtk-menu-images setting and always show their image, if available.
  *
  * Use this if the menu item would be useless or hard to use
@@ -1388,7 +1391,7 @@ gtk_action_set_always_show_image (GtkAction *action,
  * gtk_action_get_always_show_image:
  * @action: a #GtkAction
  *
- * Returns whether @action<!-- -->'s menu item proxies will always
+ * Returns whether @action's menu item proxies will always
  * show their image, if available.
  *
  * Returns: %TRUE if the menu item proxies will always show their image
@@ -1640,7 +1643,7 @@ gtk_action_get_visible_vertical (GtkAction *action)
  * Since: 2.16
  *
  * Deprecated: 3.10: Use #GAction instead, and set tooltips on associated
- * #GActionable widgets with gtk_widget_set_tooltip_text()
+ * #GtkActionable widgets with gtk_widget_set_tooltip_text()
  */
 void 
 gtk_action_set_tooltip (GtkAction   *action,
@@ -1668,7 +1671,7 @@ gtk_action_set_tooltip (GtkAction   *action,
  * Since: 2.16
  *
  * Deprecated: 3.10: Use #GAction instead, and get tooltips from associated
- * #GActionable widgets with gtk_widget_get_tooltip_text()
+ * #GtkActionable widgets with gtk_widget_get_tooltip_text()
  */
 const gchar *
 gtk_action_get_tooltip (GtkAction *action)
@@ -1832,7 +1835,7 @@ gtk_action_set_gicon (GtkAction *action,
  *
  * Gets the gicon of @action.
  *
- * Returns: (transfer none): The action's #GIcon if one is set.
+ * Returns: (transfer none): The action’s #GIcon if one is set.
  *
  * Since: 2.16
  *
@@ -1992,7 +1995,7 @@ gtk_action_set_accel_group (GtkAction     *action,
  *
  * Since multiple proxies may independently trigger the installation
  * of the accelerator, the @action counts the number of times this
- * function has been called and doesn't remove the accelerator until
+ * function has been called and doesn’t remove the accelerator until
  * gtk_action_disconnect_accelerator() has been called as many times.
  *
  * Since: 2.4
@@ -2057,7 +2060,7 @@ gtk_action_disconnect_accelerator (GtkAction *action)
  * item or the toolbar item it creates, this function returns an
  * instance of that menu.
  *
- * Return value: (transfer none): the menu item provided by the
+ * Returns: (transfer none): the menu item provided by the
  *               action, or %NULL.
  *
  * Since: 2.12

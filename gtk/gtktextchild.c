@@ -73,6 +73,12 @@
       }                                                                 \
   } G_STMT_END
 
+#define PIXBUF_SEG_SIZE ((unsigned) (G_STRUCT_OFFSET (GtkTextLineSegment, body) \
+        + sizeof (GtkTextPixbuf)))
+
+#define WIDGET_SEG_SIZE ((unsigned) (G_STRUCT_OFFSET (GtkTextLineSegment, body) \
+        + sizeof (GtkTextChildBody)))
+
 static GtkTextLineSegment *
 pixbuf_segment_cleanup_func (GtkTextLineSegment *seg,
                              GtkTextLine        *line)
@@ -89,7 +95,7 @@ pixbuf_segment_delete_func (GtkTextLineSegment *seg,
   if (seg->body.pixbuf.pixbuf)
     g_object_unref (seg->body.pixbuf.pixbuf);
 
-  g_free (seg);
+  g_slice_free1 (PIXBUF_SEG_SIZE, seg);
 
   return 0;
 }
@@ -120,15 +126,12 @@ const GtkTextLineSegmentClass gtk_text_pixbuf_type = {
 
 };
 
-#define PIXBUF_SEG_SIZE ((unsigned) (G_STRUCT_OFFSET (GtkTextLineSegment, body) \
-        + sizeof (GtkTextPixbuf)))
-
 GtkTextLineSegment *
 _gtk_pixbuf_segment_new (GdkPixbuf *pixbuf)
 {
   GtkTextLineSegment *seg;
 
-  seg = g_malloc (PIXBUF_SEG_SIZE);
+  seg = g_slice_alloc (PIXBUF_SEG_SIZE);
 
   seg->type = &gtk_text_pixbuf_type;
 
@@ -218,15 +221,12 @@ const GtkTextLineSegmentClass gtk_text_child_type = {
   child_segment_check_func                               /* checkFunc */
 };
 
-#define WIDGET_SEG_SIZE ((unsigned) (G_STRUCT_OFFSET (GtkTextLineSegment, body) \
-        + sizeof (GtkTextChildBody)))
-
 GtkTextLineSegment *
 _gtk_widget_segment_new (GtkTextChildAnchor *anchor)
 {
   GtkTextLineSegment *seg;
 
-  seg = g_malloc (WIDGET_SEG_SIZE);
+  seg = g_slice_alloc (WIDGET_SEG_SIZE);
 
   seg->type = &gtk_text_child_type;
 
@@ -333,7 +333,7 @@ gtk_text_child_anchor_class_init (GtkTextChildAnchorClass *klass)
  * To perform the creation and insertion in one step, use the
  * convenience function gtk_text_buffer_create_child_anchor().
  * 
- * Return value: a new #GtkTextChildAnchor
+ * Returns: a new #GtkTextChildAnchor
  **/
 GtkTextChildAnchor*
 gtk_text_child_anchor_new (void)
@@ -370,8 +370,8 @@ gtk_text_child_anchor_finalize (GObject *obj)
         }
   
       g_slist_free (seg->body.child.widgets);
-  
-      g_free (seg);
+
+      g_slice_free1 (WIDGET_SEG_SIZE, seg);
     }
 
   anchor->segment = NULL;
@@ -387,7 +387,7 @@ gtk_text_child_anchor_finalize (GObject *obj)
  * The returned list should be freed with g_list_free().
  *
  *
- * Return value: (element-type GtkWidget) (transfer container): list of widgets anchored at @anchor
+ * Returns: (element-type GtkWidget) (transfer container): list of widgets anchored at @anchor
  **/
 GList*
 gtk_text_child_anchor_get_widgets (GtkTextChildAnchor *anchor)
@@ -422,10 +422,10 @@ gtk_text_child_anchor_get_widgets (GtkTextChildAnchor *anchor)
  * the buffer. Keep in mind that the child anchor will be
  * unreferenced when removed from the buffer, so you need to
  * hold your own reference (with g_object_ref()) if you plan
- * to use this function &mdash; otherwise all deleted child anchors
+ * to use this function — otherwise all deleted child anchors
  * will also be finalized.
  * 
- * Return value: %TRUE if the child anchor has been deleted from its buffer
+ * Returns: %TRUE if the child anchor has been deleted from its buffer
  **/
 gboolean
 gtk_text_child_anchor_get_deleted (GtkTextChildAnchor *anchor)

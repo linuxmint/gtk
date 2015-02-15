@@ -22,7 +22,10 @@ demos =						\
 	editable_cells.c			\
 	entry_buffer.c				\
 	entry_completion.c			\
+	event_axes.c				\
 	expander.c  				\
+	gestures.c				\
+	headerbar.c				\
 	hypertext.c				\
 	iconview.c				\
 	iconview_edit.c				\
@@ -30,6 +33,7 @@ demos =						\
 	infobar.c				\
 	links.c					\
 	listbox.c				\
+	flowbox.c				\
 	list_store.c				\
 	menus.c					\
 	offscreen_window.c			\
@@ -38,6 +42,7 @@ demos =						\
 	panes.c					\
 	pickers.c				\
 	pixbufs.c				\
+	popover.c				\
 	printing.c				\
 	revealer.c				\
 	rotated_text.c				\
@@ -71,6 +76,9 @@ LDADDS = \
 	-lm
 
 bin_PROGRAMS = gtk3-demo gtk3-demo-application
+
+desktopdir = $(datadir)/applications
+dist_desktop_DATA = gtk3-demo.desktop
 
 BUILT_SOURCES = demos.h demo_resources.c
 
@@ -108,6 +116,7 @@ demo_resources.c: demo.gresource.xml $(RESOURCES)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/demo.gresource.xml
 
 RESOURCES=	$(demos)			\
+		main.ui				\
 		application.ui			\
 		demo.ui				\
 		menus.ui			\
@@ -115,6 +124,7 @@ RESOURCES=	$(demos)			\
 		revealer.ui			\
 		theming.ui			\
 		listbox.ui			\
+		popover.ui			\
 		alphatest.png			\
 		apple-red.png			\
 		brick.png			\
@@ -130,9 +140,6 @@ RESOURCES=	$(demos)			\
 		gnome-gmush.png			\
 		gnome-gsame.png			\
 		gnu-keys.png			\
-		gtk-logo-24.png			\
-		gtk-logo-48.png			\
-		gtk-logo-old.png		\
 		messages.txt			\
 		css_accordion.css		\
 		css_basics.css			\
@@ -141,6 +148,35 @@ RESOURCES=	$(demos)			\
 		css_shadows.css			\
 		cssview.css			\
 		reset.css
+
+iconthemedir = $(datadir)/icons/hicolor
+
+appsicon16dir = $(iconthemedir)/16x16/apps
+appsicon22dir = $(iconthemedir)/22x22/apps
+appsicon24dir = $(iconthemedir)/24x24/apps
+appsicon32dir = $(iconthemedir)/32x32/apps
+appsicon48dir = $(iconthemedir)/48x48/apps
+appsicon256dir = $(iconthemedir)/256x256/apps
+
+dist_appsicon16_DATA = data/16x16/gtk3-demo.png
+dist_appsicon22_DATA = data/22x22/gtk3-demo.png
+dist_appsicon24_DATA = data/24x24/gtk3-demo.png
+dist_appsicon32_DATA = data/32x32/gtk3-demo.png
+dist_appsicon48_DATA = data/48x48/gtk3-demo.png
+dist_appsicon256_DATA = data/256x256/gtk3-demo.png
+
+update_icon_cache = $(GTK_UPDATE_ICON_CACHE) --ignore-theme-index --force
+
+install-data-hook: install-update-icon-cache
+uninstall-hook: uninstall-update-icon-cache
+
+install-update-icon-cache:
+	$(AM_V_at)$(POST_INSTALL)
+	test -n "$(DESTDIR)" || $(update_icon_cache) "$(iconthemedir)"
+
+uninstall-update-icon-cache:
+	$(AM_V_at)$(POST_UNINSTALL)
+	test -n "$(DESTDIR)" || $(update_icon_cache) "$(iconthemedir)"
 
 DISTCLEANFILES = demos.h
 

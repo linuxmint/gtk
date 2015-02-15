@@ -7,8 +7,8 @@
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
 <link rel="up" href="migrating.html" title="Part V. Migrating from Previous Versions of GTK+">
 <link rel="prev" href="migrating.html" title="Part V. Migrating from Previous Versions of GTK+">
-<link rel="next" href="ch24s02.html" title="Changes that need to be done at the time of the switch">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<link rel="next" href="ch25s02.html" title="Changes that need to be done at the time of the switch">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -17,7 +17,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="migrating.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="migrating.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="ch24s02.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="ch25s02.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="chapter">
 <div class="titlepage"><div><div><h2 class="title">
@@ -32,25 +32,25 @@
 <dt><span class="section"><a href="gtk-migrating-2-to-3.html#id-1.6.3.3.7">Use GIO for launching applications</a></span></dt>
 <dt><span class="section"><a href="gtk-migrating-2-to-3.html#id-1.6.3.3.8">Use cairo for drawing</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="ch24s02.html">Changes that need to be done at the time of the switch</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html">Changes that need to be done at the time of the switch</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.3">Replace size_request by get_preferred_width/height</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.4">Replace GdkRegion by cairo_region_t</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.5">Replace GdkPixmap by cairo surfaces</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.6">Replace GdkColormap by GdkVisual</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.7">GdkDrawable is gone</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.8">Event filtering</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.9">Backend-specific code</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.10">GtkPlug and GtkSocket</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.11">The GtkWidget::draw signal</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.12">GtkProgressBar orientation</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.13">Check your expand and fill flags</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.14">Scrolling changes</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.15">GtkObject is gone</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.16">GtkEntryCompletion signal parameters</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.17">Resize grips</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.18">Prevent mixed linkage</a></span></dt>
-<dt><span class="section"><a href="ch24s02.html#id-1.6.3.4.19">Install GTK+ modules in the right place</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.3">Replace size_request by get_preferred_width/height</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.4">Replace GdkRegion by cairo_region_t</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.5">Replace GdkPixmap by cairo surfaces</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.6">Replace GdkColormap by GdkVisual</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.7">GdkDrawable is gone</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.8">Event filtering</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.9">Backend-specific code</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.10">GtkPlug and GtkSocket</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.11">The GtkWidget::draw signal</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.12">GtkProgressBar orientation</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.13">Check your expand and fill flags</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.14">Scrolling changes</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.15">GtkObject is gone</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.16">GtkEntryCompletion signal parameters</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.17">Resize grips</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.18">Prevent mixed linkage</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html#id-1.6.3.4.19">Install GTK+ modules in the right place</a></span></dt>
 </dl></dd>
 </dl></div>
 <p>
@@ -95,7 +95,7 @@
 </tr>
 <tr>
 <td><p><span class="term"><code class="filename">gtk/gtkx.h</code></span></p></td>
-<td>for the X-specfic widgets <a class="link" href="gtk3-GtkSocket.html#GtkSocket" title="struct GtkSocket"><span class="type">GtkSocket</span></a> and <a class="link" href="gtk3-GtkPlug.html#GtkPlug" title="struct GtkPlug"><span class="type">GtkPlug</span></a>
+<td>for the X-specfic widgets <a class="link" href="GtkSocket.html" title="GtkSocket"><span class="type">GtkSocket</span></a> and <a class="link" href="GtkPlug.html" title="GtkPlug"><span class="type">GtkPlug</span></a>
 </td>
 </tr>
 <tr>
@@ -283,7 +283,7 @@
         <a class="link" href="gtk3-Filesystem-utilities.html#gtk-show-uri" title="gtk_show_uri ()"><code class="function">gtk_show_uri()</code></a>; as an added benefit, your application will henceforth
         respect the users preference for what application to use.</li>
 <li class="listitem">If you are launching a regular, installed application that
-        has a desktop file, it is best to use GIOs <a href="http://library.gnome.org/devel/gio/unstable/GAppInfo.html"><span class="type">GAppInfo</span></a> with a suitable
+        has a desktop file, it is best to use GIOs <a href="https://developer.gnome.org/gio/unstable/GAppInfo.html"><span class="type">GAppInfo</span></a> with a suitable
         launch context.
         <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
@@ -307,20 +307,20 @@
 16</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="usertype">GAppInfo</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">info</span><span class="symbol">;</span>
 <span class="usertype">GAppLaunchContext</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">context</span><span class="symbol">;</span>
-<span class="usertype">GError</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">=</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">;</span>
+<span class="usertype">GError</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">=</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">;</span>
 
-<span class="normal">info </span><span class="symbol">=</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="http://library.gnome.org/devel/gio/unstable/GAppInfo.html">GAppInfo</a></span><span class="symbol">*)</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/gio/unstable/gio-Desktop-file-based-GAppInfo.html#g-desktop-app-info-new">g_desktop_app_info_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"epiphany.desktop"</span><span class="symbol">);</span>
-<span class="normal">context </span><span class="symbol">=</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="http://library.gnome.org/devel/gio/unstable/GAppInfo.html#GAppLaunchContext">GAppLaunchContext</a></span><span class="symbol">*)</span><span class="normal"> </span><span class="function"><a href="http://developer.gnome.org/gdk2/GdkDisplay.html#gdk-display-get-app-launch-context">gdk_display_get_app_launch_context</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">display</span><span class="symbol">);</span>
-<span class="function"><a href="http://library.gnome.org/devel/gio/unstable/GAppInfo.html#g-app-info-launch">g_app_info_launch</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">info</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> context</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">error</span><span class="symbol">);</span>
+<span class="normal">info </span><span class="symbol">=</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="https://developer.gnome.org/gio/unstable/GAppInfo.html">GAppInfo</a></span><span class="symbol">*)</span><span class="normal"> </span><span class="function"><a href="https://developer.gnome.org/gio/unstable/gio-Desktop-file-based-GAppInfo.html#g-desktop-app-info-new">g_desktop_app_info_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"epiphany.desktop"</span><span class="symbol">);</span>
+<span class="normal">context </span><span class="symbol">=</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="https://developer.gnome.org/gio/unstable/GAppInfo.html#GAppLaunchContext">GAppLaunchContext</a></span><span class="symbol">*)</span><span class="normal"> </span><span class="function"><a href="http://developer.gnome.org/gdk2/GdkDisplay.html#gdk-display-get-app-launch-context">gdk_display_get_app_launch_context</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">display</span><span class="symbol">);</span>
+<span class="function"><a href="https://developer.gnome.org/gio/unstable/GAppInfo.html#g-app-info-launch">g_app_info_launch</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">info</span><span class="symbol">,</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> context</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">error</span><span class="symbol">);</span>
 
 <span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error</span><span class="symbol">)</span>
 <span class="normal">  </span><span class="cbracket">{</span>
-<span class="normal">    </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Message-Logging.html#g-warning">g_warning</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Failed to launch epiphany: %s"</span><span class="symbol">,</span><span class="normal"> error</span><span class="symbol">-&gt;</span><span class="normal">message</span><span class="symbol">);</span>
-<span class="normal">    </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Error-Reporting.html#g-error-free">g_error_free</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error</span><span class="symbol">);</span>
+<span class="normal">    </span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Message-Logging.html#g-warning">g_warning</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Failed to launch epiphany: %s"</span><span class="symbol">,</span><span class="normal"> error</span><span class="symbol">-&gt;</span><span class="normal">message</span><span class="symbol">);</span>
+<span class="normal">    </span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Error-Reporting.html#g-error-free">g_error_free</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="cbracket">}</span>
 
-<span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">info</span><span class="symbol">);</span>
-<span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">context</span><span class="symbol">);</span></pre></td>
+<span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">info</span><span class="symbol">);</span>
+<span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">context</span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -329,13 +329,13 @@
         Remember that you have to include
         <code class="filename">gio/gdesktopappinfo.h</code>
         and use the <code class="filename">gio-unix-2.0</code> pkg-config file
-        when using <a href="http://library.gnome.org/devel/gio/unstable/gio-Desktop-file-based-GAppInfo.html#g-desktop-app-info-new"><code class="function">g_desktop_app_info_new()</code></a>.
+        when using <a href="https://developer.gnome.org/gio/unstable/gio-Desktop-file-based-GAppInfo.html#g-desktop-app-info-new"><code class="function">g_desktop_app_info_new()</code></a>.
         </li>
 <li class="listitem">If you are launching a custom commandline, you can
-        still use <a href="http://library.gnome.org/devel/gio/unstable/GAppInfo.html#g-app-info-launch"><code class="function">g_app_info_launch()</code></a> with a GAppInfo that is constructed
-        with <a href="http://library.gnome.org/devel/gio/unstable/GAppInfo.html#g-app-info-create-from-commandline"><code class="function">g_app_info_create_from_commandline()</code></a>, or you can use the
+        still use <a href="https://developer.gnome.org/gio/unstable/GAppInfo.html#g-app-info-launch"><code class="function">g_app_info_launch()</code></a> with a GAppInfo that is constructed
+        with <a href="https://developer.gnome.org/gio/unstable/GAppInfo.html#g-app-info-create-from-commandline"><code class="function">g_app_info_create_from_commandline()</code></a>, or you can use the
         more lowlevel <code class="literal">g_spawn</code> family of functions
-        (e.g. <a href="http://library.gnome.org/devel/glib/unstable/glib-Spawning-Processes.html#g-spawn-command-line-async"><code class="function">g_spawn_command_line_async()</code></a>), and pass <code class="envar">DISPLAY</code>
+        (e.g. <a href="https://developer.gnome.org/glib/unstable/glib-Spawning-Processes.html#g-spawn-command-line-async"><code class="function">g_spawn_command_line_async()</code></a>), and pass <code class="envar">DISPLAY</code>
         in the environment. <a href="http://developer.gnome.org/gdk2/GdkScreen.html#gdk-screen-make-display-name"><code class="function">gdk_screen_make_display_name()</code></a> can be
         used to find the right value for the <code class="envar">DISPLAY</code>
         environment variable.
@@ -366,7 +366,7 @@
       was replaced.
     </p>
 <div class="example">
-<a name="id-1.6.3.3.8.5"></a><p class="title"><b>Example 118. Drawing a GdkPixbuf onto a GdkWindow</b></p>
+<a name="id-1.6.3.3.8.5"></a><p class="title"><b>Example 6. Drawing a GdkPixbuf onto a GdkWindow</b></p>
 <div class="example-contents">
 <p>
            Drawing a pixbuf onto a drawable used to be done like this:
@@ -389,8 +389,8 @@
 <span class="normal">                 pixbuf</span><span class="symbol">,</span>
 <span class="normal">                 </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span>
 <span class="normal">                 x</span><span class="symbol">,</span><span class="normal"> y</span><span class="symbol">,</span>
-<span class="normal">                 </span><span class="function"><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#gdk-pixbuf-get-width">gdk_pixbuf_get_width</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">pixbuf</span><span class="symbol">),</span>
-<span class="normal">                 </span><span class="function"><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#gdk-pixbuf-get-height">gdk_pixbuf_get_height</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">pixbuf</span><span class="symbol">),</span>
+<span class="normal">                 </span><span class="function">gdk_pixbuf_get_width</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">pixbuf</span><span class="symbol">),</span>
+<span class="normal">                 </span><span class="function">gdk_pixbuf_get_height</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">pixbuf</span><span class="symbol">),</span>
 <span class="normal">                 GDK_RGB_DITHER_NORMAL</span><span class="symbol">,</span>
 <span class="normal">                 </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">);</span></pre></td>
       </tr>
@@ -427,7 +427,7 @@
 </div>
 </div>
 <br class="example-break"><div class="example">
-<a name="id-1.6.3.3.8.6"></a><p class="title"><b>Example 119. Drawing a tiled GdkPixmap to a GdkWindow</b></p>
+<a name="id-1.6.3.3.8.6"></a><p class="title"><b>Example 7. Drawing a tiled GdkPixmap to a GdkWindow</b></p>
 <div class="example-contents">
 <p>
           Tiled pixmaps are often used for drawing backgrounds.
@@ -460,9 +460,9 @@
 <span class="function"><a href="http://library.gnome.org/devel/gdk3/gdk2-Graphics-Contexts.html#gdk-gc-set-fill">gdk_gc_set_fill</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">gc</span><span class="symbol">,</span><span class="normal"> GDK_TILED</span><span class="symbol">);</span>
 <span class="function"><a href="http://library.gnome.org/devel/gdk3/gdk2-Graphics-Contexts.html#gdk-gc-set-ts-origin">gdk_gc_set_ts_origin</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">gc</span><span class="symbol">,</span><span class="normal"> x_origin</span><span class="symbol">,</span><span class="normal"> y_origin</span><span class="symbol">);</span>
 <span class="comment">/* use */</span>
-<span class="function"><a href="http://library.gnome.org/devel/gdk3/gdk2-Drawing-Primitives.html#gdk-draw-rectangle">gdk_draw_rectangle</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">,</span><span class="normal"> gc</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> width</span><span class="symbol">,</span><span class="normal"> height</span><span class="symbol">);</span>
+<span class="function"><a href="http://library.gnome.org/devel/gdk3/gdk2-Drawing-Primitives.html#gdk-draw-rectangle">gdk_draw_rectangle</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">,</span><span class="normal"> gc</span><span class="symbol">,</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> width</span><span class="symbol">,</span><span class="normal"> height</span><span class="symbol">);</span>
 <span class="comment">/* restore */</span>
-<span class="function"><a href="http://library.gnome.org/devel/gdk3/gdk2-Graphics-Contexts.html#gdk-gc-set-tile">gdk_gc_set_tile</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">gc</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="function"><a href="http://library.gnome.org/devel/gdk3/gdk2-Graphics-Contexts.html#gdk-gc-set-tile">gdk_gc_set_tile</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">gc</span><span class="symbol">,</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
 <span class="function"><a href="http://library.gnome.org/devel/gdk3/gdk2-Graphics-Contexts.html#gdk-gc-set-fill">gdk_gc_set_fill</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">gc</span><span class="symbol">,</span><span class="normal"> GDK_SOLID</span><span class="symbol">);</span>
 <span class="function"><a href="http://library.gnome.org/devel/gdk3/gdk2-Graphics-Contexts.html#gdk-gc-set-ts-origin">gdk_gc_set_ts_origin</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">gc</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">);</span></pre></td>
       </tr>
@@ -512,7 +512,7 @@ Another alternative is to use pixbufs instead of surfaces with
 </div>
 </div>
 <br class="example-break"><div class="example">
-<a name="id-1.6.3.3.8.7"></a><p class="title"><b>Example 120. Drawing a PangoLayout to a clipped area</b></p>
+<a name="id-1.6.3.3.8.7"></a><p class="title"><b>Example 8. Drawing a PangoLayout to a clipped area</b></p>
 <div class="example-contents">
 <p>
           Drawing layouts clipped is often used to avoid overdraw or to
@@ -539,7 +539,7 @@ Another alternative is to use pixbufs instead of surfaces with
 <span class="comment">/* use */</span>
 <span class="function"><a href="http://library.gnome.org/devel/gdk3/gdk2-Drawing-Primitives.html#gdk-draw-layout">gdk_draw_layout</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">drawable</span><span class="symbol">,</span><span class="normal"> gc</span><span class="symbol">,</span><span class="normal"> x</span><span class="symbol">,</span><span class="normal"> y</span><span class="symbol">,</span><span class="normal"> layout</span><span class="symbol">);</span>
 <span class="comment">/* restore */</span>
-<span class="function"><a href="http://library.gnome.org/devel/gdk3/gdk2-Graphics-Contexts.html#gdk-gc-set-clip-rectangle">gdk_gc_set_clip_rectangle</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">gc</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span></pre></td>
+<span class="function"><a href="http://library.gnome.org/devel/gdk3/gdk2-Graphics-Contexts.html#gdk-gc-set-clip-rectangle">gdk_gc_set_clip_rectangle</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">gc</span><span class="symbol">,</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -759,6 +759,6 @@ Another alternative is to use pixbufs instead of surfaces with
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

@@ -65,47 +65,13 @@ static void
 gtk_css_value_string_print (const GtkCssValue *value,
                             GString           *str)
 {
-  char *string = value->string;
-  gsize len;
-
-  if (string == NULL)
+  if (value->string == NULL)
     {
       g_string_append (str, "none");
       return;
     }
 
-  g_string_append_c (str, '"');
-
-  do {
-    len = strcspn (string, "\"\n\r\f");
-    g_string_append_len (str, string, len);
-    string += len;
-    switch (*string)
-      {
-      case '\0':
-        break;
-      case '\n':
-        g_string_append (str, "\\A ");
-        break;
-      case '\r':
-        g_string_append (str, "\\D ");
-        break;
-      case '\f':
-        g_string_append (str, "\\C ");
-        break;
-      case '\"':
-        g_string_append (str, "\\\"");
-        break;
-      case '\\':
-        g_string_append (str, "\\\\");
-        break;
-      default:
-        g_assert_not_reached ();
-        break;
-      }
-  } while (*string);
-
-  g_string_append_c (str, '"');
+  _gtk_css_print_string (str, value->string);
 }
 
 static void
@@ -122,7 +88,7 @@ gtk_css_value_ident_print (const GtkCssValue *value,
     switch (*string)
       {
       case '\0':
-        break;
+        goto out;
       case '\n':
         g_string_append (str, "\\A ");
         break;
@@ -145,7 +111,11 @@ gtk_css_value_ident_print (const GtkCssValue *value,
         g_assert_not_reached ();
         break;
       }
+    string++;
   } while (*string);
+
+out:
+  ;
 }
 
 static const GtkCssValueClass GTK_CSS_VALUE_STRING = {

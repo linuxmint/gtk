@@ -34,13 +34,33 @@
 
 G_BEGIN_DECLS
 
+typedef struct _GtkTargetPair GtkTargetPair;
+
+/**
+ * GtkTargetPair:
+ * @target: #GdkAtom representation of the target type
+ * @flags: #GtkTargetFlags for DND
+ * @info: an application-assigned integer ID which will
+ *     get passed as a parameter to e.g the #GtkWidget::selection-get
+ *     signal. It allows the application to identify the target
+ *     type without extensive string compares.
+ *
+ * A #GtkTargetPair is used to represent the same
+ * information as a table of #GtkTargetEntry, but in
+ * an efficient form.
+ */
+struct _GtkTargetPair
+{
+  GdkAtom   target;
+  guint     flags;
+  guint     info;
+};
+
 /**
  * GtkTargetList:
  *
- * A #GtkTargetList structure is a reference counted list
- * of #GtkTargetPair. It is used to represent the same
- * information as a table of #GtkTargetEntry, but in
- * an efficient form. This structure should be treated as
+ * A #GtkTargetList-struct is a reference counted list
+ * of #GtkTargetPair and should be treated as
  * opaque.
  */
 typedef struct _GtkTargetList  GtkTargetList;
@@ -58,7 +78,7 @@ typedef struct _GtkTargetEntry GtkTargetEntry;
  *     signal. It allows the application to identify the target
  *     type without extensive string compares.
  *
- * A #GtkTargetEntry structure represents a single type of
+ * A #GtkTargetEntry represents a single type of
  * data than can be supplied for by a widget for a selection
  * or for supplied or received during drag-and-drop.
  */

@@ -58,7 +58,7 @@
  * Creates a #GtkTextAttributes, which describes
  * a set of properties on some text.
  * 
- * Return value: a new #GtkTextAttributes,
+ * Returns: a new #GtkTextAttributes,
  *     free with gtk_text_attributes_unref().
  */
 GtkTextAttributes*
@@ -86,7 +86,7 @@ gtk_text_attributes_new (void)
  *
  * Copies @src and returns a new #GtkTextAttributes.
  *
- * Return value: a copy of @src,
+ * Returns: a copy of @src,
  *     free with gtk_text_attributes_unref()
  */
 GtkTextAttributes*
@@ -128,8 +128,10 @@ gtk_text_attributes_copy_values (GtkTextAttributes *src,
   if (dest->font)
     pango_font_description_free (dest->font);
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   if (dest->pg_bg_color)
     gdk_color_free (dest->pg_bg_color);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   if (dest->pg_bg_rgba)
     gdk_rgba_free (dest->pg_bg_rgba);
@@ -153,8 +155,10 @@ gtk_text_attributes_copy_values (GtkTextAttributes *src,
   if (src->font)
     dest->font = pango_font_description_copy (src->font);
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   if (src->pg_bg_color)
     dest->pg_bg_color = gdk_color_copy (src->pg_bg_color);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   if (src->pg_bg_rgba)
     dest->pg_bg_rgba = gdk_rgba_copy (src->pg_bg_rgba);
@@ -209,8 +213,10 @@ gtk_text_attributes_unref (GtkTextAttributes *values)
       if (values->font)
 	pango_font_description_free (values->font);
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       if (values->pg_bg_color)
 	gdk_color_free (values->pg_bg_color);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
       if (values->pg_bg_rgba)
 	gdk_rgba_free (values->pg_bg_rgba);
@@ -280,15 +286,19 @@ _gtk_text_attributes_fill_from_tags (GtkTextAttributes *dest,
 
 	  if (dest->pg_bg_color)
 	    {
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 	      gdk_color_free (dest->pg_bg_color);
 	      dest->pg_bg_color = NULL;
+G_GNUC_END_IGNORE_DEPRECATIONS
 	    }
 
 	  if (vals->pg_bg_rgba)
 	    dest->pg_bg_rgba = gdk_rgba_copy (vals->pg_bg_rgba);
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 	  if (vals->pg_bg_color)
 	    dest->pg_bg_color = gdk_color_copy (vals->pg_bg_color);
+G_GNUC_END_IGNORE_DEPRECATIONS
         }
 
       if (vals->font)

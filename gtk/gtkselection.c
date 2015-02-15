@@ -17,10 +17,10 @@
 
 /* This file implements most of the work of the ICCCM selection protocol.
  * The code was written after an intensive study of the equivalent part
- * of John Ousterhout's Tk toolkit, and does many things in much the 
+ * of John Ousterhout’s Tk toolkit, and does many things in much the 
  * same way.
  *
- * The one thing in the ICCCM that isn't fully supported here (or in Tk)
+ * The one thing in the ICCCM that isn’t fully supported here (or in Tk)
  * is side effects targets. For these to be handled properly, MULTIPLE
  * targets need to be done in the order specified. This cannot be
  * guaranteed with the way we do things, since if we are doing INCR
@@ -31,10 +31,10 @@
 
 /* Terminology note: when not otherwise specified, the term "incr" below
  * refers to the _sending_ part of the INCR protocol. The receiving
- * portion is referred to just as "retrieval". (Terminology borrowed
- * from Tk, because there is no good opposite to "retrieval" in English.
- * "send" can't be made into a noun gracefully and we're already using
- * "emission" for something else ....)
+ * portion is referred to just as “retrieval”. (Terminology borrowed
+ * from Tk, because there is no good opposite to “retrieval” in English.
+ * “send” can’t be made into a noun gracefully and we’re already using
+ * “emission” for something else ....)
  */
 
 /* The MOTIF entry widget seems to ask for the TARGETS target, then
@@ -67,8 +67,8 @@
  * #GtkClipboard provides a nicer interface to the same functionality.
  *
  * Some of the datatypes defined this section are used in
- * the #GtkClipboard and drag-and-drop API's as well. The
- * #GtkTargetEntry structure and #GtkTargetList objects represent
+ * the #GtkClipboard and drag-and-drop API’s as well. The
+ * #GtkTargetEntry and #GtkTargetList objects represent
  * lists of data types that are supported when sending or
  * receiving data. The #GtkSelectionData object is used to
  * store a chunk of data along with the data type and other
@@ -98,16 +98,22 @@
 #include "win32/gdkwin32.h"
 #endif
 
+#ifdef GDK_WINDOWING_WAYLAND
+#include <gdk/wayland/gdkwayland.h>
+#endif
+
 #undef DEBUG_SELECTION
 
 /* Maximum size of a sent chunk, in bytes. Also the default size of
    our buffers */
 #ifdef GDK_WINDOWING_X11
 #define GTK_SELECTION_MAX_SIZE(display)                                 \
+  GDK_IS_X11_DISPLAY (display) ?                                        \
   MIN(262144,                                                           \
       XExtendedMaxRequestSize (GDK_DISPLAY_XDISPLAY (display)) == 0     \
        ? XMaxRequestSize (GDK_DISPLAY_XDISPLAY (display)) - 100         \
-       : XExtendedMaxRequestSize (GDK_DISPLAY_XDISPLAY (display)) - 100)
+       : XExtendedMaxRequestSize (GDK_DISPLAY_XDISPLAY (display)) - 100)\
+  : G_MAXINT
 #else
 /* No chunks on Win32 */
 #define GTK_SELECTION_MAX_SIZE(display) G_MAXINT
@@ -214,12 +220,13 @@ static const char gtk_selection_handler_key[] = "gtk-selection-handlers";
 
 /**
  * gtk_target_list_new:
- * @targets: (array length=ntargets): Pointer to an array of #GtkTargetEntry
+ * @targets: (array length=ntargets) (allow-none): Pointer to an array
+ *   of #GtkTargetEntry
  * @ntargets: number of entries in @targets.
  * 
  * Creates a new #GtkTargetList from an array of #GtkTargetEntry.
  * 
- * Return value: (transfer full): the new #GtkTargetList.
+ * Returns: (transfer full): the new #GtkTargetList.
  **/
 GtkTargetList *
 gtk_target_list_new (const GtkTargetEntry *targets,
@@ -241,7 +248,7 @@ gtk_target_list_new (const GtkTargetEntry *targets,
  * 
  * Increases the reference count of a #GtkTargetList by one.
  *
- * Return value: the passed in #GtkTargetList.
+ * Returns: the passed in #GtkTargetList.
  **/
 GtkTargetList *
 gtk_target_list_ref (GtkTargetList *list)
@@ -345,7 +352,7 @@ init_atoms (void)
  * @list: a #GtkTargetList
  * @info: an ID that will be passed back to the application
  * 
- * Appends the text targets supported by #GtkSelection to
+ * Appends the text targets supported by #GtkSelectionData to
  * the target list. All targets are added with the same @info.
  * 
  * Since: 2.6
@@ -416,7 +423,7 @@ gtk_target_list_add_rich_text_targets (GtkTargetList  *list,
  * @writable: whether to add only targets for which GTK+ knows
  *   how to convert a pixbuf into the format
  * 
- * Appends the image targets supported by #GtkSelection to
+ * Appends the image targets supported by #GtkSelectionData to
  * the target list. All targets are added with the same @info.
  * 
  * Since: 2.6
@@ -478,7 +485,7 @@ gtk_target_list_add_image_targets (GtkTargetList *list,
  * @list: a #GtkTargetList
  * @info: an ID that will be passed back to the application
  * 
- * Appends the URI targets supported by #GtkSelection to
+ * Appends the URI targets supported by #GtkSelectionData to
  * the target list. All targets are added with the same @info.
  * 
  * Since: 2.6
@@ -563,7 +570,7 @@ gtk_target_list_remove (GtkTargetList *list,
  *
  * Looks up a given target in a #GtkTargetList.
  *
- * Return value: %TRUE if the target was found, otherwise %FALSE
+ * Returns: %TRUE if the target was found, otherwise %FALSE
  **/
 gboolean
 gtk_target_list_find (GtkTargetList *list,
@@ -603,7 +610,7 @@ gtk_target_list_find (GtkTargetList *list,
  * allocated and should be freed using gtk_target_table_free() when no
  * longer needed.
  *
- * Return value: (array length=n_targets) (transfer full): the new table.
+ * Returns: (array length=n_targets) (transfer full): the new table.
  *
  * Since: 2.10
  **/
@@ -669,7 +676,7 @@ gtk_target_table_free (GtkTargetEntry *targets,
  * Claim ownership of a given selection for a particular widget, or,
  * if @widget is %NULL, release ownership of the selection.
  *
- * Return value: TRUE if the operation succeeded 
+ * Returns: TRUE if the operation succeeded 
  * 
  * Since: 2.2
  */
@@ -771,7 +778,7 @@ gtk_selection_owner_set_for_display (GdkDisplay   *display,
  * Claims ownership of a given selection for a particular widget,
  * or, if @widget is %NULL, release ownership of the selection.
  * 
- * Return value: %TRUE if the operation succeeded
+ * Returns: %TRUE if the operation succeeded
  **/
 gboolean
 gtk_selection_owner_set (GtkWidget *widget,
@@ -876,6 +883,11 @@ gtk_selection_clear_targets (GtkWidget *widget,
   g_return_if_fail (GTK_IS_WIDGET (widget));
   g_return_if_fail (selection != GDK_NONE);
 
+#ifdef GDK_WINDOWING_WAYLAND
+  if (GDK_IS_WAYLAND_DISPLAY (gtk_widget_get_display (widget)))
+    gdk_wayland_selection_clear_targets (selection);
+#endif
+
   lists = g_object_get_data (G_OBJECT (widget), gtk_selection_handler_key);
   
   tmp_list = lists;
@@ -899,7 +911,7 @@ gtk_selection_clear_targets (GtkWidget *widget,
 
 /**
  * gtk_selection_add_target:
- * @widget:  a #GtkTarget
+ * @widget:  a #GtkWidget
  * @selection: the selection
  * @target: target to add.
  * @info: A unsigned integer which will be passed back to the application.
@@ -920,6 +932,10 @@ gtk_selection_add_target (GtkWidget	    *widget,
 
   list = gtk_selection_target_list_get (widget, selection);
   gtk_target_list_add (list, target, 0, info);
+#ifdef GDK_WINDOWING_WAYLAND
+  if (GDK_IS_WAYLAND_DISPLAY (gtk_widget_get_display (widget)))
+    gdk_wayland_selection_add_targets (gtk_widget_get_window (widget), selection, 1, &target);
+#endif
 #ifdef GDK_WINDOWING_WIN32
   gdk_win32_selection_add_targets (gtk_widget_get_window (widget), selection, 1, &target);
 #endif
@@ -949,6 +965,20 @@ gtk_selection_add_targets (GtkWidget            *widget,
   
   list = gtk_selection_target_list_get (widget, selection);
   gtk_target_list_add_table (list, targets, ntargets);
+
+#ifdef GDK_WINDOWING_WAYLAND
+  if (GDK_IS_WAYLAND_DISPLAY (gtk_widget_get_display (widget)))
+    {
+      GdkAtom *atoms = g_new (GdkAtom, ntargets);
+      guint i;
+
+      for (i = 0; i < ntargets; i++)
+        atoms[i] = gdk_atom_intern (targets[i].target, FALSE);
+
+      gdk_wayland_selection_add_targets (gtk_widget_get_window (widget), selection, ntargets, atoms);
+      g_free (atoms);
+    }
+#endif
 
 #ifdef GDK_WINDOWING_WIN32
   {
@@ -1035,9 +1065,9 @@ gtk_selection_remove_all (GtkWidget *widget)
        In emergency, you could use #GDK_CURRENT_TIME
  * 
  * Requests the contents of a selection. When received, 
- * a "selection-received" signal will be generated.
+ * a “selection-received” signal will be generated.
  * 
- * Return value: %TRUE if requested succeeded. %FALSE if we could not process
+ * Returns: %TRUE if requested succeeded. %FALSE if we could not process
  *          request. (e.g., there was already a request in process for
  *          this widget).
  **/
@@ -1051,6 +1081,7 @@ gtk_selection_convert (GtkWidget *widget,
   GList *tmp_list;
   GdkWindow *owner_window;
   GdkDisplay *display;
+  guint id;
   
   g_return_val_if_fail (GTK_IS_WIDGET (widget), FALSE);
   g_return_val_if_fail (selection != GDK_NONE, FALSE);
@@ -1131,15 +1162,16 @@ gtk_selection_convert (GtkWidget *widget,
   
   current_retrievals = g_list_append (current_retrievals, info);
   gdk_selection_convert (gtk_widget_get_window (widget), selection, target, time_);
-  gdk_threads_add_timeout (1000,
+  id = gdk_threads_add_timeout (1000,
       (GSourceFunc) gtk_selection_retrieval_timeout, info);
+  g_source_set_name_by_id (id, "[gtk+] gtk_selection_retrieval_timeout");
   
   return TRUE;
 }
 
 /**
  * gtk_selection_data_get_selection:
- * @selection_data: a pointer to a #GtkSelectionData structure.
+ * @selection_data: a pointer to a #GtkSelectionData-struct.
  *
  * Retrieves the selection #GdkAtom of the selection data.
  *
@@ -1157,7 +1189,7 @@ gtk_selection_data_get_selection (const GtkSelectionData *selection_data)
 
 /**
  * gtk_selection_data_get_target:
- * @selection_data: a pointer to a #GtkSelectionData structure.
+ * @selection_data: a pointer to a #GtkSelectionData-struct.
  *
  * Retrieves the target of the selection.
  *
@@ -1175,7 +1207,7 @@ gtk_selection_data_get_target (const GtkSelectionData *selection_data)
 
 /**
  * gtk_selection_data_get_data_type:
- * @selection_data: a pointer to a #GtkSelectionData structure.
+ * @selection_data: a pointer to a #GtkSelectionData-struct.
  *
  * Retrieves the data type of the selection.
  *
@@ -1193,7 +1225,7 @@ gtk_selection_data_get_data_type (const GtkSelectionData *selection_data)
 
 /**
  * gtk_selection_data_get_format:
- * @selection_data: a pointer to a #GtkSelectionData structure.
+ * @selection_data: a pointer to a #GtkSelectionData-struct.
  *
  * Retrieves the format of the selection.
  *
@@ -1211,11 +1243,12 @@ gtk_selection_data_get_format (const GtkSelectionData *selection_data)
 
 /**
  * gtk_selection_data_get_data: (skip)
- * @selection_data: a pointer to a #GtkSelectionData structure.
+ * @selection_data: a pointer to a
+ *   #GtkSelectionData-struct.
  *
  * Retrieves the raw data of the selection.
  *
- * Returns: the raw data of the selection.
+ * Returns: (array) (element-type guint8): the raw data of the selection.
  *
  * Since: 2.14
  **/
@@ -1229,7 +1262,7 @@ gtk_selection_data_get_data (const GtkSelectionData *selection_data)
 
 /**
  * gtk_selection_data_get_length:
- * @selection_data: a pointer to a #GtkSelectionData structure.
+ * @selection_data: a pointer to a #GtkSelectionData-struct.
  *
  * Retrieves the length of the raw data of the selection.
  *
@@ -1246,15 +1279,14 @@ gtk_selection_data_get_length (const GtkSelectionData *selection_data)
 }
 
 /**
- * gtk_selection_data_get_data_with_length:
- * @selection_data: a pointer to a #GtkSelectionData structure
+ * gtk_selection_data_get_data_with_length: (rename-to gtk_selection_data_get_data)
+ * @selection_data: a pointer to a #GtkSelectionData-struct.
  * @length: (out): return location for length of the data segment
  *
  * Retrieves the raw data of the selection along with its length.
  *
  * Returns: (array length=length): the raw data of the selection
  *
- * Rename to: gtk_selection_data_get_data
  * Since: 3.0
  */
 const guchar*
@@ -1270,7 +1302,7 @@ gtk_selection_data_get_data_with_length (const GtkSelectionData *selection_data,
 
 /**
  * gtk_selection_data_get_display:
- * @selection_data: a pointer to a #GtkSelectionData structure.
+ * @selection_data: a pointer to a #GtkSelectionData-struct.
  *
  * Retrieves the display of the selection.
  *
@@ -1288,14 +1320,14 @@ gtk_selection_data_get_display (const GtkSelectionData *selection_data)
 
 /**
  * gtk_selection_data_set:
- * @selection_data: a pointer to a #GtkSelectionData structure.
+ * @selection_data: a pointer to a #GtkSelectionData-struct.
  * @type: the type of selection data
  * @format: format (number of bits in a unit)
  * @data: (array length=length): pointer to the data (will be copied)
  * @length: length of the data
  * 
  * Stores new data into a #GtkSelectionData object. Should
- * <emphasis>only</emphasis> be called from a selection handler callback.
+ * only be called from a selection handler callback.
  * Zero-terminates the stored data.
  **/
 void 
@@ -1358,14 +1390,15 @@ selection_set_compound_text (GtkSelectionData *selection_data,
 			     const gchar      *str,
 			     gint              len)
 {
+  gboolean result = FALSE;
+
+#ifdef GDK_WINDOWING_X11
   gchar *tmp;
   guchar *text;
   GdkAtom encoding;
   gint format;
   gint new_length;
-  gboolean result = FALSE;
 
-#ifdef GDK_WINDOWING_X11
   if (GDK_IS_X11_DISPLAY (selection_data->display))
     {
       tmp = g_strndup (str, len);
@@ -1543,7 +1576,7 @@ selection_get_text_plain (const GtkSelectionData *selection_data)
  * The string is converted to the form determined by
  * @selection_data->target.
  * 
- * Return value: %TRUE if the selection was successfully set,
+ * Returns: %TRUE if the selection was successfully set,
  *   otherwise %FALSE.
  **/
 gboolean
@@ -1593,7 +1626,7 @@ gtk_selection_data_set_text (GtkSelectionData     *selection_data,
  * 
  * Gets the contents of the selection data as a UTF-8 string.
  * 
- * Return value: (type utf8): if the selection data contained a
+ * Returns: (type utf8) (nullable) (transfer full): if the selection data contained a
  *   recognized text type and it could be converted to UTF-8, a newly
  *   allocated string containing the converted text, otherwise %NULL.
  *   If the result is non-%NULL it must be freed with g_free().
@@ -1647,7 +1680,7 @@ gtk_selection_data_get_text (const GtkSelectionData *selection_data)
  * The pixbuf is converted to the form determined by
  * @selection_data->target.
  * 
- * Return value: %TRUE if the selection was successfully set,
+ * Returns: %TRUE if the selection was successfully set,
  *   otherwise %FALSE.
  *
  * Since: 2.6
@@ -1711,10 +1744,11 @@ gtk_selection_data_set_pixbuf (GtkSelectionData *selection_data,
  * 
  * Gets the contents of the selection data as a #GdkPixbuf.
  * 
- * Return value: (transfer full): if the selection data contained a recognized
- *   image type and it could be converted to a #GdkPixbuf, a 
- *   newly allocated pixbuf is returned, otherwise %NULL.
- *   If the result is non-%NULL it must be freed with g_object_unref().
+ * Returns: (nullable) (transfer full): if the selection data
+ *   contained a recognized image type and it could be converted to a
+ *   #GdkPixbuf, a newly allocated pixbuf is returned, otherwise
+ *   %NULL.  If the result is non-%NULL it must be freed with
+ *   g_object_unref().
  *
  * Since: 2.6
  **/
@@ -1756,7 +1790,7 @@ gtk_selection_data_get_pixbuf (const GtkSelectionData *selection_data)
  * The string is converted to the form determined by
  * @selection_data->target.
  * 
- * Return value: %TRUE if the selection was successfully set,
+ * Returns: %TRUE if the selection was successfully set,
  *   otherwise %FALSE.
  *
  * Since: 2.6
@@ -1810,7 +1844,7 @@ gtk_selection_data_set_uris (GtkSelectionData  *selection_data,
  * 
  * Gets the contents of the selection data as array of URIs.
  *
- * Return value:  (array zero-terminated=1) (element-type utf8) (transfer full): if
+ * Returns:  (array zero-terminated=1) (element-type utf8) (transfer full): if
  *   the selection data contains a list of
  *   URIs, a newly allocated %NULL-terminated string array
  *   containing the URIs, otherwise %NULL. If the result is
@@ -1860,7 +1894,7 @@ gtk_selection_data_get_uris (const GtkSelectionData *selection_data)
  * the standard TARGETS target that is always supplied for
  * any selection.
  * 
- * Return value: %TRUE if @selection_data contains a valid
+ * Returns: %TRUE if @selection_data contains a valid
  *    array of targets, otherwise %FALSE.
  **/
 gboolean
@@ -1894,13 +1928,13 @@ gtk_selection_data_get_targets (const GtkSelectionData  *selection_data,
 
 /**
  * gtk_targets_include_text:
- * @targets: (array length=n_targets): an array of #GdkAtom<!-- -->s
+ * @targets: (array length=n_targets): an array of #GdkAtoms
  * @n_targets: the length of @targets
  * 
  * Determines if any of the targets in @targets can be used to
  * provide text.
  * 
- * Return value: %TRUE if @targets include a suitable target for text,
+ * Returns: %TRUE if @targets include a suitable target for text,
  *   otherwise %FALSE.
  *
  * Since: 2.10
@@ -1939,14 +1973,14 @@ gtk_targets_include_text (GdkAtom *targets,
 
 /**
  * gtk_targets_include_rich_text:
- * @targets: (array length=n_targets): an array of #GdkAtom<!-- -->s
+ * @targets: (array length=n_targets): an array of #GdkAtoms
  * @n_targets: the length of @targets
  * @buffer: a #GtkTextBuffer
  *
  * Determines if any of the targets in @targets can be used to
  * provide rich text.
  *
- * Return value: %TRUE if @targets include a suitable target for rich text,
+ * Returns: %TRUE if @targets include a suitable target for rich text,
  *               otherwise %FALSE.
  *
  * Since: 2.10
@@ -1995,7 +2029,7 @@ gtk_targets_include_rich_text (GdkAtom       *targets,
  * determines if any of the targets in @targets can be used to
  * provide text.
  * 
- * Return value: %TRUE if @selection_data holds a list of targets,
+ * Returns: %TRUE if @selection_data holds a list of targets,
  *   and a suitable target for text is included, otherwise %FALSE.
  **/
 gboolean
@@ -2027,7 +2061,7 @@ gtk_selection_data_targets_include_text (const GtkSelectionData *selection_data)
  * determines if any of the targets in @targets can be used to
  * provide rich text.
  *
- * Return value: %TRUE if @selection_data holds a list of targets,
+ * Returns: %TRUE if @selection_data holds a list of targets,
  *               and a suitable target for rich text is included,
  *               otherwise %FALSE.
  *
@@ -2057,7 +2091,7 @@ gtk_selection_data_targets_include_rich_text (const GtkSelectionData *selection_
 
 /**
  * gtk_targets_include_image:
- * @targets: (array length=n_targets): an array of #GdkAtom<!-- -->s
+ * @targets: (array length=n_targets): an array of #GdkAtoms
  * @n_targets: the length of @targets
  * @writable: whether to accept only targets for which GTK+ knows
  *   how to convert a pixbuf into the format
@@ -2065,7 +2099,7 @@ gtk_selection_data_targets_include_rich_text (const GtkSelectionData *selection_
  * Determines if any of the targets in @targets can be used to
  * provide a #GdkPixbuf.
  * 
- * Return value: %TRUE if @targets include a suitable target for images,
+ * Returns: %TRUE if @targets include a suitable target for images,
  *   otherwise %FALSE.
  *
  * Since: 2.10
@@ -2111,7 +2145,7 @@ gtk_targets_include_image (GdkAtom *targets,
  * determines if any of the targets in @targets can be used to
  * provide a #GdkPixbuf.
  * 
- * Return value: %TRUE if @selection_data holds a list of targets,
+ * Returns: %TRUE if @selection_data holds a list of targets,
  *   and a suitable target for images is included, otherwise %FALSE.
  *
  * Since: 2.6
@@ -2139,13 +2173,13 @@ gtk_selection_data_targets_include_image (const GtkSelectionData *selection_data
 
 /**
  * gtk_targets_include_uri:
- * @targets: (array length=n_targets): an array of #GdkAtom<!-- -->s
+ * @targets: (array length=n_targets): an array of #GdkAtoms
  * @n_targets: the length of @targets
  * 
  * Determines if any of the targets in @targets can be used to
  * provide an uri list.
  * 
- * Return value: %TRUE if @targets include a suitable target for uri lists,
+ * Returns: %TRUE if @targets include a suitable target for uri lists,
  *   otherwise %FALSE.
  *
  * Since: 2.10
@@ -2184,7 +2218,7 @@ gtk_targets_include_uri (GdkAtom *targets,
  * determines if any of the targets in @targets can be used to
  * provide a list or URIs.
  * 
- * Return value: %TRUE if @selection_data holds a list of targets,
+ * Returns: %TRUE if @selection_data holds a list of targets,
  *   and a suitable target for URI lists is included, otherwise %FALSE.
  *
  * Since: 2.10
@@ -2238,7 +2272,7 @@ gtk_selection_init (void)
  * The default handler for the #GtkWidget::selection-clear-event
  * signal. 
  * 
- * Return value: %TRUE if the event was handled, otherwise false
+ * Returns: %TRUE if the event was handled, otherwise false
  **/
 gboolean
 _gtk_selection_clear (GtkWidget         *widget,
@@ -2276,7 +2310,7 @@ _gtk_selection_clear (GtkWidget         *widget,
 
 /*************************************************************
  * _gtk_selection_request:
- *     Handler for "selection_request_event" 
+ *     Handler for “selection_request_event” 
  *   arguments:
  *     widget:
  *     event:
@@ -2469,6 +2503,8 @@ _gtk_selection_request (GtkWidget *widget,
   
   if (info->num_incrs > 0)
     {
+      guint id;
+
       /* FIXME: this could be dangerous if window doesn't still
 	 exist */
       
@@ -2480,7 +2516,8 @@ _gtk_selection_request (GtkWidget *widget,
 			     gdk_window_get_events (info->requestor) |
 			     GDK_PROPERTY_CHANGE_MASK);
       current_incrs = g_list_append (current_incrs, info);
-      gdk_threads_add_timeout (1000, (GSourceFunc) gtk_selection_incr_timeout, info);
+      id = gdk_threads_add_timeout (1000, (GSourceFunc) gtk_selection_incr_timeout, info);
+      g_source_set_name_by_id (id, "[gtk+] gtk_selection_incr_timeout");
     }
   
   /* If it was a MULTIPLE request, set the property to indicate which
@@ -2709,7 +2746,7 @@ gtk_selection_incr_timeout (GtkIncrInfo *info)
 
 /*************************************************************
  * _gtk_selection_notify:
- *     Handler for "selection-notify-event" signals on windows
+ *     Handler for “selection-notify-event” signals on windows
  *     where a retrieval is currently in process. The selection
  *     owner has responded to our conversion request.
  *   arguments:
@@ -2801,7 +2838,7 @@ _gtk_selection_notify (GtkWidget	 *widget,
 
 /*************************************************************
  * _gtk_selection_property_notify:
- *     Handler for "property-notify-event" signals on windows
+ *     Handler for “property-notify-event” signals on windows
  *     where a retrieval is currently in process. The selection
  *     owner has added more data.
  *   arguments:
@@ -2958,7 +2995,7 @@ gtk_selection_retrieval_timeout (GtkRetrievalInfo *info)
 
 /*************************************************************
  * gtk_selection_retrieval_report:
- *     Emits a "selection-received" signal.
+ *     Emits a “selection-received” signal.
  *   arguments:
  *     info:	  information about the retrieval that completed
  *     buffer:	  buffer containing data (NULL => errror)
@@ -3031,8 +3068,8 @@ gtk_selection_invoke_handler (GtkWidget	       *widget,
 /*************************************************************
  * gtk_selection_default_handler:
  *     Handles some default targets that exist for any widget
- *     If it can't fit results into buffer, returns -1. This
- *     won't happen in any conceivable case, since it would
+ *     If it can’t fit results into buffer, returns -1. This
+ *     won’t happen in any conceivable case, since it would
  *     require 1000 selection targets!
  *
  *   arguments:
@@ -3124,11 +3161,11 @@ gtk_selection_default_handler (GtkWidget	*widget,
 
 /**
  * gtk_selection_data_copy:
- * @data: a pointer to a #GtkSelectionData structure.
+ * @data: a pointer to a #GtkSelectionData-struct.
  * 
- * Makes a copy of a #GtkSelectionData structure and its data.
+ * Makes a copy of a #GtkSelectionData-struct and its data.
  * 
- * Return value: a pointer to a copy of @data.
+ * Returns: a pointer to a copy of @data.
  **/
 GtkSelectionData*
 gtk_selection_data_copy (const GtkSelectionData *data)
@@ -3151,9 +3188,9 @@ gtk_selection_data_copy (const GtkSelectionData *data)
 
 /**
  * gtk_selection_data_free:
- * @data: a pointer to a #GtkSelectionData structure.
+ * @data: a pointer to a #GtkSelectionData-struct.
  * 
- * Frees a #GtkSelectionData structure returned from
+ * Frees a #GtkSelectionData-struct returned from
  * gtk_selection_data_copy().
  **/
 void
@@ -3172,9 +3209,9 @@ gtk_selection_data_free (GtkSelectionData *data)
  * @flags: Set of flags, see #GtkTargetFlags
  * @info: an ID that will be passed back to the application
  *
- * Makes a new #GtkTargetEntry structure.
+ * Makes a new #GtkTargetEntry.
  *
- * Return value: a pointer to a new GtkTargetEntry structure.
+ * Returns: a pointer to a new #GtkTargetEntry.
  *     Free with gtk_target_entry_free()
  **/
 GtkTargetEntry *
@@ -3188,11 +3225,11 @@ gtk_target_entry_new (const char *target,
 
 /**
  * gtk_target_entry_copy:
- * @data: a pointer to a #GtkTargetEntry structure.
+ * @data: a pointer to a #GtkTargetEntry
  *
- * Makes a copy of a #GtkTargetEntry structure and its data.
+ * Makes a copy of a #GtkTargetEntry and its data.
  *
- * Return value: a pointer to a copy of @data.
+ * Returns: a pointer to a copy of @data.
  *     Free with gtk_target_entry_free()
  **/
 GtkTargetEntry *
@@ -3212,9 +3249,9 @@ gtk_target_entry_copy (GtkTargetEntry *data)
 
 /**
  * gtk_target_entry_free:
- * @data: a pointer to a #GtkTargetEntry structure.
+ * @data: a pointer to a #GtkTargetEntry.
  *
- * Frees a #GtkTargetEntry structure returned from
+ * Frees a #GtkTargetEntry returned from
  * gtk_target_entry_new() or gtk_target_entry_copy().
  **/
 void

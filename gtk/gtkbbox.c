@@ -29,7 +29,7 @@
  *
  * A button box should be used to provide a consistent layout of buttons
  * throughout your application. The layout/spacing can be altered by the
- * programmer, or if desired, by the user to alter the 'feel' of a
+ * programmer, or if desired, by the user to alter the “feel” of a
  * program to a small degree.
  *
  * gtk_button_box_get_layout() and gtk_button_box_set_layout() retrieve and
@@ -38,12 +38,10 @@
  *
  * The main purpose of GtkButtonBox is to make sure the children have all the
  * same size. GtkButtonBox gives all children the same size, but it does allow
- * 'outliers' to keep their own larger size. To force all children to be
- * strictly the same size without exceptions, you can set the
- * #GtkButtonBox:homogeneous property to %TRUE.
+ * 'outliers' to keep their own larger size.
  *
- * To excempt individual children from homogeneous sizing regardless of their
- * 'outlier' status, you can set the #GtkButtonBox:non-homogeneous child
+ * To exempt individual children from homogeneous sizing regardless of their
+ * 'outlier' status, you can set the non-homogeneous child
  * property.
  */
 
@@ -133,6 +131,13 @@ static void gtk_button_box_get_child_property (GtkContainer      *container,
 G_DEFINE_TYPE_WITH_PRIVATE (GtkButtonBox, gtk_button_box, GTK_TYPE_BOX)
 
 static void
+gtk_button_box_add (GtkContainer *container,
+                    GtkWidget    *widget)
+{
+  gtk_box_pack_start (GTK_BOX (container), widget, TRUE, TRUE, 0);
+}
+
+static void
 gtk_button_box_class_init (GtkButtonBoxClass *class)
 {
   GtkWidgetClass *widget_class;
@@ -154,6 +159,7 @@ gtk_button_box_class_init (GtkButtonBoxClass *class)
   widget_class->size_allocate = gtk_button_box_size_allocate;
 
   container_class->remove = gtk_button_box_remove;
+  container_class->add = gtk_button_box_add;
   container_class->set_child_property = gtk_button_box_set_child_property;
   container_class->get_child_property = gtk_button_box_get_child_property;
   gtk_container_class_handle_border_width (container_class);
@@ -203,7 +209,7 @@ gtk_button_box_class_init (GtkButtonBoxClass *class)
                                                       P_("How to lay out the buttons in the box. Possible values are: spread, edge, start and end"),
                                                       GTK_TYPE_BUTTON_BOX_STYLE,
                                                       DEFAULT_LAYOUT_STYLE,
-                                                      GTK_PARAM_READWRITE));
+                                                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   gtk_container_class_install_child_property (container_class,
                                               CHILD_PROP_SECONDARY,
@@ -349,6 +355,18 @@ gtk_button_box_set_layout (GtkButtonBox      *widget,
   if (priv->layout_style != layout_style)
     {
       priv->layout_style = layout_style;
+
+      if (priv->layout_style == GTK_BUTTONBOX_EXPAND)
+        {
+          gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (widget)), "linked");
+          gtk_box_set_homogeneous (GTK_BOX (widget), TRUE);
+        }
+      else
+        {
+          gtk_style_context_remove_class (gtk_widget_get_style_context (GTK_WIDGET (widget)), "linked");
+          gtk_box_set_homogeneous (GTK_BOX (widget), FALSE);
+        }
+
       g_object_notify (G_OBJECT (widget), "layout-style");
       gtk_widget_queue_resize (GTK_WIDGET (widget));
     }
@@ -377,7 +395,7 @@ gtk_button_box_get_layout (GtkButtonBox *widget)
  *
  * Returns whether @child should appear in a secondary group of children.
  *
- * Return value: whether @child should appear in a secondary group of children.
+ * Returns: whether @child should appear in a secondary group of children.
  *
  * Since: 2.4
  **/
@@ -416,14 +434,23 @@ gtk_button_box_set_child_secondary (GtkButtonBox *widget,
                                     GtkWidget    *child,
                                     gboolean      is_secondary)
 {
+  GtkButtonBox *bbox;
+
   g_return_if_fail (GTK_IS_BUTTON_BOX (widget));
   g_return_if_fail (GTK_IS_WIDGET (child));
   g_return_if_fail (gtk_widget_get_parent (child) == GTK_WIDGET (widget));
+
+  bbox = GTK_BUTTON_BOX (widget);
 
   g_object_set_data (G_OBJECT (child),
                      GTK_BOX_SECONDARY_CHILD,
                      is_secondary ? GINT_TO_POINTER (1) : NULL);
   gtk_widget_child_notify (child, "secondary");
+
+  if (bbox->priv->layout_style == GTK_BUTTONBOX_EXPAND)
+    {
+      gtk_box_reorder_child (GTK_BOX (bbox), child, is_secondary ? 0 : -1);
+    }
 
   if (gtk_widget_get_visible (GTK_WIDGET (widget)) &&
       gtk_widget_get_visible (child))
@@ -714,6 +741,7 @@ gtk_button_box_size_request (GtkWidget      *widget,
           case GTK_BUTTONBOX_START:
           case GTK_BUTTONBOX_END:
           case GTK_BUTTONBOX_CENTER:
+          case GTK_BUTTONBOX_EXPAND:
             if (orientation == GTK_ORIENTATION_HORIZONTAL)
               requisition->width = total_size + ((nvis_children - 1)*spacing);
             else
@@ -826,6 +854,13 @@ gtk_button_box_size_allocate (GtkWidget     *widget,
 
   bbox = GTK_BUTTON_BOX (widget);
   priv = bbox->priv;
+
+  if (priv->layout_style == GTK_BUTTONBOX_EXPAND)
+    {
+      GTK_WIDGET_CLASS (gtk_button_box_parent_class)->size_allocate (widget, allocation);
+      return;
+    }
+
 
   orientation = gtk_orientable_get_orientation (GTK_ORIENTABLE (widget));
   spacing = gtk_box_get_spacing (GTK_BOX (widget));
@@ -1101,7 +1136,7 @@ gtk_button_box_size_allocate (GtkWidget     *widget,
  *
  * Creates a new #GtkButtonBox.
  *
- * Return value: a new #GtkButtonBox.
+ * Returns: a new #GtkButtonBox.
  *
  * Since: 3.0
  */

@@ -19,6 +19,8 @@
 #define __GTK_STYLE_CONTEXT_PRIVATE_H__
 
 #include "gtkstylecontext.h"
+
+#include "gtkicontheme.h"
 #include "gtkstyleproviderprivate.h"
 #include "gtkbitmaskprivate.h"
 #include "gtkcssvalueprivate.h"
@@ -34,7 +36,6 @@ GtkCssValue   * _gtk_style_context_peek_property             (GtkStyleContext *c
                                                               guint            property_id);
 const GValue * _gtk_style_context_peek_style_property        (GtkStyleContext *context,
                                                               GType            widget_type,
-                                                              GtkStateFlags    state,
                                                               GParamSpec      *pspec);
 void           _gtk_style_context_validate                   (GtkStyleContext *context,
                                                               gint64           timestamp,
@@ -53,6 +54,19 @@ void           _gtk_style_context_get_cursor_color           (GtkStyleContext   
                                                               GdkRGBA            *secondary_color);
 
 void           _gtk_style_context_update_animating           (GtkStyleContext    *context);
+
+void           _gtk_style_context_get_icon_extents           (GtkStyleContext    *context,
+                                                              GdkRectangle       *extents,
+                                                              gint                x,
+                                                              gint                y,
+                                                              gint                width,
+                                                              gint                height);
+GtkIconLookupFlags _gtk_style_context_get_icon_lookup_flags  (GtkStyleContext    *context);
+
+/* Accessibility support */
+AtkAttributeSet *_gtk_style_context_get_attributes           (AtkAttributeSet    *attributes,
+                                                              GtkStyleContext    *context,
+                                                              GtkStateFlags       flags);
 
 G_END_DECLS
 

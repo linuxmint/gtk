@@ -164,7 +164,7 @@ gtk_radio_action_class_init (GtkRadioActionClass *klass)
   /**
    * GtkRadioAction::changed:
    * @action: the action on which the signal is emitted
-   * @current: the member of @action<!-- -->s group which has just been activated
+   * @current: the member of @action's group which has just been activated
    *
    * The ::changed signal is emitted on every member of a radio group when the
    * active member is changed. The signal gets emitted after the ::activate signals
@@ -208,7 +208,7 @@ gtk_radio_action_init (GtkRadioAction *action)
  * a #GtkActionGroup and set the accelerator for the action,
  * call gtk_action_group_add_action_with_accel().
  *
- * Return value: a new #GtkRadioAction
+ * Returns: a new #GtkRadioAction
  *
  * Since: 2.4
  *
@@ -402,11 +402,11 @@ create_menu_item (GtkAction *action)
  * to the group. 
  *
  * A common way to set up a group of radio group is the following:
- * |[
+ * |[<!-- language="C" -->
  *   GSList *group = NULL;
  *   GtkRadioAction *action;
  *  
- *   while (/&ast; more actions to add &ast;/)
+ *   while ( ...more actions to add... /)
  *     {
  *        action = gtk_radio_action_new (...);
  *        
@@ -432,7 +432,7 @@ gtk_radio_action_get_group (GtkRadioAction *action)
 /**
  * gtk_radio_action_set_group:
  * @action: the action object
- * @group: (element-type GtkRadioAction): a list representing a radio group
+ * @group: (element-type GtkRadioAction) (allow-none): a list representing a radio group, or %NULL
  *
  * Sets the radio group for the radio action object.
  *
@@ -492,11 +492,11 @@ gtk_radio_action_set_group (GtkRadioAction *action,
  * and gtk_radio_action_set_group() methods
  *
  * A common way to set up a group of radio actions is the following:
- * |[
+ * |[<!-- language="C" -->
  *   GtkRadioAction *action;
  *   GtkRadioAction *last_action;
  *  
- *   while (/&ast; more actions to add &ast;/)
+ *   while ( ...more actions to add... /)
  *     {
  *        action = gtk_radio_action_new (...);
  *        
@@ -544,7 +544,7 @@ gtk_radio_action_join_group (GtkRadioAction *action,
  * Obtains the value property of the currently active member of 
  * the group to which @action belongs.
  * 
- * Return value: The value of the currently active group member
+ * Returns: The value of the currently active group member
  *
  * Since: 2.4
  *

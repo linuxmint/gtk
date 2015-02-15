@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface domain="gtk30">
+  <object class="GtkImage" id="inspect_image">
+    <property name="visible">True</property>
+    <property name="icon-name">find-location-symbolic</property>
+    <property name="icon-size">4</property>
+  </object>
+  <object class="GtkMenu" id="widget_popup">
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkMenuItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Send Widget to Shell</property>
+        <signal name="activate" handler="on_send_widget_to_shell_activate"/>
+      </object>
+    </child>
+  </object>
+  <template class="GtkInspectorWindow" parent="GtkWindow">
+    <property name="default-height">500</property>
+    <property name="default-width">1000</property>
+    <property name="icon">resource:///org/gtk/inspector/logo.png</property>
+    <child type="titlebar">
+      <object class="GtkHeaderBar">
+        <property name="visible">True</property>
+        <property name="show-close-button">True</property>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <style>
+              <class name="linked"/>
+            </style>
+            <child>
+              <object class="GtkButton">
+                <property name="visible">True</property>
+                <property name="image">inspect_image</property>
+                <property name="tooltip-text" translatable="yes">Select an Object</property>
+                <signal name="clicked" handler="gtk_inspector_on_inspect"/>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="pack-type">start</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkNotebook" id="top_notebook">
+        <property name="visible">True</property>
+        <property name="show-border">False</property>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkInspectorButtonPath" id="button_path">
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkPaned">
+                <property name="visible">True</property>
+                <property name="orientation">horizontal</property>
+                <child>
+                  <object class="GtkPaned">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkScrolledWindow">
+                        <property name="visible">True</property>
+                        <property name="hscrollbar-policy">automatic</property>
+                        <property name="vscrollbar-policy">always</property>
+                        <property name="shadow-type">in</property>
+                        <property name="width-request">250</property>
+                        <property name="expand">True</property>
+                        <child>
+                          <object class="GtkInspectorWidgetTree" id="widget_tree">
+                            <property name="visible">True</property>
+                            <signal name="widget-changed" handler="on_widget_tree_selection_changed"/>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="resize">True</property>
+                        <property name="shrink">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkInspectorPythonShell" id="python_shell">
+                        <property name="visible">False</property>
+                      </object>
+                      <packing>
+                        <property name="resize">False</property>
+                        <property name="shrink">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="resize">True</property>
+                    <property name="shrink">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkNotebook">
+                    <property name="visible">True</property>
+                    <property name="show-border">False</property>
+                    <property name="scrollable">True</property>
+                    <child>
+                      <object class="GtkInspectorMiscInfo" id="misc_info">
+                        <property name="visible">True</property>
+                        <property name="widget-tree">widget_tree</property>
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Miscellaneous</property>
+                      </object>
+                    </child> 
+                    <child>
+                      <object class="GtkInspectorPropList" id="prop_list">
+                        <property name="visible">True</property>
+                        <property name="child-properties">False</property>
+                        <property name="widget-tree">widget_tree</property>
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Properties</property>
+                      </object>
+                    </child> 
+                    <child>
+                      <object class="GtkInspectorSignalsList" id="signals_list">
+                        <property name="visible">True</property>
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Signals</property>
+                      </object>
+                    </child> 
+                    <child>
+                      <object class="GtkInspectorObjectHierarchy" id="object_hierarchy">
+                        <property name="visible">True</property>
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Hierarchy</property>
+                      </object>
+                    </child> 
+                    <child>
+                      <object class="GtkInspectorPropList" id="child_prop_list">
+                        <property name="child-properties">True</property>
+                        <property name="widget-tree">widget_tree</property>
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Child Properties</property>
+                      </object>
+                    </child> 
+                    <child>
+                      <object class="GtkInspectorClassesList" id="classes_list">
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">CSS Classes</property>
+                      </object>
+                    </child> 
+                    <child>
+                      <object class="GtkInspectorStylePropList" id="style_prop_list">
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Style Properties</property>
+                      </object>
+                    </child> 
+                    <child>
+                      <object class="GtkInspectorCssEditor" id="widget_css_editor">
+                        <property name="global">False</property>
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Custom CSS</property>
+                      </object>
+                    </child> 
+                    <child>
+                      <object class="GtkInspectorSizeGroups" id="size_groups">
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Size Groups</property>
+                      </object>
+                    </child> 
+                    <child>
+                      <object class="GtkInspectorDataList" id="data_list">
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Data</property>
+                      </object>
+                    </child> 
+                    <child>
+                      <object class="GtkInspectorActions" id="actions">
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Actions</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkInspectorMenu" id="menu">
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Menu</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkInspectorGestures" id="gestures">
+                        <property name="widget-tree">widget_tree</property>
+                      </object>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Gestures</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="resize">True</property>
+                    <property name="shrink">True</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="tab_expand">True</property>
+            <property name="tab_fill">True</property>
+          </packing>
+        </child>
+        <child type="tab">
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Objects</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkInspectorResourceList">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="tab_expand">True</property>
+            <property name="tab_fill">True</property>
+          </packing>
+        </child>
+        <child type="tab">
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Resources</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkInspectorCssEditor">
+            <property name="visible">True</property>
+            <property name="global">True</property>
+          </object>
+          <packing>
+            <property name="tab_expand">True</property>
+            <property name="tab_fill">True</property>
+          </packing>
+        </child>
+        <child type="tab">
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Custom CSS</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkInspectorVisual">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="tab_expand">True</property>
+            <property name="tab_fill">True</property>
+          </packing>
+        </child>
+        <child type="tab">
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Visual</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkInspectorGeneral">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="tab_expand">True</property>
+            <property name="tab_fill">True</property>
+          </packing>
+        </child>
+        <child type="tab">
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">General</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

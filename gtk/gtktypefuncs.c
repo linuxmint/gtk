@@ -17,6 +17,7 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 *tp++ = gdk_drag_protocol_get_type();
 *tp++ = gdk_event_get_type();
 *tp++ = gdk_event_mask_get_type();
+*tp++ = gdk_event_sequence_get_type();
 *tp++ = gdk_event_type_get_type();
 *tp++ = gdk_filter_return_get_type();
 *tp++ = gdk_frame_clock_get_type();
@@ -111,6 +112,7 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 *tp++ = gtk_accel_map_get_type();
 *tp++ = gtk_accessible_get_type();
 *tp++ = gtk_actionable_get_type();
+*tp++ = gtk_action_bar_get_type();
 *tp++ = gtk_action_get_type();
 *tp++ = gtk_action_group_get_type();
 *tp++ = gtk_activatable_get_type();
@@ -194,6 +196,8 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 *tp++ = gtk_entry_get_type();
 *tp++ = gtk_entry_icon_position_get_type();
 *tp++ = gtk_event_box_get_type();
+*tp++ = gtk_event_controller_get_type();
+*tp++ = gtk_event_sequence_state_get_type();
 *tp++ = gtk_expander_get_type();
 *tp++ = gtk_expander_style_get_type();
 *tp++ = gtk_file_chooser_action_get_type();
@@ -206,6 +210,8 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 *tp++ = gtk_file_filter_flags_get_type();
 *tp++ = gtk_file_filter_get_type();
 *tp++ = gtk_fixed_get_type();
+*tp++ = gtk_flow_box_child_get_type();
+*tp++ = gtk_flow_box_get_type();
 *tp++ = gtk_font_button_get_type();
 *tp++ = gtk_font_chooser_dialog_get_type();
 *tp++ = gtk_font_chooser_get_type();
@@ -213,6 +219,15 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 *tp++ = gtk_font_selection_dialog_get_type();
 *tp++ = gtk_font_selection_get_type();
 *tp++ = gtk_frame_get_type();
+*tp++ = gtk_gesture_drag_get_type();
+*tp++ = gtk_gesture_get_type();
+*tp++ = gtk_gesture_long_press_get_type();
+*tp++ = gtk_gesture_multi_press_get_type();
+*tp++ = gtk_gesture_pan_get_type();
+*tp++ = gtk_gesture_rotate_get_type();
+*tp++ = gtk_gesture_single_get_type();
+*tp++ = gtk_gesture_swipe_get_type();
+*tp++ = gtk_gesture_zoom_get_type();
 *tp++ = gtk_gradient_get_type();
 *tp++ = gtk_grid_get_type();
 *tp++ = gtk_handle_box_get_type();
@@ -283,6 +298,7 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 *tp++ = gtk_page_orientation_get_type();
 *tp++ = gtk_page_set_get_type();
 *tp++ = gtk_page_setup_get_type();
+*tp++ = gtk_pan_direction_get_type();
 *tp++ = gtk_paned_get_type();
 *tp++ = gtk_paper_size_get_type();
 *tp++ = gtk_path_priority_type_get_type();
@@ -293,6 +309,7 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 *tp++ = gtk_plug_get_type();
 #endif
 *tp++ = gtk_policy_type_get_type();
+*tp++ = gtk_popover_get_type();
 *tp++ = gtk_position_type_get_type();
 *tp++ = gtk_print_context_get_type();
 *tp++ = gtk_print_duplex_get_type();
@@ -306,6 +323,7 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 *tp++ = gtk_print_settings_get_type();
 *tp++ = gtk_print_status_get_type();
 *tp++ = gtk_progress_bar_get_type();
+*tp++ = gtk_propagation_phase_get_type();
 *tp++ = gtk_radio_action_get_type();
 *tp++ = gtk_radio_button_get_type();
 *tp++ = gtk_radio_menu_item_get_type();
@@ -391,6 +409,7 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 *tp++ = gtk_text_tag_get_type();
 *tp++ = gtk_text_tag_table_get_type();
 *tp++ = gtk_text_view_get_type();
+*tp++ = gtk_text_view_layer_get_type();
 *tp++ = gtk_text_window_type_get_type();
 *tp++ = gtk_theming_engine_get_type();
 *tp++ = gtk_toggle_action_get_type();

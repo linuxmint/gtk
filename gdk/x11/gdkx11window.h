@@ -65,7 +65,7 @@ void     gdk_x11_window_set_utf8_property    (GdkWindow *window,
 GDK_AVAILABLE_IN_3_2
 void     gdk_x11_window_set_theme_variant (GdkWindow   *window,
                                            char        *variant);
-GDK_AVAILABLE_IN_3_10
+GDK_DEPRECATED_IN_3_12_FOR(gdk_window_set_shadow_width)
 void     gdk_x11_window_set_frame_extents (GdkWindow *window,
                                            int        left,
                                            int        right,
@@ -93,7 +93,7 @@ void     gdk_x11_window_set_frame_sync_enabled (GdkWindow *window,
  *
  * Returns the display of a #GdkWindow.
  *
- * Returns: an Xlib <type>Display*</type>.
+ * Returns: an Xlib Display*.
  */
 #define GDK_WINDOW_XDISPLAY(win)      (GDK_DISPLAY_XDISPLAY (gdk_window_get_display (win)))
 
@@ -103,7 +103,7 @@ void     gdk_x11_window_set_frame_sync_enabled (GdkWindow *window,
  *
  * Returns the X window belonging to a #GdkWindow.
  *
- * Returns: the Xlib <type>Window</type> of @win.
+ * Returns: the Xlib Window of @win.
  */
 #define GDK_WINDOW_XID(win)           (gdk_x11_window_get_xid (win))
 

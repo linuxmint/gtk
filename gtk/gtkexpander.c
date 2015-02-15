@@ -32,9 +32,8 @@
  * to add it to the expander. When the expander is toggled, it will take
  * care of showing and hiding the child automatically.
  *
- * <refsect2 id="expander-special-usage">
- * <title>Special Usage</title>
- * <para>
+ * # Special Usage
+ *
  * There are situations in which you may prefer to show and hide the
  * expanded widget yourself, such as when you want to actually create
  * the widget at expansion time. In this case, create a #GtkExpander
@@ -42,9 +41,8 @@
  * #GtkExpander:expanded property which can be used to monitor
  * its expansion state. You should watch this property with a signal
  * connection as follows:
- * </para>
- * <informalexample>
- * <programlisting id="expander-callback-example">
+ *
+ * |[<!-- language="C" -->
  * expander = gtk_expander_new_with_mnemonic ("_More Options");
  * g_signal_connect (expander, "notify::expanded",
  *                   G_CALLBACK (expander_callback), NULL);
@@ -62,28 +60,24 @@
  *
  *   if (gtk_expander_get_expanded (expander))
  *     {
- *       /&ast; Show or create widgets &ast;/
+ *       // Show or create widgets
  *     }
  *   else
  *     {
- *       /&ast; Hide or destroy widgets &ast;/
+ *       // Hide or destroy widgets
  *     }
  * }
- * </programlisting>
- * </informalexample>
- * </refsect2>
- * <refsect2 id="GtkExpander-BUILDER-UI">
- * <title>GtkExpander as GtkBuildable</title>
- * <para>
- * The GtkExpander implementation of the GtkBuildable interface
- * supports placing a child in the label position by specifying
- * "label" as the "type" attribute of a &lt;child&gt; element.
- * A normal content child can be specified without specifying
- * a &lt;child&gt; type attribute.
- * </para>
- * <example>
- * <title>A UI definition fragment with GtkExpander</title>
- * <programlisting><![CDATA[
+ * ]|
+ *
+ * # GtkExpander as GtkBuildable
+ *
+ * The GtkExpander implementation of the GtkBuildable interface supports
+ * placing a child in the label position by specifying “label” as the
+ * “type” attribute of a <child> element. A normal content child can be
+ * specified without specifying a <child> type attribute.
+ *
+ * An example of a UI definition fragment with GtkExpander:
+ * |[
  * <object class="GtkExpander">
  *   <child type="label">
  *     <object class="GtkLabel" id="expander-label"/>
@@ -92,10 +86,7 @@
  *     <object class="GtkEntry" id="expander-content"/>
  *   </child>
  * </object>
- * ]]></programlisting>
- * </example>
- * </refsect2>
- *
+ * ]|
  */
 
 #include "config.h"
@@ -136,6 +127,7 @@ struct _GtkExpanderPrivate
 {
   GtkWidget        *label_widget;
   GdkWindow        *event_window;
+  GtkGesture       *multipress_gesture;
   gint              spacing;
 
   guint             expand_timer;
@@ -143,7 +135,6 @@ struct _GtkExpanderPrivate
   guint             expanded : 1;
   guint             use_underline : 1;
   guint             use_markup : 1; 
-  guint             button_down : 1;
   guint             prelight : 1;
   guint             label_fill : 1;
   guint             resize_toplevel : 1;
@@ -167,20 +158,13 @@ static void     gtk_expander_map            (GtkWidget        *widget);
 static void     gtk_expander_unmap          (GtkWidget        *widget);
 static gboolean gtk_expander_draw           (GtkWidget        *widget,
                                              cairo_t          *cr);
-static gboolean gtk_expander_button_press   (GtkWidget        *widget,
-                                             GdkEventButton   *event);
-static gboolean gtk_expander_button_release (GtkWidget        *widget,
-                                             GdkEventButton   *event);
+
 static gboolean gtk_expander_enter_notify   (GtkWidget        *widget,
                                              GdkEventCrossing *event);
 static gboolean gtk_expander_leave_notify   (GtkWidget        *widget,
                                              GdkEventCrossing *event);
 static gboolean gtk_expander_focus          (GtkWidget        *widget,
                                              GtkDirectionType  direction);
-static void     gtk_expander_grab_notify    (GtkWidget        *widget,
-                                             gboolean          was_grabbed);
-static void     gtk_expander_state_flags_changed  (GtkWidget     *widget,
-                                                   GtkStateFlags  previous_state);
 static gboolean gtk_expander_drag_motion    (GtkWidget        *widget,
                                              GdkDragContext   *context,
                                              gint              x,
@@ -228,6 +212,13 @@ static void  gtk_expander_get_preferred_width_for_height  (GtkWidget           *
                                                            gint                *minimum_height,
                                                            gint                *natural_height);
 
+/* Gestures */
+static void     gesture_multipress_released_cb (GtkGestureMultiPress *gesture,
+                                                gint                  n_press,
+                                                gdouble               x,
+                                                gdouble               y,
+                                                GtkExpander          *expander);
+
 G_DEFINE_TYPE_WITH_CODE (GtkExpander, gtk_expander, GTK_TYPE_BIN,
                          G_ADD_PRIVATE (GtkExpander)
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE,
@@ -254,13 +245,9 @@ gtk_expander_class_init (GtkExpanderClass *klass)
   widget_class->map                  = gtk_expander_map;
   widget_class->unmap                = gtk_expander_unmap;
   widget_class->draw                 = gtk_expander_draw;
-  widget_class->button_press_event   = gtk_expander_button_press;
-  widget_class->button_release_event = gtk_expander_button_release;
   widget_class->enter_notify_event   = gtk_expander_enter_notify;
   widget_class->leave_notify_event   = gtk_expander_leave_notify;
   widget_class->focus                = gtk_expander_focus;
-  widget_class->grab_notify          = gtk_expander_grab_notify;
-  widget_class->state_flags_changed  = gtk_expander_state_flags_changed;
   widget_class->drag_motion          = gtk_expander_drag_motion;
   widget_class->drag_leave           = gtk_expander_drag_leave;
   widget_class->get_preferred_width            = gtk_expander_get_preferred_width;
@@ -280,7 +267,7 @@ gtk_expander_class_init (GtkExpanderClass *klass)
                                                          P_("Expanded"),
                                                          P_("Whether the expander has been opened to reveal the child widget"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+                                                         GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (gobject_class,
                                    PROP_LABEL,
@@ -288,7 +275,7 @@ gtk_expander_class_init (GtkExpanderClass *klass)
                                                         P_("Label"),
                                                         P_("Text of the expander's label"),
                                                         NULL,
-                                                        GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+                                                        GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT));
 
   g_object_class_install_property (gobject_class,
                                    PROP_USE_UNDERLINE,
@@ -296,7 +283,7 @@ gtk_expander_class_init (GtkExpanderClass *klass)
                                                          P_("Use underline"),
                                                          P_("If set, an underline in the text indicates the next character should be used for the mnemonic accelerator key"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+                                                         GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (gobject_class,
                                    PROP_USE_MARKUP,
@@ -304,7 +291,7 @@ gtk_expander_class_init (GtkExpanderClass *klass)
                                                          P_("Use markup"),
                                                          P_("The text of the label includes XML markup. See pango_parse_markup()"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+                                                         GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (gobject_class,
                                    PROP_SPACING,
@@ -314,7 +301,7 @@ gtk_expander_class_init (GtkExpanderClass *klass)
                                                      0,
                                                      G_MAXINT,
                                                      0,
-                                                     GTK_PARAM_READWRITE));
+                                                     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (gobject_class,
                                    PROP_LABEL_WIDGET,
@@ -330,7 +317,7 @@ gtk_expander_class_init (GtkExpanderClass *klass)
                                                          P_("Label fill"),
                                                          P_("Whether the label widget should fill all available horizontal space"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+                                                         GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkExpander:resize-toplevel:
@@ -346,7 +333,7 @@ gtk_expander_class_init (GtkExpanderClass *klass)
                                                          P_("Resize toplevel"),
                                                          P_("Whether the expander will resize the toplevel window upon expanding and collapsing"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   gtk_widget_class_install_style_property (widget_class,
                                            g_param_spec_int ("expander-size",
@@ -395,7 +382,6 @@ gtk_expander_init (GtkExpander *expander)
   priv->expanded = FALSE;
   priv->use_underline = FALSE;
   priv->use_markup = FALSE;
-  priv->button_down = FALSE;
   priv->prelight = FALSE;
   priv->label_fill = FALSE;
   priv->expand_timer = 0;
@@ -403,6 +389,16 @@ gtk_expander_init (GtkExpander *expander)
 
   gtk_drag_dest_set (GTK_WIDGET (expander), 0, NULL, 0, 0);
   gtk_drag_dest_set_track_motion (GTK_WIDGET (expander), TRUE);
+
+  priv->multipress_gesture = gtk_gesture_multi_press_new (GTK_WIDGET (expander));
+  gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (priv->multipress_gesture),
+                                 GDK_BUTTON_PRIMARY);
+  gtk_gesture_single_set_touch_only (GTK_GESTURE_SINGLE (priv->multipress_gesture),
+                                     FALSE);
+  g_signal_connect (priv->multipress_gesture, "released",
+                    G_CALLBACK (gesture_multipress_released_cb), expander);
+  gtk_event_controller_set_propagation_phase (GTK_EVENT_CONTROLLER (priv->multipress_gesture),
+                                              GTK_PHASE_BUBBLE);
 }
 
 static void
@@ -519,7 +515,72 @@ gtk_expander_destroy (GtkWidget *widget)
       priv->expand_timer = 0;
     }
 
+  g_clear_object (&priv->multipress_gesture);
+
   GTK_WIDGET_CLASS (gtk_expander_parent_class)->destroy (widget);
+}
+
+static void
+get_padding_and_border (GtkWidget *widget,
+                        GtkBorder *border)
+{
+  GtkStyleContext *context;
+  GtkStateFlags state;
+  GtkBorder tmp;
+
+  context = gtk_widget_get_style_context (widget);
+  state = gtk_widget_get_state_flags (widget);
+
+  gtk_style_context_get_padding (context, state, border);
+  gtk_style_context_get_border (context, state, &tmp);
+  border->top += tmp.top;
+  border->right += tmp.right;
+  border->bottom += tmp.bottom;
+  border->left += tmp.left;
+}
+
+static void
+get_prelight_area_bounds (GtkExpander *expander,
+                          GdkRectangle *area)
+{
+  GtkWidget *widget;
+  GtkExpanderPrivate *priv;
+  GtkAllocation allocation;
+  GtkContainer *container;
+  int expander_size;
+  int expander_spacing;
+  guint border_width;
+  GtkBorder border;
+
+  priv = expander->priv;
+  widget = GTK_WIDGET (expander);
+  container = GTK_CONTAINER (expander);
+
+  gtk_widget_style_get (widget,
+                        "expander-size", &expander_size,
+                        "expander-spacing", &expander_spacing,
+                        NULL);
+
+  gtk_widget_get_allocation (widget, &allocation);
+  get_padding_and_border (widget, &border);
+
+  border_width = gtk_container_get_border_width (container);
+  area->x = border_width;
+  area->y = border_width;
+  area->width = allocation.width - (2 * border_width);
+
+  if (priv->label_widget && gtk_widget_get_visible (priv->label_widget))
+    {
+      GtkAllocation label_widget_allocation;
+
+      gtk_widget_get_allocation (priv->label_widget, &label_widget_allocation);
+      area->height = label_widget_allocation.height;
+    }
+  else
+    area->height = 0;
+
+  area->height = MAX (area->height, expander_size + 2 * expander_spacing);
+  area->height += border.top + border.bottom;
 }
 
 static void
@@ -530,34 +591,18 @@ gtk_expander_realize (GtkWidget *widget)
   GdkWindow *window;
   GdkWindowAttr attributes;
   gint attributes_mask;
-  gint border_width;
-  GdkRectangle expander_rect;
-  gint label_height;
+  GdkRectangle area;
 
   priv = GTK_EXPANDER (widget)->priv;
 
-  border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
-
-  get_expander_bounds (GTK_EXPANDER (widget), &expander_rect);
-
-  if (priv->label_widget && gtk_widget_get_visible (priv->label_widget))
-    {
-      GtkRequisition label_requisition;
-
-      gtk_widget_get_preferred_size (priv->label_widget,
-                                     &label_requisition, NULL);
-      label_height = label_requisition.height;
-    }
-  else
-    label_height = 0;
-
   gtk_widget_get_allocation (widget, &allocation);
+  get_prelight_area_bounds (GTK_EXPANDER (widget), &area);
 
   attributes.window_type = GDK_WINDOW_CHILD;
-  attributes.x = allocation.x + border_width;
-  attributes.y = allocation.y + border_width;
-  attributes.width = MAX (allocation.width - 2 * border_width, 1);
-  attributes.height = MAX (expander_rect.height, label_height - 2 * border_width);
+  attributes.x = allocation.x + area.x;
+  attributes.y = allocation.y + area.y;
+  attributes.width = area.width;
+  attributes.height = area.height;
   attributes.wclass = GDK_INPUT_ONLY;
   attributes.event_mask = gtk_widget_get_events (widget)
                           | GDK_BUTTON_PRESS_MASK
@@ -575,6 +620,7 @@ gtk_expander_realize (GtkWidget *widget)
                                        &attributes, attributes_mask);
   gtk_widget_register_window (widget, priv->event_window);
 
+  gtk_gesture_set_window (priv->multipress_gesture, priv->event_window);
   gtk_widget_set_realized (widget, TRUE);
 }
 
@@ -585,6 +631,7 @@ gtk_expander_unrealize (GtkWidget *widget)
 
   if (priv->event_window)
     {
+      gtk_gesture_set_window (priv->multipress_gesture, NULL);
       gtk_widget_unregister_window (widget, priv->event_window);
       gdk_window_destroy (priv->event_window);
       priv->event_window = NULL;
@@ -603,10 +650,8 @@ get_expander_bounds (GtkExpander  *expander,
   gint border_width;
   gint expander_size;
   gint expander_spacing;
-  gboolean interior_focus;
-  gint focus_width;
-  gint focus_pad;
   gboolean ltr;
+  GtkBorder border;
 
   widget = GTK_WIDGET (expander);
   priv = expander->priv;
@@ -616,23 +661,21 @@ get_expander_bounds (GtkExpander  *expander,
   border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 
   gtk_widget_style_get (widget,
-                        "interior-focus", &interior_focus,
-                        "focus-line-width", &focus_width,
-                        "focus-padding", &focus_pad,
                         "expander-size", &expander_size,
                         "expander-spacing", &expander_spacing,
                         NULL);
+  get_padding_and_border (widget, &border);
 
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
-  rect->x = allocation.x + border_width;
-  rect->y = allocation.y + border_width;
+  rect->x = allocation.x + border_width + border.left;
+  rect->y = allocation.y + border_width + border.top;
 
   if (ltr)
     rect->x += expander_spacing;
   else
     rect->x += allocation.width - 2 * border_width -
-               expander_spacing - expander_size;
+               expander_spacing - expander_size - border.right;
 
   if (priv->label_widget && gtk_widget_get_visible (priv->label_widget))
     {
@@ -641,22 +684,13 @@ get_expander_bounds (GtkExpander  *expander,
       gtk_widget_get_allocation (priv->label_widget, &label_allocation);
 
       if (expander_size < label_allocation.height)
-        rect->y += focus_width + focus_pad + (label_allocation.height - expander_size) / 2;
+        rect->y += (label_allocation.height - expander_size) / 2;
       else
         rect->y += expander_spacing;
     }
   else
     {
       rect->y += expander_spacing;
-    }
-
-  if (!interior_focus)
-    {
-      if (ltr)
-        rect->x += focus_width + focus_pad;
-      else
-        rect->x -= focus_width + focus_pad;
-      rect->y += focus_width + focus_pad;
     }
 
   rect->width = rect->height = expander_size;
@@ -673,12 +707,10 @@ gtk_expander_size_allocate (GtkWidget     *widget,
   guint border_width;
   gint expander_size;
   gint expander_spacing;
-  gboolean interior_focus;
-  gint focus_width;
-  gint focus_pad;
-  gint label_height, top_min_height;
+  gint label_height;
   gint label_xpad, label_xoffset;
   gint child_ypad, child_yoffset;
+  GtkBorder border;
 
   expander = GTK_EXPANDER (widget);
   child    = gtk_bin_get_child (GTK_BIN (widget));
@@ -689,21 +721,17 @@ gtk_expander_size_allocate (GtkWidget     *widget,
   gtk_widget_set_allocation (widget, allocation);
 
   gtk_widget_style_get (widget,
-                        "interior-focus", &interior_focus,
-                        "focus-line-width", &focus_width,
-                        "focus-padding", &focus_pad,
                         "expander-size", &expander_size,
                         "expander-spacing", &expander_spacing,
                         NULL);
-
+  get_padding_and_border (widget, &border);
 
   /* Calculate some offsets/padding first */
-  label_xoffset = border_width + expander_size + focus_width + 2 * expander_spacing + focus_pad;
-  label_xpad = 2 * border_width + expander_size + 2 * focus_width + 2 * expander_spacing + 2 * focus_pad;
+  label_xoffset = border_width + expander_size + 2 * expander_spacing + border.left;
+  label_xpad = 2 * border_width + expander_size + 2 * expander_spacing + border.left + border.right;
 
-  child_yoffset  = border_width + priv->spacing + (interior_focus ? 0 : 2 * focus_width + 2 * focus_pad);
-  child_ypad     = 2 * border_width + priv->spacing + (interior_focus ? 0 : 2 * focus_width + 2 * focus_pad);
-  top_min_height = 2 * expander_spacing + expander_size;
+  child_yoffset  = border_width + priv->spacing + border.top + border.bottom;
+  child_ypad     = 2 * border_width + priv->spacing + border.top + border.bottom;
 
   child_visible = (child && gtk_widget_get_child_visible (child));
 
@@ -737,10 +765,10 @@ gtk_expander_size_allocate (GtkWidget     *widget,
         label_allocation.x = allocation->x + allocation->width -
                              (label_allocation.width + label_xoffset);
 
-      label_allocation.y = allocation->y + border_width + focus_width + focus_pad;
+      label_allocation.y = allocation->y + border_width + border.top;
       label_allocation.height = MIN (label_height,
                                      allocation->height - 2 * border_width -
-                                     2 * focus_width - 2 * focus_pad -
+                                     border.top - border.bottom -
                                      (child_visible ? priv->spacing : 0));
       label_allocation.height = MAX (label_allocation.height, 1);
 
@@ -757,13 +785,11 @@ gtk_expander_size_allocate (GtkWidget     *widget,
     {
       GdkRectangle rect;
 
-      get_expander_bounds (expander, &rect);
-
+      get_prelight_area_bounds (expander, &rect);
       gdk_window_move_resize (priv->event_window,
-                              allocation->x + border_width,
-                              allocation->y + border_width,
-                              MAX (allocation->width - 2 * border_width, 1),
-                              MAX (rect.height, label_height - 2 * border_width));
+                              allocation->x + rect.x,
+                              allocation->y + rect.y,
+                              rect.width, rect.height);
     }
 
   if (child_visible)
@@ -771,8 +797,7 @@ gtk_expander_size_allocate (GtkWidget     *widget,
       GtkAllocation child_allocation;
       gint top_height;
 
-      top_height = MAX (top_min_height,
-                        label_height + (interior_focus ? 2 * focus_width + 2 * focus_pad : 0));
+      top_height = MAX (2 * expander_spacing + expander_size, label_height);
 
       child_allocation.x = allocation->x + border_width;
       child_allocation.y = allocation->y + top_height + child_yoffset;
@@ -817,51 +842,12 @@ static void
 gtk_expander_paint_prelight (GtkExpander *expander,
                              cairo_t     *cr)
 {
-  GtkAllocation allocation;
   GtkWidget *widget;
-  GtkContainer *container;
-  GtkExpanderPrivate *priv;
   GdkRectangle area;
   GtkStyleContext *context;
-  gboolean interior_focus;
-  int focus_width;
-  int focus_pad;
-  int expander_size;
-  int expander_spacing;
-  guint border_width;
 
-  priv = expander->priv;
   widget = GTK_WIDGET (expander);
-  container = GTK_CONTAINER (expander);
-
-  gtk_widget_style_get (widget,
-                        "interior-focus", &interior_focus,
-                        "focus-line-width", &focus_width,
-                        "focus-padding", &focus_pad,
-                        "expander-size", &expander_size,
-                        "expander-spacing", &expander_spacing,
-                        NULL);
-
-  gtk_widget_get_allocation (widget, &allocation);
-
-  border_width = gtk_container_get_border_width (container);
-  area.x = border_width;
-  area.y = border_width;
-  area.width = allocation.width - (2 * border_width);
-
-  if (priv->label_widget && gtk_widget_get_visible (priv->label_widget))
-    {
-      GtkAllocation label_widget_allocation;
-
-      gtk_widget_get_allocation (priv->label_widget, &label_widget_allocation);
-      area.height = label_widget_allocation.height;
-    }
-  else
-    area.height = 0;
-
-  area.height += interior_focus ? (focus_width + focus_pad) * 2 : 0;
-  area.height = MAX (area.height, expander_size + 2 * expander_spacing);
-  area.height += !interior_focus ? (focus_width + focus_pad) * 2 : 0;
+  get_prelight_area_bounds (expander, &area);
 
   context = gtk_widget_get_style_context (widget);
   gtk_render_background (context, cr,
@@ -902,9 +888,9 @@ gtk_expander_paint (GtkExpander *expander,
 
   /* Set active flag as per the expanded state */
   if (priv->expanded)
-    state |= GTK_STATE_FLAG_ACTIVE;
+    state |= GTK_STATE_FLAG_CHECKED;
   else
-    state &= ~(GTK_STATE_FLAG_ACTIVE);
+    state &= ~(GTK_STATE_FLAG_CHECKED);
 
   gtk_style_context_set_state (context, state);
   gtk_style_context_add_class (context, GTK_STYLE_CLASS_EXPANDER);
@@ -926,14 +912,12 @@ gtk_expander_paint_focus (GtkExpander *expander,
   GdkRectangle rect;
   GtkStyleContext *context;
   gint x, y, width, height;
-  gboolean interior_focus;
   gint border_width;
-  gint focus_width;
-  gint focus_pad;
   gint expander_size;
   gint expander_spacing;
   gboolean ltr;
   GtkAllocation allocation;
+  GtkBorder border;
 
   widget = GTK_WIDGET (expander);
   priv = expander->priv;
@@ -942,12 +926,10 @@ gtk_expander_paint_focus (GtkExpander *expander,
   gtk_widget_get_allocation (widget, &allocation);
 
   gtk_widget_style_get (widget,
-                        "interior-focus", &interior_focus,
-                        "focus-line-width", &focus_width,
-                        "focus-padding", &focus_pad,
                         "expander-size", &expander_size,
                         "expander-spacing", &expander_spacing,
                         NULL);
+  get_padding_and_border (widget, &border);
 
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
@@ -964,37 +946,27 @@ gtk_expander_paint_focus (GtkExpander *expander,
           height = label_allocation.height;
         }
 
-      width  += 2 * focus_pad + 2 * focus_width;
-      height += 2 * focus_pad + 2 * focus_width;
-
-      x = border_width;
-      y = border_width;
+      x = border_width + border.left;
+      y = border_width + border.top;
 
       if (ltr)
         {
-          if (interior_focus)
-            x += expander_spacing * 2 + expander_size;
+          x += expander_spacing * 2 + expander_size;
         }
       else
         {
           x += allocation.width - 2 * border_width
             - expander_spacing * 2 - expander_size - width;
         }
-
-      if (!interior_focus)
-        {
-          width += expander_size + 2 * expander_spacing;
-          height = MAX (height, expander_size + 2 * expander_spacing);
-        }
     }
   else
     {
       get_expander_bounds (expander, &rect);
 
-      x = rect.x - allocation.x - focus_pad;
-      y = rect.y - allocation.y - focus_pad;
-      width = rect.width + 2 * focus_pad;
-      height = rect.height + 2 * focus_pad;
+      x = rect.x - allocation.x;
+      y = rect.y - allocation.y;
+      width = rect.width;
+      height = rect.height;
     }
 
   context = gtk_widget_get_style_context (widget);
@@ -1018,52 +990,15 @@ gtk_expander_draw (GtkWidget *widget,
   return FALSE;
 }
 
-static gboolean
-gtk_expander_button_press (GtkWidget      *widget,
-                           GdkEventButton *event)
-{
-  GtkExpander *expander = GTK_EXPANDER (widget);
-
-  if (event->button == GDK_BUTTON_PRIMARY && event->window == expander->priv->event_window)
-    {
-      expander->priv->button_down = TRUE;
-      return TRUE;
-    }
-
-  return FALSE;
-}
-
-static gboolean
-gtk_expander_button_release (GtkWidget      *widget,
-                             GdkEventButton *event)
-{
-  GtkExpander *expander = GTK_EXPANDER (widget);
-
-  if (event->button == GDK_BUTTON_PRIMARY && expander->priv->button_down)
-    {
-      if (expander->priv->prelight)
-        gtk_widget_activate (widget);
-      expander->priv->button_down = FALSE;
-      return TRUE;
-    }
-
-  return FALSE;
-}
-
 static void
-gtk_expander_grab_notify (GtkWidget *widget,
-                          gboolean   was_grabbed)
+gesture_multipress_released_cb (GtkGestureMultiPress *gesture,
+                                gint                  n_press,
+                                gdouble               x,
+                                gdouble               y,
+                                GtkExpander          *expander)
 {
-  if (!was_grabbed)
-    GTK_EXPANDER (widget)->priv->button_down = FALSE;
-}
-
-static void
-gtk_expander_state_flags_changed (GtkWidget    *widget,
-                                  GtkStateFlags  previous_state)
-{
-  if (!gtk_widget_is_sensitive (widget))
-    GTK_EXPANDER (widget)->priv->button_down = FALSE;
+  if (expander->priv->prelight)
+    gtk_widget_activate (GTK_WIDGET (expander));
 }
 
 static void
@@ -1147,6 +1082,7 @@ gtk_expander_drag_motion (GtkWidget        *widget,
   if (!priv->expanded && !priv->expand_timer)
     {
       priv->expand_timer = gdk_threads_add_timeout (TIMEOUT_EXPAND, (GSourceFunc) expand_timeout, expander);
+      g_source_set_name_by_id (priv->expand_timer, "[gtk+] expand_timeout");
     }
 
   return TRUE;
@@ -1308,23 +1244,21 @@ gtk_expander_resize_toplevel (GtkExpander *expander)
       if (toplevel && gtk_widget_get_realized (toplevel))
         {
           GtkAllocation toplevel_allocation;
+          GtkAllocation child_allocation;
 
           gtk_widget_get_allocation (toplevel, &toplevel_allocation);
+          gtk_widget_get_allocation (child, &child_allocation);
 
           if (priv->expanded)
             {
               GtkRequisition child_requisition;
 
-              gtk_widget_get_preferred_size (child, &child_requisition, NULL);
+              gtk_widget_get_preferred_height_for_width (child, child_allocation.width, &child_requisition.height, NULL);
 
               toplevel_allocation.height += child_requisition.height;
             }
           else
             {
-              GtkAllocation child_allocation;
-
-              gtk_widget_get_allocation (child, &child_allocation);
-
               toplevel_allocation.height -= child_allocation.height;
             }
 
@@ -1427,9 +1361,7 @@ gtk_expander_get_preferred_width (GtkWidget *widget,
   gint border_width;
   gint expander_size;
   gint expander_spacing;
-  gboolean interior_focus;
-  gint focus_width;
-  gint focus_pad;
+  GtkBorder border;
 
   child = gtk_bin_get_child (GTK_BIN (widget));
   expander = GTK_EXPANDER (widget);
@@ -1438,16 +1370,13 @@ gtk_expander_get_preferred_width (GtkWidget *widget,
   border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 
   gtk_widget_style_get (GTK_WIDGET (widget),
-                        "interior-focus", &interior_focus,
-                        "focus-line-width", &focus_width,
-                        "focus-padding", &focus_pad,
                         "expander-size", &expander_size,
                         "expander-spacing", &expander_spacing,
                         NULL);
+  get_padding_and_border (widget, &border);
 
   *minimum_size = *natural_size =
-    expander_size + 2 * expander_spacing +
-    2 * focus_width + 2 * focus_pad;
+    expander_size + 2 * expander_spacing;
 
   if (priv->label_widget && gtk_widget_get_visible (priv->label_widget))
     {
@@ -1472,8 +1401,8 @@ gtk_expander_get_preferred_width (GtkWidget *widget,
 
     }
 
-  *minimum_size += 2 * border_width;
-  *natural_size += 2 * border_width;
+  *minimum_size += 2 * border_width + border.left + border.right;
+  *natural_size += 2 * border_width + border.left + border.right;
 }
 
 static void
@@ -1487,9 +1416,7 @@ gtk_expander_get_preferred_height (GtkWidget *widget,
   gint border_width;
   gint expander_size;
   gint expander_spacing;
-  gboolean interior_focus;
-  gint focus_width;
-  gint focus_pad;
+  GtkBorder border;
 
   child = gtk_bin_get_child (GTK_BIN (widget));
   expander = GTK_EXPANDER (widget);
@@ -1498,16 +1425,12 @@ gtk_expander_get_preferred_height (GtkWidget *widget,
   border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 
   gtk_widget_style_get (GTK_WIDGET (widget),
-                        "interior-focus", &interior_focus,
-                        "focus-line-width", &focus_width,
-                        "focus-padding", &focus_pad,
                         "expander-size", &expander_size,
                         "expander-spacing", &expander_spacing,
                         NULL);
+  get_padding_and_border (widget, &border);
 
-  *minimum_size = *natural_size =
-    interior_focus ? (2 * focus_width + 2 * focus_pad) : 0;
-
+  *minimum_size = *natural_size = 0;
 
   if (priv->label_widget && gtk_widget_get_visible (priv->label_widget))
     {
@@ -1523,13 +1446,6 @@ gtk_expander_get_preferred_height (GtkWidget *widget,
   *minimum_size = MAX (*minimum_size, expander_size + 2 * expander_spacing);
   *natural_size = MAX (*natural_size, *minimum_size);
 
-  if (!interior_focus)
-    {
-      gint extra = 2 * focus_width + 2 * focus_pad;
-      *minimum_size += extra;
-      *natural_size += extra;
-    }
-
   if (child && gtk_widget_get_child_visible (child))
     {
       gint child_min, child_nat;
@@ -1542,8 +1458,8 @@ gtk_expander_get_preferred_height (GtkWidget *widget,
 
     }
 
-  *minimum_size += 2 * border_width;
-  *natural_size += 2 * border_width;
+  *minimum_size += 2 * border_width + border.top + border.bottom;
+  *natural_size += 2 * border_width + border.top + border.bottom;
 }
 
 static void
@@ -1558,10 +1474,8 @@ gtk_expander_get_preferred_height_for_width (GtkWidget *widget,
   gint border_width;
   gint expander_size;
   gint expander_spacing;
-  gboolean interior_focus;
-  gint focus_width;
-  gint focus_pad;
   gint label_xpad;
+  GtkBorder border;
 
   child = gtk_bin_get_child (GTK_BIN (widget));
   expander = GTK_EXPANDER (widget);
@@ -1570,18 +1484,14 @@ gtk_expander_get_preferred_height_for_width (GtkWidget *widget,
   border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 
   gtk_widget_style_get (GTK_WIDGET (widget),
-                        "interior-focus", &interior_focus,
-                        "focus-line-width", &focus_width,
-                        "focus-padding", &focus_pad,
                         "expander-size", &expander_size,
                         "expander-spacing", &expander_spacing,
                         NULL);
+  get_padding_and_border (widget, &border);
 
-  label_xpad = 2 * border_width + expander_size + 2 * expander_spacing - 2 * focus_width + 2 * focus_pad;
+  label_xpad = 2 * border_width + expander_size + 2 * expander_spacing;
 
-  *minimum_height = *natural_height =
-    interior_focus ? (2 * focus_width + 2 * focus_pad) : 0;
-
+  *minimum_height = *natural_height = 0;
 
   if (priv->label_widget && gtk_widget_get_visible (priv->label_widget))
     {
@@ -1598,13 +1508,6 @@ gtk_expander_get_preferred_height_for_width (GtkWidget *widget,
   *minimum_height = MAX (*minimum_height, expander_size + 2 * expander_spacing);
   *natural_height = MAX (*natural_height, *minimum_height);
 
-  if (!interior_focus)
-    {
-      gint extra = 2 * focus_width + 2 * focus_pad;
-      *minimum_height += extra;
-      *natural_height += extra;
-    }
-
   if (child && gtk_widget_get_child_visible (child))
     {
       gint child_min, child_nat;
@@ -1617,8 +1520,8 @@ gtk_expander_get_preferred_height_for_width (GtkWidget *widget,
       *natural_height += child_nat + priv->spacing;
     }
 
-  *minimum_height += 2 * border_width;
-  *natural_height += 2 * border_width;
+  *minimum_height += 2 * border_width + border.top + border.bottom;
+  *natural_height += 2 * border_width + border.top + border.bottom;
 }
 
 static void
@@ -1638,7 +1541,7 @@ gtk_expander_get_preferred_width_for_height (GtkWidget *widget,
  *
  * Creates a new expander using @label as the text of the label.
  *
- * Return value: a new #GtkExpander widget.
+ * Returns: a new #GtkExpander widget.
  *
  * Since: 2.4
  */
@@ -1655,12 +1558,12 @@ gtk_expander_new (const gchar *label)
  *
  * Creates a new expander using @label as the text of the label.
  * If characters in @label are preceded by an underscore, they are underlined.
- * If you need a literal underscore character in a label, use '__' (two
+ * If you need a literal underscore character in a label, use “__” (two
  * underscores). The first underlined character represents a keyboard
  * accelerator called a mnemonic.
  * Pressing Alt and that key activates the button.
  *
- * Return value: a new #GtkExpander widget.
+ * Returns: a new #GtkExpander widget.
  *
  * Since: 2.4
  */
@@ -1725,7 +1628,7 @@ gtk_expander_set_expanded (GtkExpander *expander,
  *
  * See gtk_expander_set_expanded().
  *
- * Return value: the current state of the expander
+ * Returns: the current state of the expander
  *
  * Since: 2.4
  */
@@ -1770,7 +1673,7 @@ gtk_expander_set_spacing (GtkExpander *expander,
  *
  * Gets the value set by gtk_expander_set_spacing().
  *
- * Return value: spacing between the expander and child
+ * Returns: spacing between the expander and child
  *
  * Since: 2.4
  */
@@ -1834,7 +1737,7 @@ gtk_expander_set_label (GtkExpander *expander,
  * be avoided by fetching the label text directly from the label
  * widget.
  *
- * Return value: The text of the label widget. This string is owned
+ * Returns: The text of the label widget. This string is owned
  *     by the widget and must not be modified or freed.
  *
  * Since: 2.4
@@ -1894,7 +1797,7 @@ gtk_expander_set_use_underline (GtkExpander *expander,
  * Returns whether an embedded underline in the expander label
  * indicates a mnemonic. See gtk_expander_set_use_underline().
  *
- * Return value: %TRUE if an embedded underline in the expander
+ * Returns: %TRUE if an embedded underline in the expander
  *     label indicates the mnemonic accelerator keys
  *
  * Since: 2.4
@@ -1910,11 +1813,11 @@ gtk_expander_get_use_underline (GtkExpander *expander)
 /**
  * gtk_expander_set_use_markup:
  * @expander: a #GtkExpander
- * @use_markup: %TRUE if the label's text should be parsed for markup
+ * @use_markup: %TRUE if the label’s text should be parsed for markup
  *
- * Sets whether the text of the label contains markup in <link
- * linkend="PangoMarkupFormat">Pango's text markup
- * language</link>. See gtk_label_set_markup().
+ * Sets whether the text of the label contains markup in
+ * [Pango’s text markup language][PangoMarkupFormat].
+ * See gtk_label_set_markup().
  *
  * Since: 2.4
  */
@@ -1945,11 +1848,11 @@ gtk_expander_set_use_markup (GtkExpander *expander,
  * gtk_expander_get_use_markup:
  * @expander: a #GtkExpander
  *
- * Returns whether the label's text is interpreted as marked up with
- * the <link linkend="PangoMarkupFormat">Pango text markup
- * language</link>. See gtk_expander_set_use_markup().
+ * Returns whether the label’s text is interpreted as marked up with
+ * the [Pango text markup language][PangoMarkupFormat].
+ * See gtk_expander_set_use_markup().
  *
- * Return value: %TRUE if the label's text will be parsed for markup
+ * Returns: %TRUE if the label’s text will be parsed for markup
  *
  * Since: 2.4
  */
@@ -2024,7 +1927,7 @@ gtk_expander_set_label_widget (GtkExpander *expander,
  * Retrieves the label widget for the frame. See
  * gtk_expander_set_label_widget().
  *
- * Return value: (transfer none): the label widget,
+ * Returns: (transfer none): the label widget,
  *     or %NULL if there is none
  *
  * Since: 2.4
@@ -2078,7 +1981,7 @@ gtk_expander_set_label_fill (GtkExpander *expander,
  * Returns whether the label widget will fill all available
  * horizontal space allocated to @expander.
  *
- * Return value: %TRUE if the label widget will fill all
+ * Returns: %TRUE if the label widget will fill all
  *     available horizontal space
  *
  * Since: 2.22
@@ -2121,7 +2024,7 @@ gtk_expander_set_resize_toplevel (GtkExpander *expander,
  * Returns whether the expander will resize the toplevel widget
  * containing the expander upon resizing and collpasing.
  *
- * Return value: the "resize toplevel" setting.
+ * Returns: the “resize toplevel” setting.
  *
  * Since: 3.2
  */

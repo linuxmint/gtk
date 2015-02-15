@@ -29,6 +29,8 @@
 #include "gdkwayland.h"
 #include "gdkprivate-wayland.h"
 
+#include "wm-button-layout-translation.h"
+
 typedef struct _GdkWaylandScreen      GdkWaylandScreen;
 typedef struct _GdkWaylandScreenClass GdkWaylandScreenClass;
 
@@ -95,6 +97,8 @@ struct _GdkWaylandMonitor
   int		refresh_rate;
   gint          scale;
 };
+
+GType _gdk_wayland_screen_get_type (void);
 
 G_DEFINE_TYPE (GdkWaylandScreen, _gdk_wayland_screen, GDK_TYPE_SCREEN)
 
@@ -475,10 +479,28 @@ update_xft_settings (GdkScreen *screen)
 
   if (screen_wayland->xft_settings.dpi != xft_settings.dpi)
     {
+      double dpi = xft_settings.dpi / 1024.;
+      const char *scale_env;
+      double scale;
+
       screen_wayland->xft_settings.dpi = xft_settings.dpi;
+
+      scale_env = g_getenv ("GDK_DPI_SCALE");
+      if (scale_env)
+        {
+          scale = g_ascii_strtod (scale_env, NULL);
+          if (scale != 0 && dpi > 0)
+            dpi *= scale;
+        }
+
+      _gdk_screen_set_resolution (screen, dpi);
+
       notify_setting (screen, "gtk-xft-dpi");
     }
 }
+
+#define WM_SETTINGS_SCHEMA "org.gnome.desktop.wm.preferences"
+#define CLASSIC_WM_SETTINGS_SCHEMA "org.gnome.shell.extensions.classic-overrides"
 
 typedef struct _TranslationEntry TranslationEntry;
 struct _TranslationEntry {
@@ -511,12 +533,16 @@ static TranslationEntry translations[] = {
   { "org.gnome.desktop.sound", "input-feedback-sounds", "gtk-enable-input-feedback-sounds", G_TYPE_BOOLEAN, { . b = FALSE } },
   { "org.gnome.desktop.privacy", "recent-files-max-age", "gtk-recent-files-max-age", G_TYPE_INT, { .i = 30 } },
   { "org.gnome.desktop.privacy", "remember-recent-files",    "gtk-recent-files-enabled", G_TYPE_BOOLEAN, { .b = TRUE } },
+  { WM_SETTINGS_SCHEMA, "button-layout",    "gtk-decoration-layout", G_TYPE_STRING, { .s = "menu:close" } },
+  { CLASSIC_WM_SETTINGS_SCHEMA, "button-layout",   "gtk-decoration-layout", G_TYPE_STRING, { .s = "menu:close" } },
   { "org.gnome.settings-daemon.plugins.xsettings", "antialiasing", "gtk-xft-antialias", G_TYPE_NONE, { .i = 0 } },
   { "org.gnome.settings-daemon.plugins.xsettings", "hinting", "gtk-xft-hinting", G_TYPE_NONE, { .i = 0 } },
   { "org.gnome.settings-daemon.plugins.xsettings", "hinting", "gtk-xft-hintstyle", G_TYPE_NONE, { .i = 0 } },
   { "org.gnome.settings-daemon.plugins.xsettings", "rgba-order", "gtk-xft-rgba", G_TYPE_NONE, { .i = 0 } },
   { "org.gnome.desktop.interface", "text-scaling-factor", "gtk-xft-dpi" , G_TYPE_NONE, { .i = 0 } },
-
+  { "org.gnome.desktop.wm.preferences", "action-double-click-titlebar", "gtk-titlebar-double-click", G_TYPE_STRING, { .s = "toggle-maximize" } },
+  { "org.gnome.desktop.wm.preferences", "action-middle-click-titlebar", "gtk-titlebar-middle-click", G_TYPE_STRING, { .s = "none" } },
+  { "org.gnome.desktop.wm.preferences", "action-right-click-titlebar", "gtk-titlebar-right-click", G_TYPE_STRING, { .s = "menu" } },
 };
 
 static TranslationEntry *
@@ -611,9 +637,14 @@ gtk_shell_handle_capabilities (void             *data,
 			       struct gtk_shell *shell,
 			       uint32_t          capabilities)
 {
-  GdkWaylandScreen *screen_wayland = data;
+  GdkScreen *screen = data;
+  GdkWaylandScreen *screen_wayland = GDK_WAYLAND_SCREEN (data);
 
   screen_wayland->shell_capabilities = capabilities;
+
+  notify_setting (screen, "gtk-shell-shows-app-menu");
+  notify_setting (screen, "gtk-shell-shows-menubar");
+  notify_setting (screen, "gtk-shell-shows-desktop");
 }
 
 struct gtk_shell_listener gdk_screen_gtk_shell_listener = {
@@ -681,6 +712,41 @@ set_value_from_entry (GdkScreen        *screen,
     }
 }
 
+static void
+set_decoration_layout_from_entry (GdkScreen        *screen,
+                                  TranslationEntry *entry,
+                                  GValue           *value)
+{
+  GdkWaylandScreen *screen_wayland = GDK_WAYLAND_SCREEN (screen);
+  GSettings *settings = NULL;
+  const char *session;
+
+  /* Hack: until we get session-dependent defaults in GSettings,
+   *       swap out the usual schema for the "classic" one when
+   *       running in classic mode
+   */
+  session = g_getenv ("XDG_CURRENT_DESKTOP");
+  if (session && strstr (session, "GNOME-Classic"))
+    settings = (GSettings *)g_hash_table_lookup (screen_wayland->settings, CLASSIC_WM_SETTINGS_SCHEMA);
+
+  if (settings == NULL)
+    settings = (GSettings *)g_hash_table_lookup (screen_wayland->settings, WM_SETTINGS_SCHEMA);
+
+  if (settings)
+    {
+      gchar *s = g_settings_get_string (settings, entry->key);
+
+      translate_wm_button_layout_to_gtk (s);
+      g_value_set_string (value, s);
+
+      g_free (s);
+    }
+  else
+    {
+      g_value_set_static_string (value, entry->fallback.s);
+    }
+}
+
 static gboolean
 set_capability_setting (GdkScreen                 *screen,
 			GValue                    *value,
@@ -705,7 +771,10 @@ gdk_wayland_screen_get_setting (GdkScreen   *screen,
   entry = find_translation_entry_by_setting (name);
   if (entry != NULL)
     {
-      set_value_from_entry (screen, entry, value);
+      if (strcmp (name, "gtk-decoration-layout") == 0)
+        set_decoration_layout_from_entry (screen, entry, value);
+      else
+        set_value_from_entry (screen, entry, value);
       return TRUE;
    }
 
@@ -717,6 +786,12 @@ gdk_wayland_screen_get_setting (GdkScreen   *screen,
 
   if (strcmp (name, "gtk-shell-shows-desktop") == 0)
     return set_capability_setting (screen, value, GTK_SHELL_CAPABILITY_DESKTOP_ICONS);
+
+  if (strcmp (name, "gtk-dialogs-use-header") == 0)
+    {
+      g_value_set_boolean (value, TRUE);
+      return TRUE;
+    }
 
   return FALSE;
 }
@@ -733,6 +808,8 @@ struct _GdkWaylandVisualClass
 {
   GdkVisualClass parent_class;
 };
+
+GType _gdk_wayland_visual_get_type (void);
 
 G_DEFINE_TYPE (GdkWaylandVisual, _gdk_wayland_visual, GDK_TYPE_VISUAL)
 
@@ -980,6 +1057,7 @@ output_handle_scale(void *data,
   GdkWaylandMonitor *monitor = (GdkWaylandMonitor *)data;
 
   monitor->scale = factor;
+  g_signal_emit_by_name (monitor->screen, "monitors-changed");
 }
 
 static void

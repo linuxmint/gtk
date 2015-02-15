@@ -15,24 +15,331 @@
  * License along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* Preamble {{{1 */
+
 #include "config.h"
 
 #include <gtk/gtk.h>
 #include <gtk/gtkpango.h>
 #include "gtkwidgetprivate.h"
+#include "gtklabelprivate.h"
 #include "gtklabelaccessible.h"
+#include "gtklabelaccessibleprivate.h"
+#include "gtkstylecontextprivate.h"
 
 struct _GtkLabelAccessiblePrivate
 {
   gint cursor_position;
   gint selection_bound;
+
+  GList *links;
 };
 
-static void atk_text_interface_init (AtkTextIface *iface);
+typedef struct _GtkLabelAccessibleLink      GtkLabelAccessibleLink;
+typedef struct _GtkLabelAccessibleLinkClass GtkLabelAccessibleLinkClass;
+
+struct _GtkLabelAccessibleLink
+{
+  AtkHyperlink parent;
+  
+  GtkLabelAccessible *label;
+  gint index;
+  gboolean focused;
+};
+
+struct _GtkLabelAccessibleLinkClass
+{
+  AtkHyperlinkClass parent_class;
+};
+
+static GtkLabelAccessibleLink *gtk_label_accessible_link_new (GtkLabelAccessible *label,
+                                                              gint                idx);
+
+typedef struct _GtkLabelAccessibleLinkImpl      GtkLabelAccessibleLinkImpl;
+typedef struct _GtkLabelAccessibleLinkImplClass GtkLabelAccessibleLinkImplClass;
+
+struct _GtkLabelAccessibleLinkImpl
+{
+  AtkObject parent;
+
+  GtkLabelAccessibleLink *link;
+};
+
+struct _GtkLabelAccessibleLinkImplClass
+{
+  AtkObjectClass parent_class;
+};
+
+/* GtkLabelAccessibleLinkImpl {{{1 */
+
+GType _gtk_label_accessible_link_impl_get_type (void);
+
+static void atk_hyperlink_impl_interface_init (AtkHyperlinkImplIface *iface);
+
+G_DEFINE_TYPE_WITH_CODE (GtkLabelAccessibleLinkImpl, _gtk_label_accessible_link_impl, ATK_TYPE_OBJECT,
+                         G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERLINK_IMPL, atk_hyperlink_impl_interface_init))
+
+static AtkHyperlink *
+gtk_label_accessible_link_impl_get_hyperlink (AtkHyperlinkImpl *atk_impl)
+{
+  GtkLabelAccessibleLinkImpl *impl = (GtkLabelAccessibleLinkImpl *)atk_impl;
+
+  return g_object_ref (impl->link);
+}
+
+static void
+atk_hyperlink_impl_interface_init (AtkHyperlinkImplIface *iface)
+{
+  iface->get_hyperlink = gtk_label_accessible_link_impl_get_hyperlink;
+}
+
+static AtkStateSet *
+gtk_label_accessible_link_impl_ref_state_set (AtkObject *obj)
+{
+  AtkStateSet *state_set;
+  GtkLabelAccessibleLink *link;
+  GtkWidget *widget;
+
+  link = ((GtkLabelAccessibleLinkImpl *)obj)->link;
+
+  state_set = atk_object_ref_state_set (atk_object_get_parent (obj));
+
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (atk_object_get_parent (obj)));
+  if (widget)
+    {
+      if (gtk_widget_get_can_focus (widget))
+        {
+          atk_state_set_add_state (state_set, ATK_STATE_FOCUSABLE);
+          if (_gtk_label_get_link_focused (GTK_LABEL (widget), link->index))
+            atk_state_set_add_state (state_set, ATK_STATE_FOCUSED);
+          else
+            atk_state_set_remove_state (state_set, ATK_STATE_FOCUSED);
+        }
+
+      if (_gtk_label_get_link_visited (GTK_LABEL (widget), link->index))
+        atk_state_set_add_state (state_set, ATK_STATE_VISITED);
+    }
+
+  return state_set;
+}
+
+static void
+_gtk_label_accessible_link_impl_init (GtkLabelAccessibleLinkImpl *impl)
+{
+  atk_object_set_role (ATK_OBJECT (impl), ATK_ROLE_LINK);
+}
+
+static void
+_gtk_label_accessible_link_impl_finalize (GObject *obj)
+{
+  GtkLabelAccessibleLinkImpl *impl = (GtkLabelAccessibleLinkImpl *)obj;
+
+  g_object_unref (impl->link);
+
+  G_OBJECT_CLASS (_gtk_label_accessible_link_impl_parent_class)->finalize (obj);
+}
+
+static void
+_gtk_label_accessible_link_impl_class_init (GtkLabelAccessibleLinkImplClass *class)
+{
+  GObjectClass *object_class = G_OBJECT_CLASS (class);
+  AtkObjectClass *atk_obj_class = ATK_OBJECT_CLASS (class);
+
+  object_class->finalize = _gtk_label_accessible_link_impl_finalize;
+  atk_obj_class->ref_state_set = gtk_label_accessible_link_impl_ref_state_set;
+}
+
+/* 'Public' API {{{2 */
+
+static GtkLabelAccessibleLinkImpl *
+gtk_label_accessible_link_impl_new (GtkLabelAccessible *label,
+                                    gint                idx)
+{
+  GtkLabelAccessibleLinkImpl *impl;
+
+  impl = g_object_new (_gtk_label_accessible_link_impl_get_type (), NULL);
+  atk_object_set_parent (ATK_OBJECT (impl), ATK_OBJECT (label));
+  impl->link = gtk_label_accessible_link_new (label, idx);
+
+  return impl;
+}
+
+/* GtkLabelAccessibleLink {{{1 */
+
+GType _gtk_label_accessible_link_get_type (void);
+
+static void atk_action_interface_init (AtkActionIface *iface);
+
+G_DEFINE_TYPE_WITH_CODE (GtkLabelAccessibleLink, _gtk_label_accessible_link, ATK_TYPE_HYPERLINK,
+                         G_IMPLEMENT_INTERFACE (ATK_TYPE_ACTION, atk_action_interface_init))
+
+static gchar *
+gtk_label_accessible_link_get_uri (AtkHyperlink *atk_link,
+                                   gint          i)
+{
+  GtkLabelAccessibleLink *link = (GtkLabelAccessibleLink *)atk_link;
+  GtkWidget *widget;
+  const gchar *uri;
+
+  g_return_val_if_fail (i == 0, NULL);
+
+  if (link->label == NULL)
+    return NULL;
+
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (link->label));
+  uri = _gtk_label_get_link_uri (GTK_LABEL (widget), link->index);
+
+  return g_strdup (uri);
+}
+
+static gint
+gtk_label_accessible_link_get_n_anchors (AtkHyperlink *atk_link)
+{
+  return 1;
+}
+
+static gboolean
+gtk_label_accessible_link_is_valid (AtkHyperlink *atk_link)
+{
+  return TRUE;
+}
+
+static AtkObject *
+gtk_label_accessible_link_get_object (AtkHyperlink *atk_link,
+                                      gint          i)
+{
+  GtkLabelAccessibleLink *link = (GtkLabelAccessibleLink *)atk_link;
+
+  g_return_val_if_fail (i == 0, NULL);
+
+  return ATK_OBJECT (link->label);
+}
+
+static gint
+gtk_label_accessible_link_get_start_index (AtkHyperlink *atk_link)
+{
+  GtkLabelAccessibleLink *link = (GtkLabelAccessibleLink *)atk_link;
+  GtkWidget *widget;
+  gint start, end;
+
+  if (link->label == NULL)
+    return 0;
+
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (link->label));
+  _gtk_label_get_link_extent (GTK_LABEL (widget), link->index, &start, &end);
+
+  return start;
+}
+
+static gint
+gtk_label_accessible_link_get_end_index (AtkHyperlink *atk_link)
+{
+  GtkLabelAccessibleLink *link = (GtkLabelAccessibleLink *)atk_link;
+  GtkWidget *widget;
+  gint start, end;
+
+  if (link->label == NULL)
+    return 0;
+
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (link->label));
+  _gtk_label_get_link_extent (GTK_LABEL (widget), link->index, &start, &end);
+
+  return end;
+}
+
+static void
+_gtk_label_accessible_link_init (GtkLabelAccessibleLink *link)
+{
+}
+
+static void
+_gtk_label_accessible_link_class_init (GtkLabelAccessibleLinkClass *class)
+{
+  AtkHyperlinkClass *atk_link_class = ATK_HYPERLINK_CLASS (class);
+
+  atk_link_class->get_uri = gtk_label_accessible_link_get_uri;
+  atk_link_class->get_n_anchors = gtk_label_accessible_link_get_n_anchors;
+  atk_link_class->is_valid = gtk_label_accessible_link_is_valid;
+  atk_link_class->get_object = gtk_label_accessible_link_get_object;
+  atk_link_class->get_start_index = gtk_label_accessible_link_get_start_index;
+  atk_link_class->get_end_index = gtk_label_accessible_link_get_end_index;
+}
+
+/* 'Public' API {{{2 */
+
+static GtkLabelAccessibleLink *
+gtk_label_accessible_link_new (GtkLabelAccessible *label,
+                               gint                idx)
+{
+  GtkLabelAccessibleLink *link;
+
+  link = g_object_new (_gtk_label_accessible_link_get_type (), NULL);
+  link->label = label;
+  link->index = idx;
+
+  return link;
+}
+
+/* AtkAction implementation {{{2 */
+
+static gboolean
+gtk_label_accessible_link_do_action (AtkAction *action,
+                                     gint       i)
+{
+  GtkLabelAccessibleLink *link = (GtkLabelAccessibleLink *)action;
+  GtkWidget *widget;
+
+  if (i != 0)
+    return FALSE;
+
+  if (link->label == NULL)
+    return FALSE;
+
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (link->label));
+  if (widget == NULL)
+    return FALSE;
+
+  if (!gtk_widget_is_sensitive (widget) || !gtk_widget_get_visible (widget))
+    return FALSE;
+
+  _gtk_label_activate_link (GTK_LABEL (widget), link->index);
+
+  return TRUE;
+}
+
+static gint
+gtk_label_accessible_link_get_n_actions (AtkAction *action)
+{
+  return 1;
+}
+
+static const gchar *
+gtk_label_accessible_link_get_name (AtkAction *action,
+                                    gint       i)
+{
+  if (i != 0)
+    return NULL;
+
+  return "activate";
+}
+
+static void
+atk_action_interface_init (AtkActionIface *iface)
+{
+  iface->do_action = gtk_label_accessible_link_do_action;
+  iface->get_n_actions = gtk_label_accessible_link_get_n_actions;
+  iface->get_name = gtk_label_accessible_link_get_name;
+}
+
+/* GtkLabelAccessible {{{1 */
+
+static void atk_text_interface_init       (AtkTextIface      *iface);
+static void atk_hypertext_interface_init (AtkHypertextIface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GtkLabelAccessible, gtk_label_accessible, GTK_TYPE_WIDGET_ACCESSIBLE,
                          G_ADD_PRIVATE (GtkLabelAccessible)
-                         G_IMPLEMENT_INTERFACE (ATK_TYPE_TEXT, atk_text_interface_init))
+                         G_IMPLEMENT_INTERFACE (ATK_TYPE_TEXT, atk_text_interface_init)
+                         G_IMPLEMENT_INTERFACE (ATK_TYPE_HYPERTEXT, atk_hypertext_interface_init))
 
 static void
 gtk_label_accessible_init (GtkLabelAccessible *label)
@@ -50,9 +357,10 @@ gtk_label_accessible_initialize (AtkObject *obj,
 
   widget = GTK_WIDGET (data);
 
-  /*
-   * Check whether ancestor of GtkLabel is a GtkButton and if so
-   * set accessible parent for GtkLabelAccessible
+  _gtk_label_accessible_update_links (GTK_LABEL (widget));
+
+  /* Check whether ancestor of GtkLabel is a GtkButton
+   * and if so set accessible parent for GtkLabelAccessible
    */
   while (widget != NULL)
     {
@@ -89,46 +397,6 @@ check_for_selection_change (GtkLabelAccessible *accessible,
   accessible->priv->selection_bound = start;
 
   return ret_val;
-}
-
-void
-_gtk_label_accessible_text_deleted (GtkLabel *label)
-{
-  AtkObject *obj;
-  const char *text;
-  guint length;
-
-  obj = _gtk_widget_peek_accessible (GTK_WIDGET (label));
-  if (obj == NULL)
-    return;
-
-  text = gtk_label_get_text (label);
-  length = g_utf8_strlen (text, -1);
-  if (length > 0)
-    g_signal_emit_by_name (obj, "text-changed::delete", 0, length);
-}
-
-void
-_gtk_label_accessible_text_inserted (GtkLabel *label)
-{
-  AtkObject *obj;
-  const char *text;
-  guint length;
-
-  obj = _gtk_widget_peek_accessible (GTK_WIDGET (label));
-  if (obj == NULL)
-    return;
-
-  text = gtk_label_get_text (label);
-  length = g_utf8_strlen (text, -1);
-  if (length > 0)
-    g_signal_emit_by_name (obj, "text-changed::insert", 0, length);
-
-  if (obj->name == NULL)
-    /* The label has changed so notify a change in accessible-name */
-    g_object_notify (G_OBJECT (obj), "accessible-name");
-
-  g_signal_emit_by_name (obj, "visible-data-changed");
 }
 
 static void
@@ -266,21 +534,180 @@ gtk_label_accessible_get_name (AtkObject *accessible)
     }
 }
 
+static gint
+gtk_label_accessible_get_n_children (AtkObject *obj)
+{
+  GtkLabelAccessible *accessible = GTK_LABEL_ACCESSIBLE (obj);
+
+  return g_list_length (accessible->priv->links);
+}
+
+static AtkObject *
+gtk_label_accessible_ref_child (AtkObject *obj,
+                                gint       idx)
+{
+  GtkLabelAccessible *accessible = GTK_LABEL_ACCESSIBLE (obj);
+  AtkObject *child;
+
+  child = g_list_nth_data (accessible->priv->links, idx);
+
+  if (child)
+    g_object_ref (child);
+
+  return child;
+}
+
+static void clear_links (GtkLabelAccessible *accessible);
+
+static void
+gtk_label_accessible_finalize (GObject *obj)
+{
+  GtkLabelAccessible *accessible = GTK_LABEL_ACCESSIBLE (obj);
+
+  clear_links (accessible);
+
+  G_OBJECT_CLASS (gtk_label_accessible_parent_class)->finalize (obj);
+}
+
 static void
 gtk_label_accessible_class_init (GtkLabelAccessibleClass *klass)
 {
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
   AtkObjectClass *class = ATK_OBJECT_CLASS (klass);
   GtkWidgetAccessibleClass *widget_class = GTK_WIDGET_ACCESSIBLE_CLASS (klass);
 
-  widget_class->notify_gtk = gtk_label_accessible_notify_gtk;
+  object_class->finalize = gtk_label_accessible_finalize;
 
   class->get_name = gtk_label_accessible_get_name;
   class->ref_state_set = gtk_label_accessible_ref_state_set;
   class->ref_relation_set = gtk_label_accessible_ref_relation_set;
   class->initialize = gtk_label_accessible_initialize;
+
+  class->get_n_children = gtk_label_accessible_get_n_children;
+  class->ref_child = gtk_label_accessible_ref_child;
+
+  widget_class->notify_gtk = gtk_label_accessible_notify_gtk;
 }
 
-/* atktext.h */
+/* 'Public' API {{{2 */
+
+void
+_gtk_label_accessible_text_deleted (GtkLabel *label)
+{
+  AtkObject *obj;
+  const char *text;
+  guint length;
+
+  obj = _gtk_widget_peek_accessible (GTK_WIDGET (label));
+  if (obj == NULL)
+    return;
+
+  text = gtk_label_get_text (label);
+  length = g_utf8_strlen (text, -1);
+  if (length > 0)
+    g_signal_emit_by_name (obj, "text-changed::delete", 0, length);
+}
+
+void
+_gtk_label_accessible_text_inserted (GtkLabel *label)
+{
+  AtkObject *obj;
+  const char *text;
+  guint length;
+
+  obj = _gtk_widget_peek_accessible (GTK_WIDGET (label));
+  if (obj == NULL)
+    return;
+
+  text = gtk_label_get_text (label);
+  length = g_utf8_strlen (text, -1);
+  if (length > 0)
+    g_signal_emit_by_name (obj, "text-changed::insert", 0, length);
+
+  if (obj->name == NULL)
+    /* The label has changed so notify a change in accessible-name */
+    g_object_notify (G_OBJECT (obj), "accessible-name");
+
+  g_signal_emit_by_name (obj, "visible-data-changed");
+}
+
+static void
+clear_links (GtkLabelAccessible *accessible)
+{
+  GList *l;
+  gint i;
+  GtkLabelAccessibleLinkImpl *impl;
+
+  for (l = accessible->priv->links, i = 0; l; l = l->next, i++)
+    {
+      impl = l->data;
+      g_signal_emit_by_name (accessible, "children-changed::remove", i, impl, NULL);
+      atk_object_set_parent (ATK_OBJECT (impl), NULL);
+      impl->link->label = NULL;
+    }
+  g_list_free_full (accessible->priv->links, g_object_unref);
+  accessible->priv->links = NULL;
+}
+
+static void
+create_links (GtkLabelAccessible *accessible)
+{
+  GtkWidget *widget;
+  gint n, i;
+  GtkLabelAccessibleLinkImpl *impl;
+
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (accessible));
+
+  n = _gtk_label_get_n_links (GTK_LABEL (widget));
+  for (i = 0; i < n; i++)
+    {
+      impl = gtk_label_accessible_link_impl_new (accessible, i);
+      accessible->priv->links = g_list_append (accessible->priv->links, impl);
+      g_signal_emit_by_name (accessible, "children-changed::add", i, impl, NULL);
+    }
+}
+
+void
+_gtk_label_accessible_update_links (GtkLabel *label)
+{
+  AtkObject *obj;
+
+  obj = _gtk_widget_peek_accessible (GTK_WIDGET (label));
+  if (obj == NULL)
+    return;
+
+  clear_links (GTK_LABEL_ACCESSIBLE (obj));
+  create_links (GTK_LABEL_ACCESSIBLE (obj));
+}
+
+void
+_gtk_label_accessible_focus_link_changed (GtkLabel *label)
+{
+  AtkObject *obj;
+  GtkLabelAccessible *accessible;
+  GList *l;
+  GtkLabelAccessibleLinkImpl *impl;
+  gboolean focused;
+
+  obj = _gtk_widget_peek_accessible (GTK_WIDGET (label));
+  if (obj == NULL)
+    return;
+
+  accessible = GTK_LABEL_ACCESSIBLE (obj);
+
+  for (l = accessible->priv->links; l; l = l->next)
+    {
+      impl = l->data;
+      focused = _gtk_label_get_link_focused (label, impl->link->index);
+      if (impl->link->focused != focused)
+        {
+          impl->link->focused = focused;
+          atk_object_notify_state_change (ATK_OBJECT (impl), ATK_STATE_FOCUSED, focused);
+        }
+    }
+}
+
+/* AtkText implementation {{{2 */
 
 static gchar*
 gtk_label_accessible_get_text (AtkText *atk_text,
@@ -764,3 +1191,50 @@ atk_text_interface_init (AtkTextIface *iface)
   iface->get_default_attributes = gtk_label_accessible_get_default_attributes;
 }
 
+/* AtkHypertext implementation {{{2 */
+
+static AtkHyperlink *
+gtk_label_accessible_get_link (AtkHypertext *hypertext,
+                               gint          idx)
+{
+  GtkLabelAccessible *label = GTK_LABEL_ACCESSIBLE (hypertext);
+  GtkLabelAccessibleLinkImpl *impl;
+
+  impl = (GtkLabelAccessibleLinkImpl *)g_list_nth_data (label->priv->links, idx);
+
+  if (impl)
+    return ATK_HYPERLINK (impl->link);
+
+  return NULL;
+}
+
+static gint
+gtk_label_accessible_get_n_links (AtkHypertext *hypertext)
+{
+  GtkWidget *widget;
+
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (hypertext));
+
+  return _gtk_label_get_n_links (GTK_LABEL (widget));
+}
+
+static gint
+gtk_label_accessible_get_link_index (AtkHypertext *hypertext,
+                                     gint          char_index)
+{
+  GtkWidget *widget;
+
+  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (hypertext));
+
+  return _gtk_label_get_link_at (GTK_LABEL (widget), char_index);
+}
+
+static void
+atk_hypertext_interface_init (AtkHypertextIface *iface)
+{
+  iface->get_link = gtk_label_accessible_get_link;
+  iface->get_n_links = gtk_label_accessible_get_n_links;
+  iface->get_link_index = gtk_label_accessible_get_link_index;
+}
+
+/* vim:set foldmethod=marker expandtab: */

@@ -30,6 +30,7 @@
 #include "gtkintl.h"
 #include "gtkprivate.h"
 #include "gtkmessagedialog.h"
+#include "gtkwindowgroup.h"
 #include "gtktypebuiltins.h"
 
 /**
@@ -40,7 +41,7 @@
  *
  * GtkPrintOperation is the high-level, portable printing API.
  * It looks a bit different than other GTK+ dialogs such as the
- * #GtkFileChooser, since some platforms don't expose enough
+ * #GtkFileChooser, since some platforms don’t expose enough
  * infrastructure to implement a good print dialog. On such
  * platforms, GtkPrintOperation uses the native print dialog.
  * On platforms which do not provide a native print dialog, GTK+
@@ -59,9 +60,9 @@
  * #GtkPrintOperation::draw-page, which you are supposed to catch
  * and render the page on the provided #GtkPrintContext using Cairo.
  *
- * <example>
- * <title>The high-level printing API</title>
- * <programlisting>
+ * # The high-level printing API
+ *
+ * |[<!-- language="C" -->
  * static GtkPrintSettings *settings = NULL;
  *
  * static void
@@ -90,8 +91,7 @@
  *
  *   g_object_unref (print);
  * }
- * </programlisting>
- * </example>
+ * ]|
  *
  * By default GtkPrintOperation uses an external application to do
  * print preview. To implement a custom print preview, an application
@@ -167,7 +167,7 @@ G_DEFINE_TYPE_WITH_CODE (GtkPrintOperation, gtk_print_operation, G_TYPE_OBJECT,
  *
  * Registers an error quark for #GtkPrintOperation if necessary.
  * 
- * Return value: The error quark used for #GtkPrintOperation errors.
+ * Returns: The error quark used for #GtkPrintOperation errors.
  *
  * Since: 2.10
  **/
@@ -632,14 +632,17 @@ preview_ready (GtkPrintOperationPreview *preview,
                GtkPrintContext          *context,
 	       PreviewOp                *pop)
 {
+  guint id;
+
   pop->print_context = context;
 
   g_object_ref (preview);
       
-  gdk_threads_add_idle_full (G_PRIORITY_DEFAULT_IDLE + 10,
-	                     preview_print_idle,
-		             pop,
-		             preview_print_idle_done);
+  id = gdk_threads_add_idle_full (G_PRIORITY_DEFAULT_IDLE + 10,
+				  preview_print_idle,
+				  pop,
+				  preview_print_idle_done);
+  g_source_set_name_by_id (id, "[gtk+] preview_print_idle");
 }
 
 
@@ -805,7 +808,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
    * it all in the ::begin-print handler, and set the number of pages
    * from there.
    *
-   * Return value: %TRUE if pagination is complete
+   * Returns: %TRUE if pagination is complete
    *
    * Since: 2.10
    */
@@ -853,7 +856,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
    * Emitted for every page that is printed. The signal handler
    * must render the @page_nr's page onto the cairo context obtained
    * from @context using gtk_print_context_get_cairo_context().
-   * |[
+   * |[<!-- language="C" -->
    * static void
    * draw_page (GtkPrintOperation *operation,
    *            GtkPrintContext   *context,
@@ -1129,7 +1132,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
    *
    * The number of pages in the document. 
    *
-   * This <emphasis>must</emphasis> be set to a positive number
+   * This must be set to a positive number
    * before the rendering starts. It may be set in a 
    * #GtkPrintOperation::begin-print signal hander.
    *
@@ -1149,7 +1152,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 						     -1,
 						     G_MAXINT,
 						     -1,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkPrintOperation:current-page:
@@ -1171,7 +1174,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 						     -1,
 						     G_MAXINT,
 						     -1,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   /**
    * GtkPrintOperation:use-full-page:
@@ -1191,7 +1194,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 							 P_("Use full page"),
 							 P_("TRUE if the origin of the context should be at the corner of the page and not the corner of the imageable area"),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
 
   /**
@@ -1199,7 +1202,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
    *
    * If %TRUE, the print operation will try to continue report on 
    * the status of the print job in the printer queues and printer. 
-   * This can allow your application to show things like "out of paper" 
+   * This can allow your application to show things like “out of paper” 
    * issues, and when the print job actually reaches the printer. 
    * However, this is often implemented using polling, and should 
    * not be enabled unless needed.
@@ -1212,7 +1215,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 							 P_("Track Print Status"),
 							 P_("TRUE if the print operation will continue to report on the print job status after the print data has been sent to the printer or print server."),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
 
   /**
@@ -1231,7 +1234,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 						      P_("The unit in which distances can be measured in the context"),
 						      GTK_TYPE_UNIT,
 						      GTK_UNIT_NONE,
-						      GTK_PARAM_READWRITE));
+						      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   
   /**
@@ -1248,7 +1251,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 							 P_("Show Dialog"),
 							 P_("TRUE if a progress dialog is shown while printing."),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkPrintOperation:allow-async:
@@ -1272,7 +1275,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 							 P_("Allow Async"),
 							 P_("TRUE if print process may run asynchronous."),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   /**
    * GtkPrintOperation:export-filename:
@@ -1281,10 +1284,10 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
    * Currently, PDF is the only supported format.
    *
    * The intended use of this property is for implementing 
-   * "Export to PDF" actions.
+   * “Export to PDF” actions.
    *
-   * "Print to PDF" support is independent of this and is done
-   * by letting the user pick the "Print to PDF" item from the 
+   * “Print to PDF” support is independent of this and is done
+   * by letting the user pick the “Print to PDF” item from the 
    * list of printers in the print dialog.
    *
    * Since: 2.10
@@ -1311,7 +1314,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 						      P_("The status of the print operation"),
 						      GTK_TYPE_PRINT_STATUS,
 						      GTK_PRINT_STATUS_INITIAL,
-						      GTK_PARAM_READABLE));
+						      GTK_PARAM_READABLE|G_PARAM_EXPLICIT_NOTIFY));
   
   /**
    * GtkPrintOperation:status-string:
@@ -1366,7 +1369,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 							 P_("Support Selection"),
 							 P_("TRUE if the print operation will support print of selection."),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkPrintOperation:has-selection:
@@ -1383,7 +1386,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 							 P_("Has Selection"),
 							 P_("TRUE if a selection exists."),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
 
   /**
@@ -1399,7 +1402,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 							 P_("Embed Page Setup"),
 							 P_("TRUE if page setup combos are embedded in GtkPrintUnixDialog"),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   /**
    * GtkPrintOperation:n-pages-to-print:
    *
@@ -1423,7 +1426,7 @@ gtk_print_operation_class_init (GtkPrintOperationClass *class)
 						     -1,
 						     G_MAXINT,
 						     -1,
-						     GTK_PARAM_READABLE));
+						     GTK_PARAM_READABLE|G_PARAM_EXPLICIT_NOTIFY));
 }
 
 /**
@@ -1551,7 +1554,7 @@ gtk_print_operation_set_print_settings (GtkPrintOperation *op,
  * gtk_print_operation_set_print_settings() or
  * gtk_print_operation_run() have been called.
  *
- * Return value: (transfer none): the current print settings of @op.
+ * Returns: (transfer none): the current print settings of @op.
  *
  * Since: 2.10
  **/
@@ -1571,7 +1574,7 @@ gtk_print_operation_get_print_settings (GtkPrintOperation *op)
  * Sets the name of the print job. The name is used to identify 
  * the job (e.g. in monitoring applications like eggcups). 
  * 
- * If you don't set a job name, GTK+ picks a default one by 
+ * If you don’t set a job name, GTK+ picks a default one by 
  * numbering successive print jobs.
  *
  * Since: 2.10
@@ -1600,7 +1603,7 @@ gtk_print_operation_set_job_name (GtkPrintOperation *op,
  * 
  * Sets the number of pages in the document. 
  *
- * This <emphasis>must</emphasis> be set to a positive number
+ * This must be set to a positive number
  * before the rendering starts. It may be set in a 
  * #GtkPrintOperation::begin-print signal hander.
  *
@@ -1623,7 +1626,7 @@ gtk_print_operation_set_n_pages (GtkPrintOperation *op,
 
   priv = op->priv;
   g_return_if_fail (priv->current_page == -1 || 
-		    priv->current_page < n_pages);
+                    priv->current_page < n_pages);
 
   if (priv->nr_of_pages != n_pages)
     {
@@ -1738,7 +1741,7 @@ gtk_print_operation_set_unit (GtkPrintOperation *op,
  * 
  * If track_status is %TRUE, the print operation will try to continue report
  * on the status of the print job in the printer queues and printer. This
- * can allow your application to show things like "out of paper" issues,
+ * can allow your application to show things like “out of paper” issues,
  * and when the print job actually reaches the printer.
  * 
  * This function is often implemented using some form of polling, so it should
@@ -1810,7 +1813,7 @@ _gtk_print_operation_set_status (GtkPrintOperation *op,
  * Returns the status of the print operation. 
  * Also see gtk_print_operation_get_status_string().
  * 
- * Return value: the status of the print operation
+ * Returns: the status of the print operation
  *
  * Since: 2.10
  **/
@@ -1834,7 +1837,7 @@ gtk_print_operation_get_status (GtkPrintOperation *op)
  * Use gtk_print_operation_get_status() to obtain a status
  * value that is suitable for programmatic use. 
  * 
- * Return value: a string representation of the status
+ * Returns: a string representation of the status
  *    of the print operation
  *
  * Since: 2.10
@@ -1859,7 +1862,7 @@ gtk_print_operation_get_status_string (GtkPrintOperation *op)
  * can be in a non-finished state even after done has been called, as
  * the operation status then tracks the print job status on the printer.
  * 
- * Return value: %TRUE, if the print operation is finished.
+ * Returns: %TRUE, if the print operation is finished.
  *
  * Since: 2.10
  **/
@@ -1971,11 +1974,11 @@ gtk_print_operation_set_custom_tab_label (GtkPrintOperation  *op,
  * 
  * Sets up the #GtkPrintOperation to generate a file instead
  * of showing the print dialog. The indended use of this function
- * is for implementing "Export to PDF" actions. Currently, PDF
+ * is for implementing “Export to PDF” actions. Currently, PDF
  * is the only supported format.
  *
- * "Print to PDF" support is independent of this and is done
- * by letting the user pick the "Print to PDF" item from the list
+ * “Print to PDF” support is independent of this and is done
+ * by letting the user pick the “Print to PDF” item from the list
  * of printers in the print dialog.
  *
  * Since: 2.10
@@ -2366,7 +2369,7 @@ update_progress (PrintPagesData *data)
  * gtk_print_operation_draw_page_finish() from application. It can
  * be used for drawing page in another thread.
  *
- * This function must be called in the callback of "draw-page" signal.
+ * This function must be called in the callback of “draw-page” signal.
  *
  * Since: 2.16
  **/
@@ -2985,6 +2988,7 @@ print_pages (GtkPrintOperation       *op,
 	gdk_threads_add_timeout (SHOW_PROGRESS_TIME, 
 		       (GSourceFunc)show_progress_timeout,
 		       data);
+      g_source_set_name_by_id (priv->show_progress_timeout_id, "[gtk+] show_progress_timeout");
 
       data->progress = progress;
     }
@@ -3053,6 +3057,7 @@ print_pages (GtkPrintOperation       *op,
 					                 print_pages_idle, 
 					                 data, 
 					                 print_pages_idle_done);
+  g_source_set_name_by_id (priv->print_pages_idle_id, "[gtk+] print_pages_idle");
   
   /* Recursive main loop to make sure we don't exit  on sync operations  */
   if (priv->is_sync)
@@ -3116,7 +3121,7 @@ gtk_print_operation_get_error (GtkPrintOperation  *op,
  * #GtkPrintOperation::done signal will be emitted with the result of the 
  * operation when the it is done (i.e. when the dialog is canceled, or when 
  * the print succeeds or fails).
- * |[
+ * |[<!-- language="C" -->
  * if (settings != NULL)
  *   gtk_print_operation_set_print_settings (print, settings);
  *   
@@ -3157,7 +3162,7 @@ gtk_print_operation_get_error (GtkPrintOperation  *op,
  * Note that gtk_print_operation_run() can only be called once on a
  * given #GtkPrintOperation.
  *
- * Return value: the result of the print operation. A return value of 
+ * Returns: the result of the print operation. A return value of 
  *   %GTK_PRINT_OPERATION_RESULT_APPLY indicates that the printing was
  *   completed successfully. In this case, it is a good idea to obtain 
  *   the used print settings with gtk_print_operation_get_print_settings() 
@@ -3234,6 +3239,9 @@ gtk_print_operation_run (GtkPrintOperation        *op,
 								 &do_print);
     }
 
+  /* To ensure that priv is still valid after print_pages () */
+  g_object_ref (op);
+
   if (run_print_pages)
     print_pages (op, parent, do_print, result);
 
@@ -3245,6 +3253,7 @@ gtk_print_operation_run (GtkPrintOperation        *op,
   else if (priv->cancelled)
     result = GTK_PRINT_OPERATION_RESULT_CANCEL;
  
+  g_object_unref (op);
   return result;
 }
 

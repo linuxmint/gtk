@@ -2,7 +2,7 @@
 .\"     Title: broadwayd
 .\"    Author: Alexander Larsson
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: 04/05/2014
+.\"      Date: 11/09/2014
 .\"    Manual: User Commands
 .\"    Source: GTK+
 .\"  Language: English
@@ -31,7 +31,7 @@
 broadwayd \- Broadway display server
 .SH "SYNOPSIS"
 .HP \w'\fBbroadwayd\fR\ 'u
-\fBbroadwayd\fR [\-\-port\ \fIPORT\fR] [\-\-address\ \fIADDRESS\fR] [\fI:DISPLAY\fR]
+\fBbroadwayd\fR [\-\-port\ \fIPORT\fR] [\-\-address\ \fIADDRESS\fR] [\-\-unixsocket\ \fIADDRESS\fR] [\fI:DISPLAY\fR]
 .SH "DESCRIPTION"
 .PP
 \fBbroadwayd\fR
@@ -94,4 +94,14 @@ Use
 \fIADDRESS\fR
 as the HTTP address, instead of the default
 http://127\&.0\&.0\&.1:\fIPORT\fR\&.
+.RE
+.PP
+\-\-unixsocket
+.RS 4
+Use
+\fIADDRESS\fR
+as the unix domain socket address\&. This option overrides
+\-\-address
+and
+\-\-port\&. It is available only on Unix\-like systems\&.
 .RE

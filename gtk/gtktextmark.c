@@ -59,8 +59,9 @@
  * @Short_description: A position in the buffer preserved across buffer modifications
  * @Title: GtkTextMark
  *
- * You may wish to begin by reading the <link linkend="TextWidget">text widget
- * conceptual overview</link> which gives an overview of all the objects and data
+ * You may wish to begin by reading the
+ * [text widget conceptual overview][TextWidget]
+ * which gives an overview of all the objects and data
  * types related to the text widget and how they work together.
  *
  * A #GtkTextMark is like a bookmark in a text buffer; it preserves a position in
@@ -69,15 +70,14 @@
  * buffer mutations, because their behavior is defined when text is inserted or
  * deleted. When text containing a mark is deleted, the mark remains in the
  * position originally occupied by the deleted text. When text is inserted at a
- * mark, a mark with <firstterm>left gravity</firstterm> will be moved to the
- * beginning of the newly-inserted text, and a mark with <firstterm>right
- * gravity</firstterm> will be moved to the end.
+ * mark, a mark with “left gravity” will be moved to the
+ * beginning of the newly-inserted text, and a mark with “right
+ * gravity” will be moved to the end.
  *
- * <footnote>
- * "left" and "right" here refer to logical direction (left is the toward the start
- * of the buffer); in some languages such as Hebrew the logically-leftmost text is
- * not actually on the left when displayed.
- * </footnote>
+ * Note that “left” and “right” here refer to logical direction (left
+ * is the toward the start of the buffer); in some languages such as
+ * Hebrew the logically-leftmost text is not actually on the left when
+ * displayed.
  *
  * Marks are reference counted, but the reference count only controls the validity
  * of the memory; marks can be deleted from the buffer at any time with
@@ -90,6 +90,11 @@
  * Marks are typically created using the gtk_text_buffer_create_mark() function.
  */
 
+/*
+ * Macro that determines the size of a mark segment:
+ */
+#define MSEG_SIZE ((unsigned) (G_STRUCT_OFFSET (GtkTextLineSegment, body) \
+        + sizeof (GtkTextMarkBody)))
 
 static void gtk_text_mark_set_property (GObject         *object,
 				        guint            prop_id,
@@ -120,6 +125,11 @@ gtk_text_mark_class_init (GtkTextMarkClass *klass)
   object_class->set_property = gtk_text_mark_set_property;
   object_class->get_property = gtk_text_mark_get_property;
 
+  /**
+   * GtkTextMark:name:
+   *
+   * The name of the mark or %NULL if the mark is anonymous.
+   */
   g_object_class_install_property (object_class,
                                    PROP_NAME,
                                    g_param_spec_string ("name",
@@ -128,6 +138,13 @@ gtk_text_mark_class_init (GtkTextMarkClass *klass)
                                                         NULL,
                                                         GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
+  /**
+   * GtkTextMark:left-gravity:
+   *
+   * Whether the mark has left gravity. When text is inserted at the mark’s
+   * current location, if the mark has left gravity it will be moved
+   * to the left of the newly-inserted text, otherwise to the right.
+   */
   g_object_class_install_property (object_class,
                                    PROP_LEFT_GRAVITY,
                                    g_param_spec_boolean ("left-gravity",
@@ -161,7 +178,7 @@ gtk_text_mark_finalize (GObject *obj)
                    "impending");
 
       g_free (seg->body.mark.name);
-      g_free (seg);
+      g_slice_free1 (MSEG_SIZE, seg);
 
       mark->segment = NULL;
     }
@@ -231,14 +248,14 @@ gtk_text_mark_get_property (GObject    *object,
  * Creates a text mark. Add it to a buffer using gtk_text_buffer_add_mark().
  * If @name is %NULL, the mark is anonymous; otherwise, the mark can be 
  * retrieved by name using gtk_text_buffer_get_mark(). If a mark has left 
- * gravity, and text is inserted at the mark's current location, the mark 
+ * gravity, and text is inserted at the mark’s current location, the mark 
  * will be moved to the left of the newly-inserted text. If the mark has 
  * right gravity (@left_gravity = %FALSE), the mark will end up on the 
  * right of newly-inserted text. The standard left-to-right cursor is a 
  * mark with right gravity (when you type, the cursor stays on the right
- * side of the text you're typing).
+ * side of the text you’re typing).
  *
- * Return value: new #GtkTextMark
+ * Returns: new #GtkTextMark
  *
  * Since: 2.12
  **/
@@ -259,7 +276,7 @@ gtk_text_mark_new (const gchar *name,
  * Returns %TRUE if the mark is visible (i.e. a cursor is displayed
  * for it).
  * 
- * Return value: %TRUE if visible
+ * Returns: %TRUE if visible
  **/
 gboolean
 gtk_text_mark_get_visible (GtkTextMark *mark)
@@ -277,7 +294,7 @@ gtk_text_mark_get_visible (GtkTextMark *mark)
  * 
  * Returns the mark name; returns NULL for anonymous marks.
  * 
- * Return value: mark name
+ * Returns: mark name
  **/
 const char *
 gtk_text_mark_get_name (GtkTextMark *mark)
@@ -297,7 +314,7 @@ gtk_text_mark_get_name (GtkTextMark *mark)
  * with gtk_text_buffer_delete_mark(). See gtk_text_buffer_add_mark()
  * for a way to add it to a buffer again.
  * 
- * Return value: whether the mark is deleted
+ * Returns: whether the mark is deleted
  **/
 gboolean
 gtk_text_mark_get_deleted (GtkTextMark *mark)
@@ -321,7 +338,7 @@ gtk_text_mark_get_deleted (GtkTextMark *mark)
  * Gets the buffer this mark is located inside,
  * or %NULL if the mark is deleted.
  *
- * Return value: (transfer none): the mark's #GtkTextBuffer
+ * Returns: (transfer none): the mark’s #GtkTextBuffer
  **/
 GtkTextBuffer*
 gtk_text_mark_get_buffer (GtkTextMark *mark)
@@ -344,7 +361,7 @@ gtk_text_mark_get_buffer (GtkTextMark *mark)
  * 
  * Determines whether the mark has left gravity.
  * 
- * Return value: %TRUE if the mark has left gravity, %FALSE otherwise
+ * Returns: %TRUE if the mark has left gravity, %FALSE otherwise
  **/
 gboolean
 gtk_text_mark_get_left_gravity (GtkTextMark *mark)
@@ -358,20 +375,12 @@ gtk_text_mark_get_left_gravity (GtkTextMark *mark)
   return seg->type == &gtk_text_left_mark_type;
 }
 
-/*
- * Macro that determines the size of a mark segment:
- */
-
-#define MSEG_SIZE ((unsigned) (G_STRUCT_OFFSET (GtkTextLineSegment, body) \
-        + sizeof (GtkTextMarkBody)))
-
-
 static GtkTextLineSegment *
 gtk_mark_segment_new (GtkTextMark *mark_obj)
 {
   GtkTextLineSegment *mark;
 
-  mark = (GtkTextLineSegment *) g_malloc0 (MSEG_SIZE);
+  mark = g_slice_alloc0 (MSEG_SIZE);
   mark->body.mark.name = NULL;
   mark->type = &gtk_text_right_mark_type;
 

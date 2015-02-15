@@ -55,34 +55,32 @@
  * @Short_description: Container for widgets from other processes
  * @Title: GtkSocket
  * @include: gtk/gtkx.h
- * @See_also: #GtkPlug, <ulink url="http://www.freedesktop.org/Standards/xembed-spec">XEmbed</ulink>
+ * @See_also: #GtkPlug, [XEmbed Protocol](http://www.freedesktop.org/Standards/xembed-spec)
  *
  * Together with #GtkPlug, #GtkSocket provides the ability to embed
  * widgets from one process into another process in a fashion that
  * is transparent to the user. One process creates a #GtkSocket widget
- * and passes that widget's window ID to the other process, which then
+ * and passes that widget’s window ID to the other process, which then
  * creates a #GtkPlug with that window ID. Any widgets contained in the
- * #GtkPlug then will appear inside the first application's window.
+ * #GtkPlug then will appear inside the first application’s window.
  *
- * The socket's window ID is obtained by using gtk_socket_get_id().
+ * The socket’s window ID is obtained by using gtk_socket_get_id().
  * Before using this function, the socket must have been realized,
  * and for hence, have been added to its parent.
  *
- * <example>
- * <title>Obtaining the window ID of a socket.</title>
- * <programlisting>
- * GtkWidget *socket = gtk_socket_new (<!-- -->);
+ * ## Obtaining the window ID of a socket.
+ *
+ * |[<!-- language="C" -->
+ * GtkWidget *socket = gtk_socket_new ();
  * gtk_widget_show (socket);
  * gtk_container_add (GTK_CONTAINER (parent), socket);
  *
- * /&ast; The following call is only necessary if one of
- *  * the ancestors of the socket is not yet visible.
- *  &ast;/
+ * // The following call is only necessary if one of
+ * // the ancestors of the socket is not yet visible.
  * gtk_widget_realize (socket);
  * g_print ("The ID of the sockets window is %#x\n",
  *          gtk_socket_get_id (socket));
- * </programlisting>
- * </example>
+ * ]|
  *
  * Note that if you pass the window ID of the socket to another
  * process that will create a plug in the socket, you must make
@@ -101,19 +99,17 @@
  * happening, you can connect to the #GtkSocket::plug-removed signal.
  *
  * The communication between a #GtkSocket and a #GtkPlug follows the
- * <ulink url="http://www.freedesktop.org/Standards/xembed-spec">XEmbed</ulink>
- * protocol. This protocol has also been implemented in other toolkits,
- * e.g. <application>Qt</application>, allowing the same level of
- * integration when embedding a <application>Qt</application> widget
+ * [XEmbed Protocol](http://www.freedesktop.org/Standards/xembed-spec).
+ * This protocol has also been implemented in other toolkits,
+ * e.g. Qt, allowing the same level of
+ * integration when embedding a Qt widget
  * in GTK or vice versa.
  *
- * <note>
  * The #GtkPlug and #GtkSocket widgets are only available when GTK+
  * is compiled for the X11 platform and %GDK_WINDOWING_X11 is defined.
  * They can only be used on a #GdkX11Display. To use #GtkPlug and
- * #GtkSocket, you need to include the <filename>gtk/gtkx.h</filename>
+ * #GtkSocket, you need to include the `gtk/gtkx.h`
  * header.
- * </note>
  */
 
 /* Forward declararations */
@@ -245,7 +241,7 @@ gtk_socket_class_init (GtkSocketClass *class)
    * The default action is to destroy the #GtkSocket widget, so if you 
    * want to reuse it you must add a signal handler that returns %TRUE. 
    *
-   * Return value: %TRUE to stop other handlers from being invoked.
+   * Returns: %TRUE to stop other handlers from being invoked.
    */
   socket_signals[PLUG_REMOVED] =
     g_signal_new (I_("plug-removed"),
@@ -286,7 +282,7 @@ gtk_socket_init (GtkSocket *socket)
  * 
  * Create a new empty #GtkSocket.
  * 
- * Return value:  the new #GtkSocket.
+ * Returns:  the new #GtkSocket.
  **/
 GtkWidget*
 gtk_socket_new (void)
@@ -307,7 +303,7 @@ gtk_socket_new (void)
  * client may be in the same process or in a different process. 
  * 
  * To embed a #GtkPlug in a #GtkSocket, you can either create the
- * #GtkPlug with <literal>gtk_plug_new (0)</literal>, call 
+ * #GtkPlug with `gtk_plug_new (0)`, call 
  * gtk_plug_get_id() to get the window ID of the plug, and then pass that to the
  * gtk_socket_add_id(), or you can call gtk_socket_get_id() to get the
  * window ID for the socket, and call gtk_plug_new() passing in that
@@ -340,7 +336,7 @@ gtk_socket_add_id (GtkSocket      *socket,
  * The #GtkSocket must have already be added into a toplevel window 
  * before you can make this call.
  * 
- * Return value: the window ID for the socket
+ * Returns: the window ID for the socket
  **/
 Window
 gtk_socket_get_id (GtkSocket *socket)
@@ -361,7 +357,7 @@ gtk_socket_get_id (GtkSocket *socket)
  * Retrieves the window of the plug. Use this to check if the plug has
  * been created inside of the socket.
  *
- * Return value: (transfer none): the window of the plug if available, or %NULL
+ * Returns: (transfer none): the window of the plug if available, or %NULL
  *
  * Since:  2.14
  **/
@@ -1005,7 +1001,7 @@ gtk_socket_forall (GtkContainer *container,
  * gtk_socket_add_window:
  * @socket: a #GtkSocket
  * @xid: the native identifier for a window
- * @need_reparent: whether the socket's plug's window needs to be
+ * @need_reparent: whether the socket’s plug’s window needs to be
  *                 reparented to the socket
  *
  * Adds a window to a GtkSocket.

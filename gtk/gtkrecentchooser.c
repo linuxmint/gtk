@@ -84,7 +84,7 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
    * This signal is emitted when there is a change in the set of
    * selected recently used resources.  This can happen when a user
    * modifies the selection with the mouse or the keyboard, or when
-   * explicitely calling functions to change the selection.
+   * explicitly calling functions to change the selection.
    *
    * Since: 2.10
    */
@@ -96,7 +96,7 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
                   NULL, NULL,
                   g_cclosure_marshal_VOID__VOID,
                   G_TYPE_NONE, 0);
-   
+
   /**
    * GtkRecentChooser::item-activated:
    * @chooser: the object which received the signal
@@ -104,7 +104,7 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
    * This signal is emitted when the user "activates" a recent item
    * in the recent chooser.  This can happen by double-clicking on an item
    * in the recently used resources list, or by pressing
-   * <keycap>Enter</keycap>.
+   * `Enter`.
    *
    * Since: 2.10
    */
@@ -126,11 +126,12 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
    * Since: 2.10
    */
   g_object_interface_install_property (iface,
-  				       g_param_spec_object ("recent-manager",
-  				       			    P_("Recent Manager"),
-  				       			    P_("The RecentManager object to use"),
-  				       			    GTK_TYPE_RECENT_MANAGER,
-  				       			    GTK_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+                                       g_param_spec_object ("recent-manager",
+                                                            P_("Recent Manager"),
+                                                            P_("The RecentManager object to use"),
+                                                            GTK_TYPE_RECENT_MANAGER,
+                                                            GTK_PARAM_WRITABLE|G_PARAM_CONSTRUCT_ONLY));
+
   /**
    * GtkRecentManager:show-private:
    *
@@ -141,11 +142,12 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
    * Since: 2.10
    */
   g_object_interface_install_property (iface,
-   				       g_param_spec_boolean ("show-private",
-   							     P_("Show Private"),
-   							     P_("Whether the private items should be displayed"),
-   							     FALSE,
-   							     GTK_PARAM_READWRITE));
+                                       g_param_spec_boolean ("show-private",
+                                                             P_("Show Private"),
+                                                             P_("Whether the private items should be displayed"),
+                                                             FALSE,
+                                                             GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
+
   /**
    * GtkRecentChooser:show-tips:
    *
@@ -155,11 +157,12 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
    * Since: 2.10
    */
   g_object_interface_install_property (iface,
-  				       g_param_spec_boolean ("show-tips",
-  				       			     P_("Show Tooltips"),
-  				       			     P_("Whether there should be a tooltip on the item"),
-  				       			     FALSE,
-  				       			     GTK_PARAM_READWRITE));
+                                       g_param_spec_boolean ("show-tips",
+                                                             P_("Show Tooltips"),
+                                                             P_("Whether there should be a tooltip on the item"),
+                                                             FALSE,
+                                                             GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
+
   /**
    * GtkRecentChooser:show-icons:
    *
@@ -168,11 +171,12 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
    * Since: 2.10
    */
   g_object_interface_install_property (iface,
-  				       g_param_spec_boolean ("show-icons",
-  				       			     P_("Show Icons"),
-  				       			     P_("Whether there should be an icon near the item"),
-  				       			     TRUE,
-  				       			     GTK_PARAM_READWRITE));
+                                       g_param_spec_boolean ("show-icons",
+                                                             P_("Show Icons"),
+                                                             P_("Whether there should be an icon near the item"),
+                                                             TRUE,
+                                                             GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
+
   /**
    * GtkRecentChooser:show-not-found:
    *
@@ -184,11 +188,12 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
    * Since: 2.10
    */
   g_object_interface_install_property (iface,
-  				       g_param_spec_boolean ("show-not-found",
-  				       			     P_("Show Not Found"),
-  				       			     P_("Whether the items pointing to unavailable resources should be displayed"),
-  				       			     TRUE,
-  				       			     GTK_PARAM_READWRITE));
+                                       g_param_spec_boolean ("show-not-found",
+                                                             P_("Show Not Found"),
+                                                             P_("Whether the items pointing to unavailable resources should be displayed"),
+                                                             TRUE,
+                                                             GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
+
   /**
    * GtkRecentChooser:select-multiple:
    *
@@ -197,11 +202,12 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
    * Since: 2.10
    */
   g_object_interface_install_property (iface,
-   				       g_param_spec_boolean ("select-multiple",
-   							     P_("Select Multiple"),
-   							     P_("Whether to allow multiple items to be selected"),
-   							     FALSE,
-   							     GTK_PARAM_READWRITE));
+                                       g_param_spec_boolean ("select-multiple",
+                                                             P_("Select Multiple"),
+                                                             P_("Whether to allow multiple items to be selected"),
+                                                             FALSE,
+                                                             GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
+
   /**
    * GtkRecentChooser:local-only:
    *
@@ -211,11 +217,12 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
    * Since: 2.10
    */
   g_object_interface_install_property (iface,
-		  		       g_param_spec_boolean ("local-only",
-					       		     P_("Local only"),
-							     P_("Whether the selected resource(s) should be limited to local file: URIs"),
-							     TRUE,
-							     GTK_PARAM_READWRITE));
+                                       g_param_spec_boolean ("local-only",
+                                                             P_("Local only"),
+                                                             P_("Whether the selected resource(s) should be limited to local file: URIs"),
+                                                             TRUE,
+                                                             GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
+
   /**
    * GtkRecentChooser:limit:
    *
@@ -225,13 +232,12 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
    * Since: 2.10
    */
   g_object_interface_install_property (iface,
-   				       g_param_spec_int ("limit",
-   							 P_("Limit"),
-   							 P_("The maximum number of items to be displayed"),
-   							 -1,
-   							 G_MAXINT,
-   							 50,
-   							 GTK_PARAM_READWRITE));
+                                       g_param_spec_int ("limit",
+                                                         P_("Limit"),
+                                                         P_("The maximum number of items to be displayed"),
+                                                         -1, G_MAXINT, 50,
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
+
   /**
    * GtkRecentChooser:sort-type:
    *
@@ -240,12 +246,13 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
    * Since: 2.10
    */
   g_object_interface_install_property (iface,
-		  		       g_param_spec_enum ("sort-type",
-					       		  P_("Sort Type"),
-							  P_("The sorting order of the items displayed"),
-							  GTK_TYPE_RECENT_SORT_TYPE,
-							  GTK_RECENT_SORT_NONE,
-							  GTK_PARAM_READWRITE));
+                                       g_param_spec_enum ("sort-type",
+                                                          P_("Sort Type"),
+                                                          P_("The sorting order of the items displayed"),
+                                                          GTK_TYPE_RECENT_SORT_TYPE,
+                                                          GTK_RECENT_SORT_NONE,
+                                                          GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
+
   /**
    * GtkRecentChooser:filter:
    *
@@ -255,11 +262,11 @@ gtk_recent_chooser_default_init (GtkRecentChooserInterface *iface)
    * Since: 2.10
    */
   g_object_interface_install_property (iface,
-  				       g_param_spec_object ("filter",
-  				       			    P_("Filter"),
-  				       			    P_("The current filter for selecting which resources are displayed"),
-  				       			    GTK_TYPE_RECENT_FILTER,
-  				       			    GTK_PARAM_READWRITE));
+                                       g_param_spec_object ("filter",
+                                                            P_("Filter"),
+                                                            P_("The current filter for selecting which resources are displayed"),
+                                                            GTK_TYPE_RECENT_FILTER,
+                                                            GTK_PARAM_READWRITE));
 }
 
 GQuark
@@ -274,7 +281,7 @@ gtk_recent_chooser_error_quark (void)
  *
  * Gets the #GtkRecentManager used by @chooser.
  *
- * Return value: the recent manager for @chooser.
+ * Returns: the recent manager for @chooser.
  *
  * Since: 2.10
  */
@@ -311,7 +318,7 @@ gtk_recent_chooser_set_show_private (GtkRecentChooser *chooser,
  * Returns whether @chooser should display recently used resources
  * registered as private.
  *
- * Return value: %TRUE if the recent chooser should show private items,
+ * Returns: %TRUE if the recent chooser should show private items,
  *   %FALSE otherwise.
  *
  * Since: 2.10
@@ -331,10 +338,10 @@ gtk_recent_chooser_get_show_private (GtkRecentChooser *chooser)
 /**
  * gtk_recent_chooser_set_show_not_found:
  * @chooser: a #GtkRecentChooser
- * @show_not_found: whether to show the local items we didn't find
+ * @show_not_found: whether to show the local items we didn’t find
  *
  * Sets whether @chooser should display the recently used resources that
- * it didn't find.  This only applies to local resources.
+ * it didn’t find.  This only applies to local resources.
  *
  * Since: 2.10
  */
@@ -354,7 +361,7 @@ gtk_recent_chooser_set_show_not_found (GtkRecentChooser *chooser,
  * Retrieves whether @chooser should show the recently used resources that
  * were not found.
  *
- * Return value: %TRUE if the resources not found should be displayed, and
+ * Returns: %TRUE if the resources not found should be displayed, and
  *   %FALSE otheriwse.
  *
  * Since: 2.10
@@ -396,7 +403,7 @@ gtk_recent_chooser_set_show_icons (GtkRecentChooser *chooser,
  *
  * Retrieves whether @chooser should show an icon near the resource.
  *
- * Return value: %TRUE if the icons should be displayed, %FALSE otherwise.
+ * Returns: %TRUE if the icons should be displayed, %FALSE otherwise.
  *
  * Since: 2.10
  */
@@ -436,7 +443,7 @@ gtk_recent_chooser_set_select_multiple (GtkRecentChooser *chooser,
  *
  * Gets whether @chooser can select multiple items.
  *
- * Return value: %TRUE if @chooser can select more than one item.
+ * Returns: %TRUE if @chooser can select more than one item.
  *
  * Since: 2.10
  */
@@ -480,7 +487,7 @@ gtk_recent_chooser_set_local_only (GtkRecentChooser *chooser,
  * Gets whether only local resources should be shown in the recently used
  * resources selector.  See gtk_recent_chooser_set_local_only()
  *
- * Return value: %TRUE if only local resources should be shown.
+ * Returns: %TRUE if only local resources should be shown.
  *
  * Since: 2.10
  */
@@ -522,7 +529,7 @@ gtk_recent_chooser_set_limit (GtkRecentChooser *chooser,
  * Gets the number of items returned by gtk_recent_chooser_get_items()
  * and gtk_recent_chooser_get_uris().
  *
- * Return value: A positive integer, or -1 meaning that all items are
+ * Returns: A positive integer, or -1 meaning that all items are
  *   returned.
  *
  * Since: 2.10
@@ -565,7 +572,7 @@ gtk_recent_chooser_set_show_tips (GtkRecentChooser *chooser,
  * Gets whether @chooser should display tooltips containing the full path
  * of a recently user resource.
  *
- * Return value: %TRUE if the recent chooser should show tooltips,
+ * Returns: %TRUE if the recent chooser should show tooltips,
  *   %FALSE otherwise.
  *
  * Since: 2.10
@@ -626,7 +633,7 @@ gtk_recent_chooser_set_sort_type (GtkRecentChooser  *chooser,
  *
  * Gets the value set by gtk_recent_chooser_set_sort_type().
  *
- * Return value: the sorting order of the @chooser.
+ * Returns: the sorting order of the @chooser.
  *
  * Since: 2.10
  */
@@ -682,7 +689,7 @@ gtk_recent_chooser_set_sort_func  (GtkRecentChooser  *chooser,
  *
  * Sets @uri as the current URI for @chooser.
  *
- * Return value: %TRUE if the URI was found.
+ * Returns: %TRUE if the URI was found.
  *
  * Since: 2.10
  */
@@ -702,7 +709,7 @@ gtk_recent_chooser_set_current_uri (GtkRecentChooser  *chooser,
  *
  * Gets the URI currently selected by @chooser.
  *
- * Return value: a newly allocated string holding a URI.
+ * Returns: a newly allocated string holding a URI.
  *
  * Since: 2.10
  */
@@ -720,7 +727,7 @@ gtk_recent_chooser_get_current_uri (GtkRecentChooser *chooser)
  * 
  * Gets the #GtkRecentInfo currently selected by @chooser.
  *
- * Return value: a #GtkRecentInfo.  Use gtk_recent_info_unref() when
+ * Returns: a #GtkRecentInfo.  Use gtk_recent_info_unref() when
  *   when you have finished using it.
  *
  * Since: 2.10
@@ -753,7 +760,7 @@ gtk_recent_chooser_get_current_item (GtkRecentChooser *chooser)
  *
  * Selects @uri inside @chooser.
  *
- * Return value: %TRUE if @uri was found.
+ * Returns: %TRUE if @uri was found.
  *
  * Since: 2.10
  */
@@ -824,10 +831,10 @@ gtk_recent_chooser_unselect_all (GtkRecentChooser *chooser)
  *
  * Gets the list of recently used resources in form of #GtkRecentInfo objects.
  *
- * The return value of this function is affected by the "sort-type" and
- * "limit" properties of @chooser.
+ * The return value of this function is affected by the “sort-type” and
+ * “limit” properties of @chooser.
  *
- * Return value:  (element-type GtkRecentInfo) (transfer full): A newly allocated
+ * Returns:  (element-type GtkRecentInfo) (transfer full): A newly allocated
  *   list of #GtkRecentInfo objects.  You should
  *   use gtk_recent_info_unref() on every item of the list, and then free
  *   the list itself using g_list_free().
@@ -850,12 +857,12 @@ gtk_recent_chooser_get_items (GtkRecentChooser *chooser)
  *
  * Gets the URI of the recently used resources.
  *
- * The return value of this function is affected by the "sort-type" and "limit"
+ * The return value of this function is affected by the “sort-type” and “limit”
  * properties of @chooser.
  *
  * Since the returned array is %NULL terminated, @length may be %NULL.
  * 
- * Return value: (array length=length zero-terminated=1) (transfer full):
+ * Returns: (array length=length zero-terminated=1) (transfer full):
  *     A newly allocated, %NULL-terminated array of strings. Use
  *     g_strfreev() to free it.
  *
@@ -943,7 +950,7 @@ gtk_recent_chooser_remove_filter (GtkRecentChooser *chooser,
  *
  * Gets the #GtkRecentFilter objects held by @chooser.
  *
- * Return value: (element-type GtkRecentFilter) (transfer container): A singly linked list
+ * Returns: (element-type GtkRecentFilter) (transfer container): A singly linked list
  *   of #GtkRecentFilter objects.  You
  *   should just free the returned list using g_slist_free().
  *
@@ -984,7 +991,7 @@ gtk_recent_chooser_set_filter (GtkRecentChooser *chooser,
  * Gets the #GtkRecentFilter object currently used by @chooser to affect
  * the display of the recently used resources.
  *
- * Return value: (transfer none): a #GtkRecentFilter object.
+ * Returns: (transfer none): a #GtkRecentFilter object.
  *
  * Since: 2.10
  */

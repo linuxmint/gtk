@@ -128,7 +128,7 @@ static GtkClipboard *clipboard_peek       (GdkDisplay       *display,
 
 /*  pasteboardChangedOwner is not called immediately, and it's not called
  *  reliably. It is somehow documented in the apple api docs, but the docs
- *  suck and don't really give clear instructions. Therefore we track
+ *  suck and don’t really give clear instructions. Therefore we track
  *  changeCount in several places below and clear the clipboard if it
  *  changed.
  */
@@ -701,10 +701,12 @@ gtk_clipboard_wait_for_contents (GtkClipboard *clipboard,
       GdkAtom *atoms;
 
       length = [types count] * sizeof (GdkAtom);
-      
+
       selection_data = g_slice_new0 (GtkSelectionData);
       selection_data->selection = clipboard->selection;
       selection_data->target = target;
+      if (!selection_data->display)
+	selection_data->display = gdk_display_get_default ();
 
       atoms = g_malloc (length);
 

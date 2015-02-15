@@ -8,7 +8,7 @@
 <link rel="up" href="DeprecatedObjects.html" title="Deprecated">
 <link rel="prev" href="GtkVScale.html" title="GtkVScale">
 <link rel="next" href="GtkColorSelection.html" title="GtkColorSelection">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -57,16 +57,22 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GtkTearoffMenuItem.html#GtkTearoffMenuItem-struct" title="struct GtkTearoffMenuItem">GtkTearoffMenuItem</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkTearoffMenuItem.html#GtkTearoffMenuItemClass" title="struct GtkTearoffMenuItemClass">GtkTearoffMenuItemClass</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="GtkTearoffMenuItem.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBin.html" title="GtkBin">GtkBin</a>
@@ -97,9 +103,8 @@ as a tearoff menu.</p>
 as a dotted line which has a left pointing arrow graphic indicating that
 the tearoff menu can be reattached.  Activating it will erase the tearoff
 menu window.</p>
-<div class="note">
-<a class="link" href="GtkTearoffMenuItem.html" title="GtkTearoffMenuItem"><span class="type">GtkTearoffMenuItem</span></a> is deprecated and should not be used in newly
-written code. Menus are not meant to be torn around.</div>
+<div class="blockquote"><blockquote class="blockquote"><p><a class="link" href="GtkTearoffMenuItem.html" title="GtkTearoffMenuItem"><span class="type">GtkTearoffMenuItem</span></a> is deprecated and should not be used in newly
+written code. Menus are not meant to be torn around.</p></blockquote></div>
 </div>
 <div class="refsect1">
 <a name="GtkTearoffMenuItem.functions_details"></a><h2>Functions</h2>
@@ -114,7 +119,7 @@ gtk_tearoff_menu_item_new (<em class="parameter"><code><span class="type">void</
 </div>
 <p>Creates a new <a class="link" href="GtkTearoffMenuItem.html" title="GtkTearoffMenuItem"><span class="type">GtkTearoffMenuItem</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.23.8.9.2.6"></a><h4>Returns</h4>
+<a name="id-1.3.24.8.9.2.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GtkTearoffMenuItem.html" title="GtkTearoffMenuItem"><span class="type">GtkTearoffMenuItem</span></a>.</p>
 <p></p>
 </div>
@@ -126,6 +131,29 @@ gtk_tearoff_menu_item_new (<em class="parameter"><code><span class="type">void</
 <a name="GtkTearoffMenuItem-struct"></a><h3>struct GtkTearoffMenuItem</h3>
 <pre class="programlisting">struct GtkTearoffMenuItem;</pre>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GtkTearoffMenuItemClass"></a><h3>struct GtkTearoffMenuItemClass</h3>
+<pre class="programlisting">struct GtkTearoffMenuItemClass {
+  GtkMenuItemClass parent_class;
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.24.8.10.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody><tr>
+<td class="struct_member_name"><p><a class="link" href="GtkMenuItem.html#GtkMenuItemClass" title="struct GtkMenuItemClass"><span class="type">GtkMenuItemClass</span></a> <em class="structfield"><code><a name="GtkTearoffMenuItemClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkTearoffMenuItem.see-also"></a><h2>See Also</h2>
@@ -134,6 +162,6 @@ gtk_tearoff_menu_item_new (<em class="parameter"><code><span class="type">void</
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

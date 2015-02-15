@@ -19,7 +19,6 @@
  */
 #include "config.h"
 #include <gtk/gtk.h>
-#include "prop-editor.h"
 
 static void
 change_orientation (GtkWidget *button, GtkWidget *toolbar)
@@ -348,14 +347,6 @@ static GtkTargetEntry target_table[] = {
   { "application/x-toolbar-item", 0, 0 }
 };
 
-static GtkWidget *
-make_prop_editor (GObject *object)
-{
-  GtkWidget *prop_editor = create_prop_editor (object, 0);
-  gtk_widget_show (prop_editor);
-  return prop_editor;
-}
-
 static void
 rtl_toggled (GtkCheckButton *check)
 {
@@ -509,7 +500,6 @@ main (gint argc, gchar **argv)
   gtk_container_add (GTK_CONTAINER (window), grid);
 
   toolbar = gtk_toolbar_new ();
-  gtk_widget_set_vexpand (toolbar, TRUE);
   gtk_grid_attach (GTK_GRID (grid), toolbar, 0, 0, 2, 1);
 
   hbox1 = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
@@ -646,6 +636,7 @@ main (gint argc, gchar **argv)
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
   item = gtk_toggle_tool_button_new ();
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (item), "Bold");
   gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (item), "format-text-bold");
   g_signal_connect (item, "toggled", G_CALLBACK (bold_toggled), NULL);
   add_item_to_list (store, item, "Bold");  
@@ -660,6 +651,7 @@ main (gint argc, gchar **argv)
   g_assert (gtk_toolbar_get_nth_item (GTK_TOOLBAR (toolbar), 0) != 0);
   
   item = gtk_radio_tool_button_new (NULL);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (item), "Left");
   gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (item), "format-justify-left");
   group = gtk_radio_tool_button_get_group (GTK_RADIO_TOOL_BUTTON (item));
   add_item_to_list (store, item, "Left");
@@ -667,14 +659,14 @@ main (gint argc, gchar **argv)
   
   
   item = gtk_radio_tool_button_new (group);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (item), "Center");
   gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (item), "format-justify-center");
-  make_prop_editor (G_OBJECT (item));
-
   group = gtk_radio_tool_button_get_group (GTK_RADIO_TOOL_BUTTON (item));
   add_item_to_list (store, item, "Center");
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
   item = gtk_radio_tool_button_new (group);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (item), "Right");
   gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (item), "format-justify-right");
   add_item_to_list (store, item, "Right");
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
@@ -739,8 +731,6 @@ main (gint argc, gchar **argv)
 		    G_CALLBACK (toolbar_drag_drop), label);
 
   gtk_widget_show_all (window);
-
-  make_prop_editor (G_OBJECT (toolbar));
 
   g_signal_connect (window, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
   

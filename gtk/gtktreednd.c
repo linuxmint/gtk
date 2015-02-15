@@ -105,10 +105,10 @@ gtk_tree_drag_dest_get_type (void)
  * @path: row on which user is initiating a drag
  * 
  * Asks the #GtkTreeDragSource whether a particular row can be used as
- * the source of a DND operation. If the source doesn't implement
+ * the source of a DND operation. If the source doesn’t implement
  * this interface, the row is assumed draggable.
  *
- * Return value: %TRUE if the row can be dragged
+ * Returns: %TRUE if the row can be dragged
  **/
 gboolean
 gtk_tree_drag_source_row_draggable (GtkTreeDragSource *drag_source,
@@ -139,7 +139,7 @@ gtk_tree_drag_source_row_draggable (GtkTreeDragSource *drag_source,
  * some model-specific reason. Should robustly handle a @path no
  * longer found in the model!
  * 
- * Return value: %TRUE if the row was successfully deleted
+ * Returns: %TRUE if the row was successfully deleted
  **/
 gboolean
 gtk_tree_drag_source_drag_data_delete (GtkTreeDragSource *drag_source,
@@ -165,7 +165,7 @@ gtk_tree_drag_source_drag_data_delete (GtkTreeDragSource *drag_source,
  * the required type of the data.  Should robustly handle a @path no
  * longer found in the model!
  * 
- * Return value: %TRUE if data of the required type was provided 
+ * Returns: %TRUE if data of the required type was provided 
  **/
 gboolean
 gtk_tree_drag_source_drag_data_get    (GtkTreeDragSource *drag_source,
@@ -194,7 +194,7 @@ gtk_tree_drag_source_drag_data_get    (GtkTreeDragSource *drag_source,
  * not created for some model-specific reason.  Should robustly handle
  * a @dest no longer found in the model!
  * 
- * Return value: whether a new row was created before position @dest
+ * Returns: whether a new row was created before position @dest
  **/
 gboolean
 gtk_tree_drag_dest_drag_data_received (GtkTreeDragDest  *drag_dest,
@@ -221,9 +221,9 @@ gtk_tree_drag_dest_drag_data_received (GtkTreeDragDest  *drag_dest,
  * at the same depth as @dest_path. i.e., can we drop the data in
  * @selection_data at that location. @dest_path does not have to
  * exist; the return value will almost certainly be %FALSE if the
- * parent of @dest_path doesn't exist, though.
+ * parent of @dest_path doesn’t exist, though.
  * 
- * Return value: %TRUE if a drop is possible before @dest_path
+ * Returns: %TRUE if a drop is possible before @dest_path
  **/
 gboolean
 gtk_tree_drag_dest_row_drop_possible (GtkTreeDragDest   *drag_dest,
@@ -256,7 +256,7 @@ struct _TreeRowData
  * Sets selection data of target type %GTK_TREE_MODEL_ROW. Normally used
  * in a drag_data_get handler.
  * 
- * Return value: %TRUE if the #GtkSelectionData had the proper target type to allow us to set a tree row
+ * Returns: %TRUE if the #GtkSelectionData had the proper target type to allow us to set a tree row
  **/
 gboolean
 gtk_tree_set_row_drag_data (GtkSelectionData *selection_data,
@@ -311,14 +311,14 @@ gtk_tree_set_row_drag_data (GtkSelectionData *selection_data,
  * Obtains a @tree_model and @path from selection data of target type
  * %GTK_TREE_MODEL_ROW. Normally called from a drag_data_received handler.
  * This function can only be used if @selection_data originates from the same
- * process that's calling this function, because a pointer to the tree model
- * is being passed around. If you aren't in the same process, then you'll
+ * process that’s calling this function, because a pointer to the tree model
+ * is being passed around. If you aren’t in the same process, then you'll
  * get memory corruption. In the #GtkTreeDragDest drag_data_received handler,
  * you can assume that selection data of type %GTK_TREE_MODEL_ROW is
  * in from the current process. The returned path must be freed with
  * gtk_tree_path_free().
  * 
- * Return value: %TRUE if @selection_data had target type %GTK_TREE_MODEL_ROW and
+ * Returns: %TRUE if @selection_data had target type %GTK_TREE_MODEL_ROW and
  *  is otherwise valid
  **/
 gboolean

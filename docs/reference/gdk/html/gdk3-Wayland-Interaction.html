@@ -8,7 +8,7 @@
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk3-X-Window-System-Interaction.html" title="X Window System Interaction">
 <link rel="next" href="gdk3-Application-launching.html" title="Application launching">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -75,17 +75,10 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">struct <span class="returnvalue">wl_shell</span> *
+<td class="function_type">struct <span class="returnvalue">xdg_shell</span> *
 </td>
 <td class="function_name">
-<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-display-get-wl-shell" title="gdk_wayland_display_get_wl_shell ()">gdk_wayland_display_get_wl_shell</a> <span class="c_punctuation">()</span>
-</td>
-</tr>
-<tr>
-<td class="function_type">struct <span class="returnvalue">wl_shell_surface</span> *
-</td>
-<td class="function_name">
-<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-window-get-wl-shell-surface" title="gdk_wayland_window_get_wl_shell_surface ()">gdk_wayland_window_get_wl_shell_surface</a> <span class="c_punctuation">()</span>
+<a class="link" href="gdk3-Wayland-Interaction.html#gdk-wayland-display-get-xdg-shell" title="gdk_wayland_display_get_xdg_shell ()">gdk_wayland_display_get_xdg_shell</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -114,10 +107,9 @@
 <div class="refsect1">
 <a name="gdk3-Wayland-Interaction.description"></a><h2>Description</h2>
 <p>The functions in this section are specific to the GDK Wayland backend.
-To use them, you need to include the <code class="literal">&lt;gdk/gdkwayland.h&gt;</code>
-header and use the Wayland-specific pkg-config files to build your
-application (either <code class="literal">gdk-wayland-3.0</code> or
-<code class="literal">gtk+-wayland-3.0</code>).</p>
+To use them, you need to include the <code class="literal">&lt;gdk/gdkwayland.h&gt;</code> header and use
+the Wayland-specific pkg-config files to build your application (either
+<code class="literal">gdk-wayland-3.0</code> or <code class="literal">gtk+-wayland-3.0</code>).</p>
 <p>To make your code compile with other GDK backends, guard backend-specific
 calls by an ifdef as follows. Since GDK may be built with multiple
 backends, you should also check for the backend that is in use (e.g. by
@@ -144,18 +136,18 @@ using the <code class="function">GDK_IS_WAYLAND_DISPLAY()</code> macro).</p>
         <td class="listing_code"><pre class="programlisting"><span class="preproc">#ifdef</span><span class="normal"> <a href="gdk3-General.html#GDK-WINDOWING-WAYLAND:CAPS">GDK_WINDOWING_WAYLAND</a></span>
 <span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="function">GDK_IS_WAYLAND_DISPLAY</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">display</span><span class="symbol">))</span>
 <span class="normal">    </span><span class="cbracket">{</span>
-<span class="normal">      </span><span class="comment">/* make Wayland-specific calls here */</span>
+<span class="normal">      </span><span class="comment">// make Wayland-specific calls here</span>
 <span class="normal">    </span><span class="cbracket">}</span>
 <span class="normal">  </span><span class="keyword">else</span>
 <span class="preproc">#endif</span>
 <span class="preproc">#ifdef</span><span class="normal"> <a href="gdk3-General.html#GDK-WINDOWING-X11:CAPS">GDK_WINDOWING_X11</a></span>
 <span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="function">GDK_IS_X11_DISPLAY</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">display</span><span class="symbol">))</span>
 <span class="normal">    </span><span class="cbracket">{</span>
-<span class="normal">      </span><span class="comment">/* make X11-specific calls here */</span>
+<span class="normal">      </span><span class="comment">// make X11-specific calls here</span>
 <span class="normal">    </span><span class="cbracket">}</span>
 <span class="normal">  </span><span class="keyword">else</span>
 <span class="preproc">#endif</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Message-Logging.html#g-error">g_error</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Unsupported GDK backend"</span><span class="symbol">);</span></pre></td>
+<span class="normal">  </span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Message-Logging.html#g-error">g_error</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Unsupported GDK backend"</span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -171,7 +163,7 @@ using the <code class="function">GDK_IS_WAYLAND_DISPLAY()</code> macro).</p>
 gdk_wayland_device_get_wl_keyboard (<em class="parameter"><code><a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a> *device</code></em>);</pre>
 <p>Returns the Wayland wl_keyboard of a <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a></p>
 <div class="refsect3">
-<a name="id-1.2.27.6.2.5"></a><h4>Parameters</h4>
+<a name="id-1.2.26.6.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -186,7 +178,7 @@ gdk_wayland_device_get_wl_keyboard (<em class="parameter"><code><a class="link" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.27.6.2.6"></a><h4>Returns</h4>
+<a name="id-1.2.26.6.2.6"></a><h4>Returns</h4>
 <p> a Wayland wl_keyboard. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -199,7 +191,7 @@ gdk_wayland_device_get_wl_keyboard (<em class="parameter"><code><a class="link" 
 gdk_wayland_device_get_wl_pointer (<em class="parameter"><code><a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a> *device</code></em>);</pre>
 <p>Returns the Wayland wl_pointer of a <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a></p>
 <div class="refsect3">
-<a name="id-1.2.27.6.3.5"></a><h4>Parameters</h4>
+<a name="id-1.2.26.6.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -214,7 +206,7 @@ gdk_wayland_device_get_wl_pointer (<em class="parameter"><code><a class="link" h
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.27.6.3.6"></a><h4>Returns</h4>
+<a name="id-1.2.26.6.3.6"></a><h4>Returns</h4>
 <p> a Wayland wl_pointer. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -227,7 +219,7 @@ gdk_wayland_device_get_wl_pointer (<em class="parameter"><code><a class="link" h
 gdk_wayland_device_get_wl_seat (<em class="parameter"><code><a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a> *device</code></em>);</pre>
 <p>Returns the Wayland wl_seat of a <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a></p>
 <div class="refsect3">
-<a name="id-1.2.27.6.4.5"></a><h4>Parameters</h4>
+<a name="id-1.2.26.6.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -242,7 +234,7 @@ gdk_wayland_device_get_wl_seat (<em class="parameter"><code><a class="link" href
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.27.6.4.6"></a><h4>Returns</h4>
+<a name="id-1.2.26.6.4.6"></a><h4>Returns</h4>
 <p> a Wayland wl_seat. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -255,7 +247,7 @@ gdk_wayland_device_get_wl_seat (<em class="parameter"><code><a class="link" href
 gdk_wayland_display_get_wl_compositor (<em class="parameter"><code><a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> *display</code></em>);</pre>
 <p>Returns the Wayland global singleton compositor of a <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a></p>
 <div class="refsect3">
-<a name="id-1.2.27.6.5.5"></a><h4>Parameters</h4>
+<a name="id-1.2.26.6.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -270,7 +262,7 @@ gdk_wayland_display_get_wl_compositor (<em class="parameter"><code><a class="lin
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.27.6.5.6"></a><h4>Returns</h4>
+<a name="id-1.2.26.6.5.6"></a><h4>Returns</h4>
 <p> a Wayland wl_compositor. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -283,7 +275,7 @@ gdk_wayland_display_get_wl_compositor (<em class="parameter"><code><a class="lin
 gdk_wayland_display_get_wl_display (<em class="parameter"><code><a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> *display</code></em>);</pre>
 <p>Returns the Wayland wl_display of a <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a></p>
 <div class="refsect3">
-<a name="id-1.2.27.6.6.5"></a><h4>Parameters</h4>
+<a name="id-1.2.26.6.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -298,7 +290,7 @@ gdk_wayland_display_get_wl_display (<em class="parameter"><code><a class="link" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.27.6.6.6"></a><h4>Returns</h4>
+<a name="id-1.2.26.6.6.6"></a><h4>Returns</h4>
 <p> a Wayland wl_display. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -306,12 +298,12 @@ gdk_wayland_display_get_wl_display (<em class="parameter"><code><a class="link" 
 </div>
 <hr>
 <div class="refsect2">
-<a name="gdk-wayland-display-get-wl-shell"></a><h3>gdk_wayland_display_get_wl_shell ()</h3>
-<pre class="programlisting">struct <span class="returnvalue">wl_shell</span> *
-gdk_wayland_display_get_wl_shell (<em class="parameter"><code><a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> *display</code></em>);</pre>
+<a name="gdk-wayland-display-get-xdg-shell"></a><h3>gdk_wayland_display_get_xdg_shell ()</h3>
+<pre class="programlisting">struct <span class="returnvalue">xdg_shell</span> *
+gdk_wayland_display_get_xdg_shell (<em class="parameter"><code><a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> *display</code></em>);</pre>
 <p>Returns the Wayland global singleton shell of a <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a></p>
 <div class="refsect3">
-<a name="id-1.2.27.6.7.5"></a><h4>Parameters</h4>
+<a name="id-1.2.26.6.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -326,37 +318,8 @@ gdk_wayland_display_get_wl_shell (<em class="parameter"><code><a class="link" hr
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.27.6.7.6"></a><h4>Returns</h4>
-<p> a Wayland wl_shell. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
-</div>
-<p class="since">Since 3.8</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="gdk-wayland-window-get-wl-shell-surface"></a><h3>gdk_wayland_window_get_wl_shell_surface ()</h3>
-<pre class="programlisting">struct <span class="returnvalue">wl_shell_surface</span> *
-gdk_wayland_window_get_wl_shell_surface
-                               (<em class="parameter"><code><a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>);</pre>
-<p>Returns the Wayland shell surface of a <a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a></p>
-<div class="refsect3">
-<a name="id-1.2.27.6.8.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
-<colgroup>
-<col width="150px" class="parameters_name">
-<col class="parameters_description">
-<col width="200px" class="parameters_annotations">
-</colgroup>
-<tbody><tr>
-<td class="parameter_name"><p>window</p></td>
-<td class="parameter_description"><p> a <a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> GdkWaylandWindow]</span></td>
-</tr></tbody>
-</table></div>
-</div>
-<div class="refsect3">
-<a name="id-1.2.27.6.8.6"></a><h4>Returns</h4>
-<p> a Wayland wl_shell_surface. </p>
+<a name="id-1.2.26.6.7.6"></a><h4>Returns</h4>
+<p> a Wayland xdg_shell. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 <p class="since">Since 3.8</p>
@@ -368,7 +331,7 @@ gdk_wayland_window_get_wl_shell_surface
 gdk_wayland_window_get_wl_surface (<em class="parameter"><code><a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> *window</code></em>);</pre>
 <p>Returns the Wayland surface of a <a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a></p>
 <div class="refsect3">
-<a name="id-1.2.27.6.9.5"></a><h4>Parameters</h4>
+<a name="id-1.2.26.6.8.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -383,7 +346,7 @@ gdk_wayland_window_get_wl_surface (<em class="parameter"><code><a class="link" h
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.27.6.9.6"></a><h4>Returns</h4>
+<a name="id-1.2.26.6.8.6"></a><h4>Returns</h4>
 <p> a Wayland wl_surface. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -400,13 +363,13 @@ expected to register the surface as some type of surface using
 some Wayland interface.</p>
 <p>A good example would be writing a panel or on-screen-keyboard as an
 out-of-process helper - as opposed to having those in the compositor
-process. In this case the underlying surface isn't a wl_shell
+process. In this case the underlying surface isn’t an xdg_shell
 surface and the panel or OSK client need to identify the wl_surface
 as a panel or OSK to the compositor. The assumption is that the
 compositor will expose a private interface to the special client
 that lets the client identify the wl_surface as a panel or such.</p>
 <p>This function should be called before a <a class="link" href="gdk3-Windows.html#GdkWindow"><span class="type">GdkWindow</span></a> is shown. This is
-best done by connecting to the <span class="type">“realized”</span> signal:</p>
+best done by connecting to the <a href="http://developer.gnome.org/gtk2/GtkWidget.html#GtkWidget-realize"><span class="type">“realize”</span></a> signal:</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -449,15 +412,16 @@ best done by connecting to the <span class="type">“realized”</span> signal:<
 <span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
 <span class="function">setup_window</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GtkWindow</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">window</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Signals.html#g-signal-connect">g_signal_connect</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"realize"</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Closures.html#G-CALLBACK:CAPS">G_CALLBACK</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">widget_realize_cb</span><span class="symbol">),</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Signals.html#g-signal-connect">g_signal_connect</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"realize"</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Closures.html#G-CALLBACK:CAPS">G_CALLBACK</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">widget_realize_cb</span><span class="symbol">),</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
 <span class="cbracket">}</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
+<p></p>
 <div class="refsect3">
-<a name="id-1.2.27.6.10.8"></a><h4>Parameters</h4>
+<a name="id-1.2.26.6.9.9"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -480,6 +444,6 @@ best done by connecting to the <span class="type">“realized”</span> signal:<
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

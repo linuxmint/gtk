@@ -23,6 +23,8 @@
 #include "gtkrecentchooserutils.h"
 #include "gtkrecentmanager.h"
 #include "gtktypebuiltins.h"
+#include "gtksettings.h"
+#include "gtkdialogprivate.h"
 
 #include <stdarg.h>
 
@@ -42,31 +44,36 @@
  * Note that #GtkRecentChooserDialog does not have any methods of its own.
  * Instead, you should use the functions that work on a #GtkRecentChooser.
  *
- * <example id="gtkrecentchooser-typical-usage">
- * <title>Typical usage</title>
+ * ## Typical usage ## {#gtkrecentchooser-typical-usage}
+ *
  * In the simplest of cases, you can use the following code to use
  * a #GtkRecentChooserDialog to select a recently used file:
- * <programlisting>
+ *
+ * |[<!-- language="C" -->
  * GtkWidget *dialog;
+ * gint res;
  *
  * dialog = gtk_recent_chooser_dialog_new ("Recent Documents",
  *                                         parent_window,
- *                                         _("_Cancel"), GTK_RESPONSE_CANCEL,
- *                                         _("_Open"), GTK_RESPONSE_ACCEPT,
+ *                                         _("_Cancel"),
+ *                                         GTK_RESPONSE_CANCEL,
+ *                                         _("_Open"),
+ *                                         GTK_RESPONSE_ACCEPT,
  *                                         NULL);
  *
- * if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+ * res = gtk_dialog_run (GTK_DIALOG (dialog));
+ * if (res == GTK_RESPONSE_ACCEPT)
  *   {
  *     GtkRecentInfo *info;
+ *     GtkRecentChooser *chooser = GTK_RECENT_CHOOSER (dialog);
  *
- *     info = gtk_recent_chooser_get_current_item (GTK_RECENT_CHOOSER (dialog));
+ *     info = gtk_recent_chooser_get_current_item (chooser);
  *     open_file (gtk_recent_info_get_uri (info));
  *     gtk_recent_info_unref (info);
  *   }
  *
  * gtk_widget_destroy (dialog);
- * </programlisting>
- * </example>
+ * ]|
  *
  * Recently used files are supported since GTK+ 2.10.
  */
@@ -85,9 +92,7 @@ static void gtk_recent_chooser_dialog_class_init (GtkRecentChooserDialogClass *k
 static void gtk_recent_chooser_dialog_init       (GtkRecentChooserDialog      *dialog);
 static void gtk_recent_chooser_dialog_finalize   (GObject                     *object);
 
-static GObject *gtk_recent_chooser_dialog_constructor (GType                  type,
-						       guint                  n_construct_properties,
-						       GObjectConstructParam *construct_params);
+static void gtk_recent_chooser_dialog_constructed (GObject *object);
 
 static void gtk_recent_chooser_dialog_set_property (GObject      *object,
 						    guint         prop_id,
@@ -112,7 +117,7 @@ gtk_recent_chooser_dialog_class_init (GtkRecentChooserDialogClass *klass)
   
   gobject_class->set_property = gtk_recent_chooser_dialog_set_property;
   gobject_class->get_property = gtk_recent_chooser_dialog_get_property;
-  gobject_class->constructor = gtk_recent_chooser_dialog_constructor;
+  gobject_class->constructed = gtk_recent_chooser_dialog_constructed;
   gobject_class->finalize = gtk_recent_chooser_dialog_finalize;
   
   _gtk_recent_chooser_install_properties (gobject_class);
@@ -127,14 +132,16 @@ gtk_recent_chooser_dialog_init (GtkRecentChooserDialog *dialog)
 
   priv = gtk_recent_chooser_dialog_get_instance_private (dialog);
   dialog->priv = priv;
+  gtk_dialog_set_use_header_bar_from_setting (GTK_DIALOG (dialog));
 
   content_area = gtk_dialog_get_content_area (rc_dialog);
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   action_area = gtk_dialog_get_action_area (rc_dialog);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   gtk_container_set_border_width (GTK_CONTAINER (rc_dialog), 5);
   gtk_box_set_spacing (GTK_BOX (content_area), 2); /* 2 * 5 + 2 = 12 */
   gtk_container_set_border_width (GTK_CONTAINER (action_area), 5);
-
 }
 
 /* we intercept the GtkRecentChooser::item_activated signal and try to
@@ -155,7 +162,9 @@ gtk_recent_chooser_item_activated_cb (GtkRecentChooser *chooser,
   if (gtk_window_activate_default (GTK_WINDOW (dialog)))
     return;
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   action_area = gtk_dialog_get_action_area (rc_dialog);
+G_GNUC_END_IGNORE_DEPRECATIONS
   children = gtk_container_get_children (GTK_CONTAINER (action_area));
   
   for (l = children; l; l = l->next)
@@ -182,20 +191,15 @@ gtk_recent_chooser_item_activated_cb (GtkRecentChooser *chooser,
   g_list_free (children);
 }
 
-static GObject *
-gtk_recent_chooser_dialog_constructor (GType                  type,
-				       guint                  n_construct_properties,
-				       GObjectConstructParam *construct_params)
+static void
+gtk_recent_chooser_dialog_constructed (GObject *object)
 {
   GtkRecentChooserDialogPrivate *priv;
   GtkWidget *content_area;
-  GObject *object;
 
-  object = G_OBJECT_CLASS (gtk_recent_chooser_dialog_parent_class)->constructor (type,
-		  							         n_construct_properties,
-										 construct_params);
+  G_OBJECT_CLASS (gtk_recent_chooser_dialog_parent_class)->constructed (object);
   priv = GTK_RECENT_CHOOSER_DIALOG_GET_PRIVATE (object);
-  
+
   if (priv->manager)
     priv->chooser = g_object_new (GTK_TYPE_RECENT_CHOOSER_WIDGET,
   				  "recent-manager", priv->manager,
@@ -216,8 +220,6 @@ gtk_recent_chooser_dialog_constructor (GType                  type,
   
   _gtk_recent_chooser_set_delegate (GTK_RECENT_CHOOSER (object),
   				    GTK_RECENT_CHOOSER (priv->chooser));
-  
-  return object;
 }
 
 static void
@@ -274,7 +276,7 @@ gtk_recent_chooser_dialog_new_valist (const gchar      *title,
   GtkWidget *result;
   const char *button_text = first_button_text;
   gint response_id;
-  
+
   result = g_object_new (GTK_TYPE_RECENT_CHOOSER_DIALOG,
                          "title", title,
                          "recent-manager", manager,
@@ -304,7 +306,7 @@ gtk_recent_chooser_dialog_new_valist (const gchar      *title,
  * Creates a new #GtkRecentChooserDialog.  This function is analogous to
  * gtk_dialog_new_with_buttons().
  *
- * Return value: a new #GtkRecentChooserDialog
+ * Returns: a new #GtkRecentChooserDialog
  *
  * Since: 2.10
  */
@@ -342,7 +344,7 @@ gtk_recent_chooser_dialog_new (const gchar *title,
  * This is useful if you have implemented your own recent manager, or if you
  * have a customized instance of a #GtkRecentManager object.
  *
- * Return value: a new #GtkRecentChooserDialog
+ * Returns: a new #GtkRecentChooserDialog
  *
  * Since: 2.10
  */

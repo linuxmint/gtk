@@ -136,7 +136,7 @@ check_not_found (const gchar *haystack,
 }
 
 static void
-test_full_buffer (void)
+test_search_full_buffer (void)
 {
   check_found_forward ("foo", "foo", 0, 0, 3, "foo");
   check_found_backward ("foo", "foo", 0, 0, 3, "foo");
@@ -318,16 +318,402 @@ test_forward_to_tag_toggle (void)
   g_object_unref (buffer);
 }
 
+static void
+check_word_boundaries (const gchar *buffer_text,
+                       gint         offset,
+                       gboolean     starts_word,
+                       gboolean     ends_word,
+                       gboolean     inside_word)
+{
+  GtkTextBuffer *buffer;
+  GtkTextIter iter;
+
+  buffer = gtk_text_buffer_new (NULL);
+  gtk_text_buffer_set_text (buffer, buffer_text, -1);
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, offset);
+
+  g_assert_cmpint (starts_word, ==, gtk_text_iter_starts_word (&iter));
+  g_assert_cmpint (ends_word, ==, gtk_text_iter_ends_word (&iter));
+  g_assert_cmpint (inside_word, ==, gtk_text_iter_inside_word (&iter));
+
+  g_object_unref (buffer);
+}
+
+static void
+check_forward_word_end (const gchar *buffer_text,
+                        gint         initial_offset,
+                        gint         result_offset,
+                        gboolean     ret)
+{
+  GtkTextBuffer *buffer;
+  GtkTextIter iter;
+
+  buffer = gtk_text_buffer_new (NULL);
+  gtk_text_buffer_set_text (buffer, buffer_text, -1);
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, initial_offset);
+
+  g_assert_cmpint (ret, ==, gtk_text_iter_forward_word_end (&iter));
+  g_assert_cmpint (result_offset, ==, gtk_text_iter_get_offset (&iter));
+
+  g_object_unref (buffer);
+}
+
+static void
+check_backward_word_start (const gchar *buffer_text,
+                           gint         initial_offset,
+                           gint         result_offset,
+                           gboolean     ret)
+{
+  GtkTextBuffer *buffer;
+  GtkTextIter iter;
+
+  buffer = gtk_text_buffer_new (NULL);
+  gtk_text_buffer_set_text (buffer, buffer_text, -1);
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, initial_offset);
+
+  g_assert_cmpint (ret, ==, gtk_text_iter_backward_word_start (&iter));
+  g_assert_cmpint (result_offset, ==, gtk_text_iter_get_offset (&iter));
+
+  g_object_unref (buffer);
+}
+
+static void
+test_word_boundaries (void)
+{
+  /* Test with trivial content. The word boundaries are anyway determined by
+   * Pango and can change in the future for corner cases.
+   */
+
+  check_word_boundaries ("ab ", 0, TRUE, FALSE, TRUE);
+  check_word_boundaries ("ab ", 1, FALSE, FALSE, TRUE);
+  check_word_boundaries ("ab ", 2, FALSE, TRUE, FALSE);
+  check_word_boundaries ("ab ", 3, FALSE, FALSE, FALSE);
+  check_word_boundaries ("", 0, FALSE, FALSE, FALSE);
+
+  check_forward_word_end ("ab ", 0, 2, TRUE);
+  check_forward_word_end ("ab ", 1, 2, TRUE);
+  check_forward_word_end ("ab ", 2, 2, FALSE);
+  check_forward_word_end ("ab ", 3, 3, FALSE);
+  check_forward_word_end ("ab", 0, 2, FALSE);
+  check_forward_word_end ("ab\n", 2, 2, FALSE);
+
+  check_backward_word_start (" ab", 3, 1, TRUE);
+  check_backward_word_start (" ab", 2, 1, TRUE);
+  check_backward_word_start (" ab", 1, 1, FALSE);
+  check_backward_word_start (" ab", 0, 0, FALSE);
+  check_backward_word_start ("ab", 2, 0, TRUE);
+}
+
+static void
+check_forward_visible_word_end (GtkTextBuffer *buffer,
+                                gint           initial_offset,
+                                gint           result_offset,
+                                gboolean       ret)
+{
+  GtkTextIter iter;
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, initial_offset);
+
+  g_assert_cmpint (ret, ==, gtk_text_iter_forward_visible_word_end (&iter));
+  g_assert_cmpint (result_offset, ==, gtk_text_iter_get_offset (&iter));
+}
+
+static void
+check_backward_visible_word_start (GtkTextBuffer *buffer,
+                                   gint           initial_offset,
+                                   gint           result_offset,
+                                   gboolean       ret)
+{
+  GtkTextIter iter;
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, initial_offset);
+
+  g_assert_cmpint (ret, ==, gtk_text_iter_backward_visible_word_start (&iter));
+  g_assert_cmpint (result_offset, ==, gtk_text_iter_get_offset (&iter));
+}
+
+static void
+test_visible_word_boundaries (void)
+{
+  /* Test with trivial content. The word boundaries are anyway determined by
+   * Pango and can change in the future for corner cases.
+   */
+
+  GtkTextBuffer *buffer;
+  GtkTextTag *invisible_tag;
+  GtkTextIter iter;
+
+  buffer = gtk_text_buffer_new (NULL);
+
+  invisible_tag = gtk_text_buffer_create_tag (buffer, NULL,
+                                              "invisible", TRUE,
+                                              NULL);
+
+  /* Buffer contents: " a b c " with " b " invisible */
+  gtk_text_buffer_get_start_iter (buffer, &iter);
+  gtk_text_buffer_insert (buffer, &iter, " a", -1);
+  gtk_text_buffer_insert_with_tags (buffer, &iter, " b ", -1, invisible_tag, NULL);
+  gtk_text_buffer_insert (buffer, &iter, "c ", -1);
+
+  check_forward_visible_word_end (buffer, 0, 6, TRUE);
+  check_forward_visible_word_end (buffer, 1, 6, TRUE);
+  check_forward_visible_word_end (buffer, 2, 6, TRUE);
+  check_forward_visible_word_end (buffer, 3, 6, TRUE);
+  check_forward_visible_word_end (buffer, 4, 6, TRUE);
+  check_forward_visible_word_end (buffer, 5, 6, TRUE);
+  check_forward_visible_word_end (buffer, 6, 6, FALSE);
+  check_forward_visible_word_end (buffer, 7, 7, FALSE);
+
+  check_backward_visible_word_start (buffer, 7, 5, TRUE); /* FIXME result_offset should be 1 */
+  check_backward_visible_word_start (buffer, 6, 5, TRUE); /* FIXME result_offset should be 1 */
+  check_backward_visible_word_start (buffer, 5, 1, TRUE);
+  check_backward_visible_word_start (buffer, 4, 1, TRUE);
+  check_backward_visible_word_start (buffer, 3, 1, TRUE);
+  check_backward_visible_word_start (buffer, 2, 1, TRUE);
+  check_backward_visible_word_start (buffer, 1, 1, FALSE);
+  check_backward_visible_word_start (buffer, 0, 0, FALSE);
+
+  gtk_text_buffer_set_text (buffer, "ab", -1);
+  check_forward_visible_word_end (buffer, 0, 2, FALSE);
+
+  /* Buffer contents: "b c " with "b" invisible */
+  gtk_text_buffer_set_text (buffer, "", -1);
+  gtk_text_buffer_get_start_iter (buffer, &iter);
+  gtk_text_buffer_insert_with_tags (buffer, &iter, "b", -1, invisible_tag, NULL);
+  gtk_text_buffer_insert (buffer, &iter, " c ", -1);
+
+  check_forward_visible_word_end (buffer, 0, 1, TRUE); /* FIXME result_offset should be 3 */
+
+  g_object_unref (buffer);
+}
+
+static void
+check_is_cursor_position (const gchar *buffer_text,
+                          gint         offset,
+                          gboolean     ret)
+{
+  GtkTextBuffer *buffer;
+  GtkTextIter iter;
+
+  buffer = gtk_text_buffer_new (NULL);
+  gtk_text_buffer_set_text (buffer, buffer_text, -1);
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, offset);
+  g_assert_cmpint (ret, ==, gtk_text_iter_is_cursor_position (&iter));
+
+  g_object_unref (buffer);
+}
+
+static void
+check_cursor_position (const gchar *buffer_text,
+                       gboolean     forward,
+                       gint         initial_offset,
+                       gint         result_offset,
+                       gboolean     ret)
+{
+  GtkTextBuffer *buffer;
+  GtkTextIter iter;
+
+  buffer = gtk_text_buffer_new (NULL);
+  gtk_text_buffer_set_text (buffer, buffer_text, -1);
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, initial_offset);
+
+  if (forward)
+    g_assert_cmpint (ret, ==, gtk_text_iter_forward_cursor_position (&iter));
+  else
+    g_assert_cmpint (ret, ==, gtk_text_iter_backward_cursor_position (&iter));
+
+  g_assert_cmpint (result_offset, ==, gtk_text_iter_get_offset (&iter));
+
+  g_object_unref (buffer);
+}
+
+static void
+test_cursor_positions (void)
+{
+  check_is_cursor_position ("a\r\n", 0, TRUE);
+  check_is_cursor_position ("a\r\n", 1, TRUE);
+  check_is_cursor_position ("a\r\n", 2, FALSE);
+  check_is_cursor_position ("a\r\n", 3, TRUE);
+  check_is_cursor_position ("", 0, TRUE);
+
+  /* forward */
+  check_cursor_position ("a\r\nb", TRUE, 0, 1, TRUE);
+  check_cursor_position ("a\r\nb", TRUE, 1, 3, TRUE);
+  check_cursor_position ("a\r\nb", TRUE, 2, 3, TRUE);
+  check_cursor_position ("a\r\nb", TRUE, 3, 4, FALSE);
+  check_cursor_position ("a\r\nb", TRUE, 4, 4, FALSE);
+  check_cursor_position ("a\n", TRUE, 1, 2, FALSE);
+
+  /* backward */
+  check_cursor_position ("a\r\nb", FALSE, 4, 3, TRUE);
+  check_cursor_position ("a\r\nb", FALSE, 3, 1, TRUE);
+  check_cursor_position ("a\r\nb", FALSE, 2, 1, TRUE);
+  check_cursor_position ("a\r\nb", FALSE, 1, 0, TRUE);
+  check_cursor_position ("a\r\nb", FALSE, 0, 0, FALSE);
+}
+
+static void
+check_visible_cursor_position (GtkTextBuffer *buffer,
+                               gboolean       forward,
+                               gint           initial_offset,
+                               gint           result_offset,
+                               gboolean       ret)
+{
+  GtkTextIter iter;
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, initial_offset);
+
+  if (forward)
+    g_assert_cmpint (ret, ==, gtk_text_iter_forward_visible_cursor_position (&iter));
+  else
+    g_assert_cmpint (ret, ==, gtk_text_iter_backward_visible_cursor_position (&iter));
+
+  g_assert_cmpint (result_offset, ==, gtk_text_iter_get_offset (&iter));
+}
+
+static void
+test_visible_cursor_positions (void)
+{
+  GtkTextBuffer *buffer;
+  GtkTextTag *invisible_tag;
+  GtkTextIter iter;
+
+  buffer = gtk_text_buffer_new (NULL);
+
+  invisible_tag = gtk_text_buffer_create_tag (buffer, NULL,
+                                              "invisible", TRUE,
+                                              NULL);
+
+  /* Buffer contents: "abcd" with 'bc' invisible */
+  gtk_text_buffer_get_start_iter (buffer, &iter);
+  gtk_text_buffer_insert (buffer, &iter, "a", -1);
+  gtk_text_buffer_insert_with_tags (buffer, &iter, "bc", -1, invisible_tag, NULL);
+  gtk_text_buffer_insert (buffer, &iter, "d", -1);
+
+  /* forward */
+  check_visible_cursor_position (buffer, TRUE, 0, 3, TRUE);
+  check_visible_cursor_position (buffer, TRUE, 1, 3, TRUE);
+  check_visible_cursor_position (buffer, TRUE, 2, 3, TRUE);
+  check_visible_cursor_position (buffer, TRUE, 3, 4, FALSE);
+  check_visible_cursor_position (buffer, TRUE, 4, 4, FALSE);
+
+  /* backward */
+  check_visible_cursor_position (buffer, FALSE, 4, 3, TRUE);
+  check_visible_cursor_position (buffer, FALSE, 3, 0, TRUE);
+  check_visible_cursor_position (buffer, FALSE, 2, 0, TRUE);
+  check_visible_cursor_position (buffer, FALSE, 1, 0, TRUE);
+  check_visible_cursor_position (buffer, FALSE, 0, 0, FALSE);
+
+  g_object_unref (buffer);
+}
+
+static void
+check_sentence_boundaries (const gchar *buffer_text,
+                           gint         offset,
+                           gboolean     starts_sentence,
+                           gboolean     ends_sentence,
+                           gboolean     inside_sentence)
+{
+  GtkTextBuffer *buffer;
+  GtkTextIter iter;
+
+  buffer = gtk_text_buffer_new (NULL);
+  gtk_text_buffer_set_text (buffer, buffer_text, -1);
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, offset);
+
+  g_assert_cmpint (starts_sentence, ==, gtk_text_iter_starts_sentence (&iter));
+  g_assert_cmpint (ends_sentence, ==, gtk_text_iter_ends_sentence (&iter));
+  g_assert_cmpint (inside_sentence, ==, gtk_text_iter_inside_sentence (&iter));
+
+  g_object_unref (buffer);
+}
+
+static void
+check_forward_sentence_end (const gchar *buffer_text,
+                            gint         initial_offset,
+                            gint         result_offset,
+                            gboolean     ret)
+{
+  GtkTextBuffer *buffer;
+  GtkTextIter iter;
+
+  buffer = gtk_text_buffer_new (NULL);
+  gtk_text_buffer_set_text (buffer, buffer_text, -1);
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, initial_offset);
+
+  g_assert_cmpint (ret, ==, gtk_text_iter_forward_sentence_end (&iter));
+  g_assert_cmpint (result_offset, ==, gtk_text_iter_get_offset (&iter));
+
+  g_object_unref (buffer);
+}
+
+static void
+check_backward_sentence_start (const gchar *buffer_text,
+                               gint         initial_offset,
+                               gint         result_offset,
+                               gboolean     ret)
+{
+  GtkTextBuffer *buffer;
+  GtkTextIter iter;
+
+  buffer = gtk_text_buffer_new (NULL);
+  gtk_text_buffer_set_text (buffer, buffer_text, -1);
+
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, initial_offset);
+
+  g_assert_cmpint (ret, ==, gtk_text_iter_backward_sentence_start (&iter));
+  g_assert_cmpint (result_offset, ==, gtk_text_iter_get_offset (&iter));
+
+  g_object_unref (buffer);
+}
+
+static void
+test_sentence_boundaries (void)
+{
+  check_sentence_boundaries ("Hi. ", 0, TRUE, FALSE, TRUE);
+  check_sentence_boundaries ("Hi. ", 1, FALSE, FALSE, TRUE);
+  check_sentence_boundaries ("Hi. ", 2, FALSE, FALSE, TRUE);
+  check_sentence_boundaries ("Hi. ", 3, FALSE, TRUE, FALSE);
+  check_sentence_boundaries ("Hi. ", 4, FALSE, FALSE, FALSE);
+  check_sentence_boundaries ("", 0, FALSE, FALSE, FALSE);
+
+  check_forward_sentence_end ("Hi. ", 0, 3, TRUE);
+  check_forward_sentence_end ("Hi. ", 1, 3, TRUE);
+  check_forward_sentence_end ("Hi. ", 2, 3, TRUE);
+  check_forward_sentence_end ("Hi. ", 3, 3, FALSE);
+  check_forward_sentence_end ("Hi. ", 4, 4, FALSE);
+  check_forward_sentence_end ("Hi.", 0, 3, FALSE);
+  check_forward_sentence_end ("Hi.\n", 3, 3, FALSE);
+
+  check_backward_sentence_start (" Hi.", 4, 1, TRUE);
+  check_backward_sentence_start (" Hi.", 3, 1, TRUE);
+  check_backward_sentence_start (" Hi.", 2, 1, TRUE);
+  check_backward_sentence_start (" Hi.", 1, 1, FALSE);
+  check_backward_sentence_start (" Hi.", 0, 0, FALSE);
+}
+
 int
 main (int argc, char** argv)
 {
   gtk_test_init (&argc, &argv);
 
   g_test_add_func ("/TextIter/Search Empty", test_empty_search);
-  g_test_add_func ("/TextIter/Search Full Buffer", test_full_buffer);
+  g_test_add_func ("/TextIter/Search Full Buffer", test_search_full_buffer);
   g_test_add_func ("/TextIter/Search", test_search);
   g_test_add_func ("/TextIter/Search Caseless", test_search_caseless);
   g_test_add_func ("/TextIter/Forward To Tag Toggle", test_forward_to_tag_toggle);
+  g_test_add_func ("/TextIter/Word Boundaries", test_word_boundaries);
+  g_test_add_func ("/TextIter/Visible Word Boundaries", test_visible_word_boundaries);
+  g_test_add_func ("/TextIter/Cursor Positions", test_cursor_positions);
+  g_test_add_func ("/TextIter/Visible Cursor Positions", test_visible_cursor_positions);
+  g_test_add_func ("/TextIter/Sentence Boundaries", test_sentence_boundaries);
 
   return g_test_run();
 }

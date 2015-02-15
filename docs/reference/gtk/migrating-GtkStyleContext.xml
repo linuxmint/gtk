@@ -143,7 +143,7 @@
     </para>
 
     <para>
-      The detail string available in #GtkStyle-based engines has been
+      The detail string available in #GtkStyle<!-- -->-based engines has been
       replaced by widget regions and style classes. Regions are a way for
       complex widgets to associate different styles with different areas,
       such as even and odd rows in a treeview. Style classes allow sharing
@@ -162,7 +162,7 @@
     <title>Extending the CSS parser</title>
 
     <para>
-      In #GtkStyle-based engines, #GtkRCStyle provided ways to extend the
+      In #GtkStyle<!-- -->-based engines, GtkRCStyle provided ways to extend the
       gtkrc parser with engine-specific extensions. This has been replaced
       by gtk_theming_engine_register_property(), which lets a theme engine
       register new properties with an arbitrary type. While there is built-in
@@ -186,7 +186,7 @@
 
     <para>
       Widget style properties also follow a similar syntax, with the widget
-      type name used as a prefix. For example, the #GtkWidget:focus-line-width
+      type name used as a prefix. For example, the #GtkWidget focus-line-width
       style property can be modified in CSS as
       <literal>-GtkWidget-focus-line-width</literal>.
     </para>
@@ -633,7 +633,7 @@
       <listitem>
         <para>
           If your container renders child widgets within different regions,
-          make it implement GtkContainer::get_path_for_child(). This function
+          make it implement #GtkContainer get_path_for_child(<!-- -->). This function
           lets containers assign a special #GtkWidgetPath to child widgets
           depending on their role/region. This is necessary to extend the
           concept above throughout the widget hierarchy.

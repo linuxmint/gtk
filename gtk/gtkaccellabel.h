@@ -53,7 +53,7 @@ typedef struct _GtkAccelLabelPrivate GtkAccelLabelPrivate;
 /**
  * GtkAccelLabel:
  *
- * The #GtkAccelLabel-struct struct contains private data only, and
+ * The #GtkAccelLabel-struct contains private data only, and
  * should be accessed using the functions below.
  */
 struct _GtkAccelLabel
@@ -101,6 +101,10 @@ GDK_AVAILABLE_IN_3_6
 void       gtk_accel_label_set_accel         (GtkAccelLabel   *accel_label,
                                               guint            accelerator_key,
                                               GdkModifierType  accelerator_mods);
+GDK_AVAILABLE_IN_3_12
+void       gtk_accel_label_get_accel         (GtkAccelLabel   *accel_label,
+                                              guint           *accelerator_key,
+                                              GdkModifierType *accelerator_mods);
 
 /* private */
 gchar *    _gtk_accel_label_class_get_accelerator_label (GtkAccelLabelClass *klass,

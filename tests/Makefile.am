@@ -25,6 +25,7 @@ testsocket_programs = testsocket testsocket_child
 endif
 
 noinst_PROGRAMS =  $(TEST_PROGS)	\
+	subsurface			\
 	animated-resizing		\
 	motion-compression		\
 	scrolling-performance		\
@@ -39,6 +40,7 @@ noinst_PROGRAMS =  $(TEST_PROGS)	\
 	testassistant			\
 	testbaseline			\
 	testbbox			\
+	testbox                         \
 	testboxcss                      \
 	testbuttons			\
 	testcairo			\
@@ -48,12 +50,15 @@ noinst_PROGRAMS =  $(TEST_PROGS)	\
 	testcombo			\
 	testcombochange			\
 	testcellrenderertext		\
+	testdialog			\
 	testdnd				\
 	testellipsise			\
+	testemblems			\
 	testentrycompletion 		\
 	testentryicons			\
 	testfilechooser			\
 	testfilechooserbutton		\
+	testflowbox			\
 	testfontselection		\
 	testfontselectiondialog		\
 	testfontchooser			\
@@ -74,6 +79,7 @@ noinst_PROGRAMS =  $(TEST_PROGS)	\
 	testkineticscrolling		\
 	testlist			\
 	testlist2			\
+	testlist3			\
 	testlevelbar			\
 	testlockbutton			\
 	testmenubutton			\
@@ -93,11 +99,13 @@ noinst_PROGRAMS =  $(TEST_PROGS)	\
 	testrichtext			\
 	testscale			\
 	testselection			\
+	testselectionmode		\
 	$(testsocket_programs)		\
 	testspinbutton			\
 	teststatusicon			\
 	teststockbuttonmenu		\
 	testtoolbar			\
+	testtoolbar2			\
 	stresstest-toolbar		\
 	testtreechanging                \
 	testtreeedit			\
@@ -139,7 +147,11 @@ noinst_PROGRAMS =  $(TEST_PROGS)	\
 	teststack			\
 	testrevealer			\
 	testtitlebar			\
-	testwindowsize
+	testsplitheaders		\
+	testactionbar			\
+	testwindowsize			\
+	testpopover			\
+	$(NULL)
 
 if USE_X11
 noinst_PROGRAMS += testerrors
@@ -191,6 +203,7 @@ testentryicons_DEPENDENCIES = $(TEST_DEPS)
 testerrors_DEPENDENCIES = $(TEST_DEPS)
 testfilechooser_DEPENDENCIES = $(TEST_DEPS)
 testfilechooserbutton_DEPENDENCIES = $(TEST_DEPS)
+testflowbox_DEPENDENCIES = $(TEST_DEPS)
 testfontselection_DEPENDENCIES = $(TEST_DEPS)
 testfontselectiondialog_DEPENDENCIES = $(TEST_DEPS)
 testfontchooser_DEPENDENCIES = $(TEST_DEPS)
@@ -293,24 +306,22 @@ video_timer_SOURCES = 	\
 	variable.h
 
 testboxcss_SOURCES =	\
-	testboxcss.c	\
-	prop-editor.c
+	testboxcss.c
 
 testentrycompletion_SOURCES = 	\
-	prop-editor.c		\
 	testentrycompletion.c
 
 testentryicons_SOURCES =	\
-	prop-editor.c		\
 	testentryicons.c
 
 testfilechooser_SOURCES = 	\
-	prop-editor.c		\
 	testfilechooser.c
 
 testfilechooserbutton_SOURCES =	\
-	prop-editor.c		\
 	testfilechooserbutton.c
+
+testflowbox_SOURCES = \
+	testflowbox.c
 
 testfontselection_SOURCES = \
 	testfontselection.c
@@ -319,22 +330,18 @@ testfontselectiondialog_SOURCES = \
 	testfontselectiondialog.c
 
 testfontchooser_SOURCES = \
-	prop-editor.c		\
 	testfontchooser.c
 
 testfontchooserdialog_SOURCES = \
-	prop-editor.c		\
 	testfontchooserdialog.c
 
 testgrid_SOURCES =	\
 	testgrid.c
 
 testgtk_SOURCES =	\
-	prop-editor.c   \
 	testgtk.c
 
 testtreechanging_SOURCES =	\
-	prop-editor.c		\
 	testtreechanging.c
 
 testtreeedit_SOURCES = 	\
@@ -344,16 +351,13 @@ testtreemodel_SOURCES = \
 	testtreemodel.c
 
 testtreeview_SOURCES =	\
-	prop-editor.c	\
 	testtreeview.c
 
 testtoolbar_SOURCES =	\
-	testtoolbar.c	\
-	prop-editor.c
+	testtoolbar.c
 
 testmenubutton_SOURCES =	\
-	testmenubutton.c	\
-	prop-editor.c
+	testmenubutton.c
 
 testprint_SOURCES =    	\
 	testprint.c		\
@@ -372,7 +376,6 @@ testspinbutton_SOURCES =    	\
 	testspinbutton.c
 
 teststatusicon_SOURCES =    	\
-	prop-editor.c		\
 	teststatusicon.c
 
 testmerge_SOURCES = 		\
@@ -400,18 +403,15 @@ testgiconpixbuf_SOURCES =	\
 	testgiconpixbuf.c
 
 testiconview_SOURCES = 		\
-	testiconview.c		\
-	prop-editor.c
+	testiconview.c
 
 testiconview_keynav_SOURCES = 	\
 	testiconview-keynav.c
 
 testnumerableicon_SOURCES =	\
-	testnumerableicon.c	\
-	prop-editor.c
+	testnumerableicon.c
 
 testrecentchooser_SOURCES = 	\
-	prop-editor.c 		\
 	testrecentchooser.c
 
 testgrouping_SOURCES =		\
@@ -492,7 +492,6 @@ testwindowsize_SOURCES = testwindowsize.c
 
 EXTRA_DIST += 			\
 	gradient1.png		\
-	prop-editor.h		\
 	testgtk.1 		\
 	testgtk.css		\
 	testgtk2.css		\
@@ -510,7 +509,16 @@ EXTRA_DIST += 			\
 	merge-2.ui		\
 	merge-3.ui		\
 	gnome-textfile.png	\
-	makefile.msc
+	testsplitheaders.ui	\
+	makefile.msc		\
+	mydialog.ui		\
+	mydialog2.ui		\
+	popover.ui		\
+	selectionmode.ui
 
+CLEANFILES = 			\
+	autotestkeywords.log	\
+	autotestkeywords.trs	\
+	test-suite.log
 
 -include $(top_srcdir)/git.mk

@@ -42,7 +42,7 @@
  *
  * Transitions between pages can be animated as slides or
  * fades. This can be controlled with gtk_stack_set_transition_type().
- * These animations respect the #GtkSettings::gtk-enable-animations
+ * These animations respect the #GtkSettings:gtk-enable-animations
  * setting.
  *
  * The GtkStack widget was added in GTK+ 3.10.
@@ -58,9 +58,23 @@
  * @GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN: Slide from top down
  * @GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT: Slide from left or right according to the children order
  * @GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN: Slide from top down or bottom up according to the order
+ * @GTK_STACK_TRANSITION_TYPE_OVER_UP: Cover the old page by sliding up. Since 3.12
+ * @GTK_STACK_TRANSITION_TYPE_OVER_DOWN: Cover the old page by sliding down. Since: 3.12
+ * @GTK_STACK_TRANSITION_TYPE_OVER_LEFT: Cover the old page by sliding to the left. Since: 3.12
+ * @GTK_STACK_TRANSITION_TYPE_OVER_RIGHT: Cover the old page by sliding to the right. Since: 3.12
+ * @GTK_STACK_TRANSITION_TYPE_UNDER_UP: Uncover the new page by sliding up. Since 3.12
+ * @GTK_STACK_TRANSITION_TYPE_UNDER_DOWN: Uncover the new page by sliding down. Since: 3.12
+ * @GTK_STACK_TRANSITION_TYPE_UNDER_LEFT: Uncover the new page by sliding to the left. Since: 3.12
+ * @GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT: Uncover the new page by sliding to the right. Since: 3.12
+ * @GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN: Cover the old page sliding up or uncover the new page sliding down, according to order. Since: 3.12
+ * @GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP: Cover the old page sliding down or uncover the new page sliding up, according to order. Since: 3.14
+ * @GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT: Cover the old page sliding left or uncover the new page sliding right, according to order. Since: 3.14
+ * @GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT: Cover the old page sliding right or uncover the new page sliding left, according to order. Since: 3.14
  *
  * These enumeration values describe the possible transitions
  * between pages in a #GtkStack widget.
+ *
+ * New values may be added to this enumeration over time.
  */
 
 /* TODO:
@@ -74,6 +88,7 @@ enum  {
   PROP_VISIBLE_CHILD_NAME,
   PROP_TRANSITION_DURATION,
   PROP_TRANSITION_TYPE,
+  PROP_TRANSITION_RUNNING,
   LAST_PROP
 };
 
@@ -83,7 +98,8 @@ enum
   CHILD_PROP_NAME,
   CHILD_PROP_TITLE,
   CHILD_PROP_ICON_NAME,
-  CHILD_PROP_POSITION
+  CHILD_PROP_POSITION,
+  CHILD_PROP_NEEDS_ATTENTION
 };
 
 typedef struct _GtkStackChildInfo GtkStackChildInfo;
@@ -93,6 +109,7 @@ struct _GtkStackChildInfo {
   gchar *name;
   gchar *title;
   gchar *icon_name;
+  gboolean needs_attention;
 };
 
 typedef struct {
@@ -224,6 +241,9 @@ gtk_stack_get_property (GObject   *object,
     case PROP_TRANSITION_TYPE:
       g_value_set_enum (value, gtk_stack_get_transition_type (stack));
       break;
+    case PROP_TRANSITION_RUNNING:
+      g_value_set_boolean (value, gtk_stack_get_transition_running (stack));
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -298,6 +318,12 @@ gtk_stack_realize (GtkWidget *widget)
   attributes.width = allocation.width;
   attributes.height = allocation.height;
 
+  for (l = priv->children; l != NULL; l = l->next)
+    {
+      info = l->data;
+      attributes.event_mask |= gtk_widget_get_events (info->widget);
+    }
+
   priv->bin_window =
     gdk_window_new (priv->view_window, &attributes, attributes_mask);
   gtk_widget_register_window (widget, priv->bin_window);
@@ -354,33 +380,30 @@ gtk_stack_class_init (GtkStackClass *klass)
   /*container_class->get_path_for_child = gtk_stack_get_path_for_child; */
   gtk_container_class_handle_border_width (container_class);
 
-  stack_props[PROP_HOMOGENEOUS] = g_param_spec_boolean ("homogeneous",
-                                                        P_("Homogeneous"),
-                                                        P_("Homogeneous sizing"),
-                                                        TRUE,
-                                                        GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-  stack_props[PROP_VISIBLE_CHILD] = g_param_spec_object ("visible-child",
-                                                         P_("Visible child"),
-                                                         P_("The widget currently visible in the stack"),
-                                                         GTK_TYPE_WIDGET,
-                                                         GTK_PARAM_READWRITE);
-  stack_props[PROP_VISIBLE_CHILD_NAME] = g_param_spec_string ("visible-child-name",
-                                                              P_("Name of visible child"),
-                                                              P_("The name of the widget currently visible in the stack"),
-                                                              NULL,
-                                                              GTK_PARAM_READWRITE);
-  stack_props[PROP_TRANSITION_DURATION] = g_param_spec_uint ("transition-duration",
-                                                             P_("Transition duration"),
-                                                             P_("The animation duration, in milliseconds"),
-                                                             0, G_MAXUINT,
-                                                             200,
-                                                             GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-  stack_props[PROP_TRANSITION_TYPE] = g_param_spec_enum ("transition-type",
-                                                         P_("Transition type"),
-                                                         P_("The type of animation used to transition"),
-                                                         GTK_TYPE_STACK_TRANSITION_TYPE,
-                                                         GTK_STACK_TRANSITION_TYPE_NONE,
-                                                         GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+  stack_props[PROP_HOMOGENEOUS] =
+      g_param_spec_boolean ("homogeneous", P_("Homogeneous"), P_("Homogeneous sizing"),
+                            TRUE,
+                            GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_EXPLICIT_NOTIFY);
+  stack_props[PROP_VISIBLE_CHILD] =
+      g_param_spec_object ("visible-child", P_("Visible child"), P_("The widget currently visible in the stack"),
+                           GTK_TYPE_WIDGET,
+                           GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
+  stack_props[PROP_VISIBLE_CHILD_NAME] =
+      g_param_spec_string ("visible-child-name", P_("Name of visible child"), P_("The name of the widget currently visible in the stack"),
+                           NULL,
+                           GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
+  stack_props[PROP_TRANSITION_DURATION] =
+      g_param_spec_uint ("transition-duration", P_("Transition duration"), P_("The animation duration, in milliseconds"),
+                         0, G_MAXUINT, 200,
+                         GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_EXPLICIT_NOTIFY);
+  stack_props[PROP_TRANSITION_TYPE] =
+      g_param_spec_enum ("transition-type", P_("Transition type"), P_("The type of animation used to transition"),
+                         GTK_TYPE_STACK_TRANSITION_TYPE, GTK_STACK_TRANSITION_TYPE_NONE,
+                         GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_EXPLICIT_NOTIFY);
+  stack_props[PROP_TRANSITION_RUNNING] =
+      g_param_spec_boolean ("transition-running", P_("Transition running"), P_("Whether or not the transition is currently running"),
+                            FALSE,
+                            GTK_PARAM_READABLE);
 
   g_object_class_install_properties (object_class, LAST_PROP, stack_props);
 
@@ -411,6 +434,23 @@ gtk_stack_class_init (GtkStackClass *klass)
                       P_("The index of the child in the parent"),
                       -1, G_MAXINT, 0,
                       GTK_PARAM_READWRITE));
+
+  /**
+   * GtkStack:needs-attention:
+   *
+   * Sets a flag specifying whether the child requires the user attention.
+   * This is used by the #GtkStackSwitcher to change the appearance of the
+   * corresponding button when a page needs attention and it is not the
+   * current one.
+   *
+   * Since: 3.12
+   */
+  gtk_container_class_install_child_property (container_class, CHILD_PROP_NEEDS_ATTENTION,
+    g_param_spec_boolean ("needs-attention",
+                         P_("Needs Attention"),
+                         P_("Whether this page needs attention"),
+                         FALSE,
+                         GTK_PARAM_READWRITE));
 }
 
 /**
@@ -543,6 +583,10 @@ gtk_stack_get_child_property (GtkContainer *container,
       g_value_set_int (value, i);
       break;
 
+    case CHILD_PROP_NEEDS_ATTENTION:
+      g_value_set_boolean (value, info->needs_attention);
+      break;
+
     default:
       GTK_CONTAINER_WARN_INVALID_CHILD_PROPERTY_ID (container, property_id, pspec);
       break;
@@ -611,6 +655,11 @@ gtk_stack_set_child_property (GtkContainer *container,
       reorder_child (stack, child, g_value_get_int (value));
       break;
 
+    case CHILD_PROP_NEEDS_ATTENTION:
+      info->needs_attention = g_value_get_boolean (value);
+      gtk_container_child_notify (container, child, "needs-attention");
+      break;
+
     default:
       GTK_CONTAINER_WARN_INVALID_CHILD_PROPERTY_ID (container, property_id, pspec);
       break;
@@ -627,6 +676,87 @@ ease_out_cubic (double t)
   return p * p * p + 1;
 }
 
+static inline gboolean
+is_left_transition (GtkStackTransitionType transition_type)
+{
+  return (transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_OVER_LEFT);
+}
+
+static inline gboolean
+is_right_transition (GtkStackTransitionType transition_type)
+{
+  return (transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_OVER_RIGHT);
+}
+
+static inline gboolean
+is_up_transition (GtkStackTransitionType transition_type)
+{
+  return (transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_UP ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_OVER_UP);
+}
+
+static inline gboolean
+is_down_transition (GtkStackTransitionType transition_type)
+{
+  return (transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_OVER_DOWN);
+}
+
+/* Transitions that cause the bin window to move */
+static inline gboolean
+is_window_moving_transition (GtkStackTransitionType transition_type)
+{
+  return (transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_UP ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_OVER_UP ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_OVER_DOWN ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_OVER_LEFT ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_OVER_RIGHT);
+}
+
+/* Transitions that change direction depending on the relative order of the
+old and new child */
+static inline gboolean
+is_direction_dependent_transition (GtkStackTransitionType transition_type)
+{
+  return (transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT ||
+          transition_type == GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT);
+}
+
+/* Returns simple transition type for a direction dependent transition, given
+whether the new child (the one being switched to) is first in the stacking order
+(added earlier). */
+static inline GtkStackTransitionType
+get_simple_transition_type (gboolean               new_child_first,
+                            GtkStackTransitionType transition_type)
+{
+  switch (transition_type)
+    {
+    case GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT:
+      return new_child_first ? GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT : GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT;
+    case GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN:
+      return new_child_first ? GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN : GTK_STACK_TRANSITION_TYPE_SLIDE_UP;
+    case GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN:
+      return new_child_first ? GTK_STACK_TRANSITION_TYPE_UNDER_DOWN : GTK_STACK_TRANSITION_TYPE_OVER_UP;
+    case GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP:
+      return new_child_first ? GTK_STACK_TRANSITION_TYPE_UNDER_UP : GTK_STACK_TRANSITION_TYPE_OVER_DOWN;
+    case GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT:
+      return new_child_first ? GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT : GTK_STACK_TRANSITION_TYPE_OVER_LEFT;
+    case GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT:
+      return new_child_first ? GTK_STACK_TRANSITION_TYPE_UNDER_LEFT : GTK_STACK_TRANSITION_TYPE_OVER_RIGHT;
+    default: ;
+    }
+  return transition_type;
+}
+
 static gint
 get_bin_window_x (GtkStack      *stack,
                   GtkAllocation *allocation)
@@ -636,9 +766,9 @@ get_bin_window_x (GtkStack      *stack,
 
   if (priv->transition_pos < 1.0)
     {
-      if (priv->active_transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT)
+      if (is_left_transition (priv->active_transition_type))
         x = allocation->width * (1 - ease_out_cubic (priv->transition_pos));
-      if (priv->active_transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT)
+      if (is_right_transition (priv->active_transition_type))
         x = -allocation->width * (1 - ease_out_cubic (priv->transition_pos));
     }
 
@@ -654,9 +784,9 @@ get_bin_window_y (GtkStack      *stack,
 
   if (priv->transition_pos < 1.0)
     {
-      if (priv->active_transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_UP)
+      if (is_up_transition (priv->active_transition_type))
         y = allocation->height * (1 - ease_out_cubic (priv->transition_pos));
-      if (priv->active_transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN)
+      if (is_down_transition(priv->active_transition_type))
         y = -allocation->height * (1 - ease_out_cubic (priv->transition_pos));
     }
 
@@ -674,10 +804,7 @@ gtk_stack_set_transition_position (GtkStack *stack,
   gtk_widget_queue_draw (GTK_WIDGET (stack));
 
   if (priv->bin_window != NULL &&
-      (priv->active_transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT ||
-       priv->active_transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT ||
-       priv->active_transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_UP ||
-       priv->active_transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN))
+      is_window_moving_transition (priv->active_transition_type))
     {
       GtkAllocation allocation;
       gtk_widget_get_allocation (GTK_WIDGET (stack), &allocation);
@@ -711,10 +838,11 @@ gtk_stack_set_transition_position (GtkStack *stack,
 }
 
 static gboolean
-gtk_stack_transition_cb (GtkStack      *stack,
+gtk_stack_transition_cb (GtkWidget     *widget,
                          GdkFrameClock *frame_clock,
                          gpointer       user_data)
 {
+  GtkStack *stack = GTK_STACK (widget);
   GtkStackPrivate *priv = gtk_stack_get_instance_private (stack);
   gint64 now;
   gdouble t;
@@ -733,6 +861,7 @@ gtk_stack_transition_cb (GtkStack      *stack,
     {
       gtk_widget_set_opacity (GTK_WIDGET (stack), 1.0);
       priv->tick_id = 0;
+      g_object_notify_by_pspec (G_OBJECT (stack), stack_props[PROP_TRANSITION_RUNNING]);
 
       return FALSE;
     }
@@ -748,7 +877,8 @@ gtk_stack_schedule_ticks (GtkStack *stack)
   if (priv->tick_id == 0)
     {
       priv->tick_id =
-        gtk_widget_add_tick_callback (GTK_WIDGET (stack), (GtkTickCallback)gtk_stack_transition_cb, stack, NULL);
+        gtk_widget_add_tick_callback (GTK_WIDGET (stack), gtk_stack_transition_cb, stack, NULL);
+      g_object_notify_by_pspec (G_OBJECT (stack), stack_props[PROP_TRANSITION_RUNNING]);
     }
 }
 
@@ -761,6 +891,7 @@ gtk_stack_unschedule_ticks (GtkStack *stack)
     {
       gtk_widget_remove_tick_callback (GTK_WIDGET (stack), priv->tick_id);
       priv->tick_id = 0;
+      g_object_notify_by_pspec (G_OBJECT (stack), stack_props[PROP_TRANSITION_RUNNING]);
     }
 }
 
@@ -770,10 +901,22 @@ effective_transition_type (GtkStack               *stack,
 {
   if (gtk_widget_get_direction (GTK_WIDGET (stack)) == GTK_TEXT_DIR_RTL)
     {
-      if (transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT)
-        return GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT;
-      else if (transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT)
-        return GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT;
+      switch (transition_type)
+        {
+        case GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT:
+          return GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT;
+        case GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT:
+          return GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT;
+        case GTK_STACK_TRANSITION_TYPE_OVER_LEFT:
+          return GTK_STACK_TRANSITION_TYPE_OVER_RIGHT;
+        case GTK_STACK_TRANSITION_TYPE_OVER_RIGHT:
+          return GTK_STACK_TRANSITION_TYPE_OVER_LEFT;
+        case GTK_STACK_TRANSITION_TYPE_UNDER_LEFT:
+          return GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT;
+        case GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT:
+          return GTK_STACK_TRANSITION_TYPE_UNDER_LEFT;
+        default: ;
+        }
     }
 
   return transition_type;
@@ -862,13 +1005,11 @@ set_visible_child (GtkStack               *stack,
     gtk_widget_set_child_visible (child_info->widget, TRUE);
 
   if ((child_info == NULL || priv->last_visible_child == NULL) &&
-      (transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT ||
-       transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN))
+      is_direction_dependent_transition (transition_type))
     {
       transition_type = GTK_STACK_TRANSITION_TYPE_NONE;
     }
-  else if (transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT ||
-	   transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN)
+  else if (is_direction_dependent_transition (transition_type))
     {
       gboolean i_first = FALSE;
       for (l = priv->children; l != NULL; l = g_list_next (l))
@@ -882,14 +1023,7 @@ set_visible_child (GtkStack               *stack,
 	    break;
         }
 
-      if (transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT)
-	{
-	  transition_type = i_first ? GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT : GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT;
-	}
-      if (transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN)
-	{
-	  transition_type = i_first ? GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN : GTK_STACK_TRANSITION_TYPE_SLIDE_UP;
-	}
+      transition_type = get_simple_transition_type (i_first, transition_type);
     }
 
   gtk_widget_queue_resize (GTK_WIDGET (stack));
@@ -998,11 +1132,17 @@ gtk_stack_add (GtkContainer *container,
   child_info->name = NULL;
   child_info->title = NULL;
   child_info->icon_name = NULL;
+  child_info->needs_attention = FALSE;
 
   priv->children = g_list_append (priv->children, child_info);
 
   gtk_widget_set_parent_window (child, priv->bin_window);
   gtk_widget_set_parent (child, GTK_WIDGET (stack));
+
+  if (priv->bin_window)
+    gdk_window_set_events (priv->bin_window,
+                           gdk_window_get_events (priv->bin_window) |
+                           gtk_widget_get_events (child));
 
   g_signal_connect (child, "notify::visible",
                     G_CALLBACK (stack_child_visibility_notify_cb), stack);
@@ -1060,6 +1200,40 @@ gtk_stack_remove (GtkContainer *container,
 }
 
 /**
+ * gtk_stack_get_child_by_name:
+ * @stack: a #GtkStack
+ * @name: the name of the child to find
+ *
+ * Finds the child of the #GtkStack with the name given as
+ * the argument. Returns %NULL if there is no child with this
+ * name.
+ *
+ * Returns: (transfer none): the requested child of the #GtkStack
+ *
+ * Since: 3.12
+ */
+GtkWidget *
+gtk_stack_get_child_by_name (GtkStack    *stack,
+                             const gchar *name)
+{
+  GtkStackPrivate *priv = gtk_stack_get_instance_private (stack);
+  GtkStackChildInfo *info;
+  GList *l;
+
+  g_return_val_if_fail (GTK_IS_STACK (stack), NULL);
+  g_return_val_if_fail (name != NULL, NULL);
+
+  for (l = priv->children; l != NULL; l = l->next)
+    {
+      info = l->data;
+      if (info->name && strcmp (info->name, name) == 0)
+        return info->widget;
+    }
+
+  return NULL;
+}
+
+/**
  * gtk_stack_set_homogeneous:
  * @stack: a #GtkStack
  * @homogeneous: %TRUE to make @stack homogeneous
@@ -1099,7 +1273,7 @@ gtk_stack_set_homogeneous (GtkStack *stack,
  * Gets whether @stack is homogeneous.
  * See gtk_stack_set_homogeneous().
  *
- * Return value: whether @stack is homogeneous.
+ * Returns: whether @stack is homogeneous.
  *
  * Since: 3.10
  */
@@ -1152,6 +1326,9 @@ gtk_stack_set_transition_duration (GtkStack *stack,
 
   g_return_if_fail (GTK_IS_STACK (stack));
 
+  if (priv->transition_duration == duration)
+    return;
+
   priv->transition_duration = duration;
   g_object_notify_by_pspec (G_OBJECT (stack),
                             stack_props[PROP_TRANSITION_DURATION]);
@@ -1164,7 +1341,7 @@ gtk_stack_set_transition_duration (GtkStack *stack,
  * Gets the type of animation that will be used
  * for transitions between pages in @stack.
  *
- * Return value: the current transition type of @stack
+ * Returns: the current transition type of @stack
  *
  * Since: 3.10
  */
@@ -1201,9 +1378,33 @@ gtk_stack_set_transition_type (GtkStack              *stack,
 
   g_return_if_fail (GTK_IS_STACK (stack));
 
+  if (priv->transition_type == transition)
+    return;
+
   priv->transition_type = transition;
   g_object_notify_by_pspec (G_OBJECT (stack),
                             stack_props[PROP_TRANSITION_TYPE]);
+}
+
+/**
+ * gtk_stack_get_transition_running:
+ * @stack: a #GtkStack
+ *
+ * Returns whether the @stack is currently in a transition from one page to
+ * another.
+ *
+ * Returns: %TRUE if the transition is currently running, %FALSE otherwise.
+ *
+ * Since: 3.12
+ */
+gboolean
+gtk_stack_get_transition_running (GtkStack *stack)
+{
+  GtkStackPrivate *priv = gtk_stack_get_instance_private (stack);
+
+  g_return_val_if_fail (GTK_IS_STACK (stack), FALSE);
+
+  return (priv->tick_id != 0);
 }
 
 /**
@@ -1213,7 +1414,7 @@ gtk_stack_set_transition_type (GtkStack              *stack,
  * Gets the currently visible child of @stack, or %NULL if
  * there are no visible children.
  *
- * Return value: (transfer none): the visible child of the #GtkStack
+ * Returns: (transfer none): the visible child of the #GtkStack
  *
  * Since: 3.10
  */
@@ -1234,7 +1435,7 @@ gtk_stack_get_visible_child (GtkStack *stack)
  * Returns the name of the currently visible child of @stack, or
  * %NULL if there is no visible child.
  *
- * Return value: (transfer none): the name of the visible child of the #GtkStack
+ * Returns: (transfer none): the name of the visible child of the #GtkStack
  *
  * Since: 3.10
  */
@@ -1459,35 +1660,111 @@ gtk_stack_draw_crossfade (GtkWidget *widget,
 }
 
 static void
-gtk_stack_draw_slide (GtkWidget *widget,
+gtk_stack_draw_under (GtkWidget *widget,
                       cairo_t   *cr)
 {
   GtkStack *stack = GTK_STACK (widget);
   GtkStackPrivate *priv = gtk_stack_get_instance_private (stack);
   GtkAllocation allocation;
-  gint x = 0;
-  gint y = 0;
+  gint x, y, width, height, pos_x, pos_y;
 
   gtk_widget_get_allocation (widget, &allocation);
+  x = y = 0;
+  width = allocation.width;
+  height = allocation.height;
+  pos_x = pos_y = 0;
 
-  x = get_bin_window_x (stack, &allocation);
+  switch (priv->active_transition_type)
+    {
+    case GTK_STACK_TRANSITION_TYPE_UNDER_DOWN:
+      y = 0;
+      height = allocation.height * (ease_out_cubic (priv->transition_pos));
+      pos_y = height;
+      break;
+    case GTK_STACK_TRANSITION_TYPE_UNDER_UP:
+      y = allocation.height * (1 - ease_out_cubic (priv->transition_pos));
+      height = allocation.height - y;
+      pos_y = y - allocation.height;
+      break;
+    case GTK_STACK_TRANSITION_TYPE_UNDER_LEFT:
+      x = allocation.width * (1 - ease_out_cubic (priv->transition_pos));
+      width = allocation.width - x;
+      pos_x = x - allocation.width;
+      break;
+    case GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT:
+      x = 0;
+      width = allocation.width * (ease_out_cubic (priv->transition_pos));
+      pos_x = width;
+      break;
+    default:
+      g_assert_not_reached ();
+    }
 
-  if (priv->active_transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT)
-    x -= allocation.width;
-  if (priv->active_transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT)
-    x += allocation.width;
+  cairo_save (cr);
+  cairo_rectangle (cr, x, y, width, height);
+  cairo_clip (cr);
 
-  y = get_bin_window_y (stack, &allocation);
+  gtk_container_propagate_draw (GTK_CONTAINER (stack),
+                                priv->visible_child->widget,
+                                cr);
 
-  if (priv->active_transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_UP)
-    y -= allocation.height;
-  if (priv->active_transition_type == GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN)
-    y += allocation.height;
+  cairo_restore (cr);
+
+  if (priv->last_visible_surface)
+    {
+      cairo_set_source_surface (cr, priv->last_visible_surface, pos_x, pos_y);
+      cairo_paint (cr);
+    }
+}
+
+static void
+gtk_stack_draw_slide (GtkWidget *widget,
+                      cairo_t   *cr)
+{
+  GtkStack *stack = GTK_STACK (widget);
+  GtkStackPrivate *priv = gtk_stack_get_instance_private (stack);
 
   if (priv->last_visible_surface &&
       gtk_cairo_should_draw_window (cr, priv->view_window))
-
     {
+      GtkAllocation allocation;
+      int x, y;
+
+      gtk_widget_get_allocation (widget, &allocation);
+
+      x = get_bin_window_x (stack, &allocation);
+      y = get_bin_window_y (stack, &allocation);
+
+      switch (priv->active_transition_type)
+        {
+        case GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT:
+          x -= allocation.width;
+          break;
+        case GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT:
+          x += allocation.width;
+          break;
+        case GTK_STACK_TRANSITION_TYPE_SLIDE_UP:
+          y -= allocation.height;
+          break;
+        case GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN:
+          y += allocation.height;
+          break;
+        case GTK_STACK_TRANSITION_TYPE_OVER_UP:
+        case GTK_STACK_TRANSITION_TYPE_OVER_DOWN:
+          y = 0;
+          break;
+        case GTK_STACK_TRANSITION_TYPE_OVER_LEFT:
+        case GTK_STACK_TRANSITION_TYPE_OVER_RIGHT:
+          x = 0;
+          break;
+        default:
+          g_assert_not_reached ();
+          break;
+        }
+
+      x += priv->last_visible_surface_allocation.x;
+      y += priv->last_visible_surface_allocation.y;
+
       cairo_save (cr);
       cairo_set_source_surface (cr, priv->last_visible_surface, x, y);
       cairo_paint (cr);
@@ -1507,6 +1784,18 @@ gtk_stack_draw (GtkWidget *widget,
   GtkStack *stack = GTK_STACK (widget);
   GtkStackPrivate *priv = gtk_stack_get_instance_private (stack);
   cairo_t *pattern_cr;
+
+  if (gtk_cairo_should_draw_window (cr, priv->view_window))
+    {
+      GtkStyleContext *context;
+          
+      context = gtk_widget_get_style_context (widget);
+      gtk_render_background (context,
+                             cr,
+                             0, 0,
+                             gtk_widget_get_allocated_width (widget),
+                             gtk_widget_get_allocated_height (widget));
+    }
 
   if (priv->visible_child)
     {
@@ -1540,7 +1829,18 @@ gtk_stack_draw (GtkWidget *widget,
             case GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT:
             case GTK_STACK_TRANSITION_TYPE_SLIDE_UP:
             case GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN:
+            case GTK_STACK_TRANSITION_TYPE_OVER_UP:
+            case GTK_STACK_TRANSITION_TYPE_OVER_DOWN:
+            case GTK_STACK_TRANSITION_TYPE_OVER_LEFT:
+            case GTK_STACK_TRANSITION_TYPE_OVER_RIGHT:
               gtk_stack_draw_slide (widget, cr);
+              break;
+            case GTK_STACK_TRANSITION_TYPE_UNDER_UP:
+            case GTK_STACK_TRANSITION_TYPE_UNDER_DOWN:
+            case GTK_STACK_TRANSITION_TYPE_UNDER_LEFT:
+            case GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT:
+	      if (gtk_cairo_should_draw_window (cr, priv->bin_window))
+		gtk_stack_draw_under (widget, cr);
               break;
             default:
               g_assert_not_reached ();

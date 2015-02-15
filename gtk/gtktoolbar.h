@@ -48,6 +48,13 @@ G_BEGIN_DECLS
 #define GTK_IS_TOOLBAR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_TYPE_TOOLBAR))
 #define GTK_TOOLBAR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_TOOLBAR, GtkToolbarClass))
 
+/**
+ * GtkToolbarSpaceStyle:
+ * @GTK_TOOLBAR_SPACE_EMPTY: Use blank spacers.
+ * @GTK_TOOLBAR_SPACE_LINE: Use vertical lines for spacers.
+ *
+ * Whether spacers are vertical lines or just blank.
+ */
 typedef enum
 {
   GTK_TOOLBAR_SPACE_EMPTY,
@@ -137,14 +144,6 @@ GDK_AVAILABLE_IN_ALL
 void            gtk_toolbar_set_drop_highlight_item (GtkToolbar      *toolbar,
 						     GtkToolItem     *tool_item,
 						     gint             index_);
-
-
-/* internal functions */
-gchar *         _gtk_toolbar_elide_underscores      (const gchar         *original);
-void            _gtk_toolbar_paint_space_line       (GtkWidget           *widget,
-						     GtkToolbar          *toolbar,
-                                                     cairo_t             *cr);
-gint            _gtk_toolbar_get_default_space_size (void);
 
 
 G_END_DECLS

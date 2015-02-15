@@ -139,36 +139,16 @@ additional environment variables.
   to print out different types of debugging information.
   <variablelist>
     <varlistentry>
-      <term>misc</term>
-      <listitem><para>Miscellaneous information</para></listitem>
+      <term>actions</term>
+      <listitem><para>Actions and menu models.</para></listitem>
     </varlistentry>
     <varlistentry>
-      <term>plugsocket</term>
-      <listitem><para>Cross-process embedding</para></listitem>
+      <term>baselines</term>
+      <listitem><para>Baselines.</para></listitem>
     </varlistentry>
     <varlistentry>
-      <term>text</term>
-      <listitem><para>Text widget internals</para></listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>tree</term>
-      <listitem><para>Tree widget internals</para></listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>updates</term>
-      <listitem><para>Visual feedback about window updates</para></listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>keybindings</term>
-      <listitem><para>Keybindings</para></listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>multihead</term>
-      <listitem><para>Working on multiple displays</para></listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>modules</term>
-      <listitem><para>Loading of modules</para></listitem>
+      <term>builder</term>
+      <listitem><para>GtkBuilder support</para></listitem>
     </varlistentry>
     <varlistentry>
       <term>geometry</term>
@@ -179,25 +159,66 @@ additional environment variables.
       <listitem><para>Icon themes</para></listitem>
     </varlistentry>
     <varlistentry>
-      <term>printing</term>
-      <listitem><para>Printing support</para></listitem>
+      <term>interactive</term>
+      <listitem><para>Open the <link linkend="interactive-debugging">interactive debugger</link>.</para></listitem>
     </varlistentry>
     <varlistentry>
-      <term>builder</term>
-      <listitem><para>GtkBuilder support</para></listitem>
+      <term>keybindings</term>
+      <listitem><para>Keybindings</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>misc</term>
+      <listitem><para>Miscellaneous information</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>modules</term>
+      <listitem><para>Loading of modules</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>no-css-cache</term>
+      <listitem><para>Bypass caching for CSS style properties.</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>no-pixel-cache</term>
+      <listitem><para>Disable the pixel cache.</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>plugsocket</term>
+      <listitem><para>Cross-process embedding</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>pixel-cache</term>
+      <listitem><para>Pixel cache.</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>printing</term>
+      <listitem><para>Printing support</para></listitem>
     </varlistentry>
     <varlistentry>
       <term>size-request</term>
       <listitem><para>Size requests</para></listitem>
     </varlistentry>
     <varlistentry>
-      <term>no-css-cache</term>
-      <listitem><para>Bypass caching for CSS style properties.</para></listitem>
+      <term>text</term>
+      <listitem><para>Text widget internals</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>touchscreen</term>
+      <listitem><para>Pretend the pointer is a touchscreen device</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>tree</term>
+      <listitem><para>Tree widget internals</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>updates</term>
+      <listitem><para>Visual feedback about window updates</para></listitem>
     </varlistentry>
 
   </variablelist>
   The special value <literal>all</literal> can be used to turn on all
-  debug options.
+  debug options. The special value <literal>help</literal> can be used
+  to obtain a list of all supported debug options.
   </para>
 </formalpara>
 
@@ -314,6 +335,20 @@ additional environment variables.
   </para>
 </formalpara>
 
+<formalpara>
+  <title><envar>GTK_THEME</envar></title>
+
+  <para>
+    If set, makes GTK+ use the named theme instead of the theme
+    that is specified by the gtk-theme-name setting. This is intended
+    mainly for easy debugging of theme issues.
+  </para>
+  <para>
+    It is also possible to specify a theme variant to load, by appending
+    the variant name with a colon, like this: `GTK_THEME=Adwaita:dark`.
+  </para>
+</formalpara>
+
 <para>
 The following environment variables are used by GdkPixbuf, GDK or
 Pango, not by GTK+ itself, but we list them here for completeness
@@ -345,36 +380,12 @@ nevertheless.
   to print out different types of debugging information.
   <variablelist>
     <varlistentry>
-      <term>misc</term>
-      <listitem><para>Miscellaneous information</para></listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>events</term>
-      <listitem><para>Show all events received by GDK</para></listitem>
+      <term>cursor</term>
+      <listitem><para>Information about cursor objects (only win32)</para></listitem>
     </varlistentry>
     <varlistentry>
       <term>dnd</term>
       <listitem><para>Information about drag-and-drop</para></listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>xim</term>
-      <listitem><para>Information about XIM support</para></listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>nograbs</term>
-      <listitem><para>Turn off all pointer and keyboard grabs</para></listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>multihead</term>
-      <listitem><para>Information related to multiple screens</para></listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>xinerama</term>
-      <listitem><para>Simulate a multi-monitor setup</para></listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>cursor</term>
-      <listitem><para>Information about cursor objects (only win32)</para></listitem>
     </varlistentry>
     <varlistentry>
       <term>draw</term>
@@ -383,6 +394,22 @@ nevertheless.
     <varlistentry>
       <term>eventloop</term>
       <listitem><para>Information about event loop operation (mostly Quartz)</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>misc</term>
+      <listitem><para>Miscellaneous information</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>nograbs</term>
+      <listitem><para>Turn off all pointer and keyboard grabs</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>xinerama</term>
+      <listitem><para>Simulate a multi-monitor setup</para></listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>xim</term>
+      <listitem><para>Information about XIM support</para></listitem>
     </varlistentry>
 
   </variablelist>
@@ -493,6 +520,38 @@ nevertheless.
   </para>
 </formalpara>
 
+</refsect2>
+
+<refsect2 id="interactive-debugging">
+<title>Interactive debugging</title>
+
+  <inlinegraphic fileref="inspector.png" format="PNG"></inlinegraphic>
+
+  <para>
+    GTK+ includes an interactive debugger, called the GTK+ Inspector, which
+    lets you explore the widget tree of any GTK+ application at runtime, as
+    well as tweak the theme and trigger visual debugging aids. You can
+    easily try out changes at runtime before putting them into the code.
+  </para>
+  <para>
+    Note that the GTK+ inspector can only show GTK+ internals. It can not
+    understand the application-specific logic of a GTK+ application. Also,
+    the fact that the GTK+ inspector is running in the application process
+    limits what it can do. It is meant as a complement to full-blown debuggers
+    and system tracing facilities such as DTrace, not as a replacement.
+  </para>
+  <para>
+    To enable the GTK+ inspector, you can use the Control-Shift-I or
+    Control-Shift-D keyboard shortcuts, or set the
+    <envar>GTK_DEBUG=interactive</envar> environment variable.
+  </para>
+  <para>
+    In some situations, it may be inappropriate to give users access to the
+    GTK+ inspector. The keyboard shortcuts can be disabled with the
+    `enable-inspector-keybinding` key in the `org.gtk.Settings.Debug`
+    GSettings schema.
+  </para>
+ 
 </refsect2>
 
 </refsect1>

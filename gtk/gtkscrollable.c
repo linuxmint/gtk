@@ -26,44 +26,27 @@
  * To implement this interface you should override the
  * #GtkScrollable:hadjustment and #GtkScrollable:vadjustment properties.
  *
- * <refsect2>
- * <title>Creating a scrollable widget</title>
- * <para>
+ * ## Creating a scrollable widget
+ *
  * All scrollable widgets should do the following.
  *
- * <orderedlist>
- *   <listitem>
- *     <para>
- *       When a parent widget sets the scrollable child widget's adjustments, the widget should populate the adjustments'
- *       #GtkAdjustment:lower, #GtkAdjustment:upper,
- *       #GtkAdjustment:step-increment, #GtkAdjustment:page-increment and
- *       #GtkAdjustment:page-size properties and connect to the
- *       #GtkAdjustment::value-changed signal.
- *     </para>
- *   </listitem>
- *   <listitem>
- *     <para>
- *       Because its preferred size is the size for a fully expanded widget,
- *       the scrollable widget must be able to cope with underallocations.
- *       This means that it must accept any value passed to its
- *       #GtkWidgetClass.size_allocate() function.
- *     </para>
- *   </listitem>
- *   <listitem>
- *     <para>
- *       When the parent allocates space to the scrollable child widget, the widget should update
- *       the adjustments' properties with new values.
- *     </para>
- *   </listitem>
- *   <listitem>
- *     <para>
- *       When any of the adjustments emits the #GtkAdjustment::value-changed signal,
- *       the scrollable widget should scroll its contents.
- *     </para>
- *   </listitem>
- * </orderedlist>
- * </para>
- * </refsect2>
+ * - When a parent widget sets the scrollable child widget’s adjustments,
+ *   the widget should populate the adjustments’
+ *   #GtkAdjustment:lower, #GtkAdjustment:upper,
+ *   #GtkAdjustment:step-increment, #GtkAdjustment:page-increment and
+ *   #GtkAdjustment:page-size properties and connect to the
+ *   #GtkAdjustment::value-changed signal.
+ *
+ * - Because its preferred size is the size for a fully expanded widget,
+ *   the scrollable widget must be able to cope with underallocations.
+ *   This means that it must accept any value passed to its
+ *   #GtkWidgetClass.size_allocate() function.
+ *
+ * - When the parent allocates space to the scrollable child widget,
+ *   the widget should update the adjustments’ properties with new values.
+ *
+ * - When any of the adjustments emits the #GtkAdjustment::value-changed signal,
+ *   the scrollable widget should scroll its contents.
  */
 
 #include "config.h"
@@ -129,7 +112,7 @@ gtk_scrollable_default_init (GtkScrollableInterface *iface)
 			     P_("How the size of the content should be determined"),
 			     GTK_TYPE_SCROLLABLE_POLICY,
 			     GTK_SCROLL_MINIMUM,
-			     GTK_PARAM_READWRITE);
+			     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
   g_object_interface_install_property (iface, pspec);
 
   /**
@@ -145,7 +128,7 @@ gtk_scrollable_default_init (GtkScrollableInterface *iface)
 			     P_("How the size of the content should be determined"),
 			     GTK_TYPE_SCROLLABLE_POLICY,
 			     GTK_SCROLL_MINIMUM,
-			     GTK_PARAM_READWRITE);
+			     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
   g_object_interface_install_property (iface, pspec);
 }
 
@@ -155,7 +138,7 @@ gtk_scrollable_default_init (GtkScrollableInterface *iface)
  *
  * Retrieves the #GtkAdjustment used for horizontal scrolling.
  *
- * Return value: (transfer none): horizontal #GtkAdjustment.
+ * Returns: (transfer none): horizontal #GtkAdjustment.
  *
  * Since: 3.0
  **/
@@ -203,7 +186,7 @@ gtk_scrollable_set_hadjustment (GtkScrollable *scrollable,
  *
  * Retrieves the #GtkAdjustment used for vertical scrolling.
  *
- * Return value: (transfer none): vertical #GtkAdjustment.
+ * Returns: (transfer none): vertical #GtkAdjustment.
  *
  * Since: 3.0
  **/
@@ -252,7 +235,7 @@ gtk_scrollable_set_vadjustment (GtkScrollable *scrollable,
  *
  * Gets the horizontal #GtkScrollablePolicy.
  *
- * Return value: The horizontal #GtkScrollablePolicy.
+ * Returns: The horizontal #GtkScrollablePolicy.
  *
  * Since: 3.0
  **/
@@ -294,7 +277,7 @@ gtk_scrollable_set_hscroll_policy (GtkScrollable       *scrollable,
  *
  * Gets the vertical #GtkScrollablePolicy.
  *
- * Return value: The vertical #GtkScrollablePolicy.
+ * Returns: The vertical #GtkScrollablePolicy.
  *
  * Since: 3.0
  **/

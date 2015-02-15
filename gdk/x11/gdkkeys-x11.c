@@ -236,7 +236,7 @@ get_xkb (GdkX11Keymap *keymap_x11)
 #endif /* HAVE_XKB */
 
 /* Whether we were able to turn on detectable-autorepeat using
- * XkbSetDetectableAutorepeat. If FALSE, we'll fall back
+ * XkbSetDetectableAutorepeat. If FALSE, we’ll fall back
  * to checking the next event with XPending().
  */
 
@@ -1042,7 +1042,7 @@ gdk_x11_keymap_lookup_key (GdkKeymap          *keymap,
  *  - add the group and level return.
  *  - change the interpretation of mods_rtrn as described
  *    in the docs for gdk_keymap_translate_keyboard_state()
- * It's unchanged for ease of diff against the Xlib sources; don't
+ * It’s unchanged for ease of diff against the Xlib sources; don't
  * reformat it.
  */
 static Bool
@@ -1058,6 +1058,7 @@ MyEnhancedXkbTranslateKeyCode(register XkbDescPtr     xkb,
     int col,nKeyGroups;
     unsigned preserve,effectiveGroup;
     KeySym *syms;
+    int found_col = 0;
 
     if (mods_rtrn!=NULL)
         *mods_rtrn = 0;
@@ -1090,7 +1091,7 @@ MyEnhancedXkbTranslateKeyCode(register XkbDescPtr     xkb,
                 break;
         }
     }
-    col= effectiveGroup*XkbKeyGroupsWidth(xkb,key);
+    found_col = col= effectiveGroup*XkbKeyGroupsWidth(xkb,key);
     type = XkbKeyKeyType(xkb,key,effectiveGroup);
 
     preserve= 0;
@@ -1129,7 +1130,7 @@ MyEnhancedXkbTranslateKeyCode(register XkbDescPtr     xkb,
             }
 
             if (!found && ((mods&type->mods.mask) == entry->mods.mask)) {
-                col+= entry->level;
+                found_col= col + entry->level;
                 if (type->preserve)
                     preserve= type->preserve[i].mask;
 
@@ -1143,7 +1144,7 @@ MyEnhancedXkbTranslateKeyCode(register XkbDescPtr     xkb,
     }
 
     if (keysym_rtrn!=NULL)
-        *keysym_rtrn= syms[col];
+        *keysym_rtrn= syms[found_col];
     if (mods_rtrn) {
         /* ---- Begin section modified for GDK  ---- */
         *mods_rtrn &= ~preserve;
@@ -1175,7 +1176,7 @@ MyEnhancedXkbTranslateKeyCode(register XkbDescPtr     xkb,
 
     /* ---- End stuff GDK adds to the original Xlib version ---- */
 
-    return (syms[col] != NoSymbol);
+    return (syms[found_col] != NoSymbol);
 }
 #endif /* HAVE_XKB */
 
@@ -1352,7 +1353,7 @@ gdk_x11_keymap_translate_keyboard_state (GdkKeymap       *keymap,
 
 /**
  * gdk_x11_keymap_get_group_for_state:
- * @keymap: a #GdkX11Keymap
+ * @keymap: (type GdkX11Keymap): a #GdkX11Keymap
  * @state: raw state returned from X
  *
  * Extracts the group from the state field sent in an X Key event.
@@ -1440,11 +1441,11 @@ gdk_x11_keymap_add_virtual_modifiers (GdkKeymap       *keymap,
 
 /**
  * gdk_x11_keymap_key_is_modifier:
- * @keymap: a #GdkX11Keymap
+ * @keymap: (type GdkX11Keymap): a #GdkX11Keymap
  * @keycode: the hardware keycode from a key event
  *
  * Determines whether a particular key code represents a key that
- * is a modifier. That is, it's a key that normally just affects
+ * is a modifier. That is, it’s a key that normally just affects
  * the keyboard state and the behavior of other keys rather than
  * producing a direct effect itself. This is only needed for code
  * processing raw X events, since #GdkEventKey directly includes

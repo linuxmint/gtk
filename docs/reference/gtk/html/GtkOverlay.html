@@ -7,8 +7,8 @@
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
 <link rel="up" href="LayoutContainers.html" title="Layout Containers">
 <link rel="prev" href="GtkHeaderBar.html" title="GtkHeaderBar">
-<link rel="next" href="GtkAlignment.html" title="GtkAlignment">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<link rel="next" href="GtkButtonBox.html" title="GtkButtonBox">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -23,7 +23,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="LayoutContainers.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="GtkHeaderBar.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="GtkAlignment.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GtkButtonBox.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="GtkOverlay"></a><div class="titlepage"></div>
@@ -70,7 +70,7 @@
 <col width="200px" class="signals_flags">
 </colgroup>
 <tbody><tr>
-<td class="signal_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a></td>
+<td class="signal_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a></td>
 <td class="signal_name"><a class="link" href="GtkOverlay.html#GtkOverlay-get-child-position" title="The “get-child-position” signal">get-child-position</a></td>
 <td class="signal_flags">Run Last</td>
 </tr></tbody>
@@ -83,16 +83,22 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GtkOverlay.html#GtkOverlay-struct" title="struct GtkOverlay">GtkOverlay</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkOverlay.html#GtkOverlayClass" title="struct GtkOverlayClass">GtkOverlayClass</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="GtkOverlay.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBin.html" title="GtkBin">GtkBin</a>
@@ -113,7 +119,7 @@ GtkOverlay implements
 <div class="refsect1">
 <a name="GtkOverlay.description"></a><h2>Description</h2>
 <p>GtkOverlay is a container which contains a single main child, on top
-of which it can place <em class="firstterm">overlay</em> widgets. The
+of which it can place “overlay” widgets. The
 position of each overlay widget is determined by its <a class="link" href="GtkWidget.html#GtkWidget--halign" title="The “halign” property"><span class="type">“halign”</span></a>
 and <a class="link" href="GtkWidget.html#GtkWidget--valign" title="The “valign” property"><span class="type">“valign”</span></a> properties. E.g. a widget with both alignments
 set to <a class="link" href="GtkWidget.html#GTK-ALIGN-START:CAPS"><code class="literal">GTK_ALIGN_START</code></a> will be placed at the top left corner of the
@@ -124,12 +130,10 @@ by setting the margin properties of the child to non-zero values.</p>
 <p>More complicated placement of overlays is possible by connecting
 to the <a class="link" href="GtkOverlay.html#GtkOverlay-get-child-position" title="The “get-child-position” signal"><span class="type">“get-child-position”</span></a> signal.</p>
 <div class="refsect2">
-<a name="GtkOverlay-BUILDER-UI"></a><h3>GtkOverlay as GtkBuildable</h3>
-<p>
-The GtkOverlay implementation of the GtkBuildable interface
-supports placing a child as an overlay by specifying "overlay" as
-the "type" attribute of a <code class="sgmltag-starttag">&lt;child&gt;</code> element.
-</p>
+<a name="id-1.3.7.11.9.4"></a><h3>GtkOverlay as GtkBuildable</h3>
+<p>The GtkOverlay implementation of the GtkBuildable interface
+supports placing a child as an overlay by specifying “overlay” as
+the “type” attribute of a <code class="literal">&lt;child&gt;</code> element.</p>
 </div>
 </div>
 <div class="refsect1">
@@ -140,7 +144,7 @@ the "type" attribute of a <code class="sgmltag-starttag">&lt;child&gt;</code> el
 gtk_overlay_new (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkOverlay.html" title="GtkOverlay"><span class="type">GtkOverlay</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.7.9.10.2.5"></a><h4>Returns</h4>
+<a name="id-1.3.7.11.10.2.5"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GtkOverlay.html" title="GtkOverlay"><span class="type">GtkOverlay</span></a> object.</p>
 <p></p>
 </div>
@@ -161,7 +165,7 @@ added with <a class="link" href="GtkContainer.html#gtk-container-add" title="gtk
  is placed is determined
 from its <a class="link" href="GtkWidget.html#GtkWidget--halign" title="The “halign” property"><span class="type">“halign”</span></a> and <a class="link" href="GtkWidget.html#GtkWidget--valign" title="The “valign” property"><span class="type">“valign”</span></a> properties.</p>
 <div class="refsect3">
-<a name="id-1.3.7.9.10.3.7"></a><h4>Parameters</h4>
+<a name="id-1.3.7.11.10.3.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -191,16 +195,52 @@ from its <a class="link" href="GtkWidget.html#GtkWidget--halign" title="The “h
 <a name="GtkOverlay-struct"></a><h3>struct GtkOverlay</h3>
 <pre class="programlisting">struct GtkOverlay;</pre>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GtkOverlayClass"></a><h3>struct GtkOverlayClass</h3>
+<pre class="programlisting">struct GtkOverlayClass {
+  GtkBinClass parent_class;
+
+
+  gboolean (*get_child_position) (GtkOverlay    *overlay,
+                                  GtkWidget     *widget,
+                                  GtkAllocation *allocation);
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.7.11.11.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GtkBin.html#GtkBinClass" title="struct GtkBinClass"><span class="type">GtkBinClass</span></a> <em class="structfield"><code><a name="GtkOverlayClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkOverlayClass.get-child-position"></a>get_child_position</code></em> ()</p></td>
+<td class="struct_member_description"><p>Signal emitted to determine the position and
+size of any overlay child widgets.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkOverlay.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2">
 <a name="GtkOverlay-get-child-position"></a><h3>The <code class="literal">“get-child-position”</code> signal</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 user_function (<a class="link" href="GtkOverlay.html" title="GtkOverlay"><span class="type">GtkOverlay</span></a>   *overlay,
                <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>    *widget,
                <a href="http://developer.gnome.org/gdk2/gdk3-Points-Rectangles-and-Regions.html#GdkRectangle"><span class="type">GdkRectangle</span></a> *allocation,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
 <p>The ::get-child-position signal is emitted to determine
 the position and size of any overlay child widgets. A
 handler for this signal should fill <em class="parameter"><code>allocation</code></em>
@@ -217,10 +257,8 @@ alignment of <a class="link" href="GtkWidget.html#GTK-ALIGN-FILL:CAPS"><code cla
 be full-width/height). If the main child is a
 <a class="link" href="GtkScrolledWindow.html" title="GtkScrolledWindow"><span class="type">GtkScrolledWindow</span></a>, the overlays are placed relative
 to its contents.</p>
-<p>Return: <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <em class="parameter"><code>allocation</code></em>
- has been filled</p>
 <div class="refsect3">
-<a name="id-1.3.7.9.12.2.7"></a><h4>Parameters</h4>
+<a name="id-1.3.7.11.12.2.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -240,8 +278,9 @@ to its contents.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>allocation</p></td>
-<td class="parameter_description"><p> return location for the allocation. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out caller-allocates</span></acronym>]</span></td>
+<td class="parameter_description"><p> return
+location for the allocation. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> Gdk.Rectangle][<acronym title="Out parameter, where caller must allocate storage."><span class="acronym">out caller-allocates</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>user_data</p></td>
@@ -251,12 +290,18 @@ to its contents.</p>
 </tbody>
 </table></div>
 </div>
+<div class="refsect3">
+<a name="id-1.3.7.11.12.2.7"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the <em class="parameter"><code>allocation</code></em>
+has been filled</p>
+<p></p>
+</div>
 <p>Flags: Run Last</p>
 </div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

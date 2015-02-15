@@ -4,20 +4,18 @@
 
 #include "broadway-output.h"
 
-#define _XOPEN_SOURCE /* for crypt */
-
 #include <glib.h>
 #include <glib/gprintf.h>
 #include "gdktypes.h"
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #elif defined (G_OS_WIN32)
 #include <io.h>
 #endif
-#include <crypt.h>
 #ifdef HAVE_SYS_MMAN_H
 #include <sys/mman.h>
 #endif
@@ -29,6 +27,9 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #endif
+#ifdef HAVE_GIO_UNIX
+#include <gio/gunixsocketaddress.h>
+#endif
 #ifdef G_OS_WIN32
 #include <windows.h>
 #include <string.h>
@@ -39,7 +40,6 @@ typedef struct BroadwayWindow BroadwayWindow;
 struct _BroadwayServer {
   GObject parent_instance;
 
-  char *password;
   char *address;
   int port;
   GSocketService *service;
@@ -54,6 +54,8 @@ struct _BroadwayServer {
   GHashTable *id_ht;
   GList *toplevels;
   BroadwayWindow *root;
+  gint32 focused_window_id; /* -1 => none */
+  gint show_keyboard;
 
   guint32 screen_width;
   guint32 screen_height;
@@ -96,8 +98,6 @@ struct BroadwayInput {
   GSource *source;
   gboolean seen_time;
   gint64 time_base;
-  gboolean proto_v7_plus;
-  gboolean binary;
   gboolean active;
 };
 
@@ -108,11 +108,11 @@ struct BroadwayWindow {
   gint32 width;
   gint32 height;
   gboolean is_temp;
-  gboolean last_synced;
   gboolean visible;
   gint32 transient_for;
 
-  cairo_surface_t *last_surface;
+  BroadwayBuffer *buffer;
+  gboolean buffer_synced;
 
   char *cached_surface_name;
   cairo_surface_t *cached_surface;
@@ -120,14 +120,14 @@ struct BroadwayWindow {
 
 static void broadway_server_resync_windows (BroadwayServer *server);
 
+static GType broadway_server_get_type (void);
+
 G_DEFINE_TYPE (BroadwayServer, broadway_server, G_TYPE_OBJECT)
 
 static void
 broadway_server_init (BroadwayServer *server)
 {
   BroadwayWindow *root;
-  char *passwd_file;
-  char *password, *p;
 
   server->service = g_socket_service_new ();
   server->pointer_grab_window_id = -1;
@@ -135,22 +135,6 @@ broadway_server_init (BroadwayServer *server)
   server->last_seen_time = 1;
   server->id_ht = g_hash_table_new (NULL, NULL);
   server->id_counter = 0;
-
-  passwd_file = g_build_filename (g_get_user_config_dir (),
-				  "broadway.passwd", NULL);
-
-  if (g_file_get_contents (passwd_file,
-			   &password, NULL, NULL))
-    {
-      p = strchr (password, '\n');
-      if (p)
-	*p = 0;
-      g_strstrip (password);
-      if (strlen (password) > 3)
-	server->password = password;
-      else
-	g_free (password);
-    }
 
   root = g_new0 (BroadwayWindow, 1);
   root->id = server->id_counter++;
@@ -235,6 +219,15 @@ update_event_state (BroadwayServer *server,
     break;
   case BROADWAY_EVENT_BUTTON_PRESS:
   case BROADWAY_EVENT_BUTTON_RELEASE:
+    if (message->base.type == BROADWAY_EVENT_BUTTON_PRESS &&
+        server->focused_window_id != message->pointer.mouse_window_id &&
+        server->pointer_grab_window_id == -1)
+      {
+        broadway_server_window_raise (server, message->pointer.mouse_window_id);
+        broadway_server_focus_window (server, message->pointer.mouse_window_id);
+        broadway_server_flush (server);
+      }
+
     server->last_x = message->pointer.root_x;
     server->last_y = message->pointer.root_y;
     server->last_state = message->pointer.state;
@@ -245,6 +238,23 @@ update_event_state (BroadwayServer *server,
     server->last_y = message->pointer.root_y;
     server->last_state = message->pointer.state;
     server->real_mouse_in_toplevel_id = message->pointer.mouse_window_id;
+    break;
+  case BROADWAY_EVENT_TOUCH:
+    if (message->touch.touch_type == 0 && message->touch.is_emulated &&
+        server->focused_window_id != message->touch.event_window_id)
+      {
+        broadway_server_window_raise (server, message->touch.event_window_id);
+        broadway_server_focus_window (server, message->touch.event_window_id);
+        broadway_server_flush (server);
+      }
+
+    if (message->touch.is_emulated)
+      {
+        server->last_x = message->pointer.root_x;
+        server->last_y = message->pointer.root_y;
+      }
+
+    server->last_state = message->touch.state;
     break;
   case BROADWAY_EVENT_KEY_PRESS:
   case BROADWAY_EVENT_KEY_RELEASE:
@@ -364,22 +374,32 @@ fake_configure_notify (BroadwayServer *server,
   process_input_message (server, &ev);
 }
 
-static char *
-parse_pointer_data (char *p, BroadwayInputPointerMsg *data)
+static guint32 *
+parse_pointer_data (guint32 *p, BroadwayInputPointerMsg *data)
 {
-  data->mouse_window_id = strtol (p, &p, 10);
-  p++; /* Skip , */
-  data->event_window_id = strtol (p, &p, 10);
-  p++; /* Skip , */
-  data->root_x = strtol (p, &p, 10);
-  p++; /* Skip , */
-  data->root_y = strtol (p, &p, 10);
-  p++; /* Skip , */
-  data->win_x = strtol (p, &p, 10);
-  p++; /* Skip , */
-  data->win_y = strtol (p, &p, 10);
-  p++; /* Skip , */
-  data->state = strtol (p, &p, 10);
+  data->mouse_window_id = ntohl (*p++);
+  data->event_window_id = ntohl (*p++);
+  data->root_x = ntohl (*p++);
+  data->root_y = ntohl (*p++);
+  data->win_x = ntohl (*p++);
+  data->win_y = ntohl (*p++);
+  data->state = ntohl (*p++);
+
+  return p;
+}
+
+static guint32 *
+parse_touch_data (guint32 *p, BroadwayInputTouchMsg *data)
+{
+  data->touch_type = ntohl (*p++);
+  data->event_window_id = ntohl (*p++);
+  data->sequence_id = ntohl (*p++);
+  data->is_emulated = ntohl (*p++);
+  data->root_x = ntohl (*p++);
+  data->root_y = ntohl (*p++);
+  data->win_x = ntohl (*p++);
+  data->win_y = ntohl (*p++);
+  data->state = ntohl (*p++);
 
   return p;
 }
@@ -393,46 +413,21 @@ update_future_pointer_info (BroadwayServer *server, BroadwayInputPointerMsg *dat
   server->future_mouse_in_toplevel = data->mouse_window_id;
 }
 
-static gboolean
-verify_password (BroadwayServer *server, const char *password)
-{
-  char *hash;
-  hash = crypt (password, server->password);
-  return strcmp (hash, server->password) == 0;
-}
-
 static void
-parse_input_message (BroadwayInput *input, const char *message)
+parse_input_message (BroadwayInput *input, const unsigned char *message)
 {
   BroadwayServer *server = input->server;
   BroadwayInputMsg msg;
-  char *p;
+  guint32 *p;
   gint64 time_;
-
-  if (!input->active)
-    {
-      /* The input has not been activated yet, handle auth/start */
-
-      if (message[0] != 'l' ||
-	  !verify_password (server, message+1))
-	{
-	  broadway_output_request_auth (input->output);
-	  broadway_output_flush (input->output);
-	}
-      else
-	start (input);
-
-      return;
-    }
 
   memset (&msg, 0, sizeof (msg));
 
-  p = (char *)message;
-  msg.base.type = *p++;
-  msg.base.serial = (guint32)strtol (p, &p, 10);
-  p++; /* Skip , */
-  time_ = strtol(p, &p, 10);
-  p++; /* Skip , */
+  p = (guint32 *) message;
+
+  msg.base.type = ntohl (*p++);
+  msg.base.serial = ntohl (*p++);
+  time_ = ntohl (*p++);
 
   if (time_ == 0) {
     time_ = server->last_seen_time;
@@ -456,8 +451,7 @@ parse_input_message (BroadwayInput *input, const char *message)
   case BROADWAY_EVENT_LEAVE:
     p = parse_pointer_data (p, &msg.pointer);
     update_future_pointer_info (server, &msg.pointer);
-    p++; /* Skip , */
-    msg.crossing.mode = strtol(p, &p, 10);
+    msg.crossing.mode = ntohl (*p++);
     break;
 
   case BROADWAY_EVENT_POINTER_MOVE: /* Mouse move */
@@ -469,51 +463,46 @@ parse_input_message (BroadwayInput *input, const char *message)
   case BROADWAY_EVENT_BUTTON_RELEASE:
     p = parse_pointer_data (p, &msg.pointer);
     update_future_pointer_info (server, &msg.pointer);
-    p++; /* Skip , */
-    msg.button.button = strtol(p, &p, 10);
+    msg.button.button = ntohl (*p++);
     break;
 
   case BROADWAY_EVENT_SCROLL:
     p = parse_pointer_data (p, &msg.pointer);
     update_future_pointer_info (server, &msg.pointer);
-    p++; /* Skip , */
-    msg.scroll.dir = strtol(p, &p, 10);
+    msg.scroll.dir = ntohl (*p++);
+    break;
+
+  case BROADWAY_EVENT_TOUCH:
+    p = parse_touch_data (p, &msg.touch);
     break;
 
   case BROADWAY_EVENT_KEY_PRESS:
   case BROADWAY_EVENT_KEY_RELEASE:
-    msg.key.mouse_window_id = strtol(p, &p, 10);
-    p++; /* Skip , */
-    msg.key.key = strtol(p, &p, 10);
-    p++; /* Skip , */
-    msg.key.state = strtol(p, &p, 10);
+    msg.key.window_id = server->focused_window_id;
+    msg.key.key = ntohl (*p++);
+    msg.key.state = ntohl (*p++);
     break;
 
   case BROADWAY_EVENT_GRAB_NOTIFY:
   case BROADWAY_EVENT_UNGRAB_NOTIFY:
-    msg.grab_reply.res = strtol(p, &p, 10);
+    msg.grab_reply.res = ntohl (*p++);
     break;
 
   case BROADWAY_EVENT_CONFIGURE_NOTIFY:
-    msg.configure_notify.id = strtol(p, &p, 10);
-    p++; /* Skip , */
-    msg.configure_notify.x = strtol (p, &p, 10);
-    p++; /* Skip , */
-    msg.configure_notify.y = strtol (p, &p, 10);
-    p++; /* Skip , */
-    msg.configure_notify.width = strtol (p, &p, 10);
-    p++; /* Skip , */
-    msg.configure_notify.height = strtol (p, &p, 10);
+    msg.configure_notify.id = ntohl (*p++);
+    msg.configure_notify.x = ntohl (*p++);
+    msg.configure_notify.y = ntohl (*p++);
+    msg.configure_notify.width = ntohl (*p++);
+    msg.configure_notify.height = ntohl (*p++);
     break;
 
   case BROADWAY_EVENT_DELETE_NOTIFY:
-    msg.delete_notify.id = strtol(p, &p, 10);
+    msg.delete_notify.id = ntohl (*p++);
     break;
 
   case BROADWAY_EVENT_SCREEN_SIZE_CHANGED:
-    msg.screen_resize_notify.width = strtol (p, &p, 10);
-    p++; /* Skip , */
-    msg.screen_resize_notify.height = strtol (p, &p, 10);
+    msg.screen_resize_notify.width = ntohl (*p++);
+    msg.screen_resize_notify.height = ntohl (*p++);
     break;
 
   default:
@@ -557,138 +546,95 @@ hex_dump (guchar *data, gsize len)
 static void
 parse_input (BroadwayInput *input)
 {
-  BroadwayServer *server = input->server;
-
   if (!input->buffer->len)
     return;
 
-  if (input->proto_v7_plus)
+  hex_dump (input->buffer->data, input->buffer->len);
+
+  while (input->buffer->len > 2)
     {
-      hex_dump (input->buffer->data, input->buffer->len);
+      gsize len, payload_len;
+      BroadwayWSOpCode code;
+      gboolean is_mask, fin;
+      guchar *buf, *data, *mask;
 
-      while (input->buffer->len > 2)
-	{
-	  gsize len, payload_len;
-	  BroadwayWSOpCode code;
-	  gboolean is_mask, fin;
-	  guchar *buf, *data, *mask;
-
-	  buf = input->buffer->data;
-	  len = input->buffer->len;
-
-#ifdef DEBUG_WEBSOCKETS
-	  g_print ("Parse input first byte 0x%2x 0x%2x\n", buf[0], buf[1]);
-#endif
-
-	  fin = buf[0] & 0x80;
-	  code = buf[0] & 0x0f;
-	  payload_len = buf[1] & 0x7f;
-	  is_mask = buf[1] & 0x80;
-	  data = buf + 2;
-
-	  if (payload_len > 125)
-	    {
-	      if (len < 4)
-		return;
-	      payload_len = GUINT16_FROM_BE( *(guint16 *) data );
-	      data += 2;
-	    }
-	  else if (payload_len > 126)
-	    {
-	      if (len < 10)
-		return;
-	      payload_len = GUINT64_FROM_BE( *(guint64 *) data );
-	      data += 8;
-	    }
-
-	  mask = NULL;
-	  if (is_mask)
-	    {
-	      if (data - buf + 4 > len)
-		return;
-	      mask = data;
-	      data += 4;
-	    }
-
-	  if (data - buf + payload_len > len)
-	    return; /* wait to accumulate more */
-
-	  if (is_mask)
-	    {
-	      gsize i;
-	      for (i = 0; i < payload_len; i++)
-		data[i] ^= mask[i%4];
-	    }
-
-	  switch (code) {
-	  case BROADWAY_WS_CNX_CLOSE:
-	    break; /* hang around anyway */
-	  case BROADWAY_WS_TEXT:
-	    if (!fin)
-	      {
-#ifdef DEBUG_WEBSOCKETS
-		g_warning ("can't yet accept fragmented input");
-#endif
-	      }
-	    else
-	      {
-		char *terminated = g_strndup((char *)data, payload_len);
-	        parse_input_message (input, terminated);
-		g_free (terminated);
-	      }
-	    break;
-	  case BROADWAY_WS_CNX_PING:
-	    broadway_output_pong (input->output);
-	    break;
-	  case BROADWAY_WS_CNX_PONG:
-	    break; /* we never send pings, but tolerate pongs */
-	  case BROADWAY_WS_BINARY:
-	  case BROADWAY_WS_CONTINUATION:
-	  default:
-	    {
-	      g_warning ("fragmented or unknown input code 0x%2x with fin set", code);
-	      break;
-	    }
-	  }
-
-	  g_byte_array_remove_range (input->buffer, 0, data - buf + payload_len);
-	}
-    }
-  else /* old style protocol */
-    {
-      char *buf, *ptr;
-      gsize len;
-
-      buf = (char *)input->buffer->data;
+      buf = input->buffer->data;
       len = input->buffer->len;
 
-      if (buf[0] != 0)
-	{
-	  if (server->input == input)
-	    server->input = NULL;
-	  broadway_input_free (input);
-	  return;
-	}
+#ifdef DEBUG_WEBSOCKETS
+      g_print ("Parse input first byte 0x%2x 0x%2x\n", buf[0], buf[1]);
+#endif
 
-      while ((ptr = memchr (buf, 0xff, len)) != NULL)
-	{
-	  *ptr = 0;
-	  ptr++;
+      fin = buf[0] & 0x80;
+      code = buf[0] & 0x0f;
+      payload_len = buf[1] & 0x7f;
+      is_mask = buf[1] & 0x80;
+      data = buf + 2;
 
-	  parse_input_message (input, buf + 1);
+      if (payload_len > 125)
+        {
+          if (len < 4)
+            return;
+          payload_len = GUINT16_FROM_BE( *(guint16 *) data );
+          data += 2;
+        }
+      else if (payload_len > 126)
+        {
+          if (len < 10)
+            return;
+          payload_len = GUINT64_FROM_BE( *(guint64 *) data );
+          data += 8;
+        }
 
-	  len -= ptr - buf;
-	  buf = ptr;
+      mask = NULL;
+      if (is_mask)
+        {
+          if (data - buf + 4 > len)
+            return;
+          mask = data;
+          data += 4;
+        }
 
-	  if (len > 0 && buf[0] != 0)
-	    {
-	      if (server->input == input)
-		server->input = NULL;
-	      broadway_input_free (input);
-	      break;
-	    }
-	}
-      g_byte_array_remove_range (input->buffer, 0, buf - (char *)input->buffer->data);
+      if (data - buf + payload_len > len)
+        return; /* wait to accumulate more */
+
+      if (is_mask)
+        {
+          gsize i;
+          for (i = 0; i < payload_len; i++)
+            data[i] ^= mask[i%4];
+        }
+
+      switch (code) {
+      case BROADWAY_WS_CNX_CLOSE:
+        break; /* hang around anyway */
+      case BROADWAY_WS_BINARY:
+        if (!fin)
+          {
+#ifdef DEBUG_WEBSOCKETS
+            g_warning ("can't yet accept fragmented input");
+#endif
+          }
+        else
+          {
+            parse_input_message (input, data);
+          }
+        break;
+      case BROADWAY_WS_CNX_PING:
+        broadway_output_pong (input->output);
+        break;
+      case BROADWAY_WS_CNX_PONG:
+        break; /* we never send pings, but tolerate pongs */
+      case BROADWAY_WS_TEXT:
+      case BROADWAY_WS_CONTINUATION:
+      default:
+        {
+          g_warning ("fragmented or unknown input code 0x%2x with fin set", code);
+          break;
+        }
+      }
+
+      g_byte_array_remove_range (input->buffer, 0, data - buf + payload_len);
     }
 }
 
@@ -808,16 +754,10 @@ broadway_server_flush (BroadwayServer *server)
     }
 }
 
-void
-broadway_server_sync (BroadwayServer *server)
-{
-  broadway_server_flush (server);
-}
-
-
+#if 0
 /* TODO: This is not used atm, is it needed? */
 /* Note: This may be called while handling a message (i.e. sorta recursively) */
-BroadwayInputMsg *
+static BroadwayInputMsg *
 broadway_server_block_for_input (BroadwayServer *server, char op,
 				 guint32 serial, gboolean remove_message)
 {
@@ -870,6 +810,7 @@ broadway_server_block_for_input (BroadwayServer *server, char op,
     queue_process_input_at_idle (server);
   }
 }
+#endif
 
 static void *
 map_named_shm (char *name, gsize size)
@@ -1002,25 +943,18 @@ generate_handshake_response_wsietf_v7 (const gchar *key)
 }
 
 static void
-start_input (HttpRequest *request, gboolean binary)
+start_input (HttpRequest *request)
 {
   char **lines;
   char *p;
-  int num_key1, num_key2;
-  guint64 key1, key2;
-  int num_space;
   int i;
-  guint8 challenge[16];
   char *res;
-  gsize len;
-  GChecksum *checksum;
   char *origin, *host;
   BroadwayInput *input;
   const void *data_buffer;
   gsize data_buffer_size;
   GInputStream *in;
-  char *key_v7;
-  gboolean proto_v7_plus;
+  char *key;
   GSocket *socket;
   int flag = 1;
 
@@ -1029,61 +963,19 @@ start_input (HttpRequest *request, gboolean binary)
 #endif
   lines = g_strsplit (request->request->str, "\n", 0);
 
-  num_key1 = 0;
-  num_key2 = 0;
-  key1 = 0;
-  key2 = 0;
-  key_v7 = NULL;
+  key = NULL;
   origin = NULL;
   host = NULL;
   for (i = 0; lines[i] != NULL; i++)
     {
-      if ((p = parse_line (lines[i], "Sec-WebSocket-Key1")))
-	{
-	  num_space = 0;
-	  while (*p != 0)
-	    {
-	      if (g_ascii_isdigit (*p))
-		key1 = key1 * 10 + g_ascii_digit_value (*p);
-	      else if (*p == ' ')
-		num_space++;
-
-	      p++;
-	    }
-	  key1 /= num_space;
-	  num_key1++;
-	}
-      else if ((p = parse_line (lines[i], "Sec-WebSocket-Key2")))
-	{
-	  num_space = 0;
-	  while (*p != 0)
-	    {
-	      if (g_ascii_isdigit (*p))
-		key2 = key2 * 10 + g_ascii_digit_value (*p);
-	      else if (*p == ' ')
-		num_space++;
-
-	      p++;
-	    }
-	  key2 /= num_space;
-	  num_key2++;
-	}
-      else if ((p = parse_line (lines[i], "Sec-WebSocket-Key")))
-	{
-	  key_v7 = p;
-	}
+      if ((p = parse_line (lines[i], "Sec-WebSocket-Key")))
+        key = p;
       else if ((p = parse_line (lines[i], "Origin")))
-	{
-	  origin = p;
-	}
+        origin = p;
       else if ((p = parse_line (lines[i], "Host")))
-	{
-	  host = p;
-	}
+        host = p;
       else if ((p = parse_line (lines[i], "Sec-WebSocket-Origin")))
-	{
-	  origin = p;
-	}
+        origin = p;
     }
 
   if (host == NULL)
@@ -1093,9 +985,9 @@ start_input (HttpRequest *request, gboolean binary)
       return;
     }
 
-  if (key_v7 != NULL)
+  if (key != NULL)
     {
-      char* accept = generate_handshake_response_wsietf_v7 (key_v7);
+      char* accept = generate_handshake_response_wsietf_v7 (key);
       res = g_strdup_printf ("HTTP/1.1 101 Switching Protocols\r\n"
 			     "Upgrade: websocket\r\n"
 			     "Connection: Upgrade\r\n"
@@ -1115,58 +1007,12 @@ start_input (HttpRequest *request, gboolean binary)
       g_output_stream_write_all (g_io_stream_get_output_stream (G_IO_STREAM (request->connection)),
 				 res, strlen (res), NULL, NULL, NULL);
       g_free (res);
-      proto_v7_plus = TRUE;
     }
   else
     {
-      if (num_key1 != 1 || num_key2 != 1)
-	{
-	  g_strfreev (lines);
-	  send_error (request, 400, "Bad websocket request");
-	  return;
-	}
-
-      challenge[0] = (key1 >> 24) & 0xff;
-      challenge[1] = (key1 >> 16) & 0xff;
-      challenge[2] = (key1 >>  8) & 0xff;
-      challenge[3] = (key1 >>  0) & 0xff;
-      challenge[4] = (key2 >> 24) & 0xff;
-      challenge[5] = (key2 >> 16) & 0xff;
-      challenge[6] = (key2 >>  8) & 0xff;
-      challenge[7] = (key2 >>  0) & 0xff;
-
-      if (!g_input_stream_read_all (G_INPUT_STREAM (request->data), challenge+8, 8, NULL, NULL, NULL))
-	{
-	  g_strfreev (lines);
-	  send_error (request, 400, "Bad websocket request");
-	  return;
-	}
-
-      checksum = g_checksum_new (G_CHECKSUM_MD5);
-      g_checksum_update (checksum, challenge, 16);
-      len = 16;
-      g_checksum_get_digest (checksum, challenge, &len);
-      g_checksum_free (checksum);
-
-      res = g_strdup_printf ("HTTP/1.1 101 WebSocket Protocol Handshake\r\n"
-			     "Upgrade: WebSocket\r\n"
-			     "Connection: Upgrade\r\n"
-			     "%s%s%s"
-			     "Sec-WebSocket-Location: ws://%s/socket\r\n"
-			     "Sec-WebSocket-Protocol: broadway\r\n"
-			     "\r\n",
-			     origin?"Sec-WebSocket-Origin: ":"", origin?origin:"", origin?"\r\n":"",
-			     host);
-
-#ifdef DEBUG_WEBSOCKETS
-      g_print ("legacy response:\n%s", res);
-#endif
-      g_output_stream_write_all (g_io_stream_get_output_stream (G_IO_STREAM (request->connection)),
-				 res, strlen (res), NULL, NULL, NULL);
-      g_free (res);
-      g_output_stream_write_all (g_io_stream_get_output_stream (G_IO_STREAM (request->connection)),
-				 challenge, 16, NULL, NULL, NULL);
-      proto_v7_plus = FALSE;
+      g_strfreev (lines);
+      send_error (request, 400, "Bad websocket request");
+      return;
     }
 
   socket = g_socket_connection_get_socket (request->connection);
@@ -1176,16 +1022,13 @@ start_input (HttpRequest *request, gboolean binary)
   input = g_new0 (BroadwayInput, 1);
   input->server = request->server;
   input->connection = g_object_ref (request->connection);
-  input->proto_v7_plus = proto_v7_plus;
-  input->binary = binary;
 
   data_buffer = g_buffered_input_stream_peek_buffer (G_BUFFERED_INPUT_STREAM (request->data), &data_buffer_size);
   input->buffer = g_byte_array_sized_new (data_buffer_size);
   g_byte_array_append (input->buffer, data_buffer, data_buffer_size);
 
   input->output =
-    broadway_output_new (g_io_stream_get_output_stream (G_IO_STREAM (request->connection)),
-			 0, proto_v7_plus, binary);
+    broadway_output_new (g_io_stream_get_output_stream (G_IO_STREAM (request->connection)), 0);
 
   /* This will free and close the data input stream, but we got all the buffered content already */
   http_request_free (request);
@@ -1195,13 +1038,7 @@ start_input (HttpRequest *request, gboolean binary)
   g_source_set_callback (input->source, (GSourceFunc)input_data_cb, input, NULL);
   g_source_attach (input->source, NULL);
 
-  if (input->server->password)
-    {
-      broadway_output_request_auth (input->output);
-      broadway_output_flush (input->output);
-    }
-  else
-    start (input);
+  start (input);
 
   /* Process any data in the pipe already */
   parse_input (input);
@@ -1240,7 +1077,6 @@ start (BroadwayInput *input)
   server->output = input->output;
 
   broadway_output_set_next_serial (server->output, server->saved_serial);
-  broadway_output_auth_ok (server->output);
   broadway_output_flush (server->output);
 
   broadway_server_resync_windows (server);
@@ -1316,9 +1152,7 @@ got_request (HttpRequest *request)
   else if (strcmp (escaped, "/broadway.js") == 0)
     send_data (request, "text/javascript", broadway_js, G_N_ELEMENTS(broadway_js) - 1);
   else if (strcmp (escaped, "/socket") == 0)
-    start_input (request, FALSE);
-  else if (strcmp (escaped, "/socket-bin") == 0)
-    start_input (request, TRUE);
+    start_input (request);
   else
     send_error (request, 404, "File not found");
 
@@ -1403,6 +1237,7 @@ broadway_server_new (char *address, int port, GError **error)
 					    error))
 	{
 	  g_prefix_error (error, "Unable to listen to port %d: ", server->port);
+	  g_object_unref (server);
 	  return NULL;
 	}
     }
@@ -1412,6 +1247,7 @@ broadway_server_new (char *address, int port, GError **error)
       if (inet_address == NULL)
 	{
 	  g_set_error (error, G_IO_ERROR, G_IO_ERROR_INVALID_DATA, "Invalid ip address %s: ", address);
+	  g_object_unref (server);
 	  return NULL;
 	}
       socket_address = g_inet_socket_address_new (inet_address, port);
@@ -1426,6 +1262,55 @@ broadway_server_new (char *address, int port, GError **error)
 	{
 	  g_prefix_error (error, "Unable to listen to %s:%d: ", server->address, server->port);
 	  g_object_unref (socket_address);
+	  g_object_unref (server);
+	  return NULL;
+	}
+      g_object_unref (socket_address);
+    }
+
+  g_signal_connect (server->service, "incoming",
+		    G_CALLBACK (handle_incoming_connection), NULL);
+  return server;
+}
+
+BroadwayServer *
+broadway_server_on_unix_socket_new (char *address, GError **error)
+{
+  BroadwayServer *server;
+  GSocketAddress *socket_address = NULL;
+
+  server = g_object_new (BROADWAY_TYPE_SERVER, NULL);
+  server->port = -1;
+  server->address = g_strdup (address);
+
+  if (address == NULL)
+    {
+      g_set_error (error, G_IO_ERROR, G_IO_ERROR_INVALID_DATA, "Unspecified unix domain socket address");
+      g_object_unref (server);
+      return NULL;
+    }
+  else
+    {
+#ifdef HAVE_GIO_UNIX
+      socket_address = g_unix_socket_address_new (address);
+#endif
+      if (socket_address == NULL)
+	{
+	  g_set_error (error, G_IO_ERROR, G_IO_ERROR_INVALID_DATA, "Invalid unix domain socket address %s: ", address);
+	  g_object_unref (server);
+	  return NULL;
+	}
+      if (!g_socket_listener_add_address (G_SOCKET_LISTENER (server->service),
+					  socket_address,
+					  G_SOCKET_TYPE_STREAM,
+					  G_SOCKET_PROTOCOL_DEFAULT,
+					  G_OBJECT (server),
+					  NULL,
+					  error))
+	{
+	  g_prefix_error (error, "Unable to listen to %s: ", server->address);
+	  g_object_unref (socket_address);
+	  g_object_unref (server);
 	  return NULL;
 	}
       g_object_unref (socket_address);
@@ -1566,6 +1451,55 @@ broadway_server_window_hide (BroadwayServer *server,
 }
 
 void
+broadway_server_window_raise (BroadwayServer *server,
+                              gint id)
+{
+  BroadwayWindow *window;
+
+  window = g_hash_table_lookup (server->id_ht,
+				GINT_TO_POINTER (id));
+  if (window == NULL)
+    return;
+
+  server->toplevels = g_list_remove (server->toplevels, window);
+  server->toplevels = g_list_append (server->toplevels, window);
+
+  if (server->output)
+    broadway_output_raise_surface (server->output, window->id);
+}
+
+void
+broadway_server_set_show_keyboard (BroadwayServer *server,
+                                   gboolean show)
+{
+  server->show_keyboard = show;
+
+  if (server->output)
+    {
+      broadway_output_set_show_keyboard (server->output, server->show_keyboard);
+      broadway_server_flush (server);
+   }
+}
+
+void
+broadway_server_window_lower (BroadwayServer *server,
+                              gint id)
+{
+  BroadwayWindow *window;
+
+  window = g_hash_table_lookup (server->id_ht,
+				GINT_TO_POINTER (id));
+  if (window == NULL)
+    return;
+
+  server->toplevels = g_list_remove (server->toplevels, window);
+  server->toplevels = g_list_prepend (server->toplevels, window);
+
+  if (server->output)
+    broadway_output_lower_surface (server->output, window->id);
+}
+
+void
 broadway_server_window_set_transient_for (BroadwayServer *server,
 					  gint id, gint parent)
 {
@@ -1591,142 +1525,13 @@ broadway_server_has_client (BroadwayServer *server)
   return server->output != NULL;
 }
 
-static void
-_cairo_region (cairo_t         *cr,
-	       const cairo_region_t *region)
-{
-  cairo_rectangle_int_t box;
-  gint n_boxes, i;
-
-  g_return_if_fail (cr != NULL);
-  g_return_if_fail (region != NULL);
-
-  n_boxes = cairo_region_num_rectangles (region);
-
-  for (i = 0; i < n_boxes; i++)
-    {
-      cairo_region_get_rectangle (region, i, &box);
-      cairo_rectangle (cr, box.x, box.y, box.width, box.height);
-    }
-}
-
-
-static void
-copy_region (cairo_surface_t *surface,
-	     cairo_region_t *area,
-	     gint            dx,
-	     gint            dy)
-{
-  cairo_t *cr;
-
-  cr = cairo_create (surface);
-  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-
-  _cairo_region (cr, area);
-  cairo_clip (cr);
-
-  /* NB: This is a self-copy and Cairo doesn't support that yet.
-   * So we do a litle trick.
-   */
-  cairo_push_group (cr);
-
-  cairo_set_source_surface (cr, surface, dx, dy);
-  cairo_paint (cr);
-
-  cairo_pop_group_to_source (cr);
-  cairo_paint (cr);
-
-  cairo_destroy (cr);
-}
-
-gboolean
-broadway_server_window_translate (BroadwayServer *server,
-				  gint id,
-				  cairo_region_t *area,
-				  gint            dx,
-				  gint            dy)
-{
-  BroadwayWindow *window;
-  gboolean sent = FALSE;
-
-  window = g_hash_table_lookup (server->id_ht,
-				GINT_TO_POINTER (id));
-  if (window == NULL)
-    return FALSE;
-
-  if (window->last_synced &&
-      server->output)
-    {
-      BroadwayRect *rects;
-      cairo_rectangle_int_t rect;
-      int i, n_rects;
-
-      copy_region (window->last_surface, area, dx, dy);
-      n_rects = cairo_region_num_rectangles (area);
-      rects = g_new (BroadwayRect, n_rects);
-      for (i = 0; i < n_rects; i++)
-	{
-	  cairo_region_get_rectangle (area, i, &rect);
-	  rects[i].x = rect.x;
-	  rects[i].y = rect.y;
-	  rects[i].width = rect.width;
-	  rects[i].height = rect.height;
-	}
-      broadway_output_copy_rectangles (server->output,
-				       window->id,
-				       rects, n_rects, dx, dy);
-      g_free (rects);
-      sent = TRUE;
-    }
-
-  return sent;
-}
-
-static void
-diff_surfaces (cairo_surface_t *surface,
-	       cairo_surface_t *old_surface)
-{
-  guint8 *data, *old_data;
-  guint32 *line, *old_line;
-  int w, h, stride, old_stride;
-  int x, y;
-
-  data = cairo_image_surface_get_data (surface);
-  old_data = cairo_image_surface_get_data (old_surface);
-
-  w = cairo_image_surface_get_width (surface);
-  h = cairo_image_surface_get_height (surface);
-
-  stride = cairo_image_surface_get_stride (surface);
-  old_stride = cairo_image_surface_get_stride (old_surface);
-
-  for (y = 0; y < h; y++)
-    {
-      line = (guint32 *)data;
-      old_line = (guint32 *)old_data;
-
-      for (x = 0; x < w; x++)
-	{
-	  if ((*line & 0xffffff) == (*old_line & 0xffffff))
-	    *old_line = 0;
-	  else
-	    *old_line = *line | 0xff000000;
-	  line ++;
-	  old_line ++;
-	}
-
-      data += stride;
-      old_data += old_stride;
-    }
-}
-
 void
 broadway_server_window_update (BroadwayServer *server,
 			       gint id,
 			       cairo_surface_t *surface)
 {
-  cairo_t *cr;
   BroadwayWindow *window;
+  BroadwayBuffer *buffer;
 
   if (surface == NULL)
     return;
@@ -1736,46 +1541,24 @@ broadway_server_window_update (BroadwayServer *server,
   if (window == NULL)
     return;
 
-  if (window->last_surface == NULL)
-    window->last_surface = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
-						       window->width,
-						       window->height);
-
-  g_assert (window->width == cairo_image_surface_get_width (window->last_surface));
   g_assert (window->width == cairo_image_surface_get_width (surface));
-  g_assert (window->height == cairo_image_surface_get_height (window->last_surface));
   g_assert (window->height == cairo_image_surface_get_height (surface));
+
+  buffer = broadway_buffer_create (window->width, window->height,
+                                   cairo_image_surface_get_data (surface),
+                                   cairo_image_surface_get_stride (surface));
 
   if (server->output != NULL)
     {
-      if (window->last_synced)
-	{
-	  diff_surfaces (surface,
-			 window->last_surface);
-	  broadway_output_put_rgba (server->output, window->id, 0, 0,
-				    cairo_image_surface_get_width (window->last_surface),
-				    cairo_image_surface_get_height (window->last_surface),
-				    cairo_image_surface_get_stride (window->last_surface),
-				    cairo_image_surface_get_data (window->last_surface));
-	}
-      else
-	{
-	  window->last_synced = TRUE;
-	  broadway_output_put_rgb (server->output, window->id, 0, 0,
-				   cairo_image_surface_get_width (surface),
-				   cairo_image_surface_get_height (surface),
-				   cairo_image_surface_get_stride (surface),
-				   cairo_image_surface_get_data (surface));
-	}
-
-      broadway_output_surface_flush (server->output, window->id);
+      window->buffer_synced = TRUE;
+      broadway_output_put_buffer (server->output, window->id,
+                                  window->buffer, buffer);
     }
 
-  cr = cairo_create (window->last_surface);
-  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-  cairo_set_source_surface (cr, surface, 0, 0);
-  cairo_paint (cr);
-  cairo_destroy (cr);
+  if (window->buffer)
+    broadway_buffer_destroy (window->buffer);
+
+  window->buffer = buffer;
 }
 
 gboolean
@@ -1790,7 +1573,6 @@ broadway_server_window_move_resize (BroadwayServer *server,
   BroadwayWindow *window;
   gboolean with_resize;
   gboolean sent = FALSE;
-  cairo_t *cr;
 
   window = g_hash_table_lookup (server->id_ht,
 				GINT_TO_POINTER (id));
@@ -1800,25 +1582,6 @@ broadway_server_window_move_resize (BroadwayServer *server,
   with_resize = width != window->width || height != window->height;
   window->width = width;
   window->height = height;
-
-  if (with_resize && window->last_surface != NULL)
-    {
-      cairo_surface_t *old;
-
-      old = window->last_surface;
-
-      window->last_surface = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
-							 width, height);
-
-
-      cr = cairo_create (window->last_surface);
-      cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-      cairo_set_source_surface (cr, old, 0, 0);
-      cairo_paint (cr);
-      cairo_destroy (cr);
-
-      cairo_surface_destroy (old);
-    }
 
   if (server->output != NULL)
     {
@@ -1840,6 +1603,27 @@ broadway_server_window_move_resize (BroadwayServer *server,
     }
 
   return sent;
+}
+
+void
+broadway_server_focus_window (BroadwayServer *server,
+                              gint new_focused_window)
+{
+  BroadwayInputMsg focus_msg;
+
+  if (server->focused_window_id == new_focused_window)
+    return;
+
+  memset (&focus_msg, 0, sizeof (focus_msg));
+  focus_msg.base.type = BROADWAY_EVENT_FOCUS;
+  focus_msg.base.time = broadway_server_get_last_seen_time (server);
+  focus_msg.focus.old_id = server->focused_window_id;
+  focus_msg.focus.new_id = new_focused_window;
+
+  broadway_events_got_input (&focus_msg, -1);
+
+  /* Keep track of the new focused window */
+  server->focused_window_id = new_focused_window;
 }
 
 guint32
@@ -1956,7 +1740,7 @@ broadway_server_open_surface (BroadwayServer *server,
   data->data_size = size;
 
   surface = cairo_image_surface_create_for_data ((guchar *)data->data,
-						 CAIRO_FORMAT_RGB24,
+						 CAIRO_FORMAT_ARGB32,
 						 width, height,
 						 width * sizeof (guint32));
   g_assert (surface != NULL);
@@ -2003,7 +1787,7 @@ broadway_server_new_window (BroadwayServer *server,
 		       GINT_TO_POINTER (window->id),
 		       window);
 
-  server->toplevels = g_list_prepend (server->toplevels, window);
+  server->toplevels = g_list_append (server->toplevels, window);
 
   if (server->output)
     broadway_output_new_surface (server->output,
@@ -2035,7 +1819,7 @@ broadway_server_resync_windows (BroadwayServer *server)
       if (window->id == 0)
 	continue; /* Skip root */
 
-      window->last_synced = FALSE;
+      window->buffer_synced = FALSE;
       broadway_output_new_surface (server->output,
 				   window->id,
 				   window->x,
@@ -2059,18 +1843,17 @@ broadway_server_resync_windows (BroadwayServer *server)
 	{
 	  broadway_output_show_surface (server->output, window->id);
 
-	  if (window->last_surface != NULL)
+	  if (window->buffer != NULL)
 	    {
-	      window->last_synced = TRUE;
-	      broadway_output_put_rgb (server->output, window->id, 0, 0,
-				       cairo_image_surface_get_width (window->last_surface),
-				       cairo_image_surface_get_height (window->last_surface),
-				       cairo_image_surface_get_stride (window->last_surface),
-				       cairo_image_surface_get_data (window->last_surface));
+	      window->buffer_synced = TRUE;
+              broadway_output_put_buffer (server->output, window->id,
+                                          NULL, window->buffer);
 	    }
-	  broadway_output_surface_flush (server->output, window->id);
 	}
     }
+
+  if (server->show_keyboard)
+    broadway_output_set_show_keyboard (server->output, TRUE);
 
   broadway_server_flush (server);
 }

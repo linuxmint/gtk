@@ -54,7 +54,7 @@ typedef struct _GtkEntryCompletionPrivate     GtkEntryCompletionPrivate;
  * Note that @key is normalized and case-folded (see g_utf8_normalize()
  * and g_utf8_casefold()). If this is not appropriate, match functions
  * have access to the unmodified key via
- * <literal>gtk_entry_get_text (GTK_ENTRY (gtk_entry_completion_get_entry (<!-- -->)))</literal>.
+ * `gtk_entry_get_text (GTK_ENTRY (gtk_entry_completion_get_entry ()))`.
  *
  * Returns: %TRUE if @iter should be displayed as a possible completion
  *     for @key
@@ -87,12 +87,12 @@ struct _GtkEntryCompletionClass
   gboolean (* cursor_on_match)  (GtkEntryCompletion *completion,
                                  GtkTreeModel       *model,
                                  GtkTreeIter        *iter);
+  void     (* no_matches)       (GtkEntryCompletion *completion);
 
   /* Padding for future expansion */
   void (*_gtk_reserved0) (void);
   void (*_gtk_reserved1) (void);
   void (*_gtk_reserved2) (void);
-  void (*_gtk_reserved3) (void);
 };
 
 /* core */

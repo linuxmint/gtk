@@ -75,12 +75,54 @@ void _gtk_window_keys_foreach (GtkWindow               *window,
                                GtkWindowKeysForeachFunc func,
                                gpointer                 func_data);
 
+gboolean _gtk_window_check_handle_wm_event (GdkEvent  *event);
+
 /* --- internal (GtkAcceleratable) --- */
 gboolean        _gtk_window_query_nonaccels     (GtkWindow      *window,
                                                  guint           accel_key,
                                                  GdkModifierType accel_mods);
 
 void            _gtk_window_schedule_mnemonics_visible (GtkWindow *window);
+
+void            _gtk_window_notify_keys_changed (GtkWindow *window);
+
+gboolean        _gtk_window_titlebar_shows_app_menu (GtkWindow *window);
+
+void            _gtk_window_get_shadow_width (GtkWindow *window,
+                                              GtkBorder *border);
+
+void            _gtk_window_toggle_maximized (GtkWindow *window);
+
+void            _gtk_window_request_csd (GtkWindow *window);
+
+/* Window groups */
+
+GtkWindowGroup *_gtk_window_get_window_group (GtkWindow *window);
+
+void            _gtk_window_set_window_group (GtkWindow      *window,
+                                              GtkWindowGroup *group);
+
+/* Popovers */
+void    _gtk_window_add_popover          (GtkWindow                   *window,
+                                          GtkWidget                   *popover);
+void    _gtk_window_remove_popover       (GtkWindow                   *window,
+                                          GtkWidget                   *popover);
+void    _gtk_window_set_popover_position (GtkWindow                   *window,
+                                          GtkWidget                   *popover,
+                                          GtkPositionType              pos,
+                                          const cairo_rectangle_int_t *rect);
+void    _gtk_window_get_popover_position (GtkWindow                   *window,
+                                          GtkWidget                   *popover,
+                                          GtkPositionType             *pos,
+                                          cairo_rectangle_int_t       *rect);
+
+GdkPixbuf *gtk_window_get_icon_for_size (GtkWindow *window,
+                                         gint       size);
+
+void       gtk_window_set_use_subsurface (GtkWindow *window,
+                                          gboolean   use_subsurface);
+void       gtk_window_set_hardcoded_window (GtkWindow *window,
+                                            GdkWindow *gdk_window);
 
 G_END_DECLS
 

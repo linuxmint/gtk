@@ -4,7 +4,6 @@ DEB_BUILDDIR = debian/build
 DEB_MAKE_DESTDIRSKEL = $(CURDIR)/debian/install/@FLAVOR@
 DEB_MAKE_FLAVORS = shared shared_udeb
 DISABLE_UPDATE_UPLOADERS = 1
-DEB_BUILD_PARALLEL = yes
 
 include /usr/share/cdbs/1/rules/autoreconf.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
@@ -12,11 +11,12 @@ include /usr/share/cdbs/1/rules/utils.mk
 include /usr/share/cdbs/1/class/gnome.mk
 include /usr/share/gnome-pkg-tools/1/rules/uploaders.mk
 include /usr/share/gnome-pkg-tools/1/rules/gnome-get-source.mk
-
-# Make a writable HOME for the testsuite
-export HOME=$(CURDIR)/debian/home
+include /usr/share/gnome-pkg-tools/1/rules/gnome-version.mk
 
 GNOME_MODULE = gtk+
+
+# Enable parallel build support
+DEB_BUILD_PARALLEL = 1
 
 # Ensure the build aborts when there are still references to undefined symbols
 # currently fails at least in the im-multipress im module
@@ -63,25 +63,48 @@ DEB_DH_INSTALL_ARGS_$(UDEB_PKG) += --sourcedir=debian/install/shared_udeb
 
 DEB_CONFIGURE_EXTRA_FLAGS = \
 			--libdir=/$(LIBDIR) \
-			--enable-test-print-backend \
-			--enable-x11-backend
+			--enable-test-print-backend
 
 DEB_CONFIGURE_FLAGS_shared = \
+			--enable-broadway-backend \
+			--enable-x11-backend \
 			--enable-gtk-doc \
 			--enable-shared \
 			--enable-introspection \
-			--enable-colord \
-			--enable-wayland-backend \
+			--enable-cloudprint \
 			--disable-static
 
+ifeq (,$(filter stage1,$(DEB_BUILD_PROFILES)))
+DEB_CONFIGURE_FLAGS_shared += --enable-colord
+else
+DEB_CONFIGURE_FLAGS_shared += --disable-colord
+endif
+
+ifeq (linux,$(DEB_HOST_ARCH_OS))
+DEB_CONFIGURE_FLAGS_shared += --enable-wayland-backend
+else
+DEB_CONFIGURE_FLAGS_shared += --disable-wayland-backend
+endif
+
 DEB_CONFIGURE_FLAGS_shared_udeb = \
-			--disable-introspection \
-			--disable-colord \
+			--disable-broadway-backend \
 			--disable-wayland-backend \
+			--enable-x11-backend \
+			--disable-introspection \
+			--disable-cloudprint \
+			--disable-colord \
 			--disable-xcomposite \
 			--disable-xdamage \
 			--disable-xfixes \
 			--disable-xrandr
+
+# Avoid test failures on buildd environments
+export HOME=$(CURDIR)/debian/build
+export XDG_RUNTIME_DIR=$(HOME)
+# So that gsettings can find the (uninstalled) gtk schemas
+export XDG_DATA_DIRS=/usr/share:$(CURDIR)/debian/build
+# Get failing tests' stdout/err so we have some information when a build fails
+export VERBOSE=1
 
 DEB_MAKE_CHECK_TARGET = -k check
 DEB_INSTALL_DOCS_ALL = AUTHORS
@@ -93,9 +116,6 @@ DEB_DH_MAKESHLIBS_ARGS_libgail-3-0 += -V -- -c4
 DEB_DH_FIXPERMS_ARGS_ALL += -X$(LIBDIR)/$(SHARED_PKG)
 DEB_DH_STRIP_ARGS = --dbg-package=$(if $(findstring libgail,$(cdbs_curpkg)),libgail-3-0-dbg,$(DEBUG_PKG))
 DEB_DH_STRIP_ARGS_$(UDEB_PKG) =
-
-pre-build::
-	mkdir -p $(CURDIR)/debian/home
 
 # macro computing the list of 'debian/<pkg>.*" files which have a
 # corresponding ".in" file; pass the list of packages in $(1)
@@ -130,10 +150,14 @@ clean:: debian/control
 	# gross kludge to force control generation with the %.in target
 	touch debian/control.in
 	rm -f $(call dh_subst_files,$(DEB_ALL_PACKAGES))
-	# work around tarball generated with too new Wayland
-	rm -f gdk/wayland/gtk-shell-client-protocol.h
-	rm -f gdk/wayland/gtk-shell-protocol.c
-	rm -rf $(CURDIR)/debian/home
+
+pre-build::
+	# Mark reftests with known failures as non-fatal
+	touch testsuite/reftests/style-properties-nth-child.ui.known_fail
+	# So that gsettings can find the (uninstalled) gtk schemas
+	mkdir -p debian/build/glib-2.0/schemas/
+	cp gtk/org.gtk.* debian/build/glib-2.0/schemas/
+	glib-compile-schemas debian/build/glib-2.0/schemas/
 
 # Add dependencies to generate files from the debian/*.in ones
 build-indep: $(call dh_subst_files,$(DEB_INDEP_PACKAGES))
@@ -143,8 +167,6 @@ binary-install/$(SHARED_PKG)::
 	# Install the binaries with a -3.0 suffix
 	mv debian/$(SHARED_PKG)/$(LIBDIR)/$(SHARED_PKG)/gtk-update-icon-cache \
 	    debian/$(SHARED_PKG)/$(LIBDIR)/$(SHARED_PKG)/gtk-update-icon-cache-3.0
-	# Install custom settings
-	install -D debian/settings.ini debian/$(SHARED_PKG)/$(CONFDIR)/settings.ini
 
 binary-install/$(BIN_PKG)::
 	# Install the binaries with a -3.0 suffix

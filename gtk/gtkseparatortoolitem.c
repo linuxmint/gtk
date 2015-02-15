@@ -21,7 +21,7 @@
 #include "gtkseparatormenuitem.h"
 #include "gtkseparatortoolitem.h"
 #include "gtkintl.h"
-#include "gtktoolbar.h"
+#include "gtktoolbarprivate.h"
 #include "gtkprivate.h"
 
 /**
@@ -35,9 +35,9 @@
  * #GtkToolItems. Depending on the theme, a #GtkSeparatorToolItem will
  * often look like a vertical line on horizontally docked toolbars.
  *
- * If the #GtkToolbar child property "expand" is %TRUE and the property
+ * If the #GtkToolbar child property “expand” is %TRUE and the property
  * #GtkSeparatorToolItem:draw is %FALSE, a #GtkSeparatorToolItem will act as
- * a "spring" that forces other items to the ends of the toolbar.
+ * a “spring” that forces other items to the ends of the toolbar.
  *
  * Use gtk_separator_tool_item_new() to create a new #GtkSeparatorToolItem.
  */
@@ -83,6 +83,8 @@ static void     gtk_separator_tool_item_map               (GtkWidget            
 static void     gtk_separator_tool_item_unmap             (GtkWidget                 *widget);
 static gboolean gtk_separator_tool_item_button_event      (GtkWidget                 *widget,
                                                            GdkEventButton            *event);
+static gboolean gtk_separator_tool_item_motion_event      (GtkWidget                 *widget,
+                                                           GdkEventMotion            *event);
 
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtkSeparatorToolItem, gtk_separator_tool_item, GTK_TYPE_TOOL_ITEM)
@@ -130,6 +132,7 @@ gtk_separator_tool_item_class_init (GtkSeparatorToolItemClass *class)
   widget_class->unmap = gtk_separator_tool_item_unmap;
   widget_class->button_press_event = gtk_separator_tool_item_button_event;
   widget_class->button_release_event = gtk_separator_tool_item_button_event;
+  widget_class->motion_notify_event = gtk_separator_tool_item_motion_event;
 
   toolitem_class->create_menu_proxy = gtk_separator_tool_item_create_menu_proxy;
   
@@ -141,7 +144,7 @@ gtk_separator_tool_item_class_init (GtkSeparatorToolItemClass *class)
                                                          P_("Draw"),
                                                          P_("Whether the separator is drawn, or just blank"),
                                                          TRUE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 }
 
 static void
@@ -290,7 +293,8 @@ gtk_separator_tool_item_realize (GtkWidget *widget)
   attributes.visual = gtk_widget_get_visual (widget);
   attributes.event_mask = gtk_widget_get_events (widget) |
                           GDK_BUTTON_PRESS_MASK |
-                          GDK_BUTTON_RELEASE_MASK;
+                          GDK_BUTTON_RELEASE_MASK |
+                          GDK_POINTER_MOTION_MASK;
   attributes_mask = GDK_WA_X | GDK_WA_Y;
 
   window = gtk_widget_get_parent_window (widget);
@@ -343,6 +347,19 @@ gtk_separator_tool_item_unmap (GtkWidget *widget)
 }
 
 static gboolean
+gtk_separator_tool_item_motion_event (GtkWidget      *widget,
+                                      GdkEventMotion *event)
+{
+  GtkSeparatorToolItem *separator = GTK_SEPARATOR_TOOL_ITEM (widget);
+  GtkSeparatorToolItemPrivate *priv = separator->priv;
+
+  /* We want window dragging to work on empty toolbar areas,
+   * so we only eat button events on visible separators
+   */
+  return priv->draw;
+}
+
+static gboolean
 gtk_separator_tool_item_button_event (GtkWidget      *widget,
                                       GdkEventButton *event)
 {
@@ -383,7 +400,7 @@ gtk_separator_tool_item_draw (GtkWidget *widget,
  * 
  * Create a new #GtkSeparatorToolItem
  * 
- * Return value: the new #GtkSeparatorToolItem
+ * Returns: the new #GtkSeparatorToolItem
  * 
  * Since: 2.4
  */
@@ -405,7 +422,7 @@ gtk_separator_tool_item_new (void)
  * Returns whether @item is drawn as a line, or just blank. 
  * See gtk_separator_tool_item_set_draw().
  * 
- * Return value: %TRUE if @item is drawn as a line, or just blank.
+ * Returns: %TRUE if @item is drawn as a line, or just blank.
  * 
  * Since: 2.4
  */

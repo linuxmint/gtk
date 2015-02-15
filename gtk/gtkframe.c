@@ -45,18 +45,15 @@
  * top side of the frame. The position of the
  * label can be controlled with gtk_frame_set_label_align().
  *
- * <refsect2 id="GtkFrame-BUILDER-UI">
- * <title>GtkFrame as GtkBuildable</title>
- * <para>
- * The GtkFrame implementation of the GtkBuildable interface
- * supports placing a child in the label position by specifying
- * "label" as the "type" attribute of a &lt;child&gt; element.
- * A normal content child can be specified without specifying
- * a &lt;child&gt; type attribute.
- * </para>
- * <example>
- * <title>A UI definition fragment with GtkFrame</title>
- * <programlisting><![CDATA[
+ * # GtkFrame as GtkBuildable
+ *
+ * The GtkFrame implementation of the GtkBuildable interface supports
+ * placing a child in the label position by specifying “label” as the
+ * “type” attribute of a <child> element. A normal content child can
+ * be specified without specifying a <child> type attribute.
+ *
+ * An example of a UI definition fragment with GtkFrame:
+ * |[
  * <object class="GtkFrame">
  *   <child type="label">
  *     <object class="GtkLabel" id="frame-label"/>
@@ -65,9 +62,7 @@
  *     <object class="GtkEntry" id="frame-content"/>
  *   </child>
  * </object>
- * ]]></programlisting>
- * </example>
- * </refsect2>
+ * ]|
  */
 
 
@@ -171,8 +166,7 @@ gtk_frame_class_init (GtkFrameClass *class)
                                                         P_("Label"),
                                                         P_("Text of the frame's label"),
                                                         NULL,
-                                                        GTK_PARAM_READABLE |
-							GTK_PARAM_WRITABLE));
+                                                        GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   g_object_class_install_property (gobject_class,
 				   PROP_LABEL_XALIGN,
 				   g_param_spec_float ("label-xalign",
@@ -181,7 +175,7 @@ gtk_frame_class_init (GtkFrameClass *class)
 						       0.0,
 						       1.0,
 						       0.0,
-						       GTK_PARAM_READWRITE));
+						       GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   g_object_class_install_property (gobject_class,
 				   PROP_LABEL_YALIGN,
 				   g_param_spec_float ("label-yalign",
@@ -190,7 +184,7 @@ gtk_frame_class_init (GtkFrameClass *class)
 						       0.0,
 						       1.0,
 						       0.5,
-						       GTK_PARAM_READWRITE));
+						       GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   g_object_class_install_property (gobject_class,
                                    PROP_SHADOW_TYPE,
                                    g_param_spec_enum ("shadow-type",
@@ -198,7 +192,7 @@ gtk_frame_class_init (GtkFrameClass *class)
                                                       P_("Appearance of the frame border"),
 						      GTK_TYPE_SHADOW_TYPE,
 						      GTK_SHADOW_ETCHED_IN,
-                                                      GTK_PARAM_READWRITE));
+                                                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (gobject_class,
                                    PROP_LABEL_WIDGET,
@@ -337,7 +331,7 @@ gtk_frame_get_property (GObject         *object,
  * Creates a new #GtkFrame, with optional label @label.
  * If @label is %NULL, the label is omitted.
  * 
- * Return value: a new #GtkFrame widget
+ * Returns: a new #GtkFrame widget
  **/
 GtkWidget*
 gtk_frame_new (const gchar *label)
@@ -425,12 +419,12 @@ gtk_frame_set_label (GtkFrame *frame,
  * gtk_frame_get_label:
  * @frame: a #GtkFrame
  * 
- * If the frame's label widget is a #GtkLabel, returns the
+ * If the frame’s label widget is a #GtkLabel, returns the
  * text in the label widget. (The frame will have a #GtkLabel
  * for the label widget if a non-%NULL argument was passed
  * to gtk_frame_new().)
  * 
- * Return value: the text in the label, or %NULL if there
+ * Returns: the text in the label, or %NULL if there
  *               was no label widget or the lable widget was not
  *               a #GtkLabel. This string is owned by GTK+ and
  *               must not be modified or freed.
@@ -453,7 +447,7 @@ gtk_frame_get_label (GtkFrame *frame)
 /**
  * gtk_frame_set_label_widget:
  * @frame: a #GtkFrame
- * @label_widget: the new label widget
+ * @label_widget: (nullable): the new label widget
  * 
  * Sets the label widget for the frame. This is the widget that
  * will appear embedded in the top edge of the frame as a
@@ -506,7 +500,8 @@ gtk_frame_set_label_widget (GtkFrame  *frame,
  * Retrieves the label widget for the frame. See
  * gtk_frame_set_label_widget().
  *
- * Return value: (transfer none): the label widget, or %NULL if there is none.
+ * Returns: (nullable) (transfer none): the label widget, or %NULL if
+ * there is none.
  **/
 GtkWidget *
 gtk_frame_get_label_widget (GtkFrame *frame)
@@ -524,10 +519,10 @@ gtk_frame_get_label_widget (GtkFrame *frame)
  *   1.0 represents right alignment.
  * @yalign: The y alignment of the label. A value of 0.0 aligns under 
  *   the frame; 1.0 aligns above the frame. If the values are exactly
- *   0.0 or 1.0 the gap in the frame won't be painted because the label
+ *   0.0 or 1.0 the gap in the frame won’t be painted because the label
  *   will be completely above or below the frame.
  * 
- * Sets the alignment of the frame widget's label. The
+ * Sets the alignment of the frame widget’s label. The
  * default values for a newly created frame are 0.0 and 0.5.
  **/
 void
@@ -565,11 +560,11 @@ gtk_frame_set_label_align (GtkFrame *frame,
  * gtk_frame_get_label_align:
  * @frame: a #GtkFrame
  * @xalign: (out) (allow-none): location to store X alignment of
- *     frame's label, or %NULL
+ *     frame’s label, or %NULL
  * @yalign: (out) (allow-none): location to store X alignment of
- *     frame's label, or %NULL
+ *     frame’s label, or %NULL
  * 
- * Retrieves the X and Y alignment of the frame's label. See
+ * Retrieves the X and Y alignment of the frame’s label. See
  * gtk_frame_set_label_align().
  **/
 void
@@ -602,6 +597,7 @@ gtk_frame_set_shadow_type (GtkFrame      *frame,
 {
   GtkFramePrivate *priv;
   GtkWidget *widget;
+  GtkStyleContext *context;
 
   g_return_if_fail (GTK_IS_FRAME (frame));
 
@@ -611,14 +607,18 @@ gtk_frame_set_shadow_type (GtkFrame      *frame,
     {
       widget = GTK_WIDGET (frame);
       priv->shadow_type = type;
-      g_object_notify (G_OBJECT (frame), "shadow-type");
+
+      context = gtk_widget_get_style_context (GTK_WIDGET (frame));
+      if (type == GTK_SHADOW_NONE)
+        gtk_style_context_add_class (context, GTK_STYLE_CLASS_FLAT);
+      else
+        gtk_style_context_remove_class (context, GTK_STYLE_CLASS_FLAT);
 
       if (gtk_widget_is_drawable (widget))
-	{
-	  gtk_widget_queue_draw (widget);
-	}
+	gtk_widget_queue_draw (widget);
       
       gtk_widget_queue_resize (widget);
+      g_object_notify (G_OBJECT (frame), "shadow-type");
     }
 }
 
@@ -629,7 +629,7 @@ gtk_frame_set_shadow_type (GtkFrame      *frame,
  * Retrieves the shadow type of the frame. See
  * gtk_frame_set_shadow_type().
  *
- * Return value: the current shadow type of the frame.
+ * Returns: the current shadow type of the frame.
  **/
 GtkShadowType
 gtk_frame_get_shadow_type (GtkFrame *frame)
@@ -686,46 +686,39 @@ gtk_frame_draw (GtkWidget *widget,
   width = priv->child_allocation.width + padding.left + padding.right;
   height =  priv->child_allocation.height + padding.top + padding.bottom;
 
-  if (priv->shadow_type != GTK_SHADOW_NONE)
+  if (priv->label_widget)
     {
-      if (priv->label_widget)
-        {
-          gfloat xalign;
-          gint height_extra;
-          gint x2;
+      gfloat xalign;
+      gint height_extra;
+      gint x2;
 
-          if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
-            xalign = priv->label_xalign;
-          else
-            xalign = 1 - priv->label_xalign;
-
-          height_extra = MAX (0, priv->label_allocation.height - padding.top)
-            - priv->label_yalign * priv->label_allocation.height;
-          y -= height_extra;
-          height += height_extra;
-
-          x2 = padding.left + (priv->child_allocation.width - priv->label_allocation.width - 2 * LABEL_PAD - 2 * LABEL_SIDE_PAD) * xalign + LABEL_SIDE_PAD;
-
-          gtk_render_background (context, cr, x, y, width, height);
-
-          /* If the label is completely over or under the frame we can omit the gap */
-          if (priv->label_yalign == 0.0 || priv->label_yalign == 1.0)
-            gtk_render_frame (context, cr, x, y, width, height);
-          else
-            gtk_render_frame_gap (context, cr,
-                                  x, y, width, height,
-                                  GTK_POS_TOP, x2,
-                                  x2 + priv->label_allocation.width + 2 * LABEL_PAD);
-        }
+      if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
+        xalign = priv->label_xalign;
       else
-        {
-          gtk_render_background (context, cr, x, y, width, height);
-          gtk_render_frame (context, cr, x, y, width, height);
-        }
+        xalign = 1 - priv->label_xalign;
+
+      height_extra = MAX (0, priv->label_allocation.height - padding.top)
+          - priv->label_yalign * priv->label_allocation.height;
+      y -= height_extra;
+      height += height_extra;
+
+      x2 = padding.left + (priv->child_allocation.width - priv->label_allocation.width - 2 * LABEL_PAD - 2 * LABEL_SIDE_PAD) * xalign + LABEL_SIDE_PAD;
+
+      gtk_render_background (context, cr, x, y, width, height);
+
+      /* If the label is completely over or under the frame we can omit the gap */
+      if (priv->label_yalign == 0.0 || priv->label_yalign == 1.0)
+        gtk_render_frame (context, cr, x, y, width, height);
+      else
+        gtk_render_frame_gap (context, cr,
+                              x, y, width, height,
+                              GTK_POS_TOP, x2,
+                              x2 + priv->label_allocation.width + 2 * LABEL_PAD);
     }
   else
     {
       gtk_render_background (context, cr, x, y, width, height);
+      gtk_render_frame (context, cr, x, y, width, height);
     }
 
   GTK_WIDGET_CLASS (gtk_frame_parent_class)->draw (widget, cr);
@@ -851,15 +844,14 @@ gtk_frame_real_compute_child_allocation (GtkFrame      *frame,
 }
 
 static void
-gtk_frame_get_preferred_size (GtkWidget      *request,
+gtk_frame_get_preferred_size (GtkWidget      *widget,
                               GtkOrientation  orientation,
                               gint           *minimum_size,
                               gint           *natural_size)
 {
-  GtkFrame *frame = GTK_FRAME (request);
+  GtkFrame *frame = GTK_FRAME (widget);
   GtkFramePrivate *priv = frame->priv;
   GtkBorder padding;
-  GtkWidget *widget = GTK_WIDGET (request);
   GtkWidget *child;
   GtkBin *bin = GTK_BIN (widget);
   gint child_min, child_nat;
@@ -922,11 +914,8 @@ gtk_frame_get_preferred_size (GtkWidget      *request,
       natural += (border_width * 2) + padding.top + padding.bottom;
     }
 
- if (minimum_size)
-    *minimum_size = minimum;
-
-  if (natural_size)
-    *natural_size = natural;
+  *minimum_size = minimum;
+  *natural_size = natural;
 }
 
 static void
@@ -947,12 +936,11 @@ gtk_frame_get_preferred_height (GtkWidget *widget,
 
 
 static void
-gtk_frame_get_preferred_height_for_width (GtkWidget *request,
+gtk_frame_get_preferred_height_for_width (GtkWidget *widget,
                                           gint       width,
                                           gint      *minimum_height,
                                           gint      *natural_height)
 {
-  GtkWidget *widget = GTK_WIDGET (request);
   GtkWidget *child;
   GtkFrame *frame = GTK_FRAME (widget);
   GtkFramePrivate *priv = frame->priv;
@@ -988,11 +976,8 @@ gtk_frame_get_preferred_height_for_width (GtkWidget *request,
       natural += child_nat;
     }
 
- if (minimum_height)
-    *minimum_height = minimum;
-
-  if (natural_height)
-    *natural_height = natural;
+  *minimum_height = minimum;
+  *natural_height = natural;
 }
 
 static void

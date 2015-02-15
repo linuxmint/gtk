@@ -26,7 +26,7 @@
  *
  * Use gtk_print_job_get_surface() to obtain the cairo surface
  * onto which the pages must be drawn. Use gtk_print_job_send()
- * to send the finished job to the printer. If you don't use cairo
+ * to send the finished job to the printer. If you don’t use cairo
  * #GtkPrintJob also supports printing of manually generated postscript,
  * via gtk_print_job_set_source_file().
  */
@@ -95,9 +95,7 @@ static void     gtk_print_job_get_property (GObject               *object,
 					    guint                  prop_id,
 					    GValue                *value,
 					    GParamSpec            *pspec);
-static GObject* gtk_print_job_constructor  (GType                  type,
-					    guint                  n_construct_properties,
-					    GObjectConstructParam *construct_params);
+static void     gtk_print_job_constructed  (GObject               *object);
 
 enum {
   STATUS_CHANGED,
@@ -124,7 +122,7 @@ gtk_print_job_class_init (GtkPrintJobClass *class)
   object_class = (GObjectClass *) class;
 
   object_class->finalize = gtk_print_job_finalize;
-  object_class->constructor = gtk_print_job_constructor;
+  object_class->constructed = gtk_print_job_constructed;
   object_class->set_property = gtk_print_job_set_property;
   object_class->get_property = gtk_print_job_get_property;
 
@@ -228,23 +226,14 @@ gtk_print_job_init (GtkPrintJob *job)
 }
 
 
-static GObject*
-gtk_print_job_constructor (GType                  type,
-			   guint                  n_construct_properties,
-			   GObjectConstructParam *construct_params)
+static void
+gtk_print_job_constructed (GObject *object)
 {
-  GtkPrintJob *job;
-  GtkPrintJobPrivate *priv;
-  GObject *object;
+  GtkPrintJob *job = GTK_PRINT_JOB (object);
+  GtkPrintJobPrivate *priv = job->priv;
 
-  object =
-    G_OBJECT_CLASS (gtk_print_job_parent_class)->constructor (type,
-							      n_construct_properties,
-							      construct_params);
+  G_OBJECT_CLASS (gtk_print_job_parent_class)->constructed (object);
 
-  job = GTK_PRINT_JOB (object);
-
-  priv = job->priv;
   g_assert (priv->printer_set &&
 	    priv->settings_set &&
 	    priv->page_setup_set);
@@ -253,8 +242,6 @@ gtk_print_job_constructor (GType                  type,
 				  job,
 				  priv->settings,
 				  priv->page_setup);
-
-  return object;
 }
 
 
@@ -303,7 +290,7 @@ gtk_print_job_finalize (GObject *object)
  *
  * Creates a new #GtkPrintJob.
  *
- * Return value: a new #GtkPrintJob
+ * Returns: a new #GtkPrintJob
  *
  * Since: 2.10
  **/
@@ -329,7 +316,7 @@ gtk_print_job_new (const gchar      *title,
  * 
  * Gets the #GtkPrintSettings of the print job.
  * 
- * Return value: (transfer none): the settings of @job
+ * Returns: (transfer none): the settings of @job
  *
  * Since: 2.10
  */
@@ -347,7 +334,7 @@ gtk_print_job_get_settings (GtkPrintJob *job)
  * 
  * Gets the #GtkPrinter of the print job.
  * 
- * Return value: (transfer none): the printer of @job
+ * Returns: (transfer none): the printer of @job
  *
  * Since: 2.10
  */
@@ -365,7 +352,7 @@ gtk_print_job_get_printer (GtkPrintJob *job)
  * 
  * Gets the job title.
  * 
- * Return value: the title of @job
+ * Returns: the title of @job
  *
  * Since: 2.10
  */
@@ -383,7 +370,7 @@ gtk_print_job_get_title (GtkPrintJob *job)
  * 
  * Gets the status of the print job.
  * 
- * Return value: the status of @job
+ * Returns: the status of @job
  *
  * Since: 2.10
  */
@@ -464,7 +451,7 @@ gtk_print_job_set_source_file (GtkPrintJob *job,
  * Gets a cairo surface onto which the pages of
  * the print job should be rendered.
  * 
- * Return value: (transfer none): the cairo surface of @job
+ * Returns: (transfer none): the cairo surface of @job
  *
  * Since: 2.10
  **/
@@ -540,7 +527,7 @@ gtk_print_job_get_surface (GtkPrintJob  *job,
  * 
  * If track_status is %TRUE, the print job will try to continue report
  * on the status of the print job in the printer queues and printer. This
- * can allow your application to show things like "out of paper" issues,
+ * can allow your application to show things like “out of paper” issues,
  * and when the print job actually reaches the printer.
  * 
  * This function is often implemented using some form of polling, so it should
@@ -575,7 +562,7 @@ gtk_print_job_set_track_print_status (GtkPrintJob *job,
  * Returns wheter jobs will be tracked after printing.
  * For details, see gtk_print_job_set_track_print_status().
  *
- * Return value: %TRUE if print job status will be reported after printing
+ * Returns: %TRUE if print job status will be reported after printing
  *
  * Since: 2.10
  */

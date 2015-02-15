@@ -8,7 +8,7 @@
 <link rel="up" href="DeprecatedObjects.html" title="Deprecated">
 <link rel="prev" href="GtkRecentAction.html" title="GtkRecentAction">
 <link rel="next" href="GtkImageMenuItem.html" title="GtkImageMenuItem">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -61,7 +61,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkActivatable.html#gtk-activatable-get-use-action-appearance" title="gtk_activatable_get_use_action_appearance ()">gtk_activatable_get_use_action_appearance</a> <span class="c_punctuation">()</span>
@@ -110,7 +110,7 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkActivatable.html#GtkActivatable--use-action-appearance" title="The “use-action-appearance” property">use-action-appearance</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -146,7 +146,7 @@
 <a name="GtkActivatable.prerequisites"></a><h2>Prerequisites</h2>
 <p>
 GtkActivatable requires
- <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>.</p>
+ <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>.</p>
 </div>
 <div class="refsect1">
 <a name="GtkActivatable.implementations"></a><h2>Known Implementations</h2>
@@ -166,9 +166,8 @@ the state of its action. A <a class="link" href="GtkActivatable.html" title="Gtk
 through its action, as they are responsible for activating their
 related actions.</p>
 <div class="refsect2">
-<a name="id-1.3.23.31.10.3"></a><h3>Implementing GtkActivatable</h3>
-<p>
-When extending a class that is already <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a>; it is only
+<a name="id-1.3.24.31.10.3"></a><h3>Implementing GtkActivatable</h3>
+<p>When extending a class that is already <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a>; it is only
 necessary to implement the <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a>-&gt;<code class="function">sync_action_properties()</code>
 and <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a>-&gt;<code class="function">update()</code> methods and chain up to the parent
 implementation, however when introducing
@@ -177,11 +176,11 @@ a new <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span cl
 the implementor. Handling these properties is mostly a matter of installing
 the action pointer and boolean flag on your instance, and calling
 <a class="link" href="GtkActivatable.html#gtk-activatable-do-set-related-action" title="gtk_activatable_do_set_related_action ()"><code class="function">gtk_activatable_do_set_related_action()</code></a> and
-<a class="link" href="GtkActivatable.html#gtk-activatable-sync-action-properties" title="gtk_activatable_sync_action_properties ()"><code class="function">gtk_activatable_sync_action_properties()</code></a> at the appropriate times.
-</p>
-<div class="example">
-<a name="id-1.3.23.31.10.3.3"></a><p class="title"><b>Example 79. A class fragment implementing <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a></b></p>
-<div class="example-contents">
+<a class="link" href="GtkActivatable.html#gtk-activatable-sync-action-properties" title="gtk_activatable_sync_action_properties ()"><code class="function">gtk_activatable_sync_action_properties()</code></a> at the appropriate times.</p>
+<div class="refsect3">
+<a name="id-1.3.24.31.10.3.3"></a><h4>A class fragment implementing <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a>
+</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -429,8 +428,8 @@ the action pointer and boolean flag on your instance, and calling
 
 <span class="normal">  </span><span class="symbol">...</span>
 
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-class-override-property">g_object_class_override_property</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">gobject_class</span><span class="symbol">,</span><span class="normal"> PROP_ACTIVATABLE_RELATED_ACTION</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"related-action"</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-class-override-property">g_object_class_override_property</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">gobject_class</span><span class="symbol">,</span><span class="normal"> PROP_ACTIVATABLE_USE_ACTION_APPEARANCE</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"use-action-appearance"</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-class-override-property">g_object_class_override_property</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">gobject_class</span><span class="symbol">,</span><span class="normal"> PROP_ACTIVATABLE_RELATED_ACTION</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"related-action"</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-class-override-property">g_object_class_override_property</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">gobject_class</span><span class="symbol">,</span><span class="normal"> PROP_ACTIVATABLE_USE_ACTION_APPEARANCE</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"use-action-appearance"</span><span class="symbol">);</span>
 
 <span class="normal">  </span><span class="symbol">...</span>
 <span class="cbracket">}</span>
@@ -455,13 +454,13 @@ the action pointer and boolean flag on your instance, and calling
 
 <span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">priv</span><span class="symbol">-&gt;</span><span class="normal">action</span><span class="symbol">)</span>
 <span class="normal">    </span><span class="cbracket">{</span>
-<span class="normal">      </span><span class="function"><a href="GtkActivatable.html#gtk-activatable-do-set-related-action">gtk_activatable_do_set_related_action</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_ACTIVATABLE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">bar</span><span class="symbol">),</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
-<span class="normal">      priv</span><span class="symbol">-&gt;</span><span class="normal">action </span><span class="symbol">=</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">;</span>
+<span class="normal">      </span><span class="function"><a href="GtkActivatable.html#gtk-activatable-do-set-related-action">gtk_activatable_do_set_related_action</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_ACTIVATABLE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">bar</span><span class="symbol">),</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">      priv</span><span class="symbol">-&gt;</span><span class="normal">action </span><span class="symbol">=</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">;</span>
 <span class="normal">    </span><span class="cbracket">}</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#G-OBJECT-CLASS:CAPS">G_OBJECT_CLASS</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">foo_bar_parent_class</span><span class="symbol">)-&gt;</span><span class="function">dispose</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">object</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#G-OBJECT-CLASS:CAPS">G_OBJECT_CLASS</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">foo_bar_parent_class</span><span class="symbol">)-&gt;</span><span class="function">dispose</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">object</span><span class="symbol">);</span>
 <span class="cbracket">}</span>
 
-<span class="symbol">...</span><span class="normal"> </span><span class="usertype">Handle</span><span class="normal"> the </span><span class="string">"related-action"</span><span class="normal"> and </span><span class="string">"use-action-appearance"</span><span class="normal"> properties </span><span class="symbol">...</span>
+<span class="symbol">...</span><span class="normal"> Handle the “related</span><span class="symbol">-</span><span class="normal">action” and “use</span><span class="symbol">-</span><span class="normal">action</span><span class="symbol">-</span><span class="usertype">appearance”</span><span class="normal"> properties </span><span class="symbol">...</span>
 
 <span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
 <span class="function">foo_bar_set_property</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">GObject</span><span class="normal">         </span><span class="symbol">*</span><span class="normal">object</span><span class="symbol">,</span>
@@ -478,13 +477,13 @@ the action pointer and boolean flag on your instance, and calling
 <span class="normal">      </span><span class="symbol">...</span>
 
 <span class="normal">    </span><span class="keyword">case</span><span class="normal"> PROP_ACTIVATABLE_RELATED_ACTION</span><span class="symbol">:</span>
-<span class="normal">      </span><span class="function">foo_bar_set_related_action</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">bar</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Standard-Parameter-and-Value-Types.html#g-value-get-object">g_value_get_object</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">value</span><span class="symbol">));</span>
+<span class="normal">      </span><span class="function">foo_bar_set_related_action</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">bar</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Standard-Parameter-and-Value-Types.html#g-value-get-object">g_value_get_object</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">value</span><span class="symbol">));</span>
 <span class="normal">      </span><span class="keyword">break</span><span class="symbol">;</span>
 <span class="normal">    </span><span class="keyword">case</span><span class="normal"> PROP_ACTIVATABLE_USE_ACTION_APPEARANCE</span><span class="symbol">:</span>
-<span class="normal">      </span><span class="function">foo_bar_set_use_action_appearance</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">bar</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Standard-Parameter-and-Value-Types.html#g-value-get-boolean">g_value_get_boolean</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">value</span><span class="symbol">));</span>
+<span class="normal">      </span><span class="function">foo_bar_set_use_action_appearance</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">bar</span><span class="symbol">,</span><span class="normal"> </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Standard-Parameter-and-Value-Types.html#g-value-get-boolean">g_value_get_boolean</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">value</span><span class="symbol">));</span>
 <span class="normal">      </span><span class="keyword">break</span><span class="symbol">;</span>
 <span class="label">    default:</span>
-<span class="normal">      </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#G-OBJECT-WARN-INVALID-PROPERTY-ID:CAPS">G_OBJECT_WARN_INVALID_PROPERTY_ID</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">object</span><span class="symbol">,</span><span class="normal"> prop_id</span><span class="symbol">,</span><span class="normal"> pspec</span><span class="symbol">);</span>
+<span class="normal">      </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#G-OBJECT-WARN-INVALID-PROPERTY-ID:CAPS">G_OBJECT_WARN_INVALID_PROPERTY_ID</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">object</span><span class="symbol">,</span><span class="normal"> prop_id</span><span class="symbol">,</span><span class="normal"> pspec</span><span class="symbol">);</span>
 <span class="normal">      </span><span class="keyword">break</span><span class="symbol">;</span>
 <span class="normal">    </span><span class="cbracket">}</span>
 <span class="cbracket">}</span>
@@ -504,13 +503,13 @@ the action pointer and boolean flag on your instance, and calling
 <span class="normal">      </span><span class="symbol">...</span>
 
 <span class="normal">    </span><span class="keyword">case</span><span class="normal"> PROP_ACTIVATABLE_RELATED_ACTION</span><span class="symbol">:</span>
-<span class="normal">      </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Standard-Parameter-and-Value-Types.html#g-value-set-object">g_value_set_object</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">value</span><span class="symbol">,</span><span class="normal"> priv</span><span class="symbol">-&gt;</span><span class="normal">action</span><span class="symbol">);</span>
+<span class="normal">      </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Standard-Parameter-and-Value-Types.html#g-value-set-object">g_value_set_object</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">value</span><span class="symbol">,</span><span class="normal"> priv</span><span class="symbol">-&gt;</span><span class="normal">action</span><span class="symbol">);</span>
 <span class="normal">      </span><span class="keyword">break</span><span class="symbol">;</span>
 <span class="normal">    </span><span class="keyword">case</span><span class="normal"> PROP_ACTIVATABLE_USE_ACTION_APPEARANCE</span><span class="symbol">:</span>
-<span class="normal">      </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Standard-Parameter-and-Value-Types.html#g-value-set-boolean">g_value_set_boolean</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">value</span><span class="symbol">,</span><span class="normal"> priv</span><span class="symbol">-&gt;</span><span class="normal">use_action_appearance</span><span class="symbol">);</span>
+<span class="normal">      </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-Standard-Parameter-and-Value-Types.html#g-value-set-boolean">g_value_set_boolean</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">value</span><span class="symbol">,</span><span class="normal"> priv</span><span class="symbol">-&gt;</span><span class="normal">use_action_appearance</span><span class="symbol">);</span>
 <span class="normal">      </span><span class="keyword">break</span><span class="symbol">;</span>
 <span class="label">    default:</span>
-<span class="normal">      </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#G-OBJECT-WARN-INVALID-PROPERTY-ID:CAPS">G_OBJECT_WARN_INVALID_PROPERTY_ID</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">object</span><span class="symbol">,</span><span class="normal"> prop_id</span><span class="symbol">,</span><span class="normal"> pspec</span><span class="symbol">);</span>
+<span class="normal">      </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#G-OBJECT-WARN-INVALID-PROPERTY-ID:CAPS">G_OBJECT_WARN_INVALID_PROPERTY_ID</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">object</span><span class="symbol">,</span><span class="normal"> prop_id</span><span class="symbol">,</span><span class="normal"> pspec</span><span class="symbol">);</span>
 <span class="normal">      </span><span class="keyword">break</span><span class="symbol">;</span>
 <span class="normal">    </span><span class="cbracket">}</span>
 <span class="cbracket">}</span>
@@ -612,8 +611,8 @@ the action pointer and boolean flag on your instance, and calling
   </table>
 </div>
 
+<p></p>
 </div>
-<br class="example-break">
 </div>
 </div>
 <div class="refsect1">
@@ -627,17 +626,17 @@ gtk_activatable_do_set_related_action (<em class="parameter"><code><a class="lin
 <p>This is a utility function for <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> implementors.</p>
 <p>When implementing <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> you must call this when
 handling changes of the <a class="link" href="GtkActivatable.html#GtkActivatable--related-action" title="The “related-action” property"><span class="type">“related-action”</span></a>, and
-you must also use this to break references in <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>-&gt;<code class="function">dispose()</code>.</p>
+you must also use this to break references in <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>-&gt;<code class="function">dispose()</code>.</p>
 <p>This function adds a reference to the currently set related
 action for you, it also makes sure the <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a>-&gt;<code class="function">update()</code>
 method is called when the related <a class="link" href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> properties change
-and registers to the action's proxy list.</p>
-<div class="note"><p>Be careful to call this before setting the local
+and registers to the action’s proxy list.</p>
+<div class="blockquote"><blockquote class="blockquote"><p>Be careful to call this before setting the local
 copy of the <a class="link" href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> property, since this function uses 
 <a class="link" href="GtkActivatable.html#gtk-activatable-get-related-action" title="gtk_activatable_get_related_action ()"><code class="function">gtk_activatable_get_related_action()</code></a> to retrieve the
-previous action</p></div>
+previous action.</p></blockquote></div>
 <div class="refsect3">
-<a name="id-1.3.23.31.11.2.10"></a><h4>Parameters</h4>
+<a name="id-1.3.24.31.11.2.10"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -669,7 +668,7 @@ gtk_activatable_get_related_action (<em class="parameter"><code><a class="link" 
 <p>Gets the related <a class="link" href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> for <em class="parameter"><code>activatable</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.23.31.11.3.7"></a><h4>Parameters</h4>
+<a name="id-1.3.24.31.11.3.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -684,7 +683,7 @@ gtk_activatable_get_related_action (<em class="parameter"><code><a class="link" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.23.31.11.3.8"></a><h4>Returns</h4>
+<a name="id-1.3.24.31.11.3.8"></a><h4>Returns</h4>
 <p> the related <a class="link" href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> if one is set. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -693,7 +692,7 @@ gtk_activatable_get_related_action (<em class="parameter"><code><a class="link" 
 <hr>
 <div class="refsect2">
 <a name="gtk-activatable-get-use-action-appearance"></a><h3>gtk_activatable_get_use_action_appearance ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_activatable_get_use_action_appearance
                                (<em class="parameter"><code><a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> *activatable</code></em>);</pre>
 <div class="warning"><p><code class="literal">gtk_activatable_get_use_action_appearance</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
@@ -701,7 +700,7 @@ gtk_activatable_get_use_action_appearance
 and appearance when setting the related action or when
 the action changes appearance.</p>
 <div class="refsect3">
-<a name="id-1.3.23.31.11.4.7"></a><h4>Parameters</h4>
+<a name="id-1.3.24.31.11.4.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -716,7 +715,7 @@ the action changes appearance.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.23.31.11.4.8"></a><h4>Returns</h4>
+<a name="id-1.3.24.31.11.4.8"></a><h4>Returns</h4>
 <p> whether <em class="parameter"><code>activatable</code></em>
 uses its actions appearance.</p>
 <p></p>
@@ -736,7 +735,7 @@ internally when the <a class="link" href="GtkActivatable.html#GtkActivatable--re
 or unset and by the implementing class when
 <a class="link" href="GtkActivatable.html#GtkActivatable--use-action-appearance" title="The “use-action-appearance” property"><span class="type">“use-action-appearance”</span></a> changes.</p>
 <div class="refsect3">
-<a name="id-1.3.23.31.11.5.7"></a><h4>Parameters</h4>
+<a name="id-1.3.24.31.11.5.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -751,8 +750,8 @@ or unset and by the implementing class when
 </tr>
 <tr>
 <td class="parameter_name"><p>action</p></td>
-<td class="parameter_description"><p> the related <a class="link" href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> the related <a class="link" href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -768,10 +767,10 @@ gtk_activatable_set_related_action (<em class="parameter"><code><a class="link" 
 <div class="warning"><p><code class="literal">gtk_activatable_set_related_action</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
 <p>Sets the related action on the <em class="parameter"><code>activatable</code></em>
  object.</p>
-<div class="note"><p><a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> implementors need to handle the <a class="link" href="GtkActivatable.html#GtkActivatable--related-action" title="The “related-action” property"><span class="type">“related-action”</span></a>
-property and call <a class="link" href="GtkActivatable.html#gtk-activatable-do-set-related-action" title="gtk_activatable_do_set_related_action ()"><code class="function">gtk_activatable_do_set_related_action()</code></a> when it changes.</p></div>
+<div class="blockquote"><blockquote class="blockquote"><p><a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> implementors need to handle the <a class="link" href="GtkActivatable.html#GtkActivatable--related-action" title="The “related-action” property"><span class="type">“related-action”</span></a>
+property and call <a class="link" href="GtkActivatable.html#gtk-activatable-do-set-related-action" title="gtk_activatable_do_set_related_action ()"><code class="function">gtk_activatable_do_set_related_action()</code></a> when it changes.</p></blockquote></div>
 <div class="refsect3">
-<a name="id-1.3.23.31.11.6.8"></a><h4>Parameters</h4>
+<a name="id-1.3.24.31.11.6.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -800,16 +799,17 @@ property and call <a class="link" href="GtkActivatable.html#gtk-activatable-do-s
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_activatable_set_use_action_appearance
                                (<em class="parameter"><code><a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> *activatable</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> use_appearance</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> use_appearance</code></em>);</pre>
 <div class="warning"><p><code class="literal">gtk_activatable_set_use_action_appearance</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
 <p>Sets whether this activatable should reset its layout and appearance
 when setting the related action or when the action changes appearance</p>
-<div class="note"><p><a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> implementors need to handle the
+<div class="blockquote"><blockquote class="blockquote"><p><a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> implementors need to handle the
 <a class="link" href="GtkActivatable.html#GtkActivatable--use-action-appearance" title="The “use-action-appearance” property"><span class="type">“use-action-appearance”</span></a> property and call
 <a class="link" href="GtkActivatable.html#gtk-activatable-sync-action-properties" title="gtk_activatable_sync_action_properties ()"><code class="function">gtk_activatable_sync_action_properties()</code></a> to update <em class="parameter"><code>activatable</code></em>
-if needed.</p></div>
+
+if needed.</p></blockquote></div>
 <div class="refsect3">
-<a name="id-1.3.23.31.11.7.8"></a><h4>Parameters</h4>
+<a name="id-1.3.24.31.11.7.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -843,8 +843,6 @@ if needed.</p></div>
 <div class="refsect2">
 <a name="GtkActivatableIface"></a><h3>struct GtkActivatableIface</h3>
 <pre class="programlisting">struct GtkActivatableIface {
-  GTypeInterface g_iface;
-
   /* virtual table */
   void   (* update)                   (GtkActivatable *activatable,
 		                       GtkAction      *action,
@@ -854,8 +852,9 @@ if needed.</p></div>
 };
 </pre>
 <div class="warning"><p><code class="literal">GtkActivatableIface</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
+<div class="blockquote"><blockquote class="blockquote"><p>This method can be called with a <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> action at times.</p></blockquote></div>
 <div class="refsect3">
-<a name="id-1.3.23.31.12.3.6"></a><h4>Members</h4>
+<a name="id-1.3.24.31.12.3.7"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
@@ -864,26 +863,17 @@ if needed.</p></div>
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GTypeInterface"><span class="type">GTypeInterface</span></a> <em class="structfield"><code><a name="GtkActivatableIface.g-iface"></a>g_iface</code></em>;</p></td>
-<td> </td>
-<td> </td>
-</tr>
-<tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GtkActivatableIface.update"></a>update</code></em> ()</p></td>
-<td class="struct_member_description"><p>Called to update the activatable when its related action's properties change.
+<td class="struct_member_description"><p>Called to update the activatable when its related action’s properties change.
 You must check the <a class="link" href="GtkActivatable.html#GtkActivatable--use-action-appearance" title="The “use-action-appearance” property"><span class="type">“use-action-appearance”</span></a> property only apply action
 properties that are meant to effect the appearance accordingly.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GtkActivatableIface.sync-action-properties"></a>sync_action_properties</code></em> ()</p></td>
-<td class="struct_member_description">
-<p>Called to update the activatable completely, this is called internally when
+<td class="struct_member_description"><p>Called to update the activatable completely, this is called internally when
 <a class="link" href="GtkActivatable.html#GtkActivatable--related-action" title="The “related-action” property"><span class="type">“related-action”</span></a> property is set or unset and by the implementor when
-<a class="link" href="GtkActivatable.html#GtkActivatable--use-action-appearance" title="The “use-action-appearance” property"><span class="type">“use-action-appearance”</span></a> changes.</p>
-<div class="note"><p>This method can be called
-with a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> action at times</p></div>
-</td>
+<a class="link" href="GtkActivatable.html#GtkActivatable--use-action-appearance" title="The “use-action-appearance” property"><span class="type">“use-action-appearance”</span></a> changes.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
@@ -899,9 +889,8 @@ with a <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macro
 <pre class="programlisting">  “related-action”           <a class="link" href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> *</pre>
 <p>The action that this activatable will activate and receive
 updates from for various states and possibly appearance.</p>
-<div class="note"><p><a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> implementors need to handle the this property and
-
-call <a class="link" href="GtkActivatable.html#gtk-activatable-do-set-related-action" title="gtk_activatable_do_set_related_action ()"><code class="function">gtk_activatable_do_set_related_action()</code></a> when it changes.</p></div>
+<div class="blockquote"><blockquote class="blockquote"><p><a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> implementors need to handle the this property and
+call <a class="link" href="GtkActivatable.html#gtk-activatable-do-set-related-action" title="gtk_activatable_do_set_related_action ()"><code class="function">gtk_activatable_do_set_related_action()</code></a> when it changes.</p></blockquote></div>
 <div class="warning"><p><code class="literal">GtkActivatable:related-action</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
 <p>Flags: Read / Write</p>
 <p class="since">Since 2.16</p>
@@ -909,15 +898,15 @@ call <a class="link" href="GtkActivatable.html#gtk-activatable-do-set-related-ac
 <hr>
 <div class="refsect2">
 <a name="GtkActivatable--use-action-appearance"></a><h3>The <code class="literal">“use-action-appearance”</code> property</h3>
-<pre class="programlisting">  “use-action-appearance”    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “use-action-appearance”    <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>Whether this activatable should reset its layout
 and appearance when setting the related action or when
 the action changes appearance.</p>
 <p>See the <a class="link" href="GtkAction.html" title="GtkAction"><span class="type">GtkAction</span></a> documentation directly to find which properties
-should be ignored by the <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> when this property is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
-<div class="note"><p><a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> implementors need to handle this property
+should be ignored by the <a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> when this property is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+<div class="blockquote"><blockquote class="blockquote"><p><a class="link" href="GtkActivatable.html" title="GtkActivatable"><span class="type">GtkActivatable</span></a> implementors need to handle this property
 and call <a class="link" href="GtkActivatable.html#gtk-activatable-sync-action-properties" title="gtk_activatable_sync_action_properties ()"><code class="function">gtk_activatable_sync_action_properties()</code></a> on the activatable
-widget when it changes.</p></div>
+widget when it changes.</p></blockquote></div>
 <div class="warning"><p><code class="literal">GtkActivatable:use-action-appearance</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p></div>
 <p>Flags: Read / Write</p>
 <p>Default value: TRUE</p>
@@ -927,6 +916,6 @@ widget when it changes.</p></div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

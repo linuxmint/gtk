@@ -8,7 +8,7 @@
 <link rel="up" href="MiscObjects.html" title="Miscellaneous">
 <link rel="prev" href="GtkEventBox.html" title="GtkEventBox">
 <link rel="next" href="GtkIMContextSimple.html" title="GtkIMContextSimple">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -101,7 +101,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkHandleBox.html#gtk-handle-box-get-child-detached" title="gtk_handle_box_get_child_detached ()">gtk_handle_box_get_child_detached</a> <span class="c_punctuation">()</span>
@@ -120,7 +120,7 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkHandleBox.html#GtkHandleBox--child-detached" title="The “child-detached” property">child-detached</a></td>
 <td class="property_flags">Read</td>
 </tr>
@@ -140,7 +140,7 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkHandleBox.html#GtkHandleBox--snap-edge-set" title="The “snap-edge-set” property">snap-edge-set</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -176,16 +176,22 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GtkHandleBox.html#GtkHandleBox-struct" title="struct GtkHandleBox">GtkHandleBox</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkHandleBox.html#GtkHandleBoxClass" title="struct GtkHandleBoxClass">GtkHandleBoxClass</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="GtkHandleBox.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBin.html" title="GtkBin">GtkBin</a>
@@ -207,15 +213,15 @@ GtkHandleBox implements
 <a name="GtkHandleBox.description"></a><h2>Description</h2>
 <p>The <a class="link" href="GtkHandleBox.html" title="GtkHandleBox"><span class="type">GtkHandleBox</span></a> widget allows a portion of a window to be "torn
 off". It is a bin widget which displays its child and a handle that
-the user can drag to tear off a separate window (the <em class="firstterm">float
-window</em>) containing the child widget. A thin
-<em class="firstterm">ghost</em> is drawn in the original location of the
+the user can drag to tear off a separate window (the “float
+window”) containing the child widget. A thin
+“ghost” is drawn in the original location of the
 handlebox. By dragging the separate window back to its original
 location, it can be reattached.</p>
 <p>When reattaching, the ghost and float window, must be aligned
-along one of the edges, the <em class="firstterm">snap edge</em>.
+along one of the edges, the “snap edge”.
 This either can be specified by the application programmer
-explicitely, or GTK+ will pick a reasonable default based
+explicitly, or GTK+ will pick a reasonable default based
 on the handle position.</p>
 <p>To make detaching and reattaching the handlebox as minimally confusing
 as possible to the user, it is important to set the snap edge so that
@@ -224,11 +230,9 @@ instance, if the handlebox is packed at the bottom of a VBox, then
 when the handlebox is detached, the bottom edge of the handlebox's
 allocation will remain fixed as the height of the handlebox shrinks,
 so the snap edge should be set to <a class="link" href="gtk3-Standard-Enumerations.html#GTK-POS-BOTTOM:CAPS"><code class="literal">GTK_POS_BOTTOM</code></a>.</p>
-<div class="note">
-<a class="link" href="GtkHandleBox.html" title="GtkHandleBox"><span class="type">GtkHandleBox</span></a> has been deprecated. It is very specialized, lacks features
+<div class="blockquote"><blockquote class="blockquote"><p><a class="link" href="GtkHandleBox.html" title="GtkHandleBox"><span class="type">GtkHandleBox</span></a> has been deprecated. It is very specialized, lacks features
 to make it useful and most importantly does not fit well into modern
-application design. Do not use it. There is no replacement.
-</div>
+application design. Do not use it. There is no replacement.</p></blockquote></div>
 </div>
 <div class="refsect1">
 <a name="GtkHandleBox.functions_details"></a><h2>Functions</h2>
@@ -242,7 +246,7 @@ gtk_handle_box_new (<em class="parameter"><code><span class="type">void</span></
 </div>
 <p>Create a new handle box.</p>
 <div class="refsect3">
-<a name="id-1.3.18.7.11.2.6"></a><h4>Returns</h4>
+<a name="id-1.3.18.6.11.2.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GtkHandleBox.html" title="GtkHandleBox"><span class="type">GtkHandleBox</span></a>.</p>
 <p></p>
 </div>
@@ -260,7 +264,7 @@ gtk_handle_box_set_shadow_type (<em class="parameter"><code><a class="link" href
 <p>Sets the type of shadow to be drawn around the border
 of the handle box.</p>
 <div class="refsect3">
-<a name="id-1.3.18.7.11.3.6"></a><h4>Parameters</h4>
+<a name="id-1.3.18.6.11.3.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -294,7 +298,7 @@ gtk_handle_box_set_handle_position (<em class="parameter"><code><a class="link" 
 </div>
 <p>Sets the side of the handlebox where the handle is drawn.</p>
 <div class="refsect3">
-<a name="id-1.3.18.7.11.4.6"></a><h4>Parameters</h4>
+<a name="id-1.3.18.6.11.4.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -328,7 +332,7 @@ gtk_handle_box_set_snap_edge (<em class="parameter"><code><a class="link" href="
 </div>
 <p>Sets the snap edge of a handlebox. The snap edge is
 the edge of the detached child that must be aligned
-with the corresponding edge of the "ghost" left
+with the corresponding edge of the “ghost” left
 behind when the child was detached to reattach
 the torn-off window. Usually, the snap edge should
 be chosen so that it stays in the same place on
@@ -339,7 +343,7 @@ handle position is <a class="link" href="gtk3-Standard-Enumerations.html#GTK-POS
 then the snap edge will be <a class="link" href="gtk3-Standard-Enumerations.html#GTK-POS-TOP:CAPS"><code class="literal">GTK_POS_TOP</code></a>, otherwise
 it will be <a class="link" href="gtk3-Standard-Enumerations.html#GTK-POS-LEFT:CAPS"><code class="literal">GTK_POS_LEFT</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.18.7.11.5.7"></a><h4>Parameters</h4>
+<a name="id-1.3.18.6.11.5.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -375,7 +379,7 @@ gtk_handle_box_get_handle_position (<em class="parameter"><code><a class="link" 
 <p>Gets the handle position of the handle box. See
 <a class="link" href="GtkHandleBox.html#gtk-handle-box-set-handle-position" title="gtk_handle_box_set_handle_position ()"><code class="function">gtk_handle_box_set_handle_position()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.18.7.11.6.6"></a><h4>Parameters</h4>
+<a name="id-1.3.18.6.11.6.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -390,7 +394,7 @@ gtk_handle_box_get_handle_position (<em class="parameter"><code><a class="link" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.18.7.11.6.7"></a><h4>Returns</h4>
+<a name="id-1.3.18.6.11.6.7"></a><h4>Returns</h4>
 <p> the current handle position.</p>
 <p></p>
 </div>
@@ -407,7 +411,7 @@ gtk_handle_box_get_shadow_type (<em class="parameter"><code><a class="link" href
 <p>Gets the type of shadow drawn around the handle box. See
 <a class="link" href="GtkHandleBox.html#gtk-handle-box-set-shadow-type" title="gtk_handle_box_set_shadow_type ()"><code class="function">gtk_handle_box_set_shadow_type()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.18.7.11.7.6"></a><h4>Parameters</h4>
+<a name="id-1.3.18.6.11.7.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -422,7 +426,7 @@ gtk_handle_box_get_shadow_type (<em class="parameter"><code><a class="link" href
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.18.7.11.7.7"></a><h4>Returns</h4>
+<a name="id-1.3.18.6.11.7.7"></a><h4>Returns</h4>
 <p> the type of shadow currently drawn around the handle box.</p>
 <p></p>
 </div>
@@ -439,7 +443,7 @@ gtk_handle_box_get_snap_edge (<em class="parameter"><code><a class="link" href="
 <p>Gets the edge used for determining reattachment of the handle box.
 See <a class="link" href="GtkHandleBox.html#gtk-handle-box-set-snap-edge" title="gtk_handle_box_set_snap_edge ()"><code class="function">gtk_handle_box_set_snap_edge()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.18.7.11.8.6"></a><h4>Parameters</h4>
+<a name="id-1.3.18.6.11.8.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -454,7 +458,7 @@ See <a class="link" href="GtkHandleBox.html#gtk-handle-box-set-snap-edge" title=
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.18.7.11.8.7"></a><h4>Returns</h4>
+<a name="id-1.3.18.6.11.8.7"></a><h4>Returns</h4>
 <p> the edge used for determining reattachment, or
 (GtkPositionType)-1 if this is determined (as per default)
 from the handle position.</p>
@@ -464,15 +468,15 @@ from the handle position.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-handle-box-get-child-detached"></a><h3>gtk_handle_box_get_child_detached ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_handle_box_get_child_detached (<em class="parameter"><code><a class="link" href="GtkHandleBox.html" title="GtkHandleBox"><span class="type">GtkHandleBox</span></a> *handle_box</code></em>);</pre>
 <div class="warning">
 <p><code class="literal">gtk_handle_box_get_child_detached</code> has been deprecated since version 3.4 and should not be used in newly-written code.</p>
 <p><a class="link" href="GtkHandleBox.html" title="GtkHandleBox"><span class="type">GtkHandleBox</span></a> has been deprecated.</p>
 </div>
-<p>Whether the handlebox's child is currently detached.</p>
+<p>Whether the handlebox’s child is currently detached.</p>
 <div class="refsect3">
-<a name="id-1.3.18.7.11.9.7"></a><h4>Parameters</h4>
+<a name="id-1.3.18.6.11.9.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -487,8 +491,8 @@ gtk_handle_box_get_child_detached (<em class="parameter"><code><a class="link" h
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.18.7.11.9.8"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the child is currently detached, otherwise <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a></p>
+<a name="id-1.3.18.6.11.9.8"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the child is currently detached, otherwise <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a></p>
 <p></p>
 </div>
 <p class="since">Since 2.14</p>
@@ -500,12 +504,54 @@ gtk_handle_box_get_child_detached (<em class="parameter"><code><a class="link" h
 <a name="GtkHandleBox-struct"></a><h3>struct GtkHandleBox</h3>
 <pre class="programlisting">struct GtkHandleBox;</pre>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GtkHandleBoxClass"></a><h3>struct GtkHandleBoxClass</h3>
+<pre class="programlisting">struct GtkHandleBoxClass {
+  GtkBinClass parent_class;
+
+  void (*child_attached) (GtkHandleBox *handle_box,
+				 GtkWidget *child);
+  void (*child_detached) (GtkHandleBox *handle_box,
+				 GtkWidget *child);
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.18.6.12.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GtkBin.html#GtkBinClass" title="struct GtkBinClass"><span class="type">GtkBinClass</span></a> <em class="structfield"><code><a name="GtkHandleBoxClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkHandleBoxClass.child-attached"></a>child_attached</code></em> ()</p></td>
+<td class="struct_member_description"><p>Signal emitted when the contents of the handlebox
+are reattached to the main window. Deprecated: 3.4.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkHandleBoxClass.child-detached"></a>child_detached</code></em> ()</p></td>
+<td class="struct_member_description"><p>Signal emitted when the contents of the handlebox
+are detached from the main window. Deprecated: 3.4.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkHandleBox.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GtkHandleBox--child-detached"></a><h3>The <code class="literal">“child-detached”</code> property</h3>
-<pre class="programlisting">  “child-detached”           <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “child-detached”           <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>A boolean value indicating whether the handlebox's child is attached or detached.</p>
 <p>Flags: Read</p>
 <p>Default value: FALSE</p>
@@ -537,7 +583,7 @@ gtk_handle_box_get_child_detached (<em class="parameter"><code><a class="link" h
 <hr>
 <div class="refsect2">
 <a name="GtkHandleBox--snap-edge-set"></a><h3>The <code class="literal">“snap-edge-set”</code> property</h3>
-<pre class="programlisting">  “snap-edge-set”            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “snap-edge-set”            <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>Whether to use the value from the snap_edge property or a value derived from handle_position.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>
@@ -550,7 +596,7 @@ gtk_handle_box_get_child_detached (<em class="parameter"><code><a class="link" h
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkHandleBox.html" title="GtkHandleBox"><span class="type">GtkHandleBox</span></a> *handlebox,
                <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>    *widget,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
 <p>This signal is emitted when the contents of the
 handlebox are reattached to the main window.</p>
 <div class="warning">
@@ -558,7 +604,7 @@ handlebox are reattached to the main window.</p>
 <p><a class="link" href="GtkHandleBox.html" title="GtkHandleBox"><span class="type">GtkHandleBox</span></a> has been deprecated.</p>
 </div>
 <div class="refsect3">
-<a name="id-1.3.18.7.14.2.6"></a><h4>Parameters</h4>
+<a name="id-1.3.18.6.14.2.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -594,7 +640,7 @@ and is here only for backwards-compatibility)</p></td>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkHandleBox.html" title="GtkHandleBox"><span class="type">GtkHandleBox</span></a> *handlebox,
                <a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a>    *widget,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
 <p>This signal is emitted when the contents of the
 handlebox are detached from the main window.</p>
 <div class="warning">
@@ -602,7 +648,7 @@ handlebox are detached from the main window.</p>
 <p><a class="link" href="GtkHandleBox.html" title="GtkHandleBox"><span class="type">GtkHandleBox</span></a> has been deprecated.</p>
 </div>
 <div class="refsect3">
-<a name="id-1.3.18.7.14.3.6"></a><h4>Parameters</h4>
+<a name="id-1.3.18.6.14.3.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -636,6 +682,6 @@ and is here only for backwards-compatibility)</p></td>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

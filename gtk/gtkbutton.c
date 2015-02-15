@@ -42,7 +42,7 @@
 #include "gtkbuttonprivate.h"
 
 #include <string.h>
-#include "gtkalignment.h"
+#include "deprecated/gtkalignment.h"
 #include "gtklabel.h"
 #include "gtkmain.h"
 #include "gtkmarshalers.h"
@@ -59,7 +59,7 @@
 #include "gtkapplicationprivate.h"
 #include "gtkactionhelper.h"
 
-static const GtkBorder default_default_border = { 1, 1, 1, 1 };
+static const GtkBorder default_default_border = { 0, 0, 0, 0 };
 static const GtkBorder default_default_outside_border = { 0, 0, 0, 0 };
 
 /* Time out before giving up on getting a key release when animating
@@ -89,13 +89,16 @@ enum {
   PROP_XALIGN,
   PROP_YALIGN,
   PROP_IMAGE_POSITION,
+  PROP_ALWAYS_SHOW_IMAGE,
+
+  /* actionable properties */
   PROP_ACTION_NAME,
   PROP_ACTION_TARGET,
-  PROP_ALWAYS_SHOW_IMAGE,
 
   /* activatable properties */
   PROP_ACTIVATABLE_RELATED_ACTION,
-  PROP_ACTIVATABLE_USE_ACTION_APPEARANCE
+  PROP_ACTIVATABLE_USE_ACTION_APPEARANCE,
+  LAST_PROP = PROP_ACTION_NAME
 };
 
 
@@ -119,12 +122,6 @@ static void gtk_button_style_updated (GtkWidget * widget);
 static void gtk_button_size_allocate (GtkWidget * widget,
 				      GtkAllocation * allocation);
 static gint gtk_button_draw (GtkWidget * widget, cairo_t *cr);
-static gint gtk_button_button_press (GtkWidget * widget,
-				     GdkEventButton * event);
-static gint gtk_button_button_release (GtkWidget * widget,
-				       GdkEventButton * event);
-static gboolean gtk_button_touch (GtkWidget     *widget,
-                                  GdkEventTouch *event);
 static gint gtk_button_grab_broken (GtkWidget * widget,
 				    GdkEventGrabBroken * event);
 static gint gtk_button_key_release (GtkWidget * widget, GdkEventKey * event);
@@ -137,15 +134,14 @@ static void gtk_real_button_released (GtkButton * button);
 static void gtk_real_button_clicked (GtkButton * button);
 static void gtk_real_button_activate  (GtkButton          *button);
 static void gtk_button_update_state   (GtkButton          *button);
+static void gtk_button_enter_leave    (GtkButton          *button);
 static void gtk_button_add            (GtkContainer       *container,
 			               GtkWidget          *widget);
 static GType gtk_button_child_type    (GtkContainer       *container);
 static void gtk_button_finish_activate (GtkButton         *button,
 					gboolean           do_it);
 
-static GObject*	gtk_button_constructor (GType                  type,
-					guint                  n_construct_properties,
-					GObjectConstructParam *construct_params);
+static void gtk_button_constructed (GObject *object);
 static void gtk_button_construct_child (GtkButton             *button);
 static void gtk_button_state_changed   (GtkWidget             *widget,
 					GtkStateType           previous_state);
@@ -185,6 +181,7 @@ static void gtk_button_get_preferred_height_and_baseline_for_width (GtkWidget *w
 								    gint      *minimum_baseline,
 								    gint      *natural_baseline);
   
+static GParamSpec *props[LAST_PROP] = { NULL, };
 static guint button_signals[LAST_SIGNAL] = { 0 };
 
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
@@ -206,7 +203,7 @@ gtk_button_class_init (GtkButtonClass *klass)
   widget_class = (GtkWidgetClass*) klass;
   container_class = (GtkContainerClass*) klass;
   
-  gobject_class->constructor  = gtk_button_constructor;
+  gobject_class->constructed  = gtk_button_constructed;
   gobject_class->dispose      = gtk_button_dispose;
   gobject_class->set_property = gtk_button_set_property;
   gobject_class->get_property = gtk_button_get_property;
@@ -225,9 +222,6 @@ gtk_button_class_init (GtkButtonClass *klass)
   widget_class->style_updated = gtk_button_style_updated;
   widget_class->size_allocate = gtk_button_size_allocate;
   widget_class->draw = gtk_button_draw;
-  widget_class->button_press_event = gtk_button_button_press;
-  widget_class->button_release_event = gtk_button_button_release;
-  widget_class->touch_event = gtk_button_touch;
   widget_class->grab_broken_event = gtk_button_grab_broken;
   widget_class->key_release_event = gtk_button_key_release;
   widget_class->enter_notify_event = gtk_button_enter_notify;
@@ -242,55 +236,50 @@ gtk_button_class_init (GtkButtonClass *klass)
   klass->pressed = gtk_real_button_pressed;
   klass->released = gtk_real_button_released;
   klass->clicked = NULL;
-  klass->enter = gtk_button_update_state;
-  klass->leave = gtk_button_update_state;
+  klass->enter = gtk_button_enter_leave;
+  klass->leave = gtk_button_enter_leave;
   klass->activate = gtk_real_button_activate;
 
-  g_object_class_install_property (gobject_class,
-                                   PROP_LABEL,
-                                   g_param_spec_string ("label",
-                                                        P_("Label"),
-                                                        P_("Text of the label widget inside the button, if the button contains a label widget"),
-                                                        NULL,
-                                                        GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+  props[PROP_LABEL] =
+    g_param_spec_string ("label",
+                         P_("Label"),
+                         P_("Text of the label widget inside the button, if the button contains a label widget"),
+                         NULL,
+                         GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_EXPLICIT_NOTIFY);
   
-  g_object_class_install_property (gobject_class,
-                                   PROP_USE_UNDERLINE,
-                                   g_param_spec_boolean ("use-underline",
-							 P_("Use underline"),
-							 P_("If set, an underline in the text indicates the next character should be used for the mnemonic accelerator key"),
-                                                        FALSE,
-                                                        GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+  props[PROP_USE_UNDERLINE] =
+    g_param_spec_boolean ("use-underline",
+                          P_("Use underline"),
+                          P_("If set, an underline in the text indicates the next character should be used for the mnemonic accelerator key"),
+                          FALSE,
+                          GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_EXPLICIT_NOTIFY);
   
   /**
    * GtkButton:use-stock:
    *
    * Deprecated: 3.10
    */
-  g_object_class_install_property (gobject_class,
-                                   PROP_USE_STOCK,
-                                   g_param_spec_boolean ("use-stock",
-							 P_("Use stock"),
-							 P_("If set, the label is used to pick a stock item instead of being displayed"),
-                                                        FALSE,
-                                                        GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_DEPRECATED));
+  props[PROP_USE_STOCK] =
+    g_param_spec_boolean ("use-stock",
+                          P_("Use stock"),
+                          P_("If set, the label is used to pick a stock item instead of being displayed"),
+                          FALSE,
+                          GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_EXPLICIT_NOTIFY|G_PARAM_DEPRECATED);
   
-  g_object_class_install_property (gobject_class,
-                                   PROP_FOCUS_ON_CLICK,
-                                   g_param_spec_boolean ("focus-on-click",
-							 P_("Focus on click"),
-							 P_("Whether the button grabs focus when it is clicked with the mouse"),
-							 TRUE,
-							 GTK_PARAM_READWRITE));
+  props[PROP_FOCUS_ON_CLICK] =
+    g_param_spec_boolean ("focus-on-click",
+                          P_("Focus on click"),
+                          P_("Whether the button grabs focus when it is clicked with the mouse"),
+                          TRUE,
+                          GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
   
-  g_object_class_install_property (gobject_class,
-                                   PROP_RELIEF,
-                                   g_param_spec_enum ("relief",
-                                                      P_("Border relief"),
-                                                      P_("The border relief style"),
-                                                      GTK_TYPE_RELIEF_STYLE,
-                                                      GTK_RELIEF_NORMAL,
-                                                      GTK_PARAM_READWRITE));
+  props[PROP_RELIEF] =
+    g_param_spec_enum ("relief",
+                       P_("Border relief"),
+                       P_("The border relief style"),
+                       GTK_TYPE_RELIEF_STYLE,
+                       GTK_RELIEF_NORMAL,
+                       GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
   
   /**
    * GtkButton:xalign:
@@ -300,16 +289,16 @@ gtk_button_class_init (GtkButtonClass *klass)
    * 1.0 is right aligned.
    *
    * Since: 2.4
+   *
+   * Deprecated: 3.14: Access the child widget directly if you need to control
+   * its alignment.
    */
-  g_object_class_install_property (gobject_class,
-                                   PROP_XALIGN,
-                                   g_param_spec_float("xalign",
-                                                      P_("Horizontal alignment for child"),
-                                                      P_("Horizontal position of child in available space. 0.0 is left aligned, 1.0 is right aligned"),
-                                                      0.0,
-                                                      1.0,
-                                                      0.5,
-                                                      GTK_PARAM_READWRITE));
+  props[PROP_XALIGN] =
+    g_param_spec_float ("xalign",
+                        P_("Horizontal alignment for child"),
+                        P_("Horizontal position of child in available space. 0.0 is left aligned, 1.0 is right aligned"),
+                        0.0, 1.0, 0.5,
+                        GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY|G_PARAM_DEPRECATED);
 
   /**
    * GtkButton:yalign:
@@ -319,16 +308,16 @@ gtk_button_class_init (GtkButtonClass *klass)
    * 1.0 is bottom aligned.
    *
    * Since: 2.4
+   *
+   * Deprecated: 3.14: Access the child widget directly if you need to control
+   * its alignment.
    */
-  g_object_class_install_property (gobject_class,
-                                   PROP_YALIGN,
-                                   g_param_spec_float("yalign",
-                                                      P_("Vertical alignment for child"),
-                                                      P_("Vertical position of child in available space. 0.0 is top aligned, 1.0 is bottom aligned"),
-                                                      0.0,
-                                                      1.0,
-                                                      0.5,
-                                                      GTK_PARAM_READWRITE));
+  props[PROP_YALIGN] =
+    g_param_spec_float ("yalign",
+                        P_("Vertical alignment for child"),
+                        P_("Vertical position of child in available space. 0.0 is top aligned, 1.0 is bottom aligned"),
+                        0.0, 1.0, 0.5,
+                        GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY|G_PARAM_DEPRECATED);
 
   /**
    * GtkButton:image:
@@ -337,13 +326,12 @@ gtk_button_class_init (GtkButtonClass *klass)
    *
    * Since: 2.6
    */
-  g_object_class_install_property (gobject_class,
-                                   PROP_IMAGE,
-                                   g_param_spec_object ("image",
-                                                        P_("Image widget"),
-                                                        P_("Child widget to appear next to the button text"),
-                                                        GTK_TYPE_WIDGET,
-                                                        GTK_PARAM_READWRITE));
+  props[PROP_IMAGE] =
+    g_param_spec_object ("image",
+                         P_("Image widget"),
+                         P_("Child widget to appear next to the button text"),
+                         GTK_TYPE_WIDGET,
+                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkButton:image-position:
@@ -352,14 +340,13 @@ gtk_button_class_init (GtkButtonClass *klass)
    *
    * Since: 2.10
    */
-  g_object_class_install_property (gobject_class,
-                                   PROP_IMAGE_POSITION,
-                                   g_param_spec_enum ("image-position",
-                                            P_("Image position"),
-                                                      P_("The position of the image relative to the text"),
-                                                      GTK_TYPE_POSITION_TYPE,
-                                                      GTK_POS_LEFT,
-                                                      GTK_PARAM_READWRITE));
+  props[PROP_IMAGE_POSITION] =
+    g_param_spec_enum ("image-position",
+                       P_("Image position"),
+                       P_("The position of the image relative to the text"),
+                       GTK_TYPE_POSITION_TYPE,
+                       GTK_POS_LEFT,
+                       GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkButton:always-show-image:
@@ -372,13 +359,14 @@ gtk_button_class_init (GtkButtonClass *klass)
    *
    * Since: 3.6
    */
-  g_object_class_install_property (gobject_class,
-                                   PROP_ALWAYS_SHOW_IMAGE,
-                                   g_param_spec_boolean ("always-show-image",
-                                                         P_("Always show image"),
-                                                         P_("Whether the image will always be shown"),
-                                                         FALSE,
-                                                         GTK_PARAM_READWRITE | G_PARAM_CONSTRUCT));
+  props[PROP_ALWAYS_SHOW_IMAGE] =
+     g_param_spec_boolean ("always-show-image",
+                           P_("Always show image"),
+                           P_("Whether the image will always be shown"),
+                           FALSE,
+                           GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_EXPLICIT_NOTIFY);
+
+  g_object_class_install_properties (gobject_class, LAST_PROP, props);
 
   g_object_class_override_property (gobject_class, PROP_ACTION_NAME, "action-name");
   g_object_class_override_property (gobject_class, PROP_ACTION_TARGET, "action-target");
@@ -496,6 +484,8 @@ gtk_button_class_init (GtkButtonClass *klass)
    * The "default-border" style property defines the extra space to add
    * around a button that can become the default widget of its window.
    * For more information about default widgets, see gtk_widget_grab_default().
+   *
+   * Deprecated: 3.14: use CSS margins and padding instead.
    */
 
   gtk_widget_class_install_style_property (widget_class,
@@ -503,7 +493,7 @@ gtk_button_class_init (GtkButtonClass *klass)
 							       P_("Default Spacing"),
 							       P_("Extra space to add for GTK_CAN_DEFAULT buttons"),
 							       GTK_TYPE_BORDER,
-							       GTK_PARAM_READABLE));
+							       GTK_PARAM_READABLE|G_PARAM_DEPRECATED));
 
   /**
    * GtkButton:default-outside-border:
@@ -512,13 +502,15 @@ gtk_button_class_init (GtkButtonClass *klass)
    * space to add around a button that can become the default widget of its
    * window. Extra outside space is always drawn outside the button border.
    * For more information about default widgets, see gtk_widget_grab_default().
+   *
+   * Deprecated: 3.14: use CSS margins and padding instead.
    */
   gtk_widget_class_install_style_property (widget_class,
 					   g_param_spec_boxed ("default-outside-border",
 							       P_("Default Outside Spacing"),
 							       P_("Extra space to add for GTK_CAN_DEFAULT buttons that is always drawn outside the border"),
 							       GTK_TYPE_BORDER,
-							       GTK_PARAM_READABLE));
+							       GTK_PARAM_READABLE|G_PARAM_DEPRECATED));
   gtk_widget_class_install_style_property (widget_class,
 					   g_param_spec_int ("child-displacement-x",
 							     P_("Child X Displacement"),
@@ -526,7 +518,7 @@ gtk_button_class_init (GtkButtonClass *klass)
 							     G_MININT,
 							     G_MAXINT,
 							     0,
-							     GTK_PARAM_READABLE));
+							     GTK_PARAM_READABLE|G_PARAM_DEPRECATED));
   gtk_widget_class_install_style_property (widget_class,
 					   g_param_spec_int ("child-displacement-y",
 							     P_("Child Y Displacement"),
@@ -534,7 +526,7 @@ gtk_button_class_init (GtkButtonClass *klass)
 							     G_MININT,
 							     G_MAXINT,
 							     0,
-							     GTK_PARAM_READABLE));
+							     GTK_PARAM_READABLE|G_PARAM_DEPRECATED));
 
   /**
    * GtkButton:displace-focus:
@@ -549,7 +541,7 @@ gtk_button_class_init (GtkButtonClass *klass)
 								 P_("Displace focus"),
 								 P_("Whether the child_displacement_x/_y properties should also affect the focus rectangle"),
 								 FALSE,
-								 GTK_PARAM_READABLE));
+								 GTK_PARAM_READABLE|G_PARAM_DEPRECATED));
 
   /**
    * GtkButton:inner-border:
@@ -588,6 +580,71 @@ gtk_button_class_init (GtkButtonClass *klass)
 }
 
 static void
+multipress_pressed_cb (GtkGestureMultiPress *gesture,
+                       guint                 n_press,
+                       gdouble               x,
+                       gdouble               y,
+                       GtkWidget            *widget)
+{
+  GtkButton *button = GTK_BUTTON (widget);
+  GtkButtonPrivate *priv = button->priv;
+
+  if (priv->focus_on_click && !gtk_widget_has_focus (widget))
+    gtk_widget_grab_focus (widget);
+
+  priv->in_button = TRUE;
+  g_signal_emit (button, button_signals[PRESSED], 0);
+  gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_CLAIMED);
+}
+
+static void
+multipress_released_cb (GtkGestureMultiPress *gesture,
+                        guint                 n_press,
+                        gdouble               x,
+                        gdouble               y,
+                        GtkWidget            *widget)
+{
+  GtkButton *button = GTK_BUTTON (widget);
+  GtkButtonPrivate *priv = button->priv;
+  GdkEventSequence *sequence;
+
+  g_signal_emit (button, button_signals[RELEASED], 0);
+
+  sequence = gtk_gesture_single_get_current_sequence (GTK_GESTURE_SINGLE (gesture));
+
+  if (sequence)
+    {
+      priv->in_button = FALSE;
+      gtk_button_update_state (button);
+    }
+}
+
+static void
+multipress_gesture_update_cb (GtkGesture       *gesture,
+                              GdkEventSequence *sequence,
+                              GtkButton        *button)
+{
+  GtkButtonPrivate *priv = button->priv;
+  GtkAllocation allocation;
+  gboolean in_button;
+  gdouble x, y;
+
+  if (sequence != gtk_gesture_single_get_current_sequence (GTK_GESTURE_SINGLE (gesture)))
+    return;
+
+  gtk_widget_get_allocation (GTK_WIDGET (button), &allocation);
+  gtk_gesture_get_point (gesture, sequence, &x, &y);
+
+  in_button = (x >= 0 && y >= 0 && x < allocation.width && y < allocation.height);
+
+  if (priv->in_button != in_button)
+    {
+      priv->in_button = in_button;
+      gtk_button_update_state (button);
+    }
+}
+
+static void
 gtk_button_init (GtkButton *button)
 {
   GtkButtonPrivate *priv;
@@ -605,11 +662,8 @@ gtk_button_init (GtkButton *button)
   priv->constructed = FALSE;
   priv->in_button = FALSE;
   priv->button_down = FALSE;
-  priv->relief = GTK_RELIEF_NORMAL;
   priv->use_stock = FALSE;
   priv->use_underline = FALSE;
-  priv->depressed = FALSE;
-  priv->depress_on_activate = TRUE;
   priv->focus_on_click = TRUE;
 
   priv->xalign = 0.5;
@@ -621,6 +675,15 @@ gtk_button_init (GtkButton *button)
 
   context = gtk_widget_get_style_context (GTK_WIDGET (button));
   gtk_style_context_add_class (context, GTK_STYLE_CLASS_BUTTON);
+
+  priv->gesture = gtk_gesture_multi_press_new (GTK_WIDGET (button));
+  gtk_gesture_single_set_touch_only (GTK_GESTURE_SINGLE (priv->gesture), FALSE);
+  gtk_gesture_single_set_exclusive (GTK_GESTURE_SINGLE (priv->gesture), TRUE);
+  gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (priv->gesture), GDK_BUTTON_PRIMARY);
+  g_signal_connect (priv->gesture, "pressed", G_CALLBACK (multipress_pressed_cb), button);
+  g_signal_connect (priv->gesture, "released", G_CALLBACK (multipress_released_cb), button);
+  g_signal_connect (priv->gesture, "update", G_CALLBACK (multipress_gesture_update_cb), button);
+  gtk_event_controller_set_propagation_phase (GTK_EVENT_CONTROLLER (priv->gesture), GTK_PHASE_BUBBLE);
 }
 
 static void
@@ -635,31 +698,23 @@ gtk_button_destroy (GtkWidget *widget)
       priv->label_text = NULL;
     }
 
+  g_clear_object (&priv->gesture);
+
   GTK_WIDGET_CLASS (gtk_button_parent_class)->destroy (widget);
 }
 
-static GObject*
-gtk_button_constructor (GType                  type,
-			guint                  n_construct_properties,
-			GObjectConstructParam *construct_params)
+static void
+gtk_button_constructed (GObject *object)
 {
-  GObject *object;
-  GtkButton *button;
-  GtkButtonPrivate *priv;
+  GtkButton *button = GTK_BUTTON (object);
+  GtkButtonPrivate *priv = button->priv;
 
-  object = G_OBJECT_CLASS (gtk_button_parent_class)->constructor (type,
-                                                                  n_construct_properties,
-                                                                  construct_params);
-
-  button = GTK_BUTTON (object);
-  priv = button->priv;
+  G_OBJECT_CLASS (gtk_button_parent_class)->constructed (object);
 
   priv->constructed = TRUE;
 
   if (priv->label_text != NULL)
     gtk_button_construct_child (button);
-  
-  return object;
 }
 
 
@@ -678,28 +733,15 @@ maybe_set_alignment (GtkButton *button,
 {
   GtkButtonPrivate *priv = button->priv;
 
+  if (!priv->align_set)
+    return;
+
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   if (GTK_IS_MISC (widget))
-    {
-      GtkMisc *misc = GTK_MISC (widget);
-      
-      if (priv->align_set)
-	gtk_misc_set_alignment (misc, priv->xalign, priv->yalign);
-    }
+    gtk_misc_set_alignment (GTK_MISC (widget), priv->xalign, priv->yalign);
   else if (GTK_IS_ALIGNMENT (widget))
-    {
-      GtkAlignment *alignment = GTK_ALIGNMENT (widget);
-      gfloat xscale, yscale;
-
-      g_object_get (alignment,
-                    "xscale", &xscale,
-                    "yscale", &yscale,
-                    NULL);
-
-      if (priv->align_set)
-        gtk_alignment_set (alignment,
-                           priv->xalign, priv->yalign,
-                           xscale, yscale);
-    }
+    g_object_set (widget, "xalign", priv->xalign, "yalign", priv->yalign, NULL);
+G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 static void
@@ -794,10 +836,14 @@ gtk_button_set_property (GObject         *object,
       gtk_button_set_focus_on_click (button, g_value_get_boolean (value));
       break;
     case PROP_XALIGN:
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       gtk_button_set_alignment (button, g_value_get_float (value), priv->yalign);
+G_GNUC_END_IGNORE_DEPRECATIONS
       break;
     case PROP_YALIGN:
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       gtk_button_set_alignment (button, priv->xalign, g_value_get_float (value));
+G_GNUC_END_IGNORE_DEPRECATIONS
       break;
     case PROP_IMAGE_POSITION:
       gtk_button_set_image_position (button, g_value_get_enum (value));
@@ -841,7 +887,7 @@ gtk_button_get_property (GObject         *object,
       g_value_set_boolean (value, gtk_button_get_always_show_image (button));
       break;
     case PROP_RELIEF:
-      g_value_set_enum (value, priv->relief);
+      g_value_set_enum (value, gtk_button_get_relief (button));
       break;
     case PROP_USE_UNDERLINE:
       g_value_set_boolean (value, priv->use_underline);
@@ -1285,8 +1331,7 @@ gtk_button_construct_child (GtkButton *button)
 
   gtk_widget_set_valign (label, GTK_ALIGN_BASELINE);
 
-  if (priv->align_set)
-    gtk_misc_set_alignment (GTK_MISC (label), priv->xalign, priv->yalign);
+  maybe_set_alignment (button, label);
 
   gtk_widget_show (label);
   gtk_container_add (GTK_CONTAINER (button), label);
@@ -1317,7 +1362,7 @@ gtk_button_new_with_label (const gchar *label)
  *
  * Creates a new button containing an icon from the current icon theme.
  *
- * If the icon name isn't known, a "broken image" icon will be
+ * If the icon name isn’t known, a “broken image” icon will be
  * displayed instead. If the current icon theme is changed, the icon
  * will be updated appropriately.
  *
@@ -1375,7 +1420,7 @@ gtk_button_new_from_stock (const gchar *stock_id)
  *
  * Creates a new #GtkButton containing a label.
  * If characters in @label are preceded by an underscore, they are underlined.
- * If you need a literal underscore character in a label, use '__' (two
+ * If you need a literal underscore character in a label, use “__” (two
  * underscores). The first underlined character represents a keyboard
  * accelerator called a mnemonic.
  * Pressing Alt and that key activates the button.
@@ -1468,30 +1513,34 @@ gtk_button_leave (GtkButton *button)
 
 /**
  * gtk_button_set_relief:
- * @button: The #GtkButton you want to set relief styles of.
- * @newstyle: The GtkReliefStyle as described above.
+ * @button: The #GtkButton you want to set relief styles of
+ * @relief: The GtkReliefStyle as described above
  *
  * Sets the relief style of the edges of the given #GtkButton widget.
- * Three styles exist, GTK_RELIEF_NORMAL, GTK_RELIEF_HALF, GTK_RELIEF_NONE.
- * The default style is, as one can guess, GTK_RELIEF_NORMAL.
- *
- * <!-- FIXME: put pictures of each style -->
+ * Two styles exist, %GTK_RELIEF_NORMAL and %GTK_RELIEF_NONE.
+ * The default style is, as one can guess, %GTK_RELIEF_NORMAL.
+ * The deprecated value %GTK_RELIEF_HALF behaves the same as
+ * %GTK_RELIEF_NORMAL.
  */
 void
-gtk_button_set_relief (GtkButton *button,
-		       GtkReliefStyle newrelief)
+gtk_button_set_relief (GtkButton      *button,
+		       GtkReliefStyle  relief)
 {
-  GtkButtonPrivate *priv;
+  GtkStyleContext *context;
+  GtkReliefStyle old_relief;
 
   g_return_if_fail (GTK_IS_BUTTON (button));
 
-  priv = button->priv;
-
-  if (newrelief != priv->relief)
+  old_relief = gtk_button_get_relief (button);
+  if (old_relief != relief)
     {
-       priv->relief = newrelief;
-       g_object_notify (G_OBJECT (button), "relief");
-       gtk_widget_queue_draw (GTK_WIDGET (button));
+      context = gtk_widget_get_style_context (GTK_WIDGET (button));
+      if (relief == GTK_RELIEF_NONE)
+        gtk_style_context_add_class (context, GTK_STYLE_CLASS_FLAT);
+      else
+        gtk_style_context_remove_class (context, GTK_STYLE_CLASS_FLAT);
+
+      g_object_notify_by_pspec (G_OBJECT (button), props[PROP_RELIEF]);
     }
 }
 
@@ -1506,9 +1555,15 @@ gtk_button_set_relief (GtkButton *button,
 GtkReliefStyle
 gtk_button_get_relief (GtkButton *button)
 {
+  GtkStyleContext *context;
+
   g_return_val_if_fail (GTK_IS_BUTTON (button), GTK_RELIEF_NORMAL);
 
-  return button->priv->relief;
+  context = gtk_widget_get_style_context (GTK_WIDGET (button));
+  if (gtk_style_context_has_class (context, GTK_STYLE_CLASS_FLAT))
+    return GTK_RELIEF_NONE;
+  else
+    return GTK_RELIEF_NORMAL;
 }
 
 static void
@@ -1642,8 +1697,7 @@ gtk_button_get_props (GtkButton *button,
 		      GtkBorder *default_border,
 		      GtkBorder *default_outside_border,
                       GtkBorder *padding,
-                      GtkBorder *border,
-		      gboolean  *interior_focus)
+                      GtkBorder *border)
 {
   GtkStyleContext *context;
   GtkStateFlags state;
@@ -1682,13 +1736,6 @@ gtk_button_get_props (GtkButton *button,
 	*default_outside_border = default_default_outside_border;
     }
 
-  if (interior_focus)
-    {
-      gtk_style_context_get_style (context,
-                                   "interior-focus", interior_focus,
-                                   NULL);
-    }
-
   if (padding)
     gtk_style_context_get_padding (context, state, padding);
 
@@ -1703,24 +1750,15 @@ static void
 gtk_button_get_full_border (GtkButton *button,
                             GtkBorder *full_border)
 {
-  GtkWidget *widget = GTK_WIDGET (button);
-  GtkStyleContext *context;
   GtkBorder default_border, padding, border;
-  int focus_width, focus_pad;
-
-  context = gtk_widget_get_style_context (widget);
 
   gtk_button_get_props (button, &default_border, NULL,
-                        &padding, &border, NULL);
-  gtk_style_context_get_style (context,
-                               "focus-line-width", &focus_width,
-                               "focus-padding", &focus_pad,
-                               NULL);
+                        &padding, &border);
 
-  full_border->left = padding.left + border.left + focus_width + focus_pad;
-  full_border->right = padding.right + border.right + focus_width + focus_pad; 
-  full_border->top = padding.top + border.top + focus_width + focus_pad; 
-  full_border->bottom = padding.bottom + border.bottom + focus_width + focus_pad; 
+  full_border->left = padding.left + border.left;
+  full_border->right = padding.right + border.right;
+  full_border->top = padding.top + border.top;
+  full_border->bottom = padding.bottom + border.bottom;
 
   if (gtk_widget_get_can_default (GTK_WIDGET (button)))
     {
@@ -1766,26 +1804,13 @@ gtk_button_size_allocate (GtkWidget     *widget,
       if (baseline != -1)
 	baseline -= border.top;
 
-      if (priv->depressed)
-	{
-	  gint child_displacement_x;
-	  gint child_displacement_y;
-
-          gtk_style_context_get_style (gtk_widget_get_style_context (GTK_WIDGET (button)),
-                                       "child-displacement-x", &child_displacement_x,
-                                       "child-displacement-y", &child_displacement_y,
-                                       NULL);
-	  child_allocation.x += child_displacement_x;
-	  child_allocation.y += child_displacement_y;
-          if (baseline != -1)
-            baseline -= child_displacement_y;
-	}
-
       child_allocation.width  = MAX (1, child_allocation.width);
       child_allocation.height = MAX (1, child_allocation.height);
 
       gtk_widget_size_allocate_with_baseline (child, &child_allocation, baseline);
     }
+
+  _gtk_widget_set_simple_clip (widget, NULL);
 }
 
 static gboolean
@@ -1793,37 +1818,25 @@ gtk_button_draw (GtkWidget *widget,
 		 cairo_t   *cr)
 {
   GtkButton *button = GTK_BUTTON (widget);
-  GtkButtonPrivate *priv = button->priv;
   gint x, y;
+  gint width, height;
   GtkBorder default_border;
   GtkBorder default_outside_border;
-  gboolean interior_focus;
-  gint focus_width;
-  gint focus_pad;
-  GtkAllocation allocation;
   GtkStyleContext *context;
   GtkStateFlags state;
-  gboolean draw_focus;
-  gint width, height;
 
   context = gtk_widget_get_style_context (widget);
   state = gtk_style_context_get_state (context);
 
-  gtk_button_get_props (button, &default_border, &default_outside_border, NULL, NULL, &interior_focus);
-  gtk_style_context_get_style (context,
-                               "focus-line-width", &focus_width,
-                               "focus-padding", &focus_pad,
-                               NULL);
-
-  gtk_widget_get_allocation (widget, &allocation);
+  gtk_button_get_props (button, &default_border, &default_outside_border, NULL, NULL);
 
   x = 0;
   y = 0;
-  width = allocation.width;
-  height = allocation.height;
+  width = gtk_widget_get_allocated_width (widget);
+  height = gtk_widget_get_allocated_height (widget);
 
   if (gtk_widget_has_default (widget) &&
-      priv->relief == GTK_RELIEF_NORMAL)
+      gtk_button_get_relief (button) == GTK_RELIEF_NORMAL)
     {
       x += default_border.left;
       y += default_border.top;
@@ -1838,60 +1851,19 @@ gtk_button_draw (GtkWidget *widget,
       height -= default_outside_border.top + default_outside_border.bottom;
     }
 
-  draw_focus = gtk_widget_has_visible_focus (widget);
+  gtk_render_background (context, cr, x, y, width, height);
+  gtk_render_frame (context, cr, x, y, width, height);
 
-
-  if (!interior_focus && draw_focus)
+  if (gtk_widget_has_visible_focus (widget))
     {
-      x += focus_width + focus_pad;
-      y += focus_width + focus_pad;
-      width -= 2 * (focus_width + focus_pad);
-      height -= 2 * (focus_width + focus_pad);
-    }
-
-  if (priv->relief != GTK_RELIEF_NONE || priv->depressed ||
-      state & GTK_STATE_FLAG_PRELIGHT)
-    {
-      gtk_render_background (context, cr,
-			     x, y, width, height);
-      gtk_render_frame (context, cr,
-			x, y, width, height);
-    }
-
-  if (draw_focus)
-    {
-      gint child_displacement_x;
-      gint child_displacement_y;
-      gboolean displace_focus;
       GtkBorder border;
 
-      gtk_style_context_get_style (context,
-                                   "child-displacement-y", &child_displacement_y,
-                                   "child-displacement-x", &child_displacement_x,
-                                   "displace-focus", &displace_focus,
-                                   NULL);
       gtk_style_context_get_border (context, state, &border);
 
-      if (interior_focus)
-        {
-          x += border.left + focus_pad;
-          y += border.top + focus_pad;
-          width -= (2 * focus_pad) + border.left + border.right;
-          height -=  (2 * focus_pad) + border.top + border.bottom;
-        }
-      else
-        {
-          x -= focus_width + focus_pad;
-          y -= focus_width + focus_pad;
-          width += 2 * (focus_width + focus_pad);
-          height += 2 * (focus_width + focus_pad);
-        }
-
-      if (priv->depressed && displace_focus)
-        {
-          x += child_displacement_x;
-          y += child_displacement_y;
-        }
+      x += border.left;
+      y += border.top;
+      width -= border.left + border.right;
+      height -= border.top + border.bottom;
 
       gtk_render_focus (context, cr, x, y, width, height);
     }
@@ -1901,69 +1873,24 @@ gtk_button_draw (GtkWidget *widget,
   return FALSE;
 }
 
-static gboolean
-gtk_button_button_press (GtkWidget      *widget,
-			 GdkEventButton *event)
+static void
+gtk_button_do_release (GtkButton *button,
+                       gboolean   emit_clicked)
 {
-  GtkButton *button;
-  GtkButtonPrivate *priv;
-
-  if (event->type == GDK_BUTTON_PRESS)
-    {
-      button = GTK_BUTTON (widget);
-      priv = button->priv;
-
-      if (priv->focus_on_click && !gtk_widget_has_focus (widget))
-	gtk_widget_grab_focus (widget);
-
-      if (event->button == GDK_BUTTON_PRIMARY)
-        {
-          g_signal_emit (button, button_signals[PRESSED], 0);
-          return GDK_EVENT_STOP;
-        }
-    }
-
-  return GDK_EVENT_PROPAGATE;
-}
-
-static gboolean
-gtk_button_button_release (GtkWidget      *widget,
-			   GdkEventButton *event)
-{
-  GtkButton *button;
-
-  if (event->button == GDK_BUTTON_PRIMARY)
-    {
-      button = GTK_BUTTON (widget);
-      g_signal_emit (button, button_signals[RELEASED], 0);
-      return GDK_EVENT_STOP;
-    }
-
-  return GDK_EVENT_PROPAGATE;
-}
-
-static gboolean
-gtk_button_touch (GtkWidget     *widget,
-                  GdkEventTouch *event)
-{
-  GtkButton *button = GTK_BUTTON (widget);
   GtkButtonPrivate *priv = button->priv;
 
-  if (event->type == GDK_TOUCH_BEGIN)
+  if (priv->button_down)
     {
-      if (priv->focus_on_click && !gtk_widget_has_focus (widget))
-        gtk_widget_grab_focus (widget);
+      priv->button_down = FALSE;
 
-      g_signal_emit (button, button_signals[PRESSED], 0);
-      return GDK_EVENT_STOP;
-    }
-  else if (event->type == GDK_TOUCH_END)
-    {
-      g_signal_emit (button, button_signals[RELEASED], 0);
-      return GDK_EVENT_STOP;
-    }
+      if (priv->activate_timeout)
+	return;
 
-  return GDK_EVENT_PROPAGATE;
+      if (emit_clicked)
+        gtk_button_clicked (button);
+
+      gtk_button_update_state (button);
+    }
 }
 
 static gboolean
@@ -1971,21 +1898,8 @@ gtk_button_grab_broken (GtkWidget          *widget,
 			GdkEventGrabBroken *event)
 {
   GtkButton *button = GTK_BUTTON (widget);
-  GtkButtonPrivate *priv = button->priv;
-  gboolean save_in;
   
-  /* Simulate a button release without the pointer in the button */
-  if (priv->button_down)
-    {
-      save_in = priv->in_button;
-      priv->in_button = FALSE;
-      g_signal_emit (button, button_signals[RELEASED], 0);
-      if (save_in != priv->in_button)
-	{
-	  priv->in_button = save_in;
-	  gtk_button_update_state (button);
-	}
-    }
+  gtk_button_do_release (button, FALSE);
 
   return TRUE;
 }
@@ -2033,8 +1947,7 @@ gtk_button_leave_notify (GtkWidget        *widget,
   GtkButtonPrivate *priv = button->priv;
 
   if ((event->window == button->priv->event_window) &&
-      (event->detail != GDK_NOTIFY_INFERIOR) &&
-      (gtk_widget_get_sensitive (widget)))
+      (event->detail != GDK_NOTIFY_INFERIOR))
     {
       priv->in_button = FALSE;
       g_signal_emit (button, button_signals[LEAVE], 0);
@@ -2092,21 +2005,10 @@ touch_release_in_button (GtkButton *button)
 static void
 gtk_real_button_released (GtkButton *button)
 {
-  GtkButtonPrivate *priv = button->priv;
-
-  if (priv->button_down)
-    {
-      priv->button_down = FALSE;
-
-      if (priv->activate_timeout)
-	return;
-
-      if (priv->in_button ||
-          touch_release_in_button (button))
-	gtk_button_clicked (button);
-
-      gtk_button_update_state (button);
-    }
+  gtk_button_do_release (button,
+                         gtk_widget_is_sensitive (GTK_WIDGET (button)) &&
+                         (button->priv->in_button ||
+                          touch_release_in_button (button)));
 }
 
 static void 
@@ -2165,9 +2067,9 @@ gtk_real_button_activate (GtkButton *button)
       priv->activate_timeout = gdk_threads_add_timeout (ACTIVATE_TIMEOUT,
 						button_activate_timeout,
 						button);
+      g_source_set_name_by_id (priv->activate_timeout, "[gtk+] button_activate_timeout");
       priv->button_down = TRUE;
       gtk_button_update_state (button);
-      gtk_widget_queue_draw (GTK_WIDGET (button));
     }
 }
 
@@ -2191,7 +2093,6 @@ gtk_button_finish_activate (GtkButton *button,
   priv->button_down = FALSE;
 
   gtk_button_update_state (button);
-  gtk_widget_queue_draw (GTK_WIDGET (button));
 
   if (do_it)
     gtk_button_clicked (button);
@@ -2252,11 +2153,8 @@ gtk_button_get_size (GtkWidget      *widget,
       natural += child_nat;
     }
 
-  if (minimum_size)
-    *minimum_size = minimum;
-
-  if (natural_size)
-    *natural_size = natural;
+  *minimum_size = minimum;
+  *natural_size = natural;
 }
 
 static void 
@@ -2332,7 +2230,7 @@ gtk_button_set_label (GtkButton   *button,
 
   gtk_button_construct_child (button);
   
-  g_object_notify (G_OBJECT (button), "label");
+  g_object_notify_by_pspec (G_OBJECT (button), props[PROP_LABEL]);
 }
 
 /**
@@ -2345,7 +2243,7 @@ gtk_button_set_label (GtkButton   *button,
  * case if you create an empty button with gtk_button_new() to 
  * use as a container.
  *
- * Return value: The text of the label widget. This string is owned
+ * Returns: The text of the label widget. This string is owned
  * by the widget and must not be modified or freed.
  **/
 const gchar *
@@ -2382,7 +2280,7 @@ gtk_button_set_use_underline (GtkButton *button,
 
       gtk_button_construct_child (button);
       
-      g_object_notify (G_OBJECT (button), "use-underline");
+      g_object_notify_by_pspec (G_OBJECT (button), props[PROP_USE_UNDERLINE]);
     }
 }
 
@@ -2393,7 +2291,7 @@ gtk_button_set_use_underline (GtkButton *button,
  * Returns whether an embedded underline in the button label indicates a
  * mnemonic. See gtk_button_set_use_underline ().
  *
- * Return value: %TRUE if an embedded underline in the button label
+ * Returns: %TRUE if an embedded underline in the button label
  *               indicates the mnemonic accelerator keys.
  **/
 gboolean
@@ -2432,7 +2330,7 @@ gtk_button_set_use_stock (GtkButton *button,
 
       gtk_button_construct_child (button);
       
-      g_object_notify (G_OBJECT (button), "use-stock");
+      g_object_notify_by_pspec (G_OBJECT (button), props[PROP_USE_STOCK]);
     }
 }
 
@@ -2442,7 +2340,7 @@ gtk_button_set_use_stock (GtkButton *button,
  *
  * Returns whether the button label is a stock item.
  *
- * Return value: %TRUE if the button label is used to
+ * Returns: %TRUE if the button label is used to
  *               select a stock item instead of being
  *               used directly as the label text.
  *
@@ -2463,7 +2361,7 @@ gtk_button_get_use_stock (GtkButton *button)
  *
  * Sets whether the button will grab focus when it is clicked with the mouse.
  * Making mouse clicks not grab focus is useful in places like toolbars where
- * you don't want the keyboard focus removed from the main area of the
+ * you don’t want the keyboard focus removed from the main area of the
  * application.
  *
  * Since: 2.4
@@ -2484,7 +2382,7 @@ gtk_button_set_focus_on_click (GtkButton *button,
     {
       priv->focus_on_click = focus_on_click;
       
-      g_object_notify (G_OBJECT (button), "focus-on-click");
+      g_object_notify_by_pspec (G_OBJECT (button), props[PROP_FOCUS_ON_CLICK]);
     }
 }
 
@@ -2495,7 +2393,7 @@ gtk_button_set_focus_on_click (GtkButton *button,
  * Returns whether the button grabs focus when it is clicked with the mouse.
  * See gtk_button_set_focus_on_click().
  *
- * Return value: %TRUE if the button grabs focus when it is clicked with
+ * Returns: %TRUE if the button grabs focus when it is clicked with
  *               the mouse.
  *
  * Since: 2.4
@@ -2520,6 +2418,9 @@ gtk_button_get_focus_on_click (GtkButton *button)
  * the child is a #GtkMisc or a #GtkAlignment.
  *
  * Since: 2.4
+ *
+ * Deprecated: 3.14: Access the child widget directly if you need to control
+ * its alignment.
  */
 void
 gtk_button_set_alignment (GtkButton *button,
@@ -2539,8 +2440,8 @@ gtk_button_set_alignment (GtkButton *button,
   maybe_set_alignment (button, gtk_bin_get_child (GTK_BIN (button)));
 
   g_object_freeze_notify (G_OBJECT (button));
-  g_object_notify (G_OBJECT (button), "xalign");
-  g_object_notify (G_OBJECT (button), "yalign");
+  g_object_notify_by_pspec (G_OBJECT (button), props[PROP_XALIGN]);
+  g_object_notify_by_pspec (G_OBJECT (button), props[PROP_YALIGN]);
   g_object_thaw_notify (G_OBJECT (button));
 }
 
@@ -2553,6 +2454,9 @@ gtk_button_set_alignment (GtkButton *button,
  * Gets the alignment of the child in the button.
  *
  * Since: 2.4
+ *
+ * Deprecated: 3.14: Access the child widget directly if you need to control
+ * its alignment.
  */
 void
 gtk_button_get_alignment (GtkButton *button,
@@ -2572,29 +2476,10 @@ gtk_button_get_alignment (GtkButton *button,
     *yalign = priv->yalign;
 }
 
-/**
- * _gtk_button_set_depressed:
- * @button: a #GtkButton
- * @depressed: %TRUE if the button should be drawn with a recessed shadow.
- *
- * Sets whether the button is currently drawn as down or not. This is 
- * purely a visual setting, and is meant only for use by derived widgets
- * such as #GtkToggleButton.
- **/
-void
-_gtk_button_set_depressed (GtkButton *button,
-			   gboolean   depressed)
+static void
+gtk_button_enter_leave (GtkButton *button)
 {
-  GtkWidget *widget = GTK_WIDGET (button);
-  GtkButtonPrivate *priv = button->priv;
-
-  depressed = depressed != FALSE;
-
-  if (depressed != priv->depressed)
-    {
-      priv->depressed = depressed;
-      gtk_widget_queue_resize (widget);
-    }
+  gtk_button_update_state (button);
 }
 
 static void
@@ -2605,7 +2490,7 @@ gtk_button_update_state (GtkButton *button)
   gboolean depressed;
 
   if (priv->activate_timeout)
-    depressed = priv->depress_on_activate;
+    depressed = TRUE;
   else
     depressed = priv->in_button && priv->button_down;
 
@@ -2618,7 +2503,6 @@ gtk_button_update_state (GtkButton *button)
   if (depressed)
     new_state |= GTK_STATE_FLAG_ACTIVE;
 
-  _gtk_button_set_depressed (button, depressed);
   gtk_widget_set_state_flags (GTK_WIDGET (button), new_state, TRUE);
 }
 
@@ -2703,13 +2587,9 @@ gtk_button_state_changed (GtkWidget    *widget,
                           GtkStateType  previous_state)
 {
   GtkButton *button = GTK_BUTTON (widget);
-  GtkButtonPrivate *priv = button->priv;
 
   if (!gtk_widget_is_sensitive (widget))
-    {
-      priv->in_button = FALSE;
-      gtk_real_button_released (button);
-    }
+    gtk_button_do_release (button, FALSE);
 }
 
 static void
@@ -2718,7 +2598,6 @@ gtk_button_grab_notify (GtkWidget *widget,
 {
   GtkButton *button = GTK_BUTTON (widget);
   GtkButtonPrivate *priv = button->priv;
-  gboolean save_in;
 
   if (priv->activate_timeout &&
       priv->grab_keyboard &&
@@ -2726,16 +2605,7 @@ gtk_button_grab_notify (GtkWidget *widget,
     gtk_button_finish_activate (button, FALSE);
 
   if (!was_grabbed)
-    {
-      save_in = priv->in_button;
-      priv->in_button = FALSE;
-      gtk_real_button_released (button);
-      if (save_in != priv->in_button)
-        {
-          priv->in_button = save_in;
-          gtk_button_update_state (button);
-        }
-    }
+    gtk_button_do_release (button, FALSE);
 }
 
 /**
@@ -2745,7 +2615,7 @@ gtk_button_grab_notify (GtkWidget *widget,
  *
  * Set the image of @button to the given widget. The image will be
  * displayed if the label text is %NULL or if
- * #GtkButton:always-show-image is %TRUE. You don't have to call
+ * #GtkButton:always-show-image is %TRUE. You don’t have to call
  * gtk_widget_show() on @image yourself.
  *
  * Since: 2.6
@@ -2774,7 +2644,7 @@ gtk_button_set_image (GtkButton *button,
 
   gtk_button_construct_child (button);
 
-  g_object_notify (G_OBJECT (button), "image");
+  g_object_notify_by_pspec (G_OBJECT (button), props[PROP_IMAGE]);
 }
 
 /**
@@ -2785,7 +2655,7 @@ gtk_button_set_image (GtkButton *button,
  * This may have been explicitly set by gtk_button_set_image()
  * or constructed by gtk_button_new_from_stock().
  *
- * Return value: (transfer none): a #GtkWidget or %NULL in case there is no image
+ * Returns: (transfer none): a #GtkWidget or %NULL in case there is no image
  *
  * Since: 2.6
  */
@@ -2824,7 +2694,7 @@ gtk_button_set_image_position (GtkButton       *button,
 
       gtk_button_construct_child (button);
 
-      g_object_notify (G_OBJECT (button), "image-position");
+      g_object_notify_by_pspec (G_OBJECT (button), props[PROP_IMAGE_POSITION]);
     }
 }
 
@@ -2835,7 +2705,7 @@ gtk_button_set_image_position (GtkButton       *button,
  * Gets the position of the image relative to the text 
  * inside the button.
  *
- * Return value: the position
+ * Returns: the position
  *
  * Since: 2.10
  */
@@ -2882,7 +2752,7 @@ gtk_button_set_always_show_image (GtkButton *button,
             gtk_widget_hide (priv->image);
         }
 
-      g_object_notify (G_OBJECT (button), "always-show-image");
+      g_object_notify_by_pspec (G_OBJECT (button), props[PROP_ALWAYS_SHOW_IMAGE]);
     }
 }
 
@@ -2909,10 +2779,10 @@ gtk_button_get_always_show_image (GtkButton *button)
  * gtk_button_get_event_window:
  * @button: a #GtkButton
  *
- * Returns the button's event window if it is realized, %NULL otherwise.
+ * Returns the button’s event window if it is realized, %NULL otherwise.
  * This function should be rarely needed.
  *
- * Return value: (transfer none): @button's event window.
+ * Returns: (transfer none): @button’s event window.
  *
  * Since: 2.22
  */

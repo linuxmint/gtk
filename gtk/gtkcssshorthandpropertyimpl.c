@@ -353,6 +353,13 @@ parse_border_side (GtkCssShorthandProperty  *shorthand,
         if (values[2] == NULL)
           return FALSE;
       }
+    else
+      {
+        /* We parsed and there's still stuff left?
+         * Pretend we didn't notice and let the normal code produce
+         * a 'junk at end of value' error */
+        break;
+      }
   }
   while (!value_is_done_parsing (parser));
 
@@ -446,9 +453,13 @@ parse_font (GtkCssShorthandProperty  *shorthand,
     {
       values[3] = _gtk_css_font_weight_value_new (pango_font_description_get_weight (desc));
     }
+  if (mask & PANGO_FONT_MASK_STRETCH)
+    {
+      values[4] = _gtk_css_font_stretch_value_new (pango_font_description_get_stretch (desc));
+    }
   if (mask & PANGO_FONT_MASK_SIZE)
     {
-      values[4] = _gtk_css_number_value_new ((double) pango_font_description_get_size (desc) / PANGO_SCALE, GTK_CSS_PX);
+      values[5] = _gtk_css_number_value_new ((double) pango_font_description_get_size (desc) / PANGO_SCALE, GTK_CSS_PX);
     }
 
   pango_font_description_free (desc);
@@ -715,6 +726,9 @@ parse_one_animation (GtkCssShorthandProperty  *shorthand,
                                                GTK_CSS_POSITIVE_ONLY
                                                | (values[1] == NULL ? GTK_CSS_PARSE_NUMBER : 0)
                                                | (values[3] == NULL ? GTK_CSS_PARSE_TIME : 0));
+          if (value == NULL)
+            return FALSE;
+
           if (_gtk_css_number_value_get_unit (value) == GTK_CSS_NUMBER)
             values[1] = value;
           else if (values[2] == NULL)
@@ -766,21 +780,19 @@ parse_animation (GtkCssShorthandProperty  *shorthand,
                  GtkCssParser             *parser)
 {
   GtkCssValue *step_values[7];
-  GPtrArray *arrays[6];
+  GPtrArray *arrays[7];
   guint i;
 
-  for (i = 0; i < 6; i++)
+  for (i = 0; i < 7; i++)
     {
       arrays[i] = g_ptr_array_new ();
       step_values[i] = NULL;
     }
   
-  step_values[6] = NULL;
-
   do {
     if (!parse_one_animation (shorthand, step_values, parser))
       {
-        for (i = 0; i < 6; i++)
+        for (i = 0; i < 7; i++)
           {
             g_ptr_array_set_free_func (arrays[i], (GDestroyNotify) _gtk_css_value_unref);
             g_ptr_array_unref (arrays[i]);
@@ -788,7 +800,7 @@ parse_animation (GtkCssShorthandProperty  *shorthand,
         return FALSE;
       }
 
-      for (i = 0; i < 6; i++)
+      for (i = 0; i < 7; i++)
         {
           if (step_values[i] == NULL)
             {
@@ -802,15 +814,22 @@ parse_animation (GtkCssShorthandProperty  *shorthand,
         }
   } while (_gtk_css_parser_try (parser, ",", TRUE));
 
-  for (i = 0; i < 6; i++)
+  for (i = 0; i < 7; i++)
     {
       values[i] = _gtk_css_array_value_new_from_array ((GtkCssValue **) arrays[i]->pdata, arrays[i]->len);
       g_ptr_array_unref (arrays[i]);
     }
 
-  values[6] = step_values[6];
-
   return TRUE;
+}
+
+static gboolean
+parse_all (GtkCssShorthandProperty  *shorthand,
+           GtkCssValue             **values,
+           GtkCssParser             *parser)
+{
+  _gtk_css_parser_error (parser, "The 'all' property can only be set to 'initial', 'inherit' or 'unset'");
+  return FALSE;
 }
 
 /*** PACKING ***/
@@ -981,6 +1000,16 @@ unpack_font_description (GtkCssShorthandProperty *shorthand,
       g_value_unset (&v);
     }
 
+  if (mask & PANGO_FONT_MASK_STRETCH)
+    {
+      g_value_init (&v, PANGO_TYPE_STRETCH);
+      g_value_set_enum (&v, pango_font_description_get_stretch (description));
+
+      prop = _gtk_style_property_lookup ("font-stretch");
+      _gtk_style_property_assign (prop, props, state, &v);
+      g_value_unset (&v);
+    }
+
   if (mask & PANGO_FONT_MASK_SIZE)
     {
       g_value_init (&v, G_TYPE_DOUBLE);
@@ -1025,6 +1054,10 @@ pack_font_description (GtkCssShorthandProperty *shorthand,
   v = (* query_func) (_gtk_css_style_property_get_id (GTK_CSS_STYLE_PROPERTY (_gtk_style_property_lookup ("font-weight"))), query_data);
   if (v)
     pango_font_description_set_weight (description, _gtk_css_font_weight_value_get (v));
+
+  v = (* query_func) (_gtk_css_style_property_get_id (GTK_CSS_STYLE_PROPERTY (_gtk_style_property_lookup ("font-stretch"))), query_data);
+  if (v)
+    pango_font_description_set_stretch (description, _gtk_css_font_stretch_value_get (v));
 
   g_value_init (value, PANGO_TYPE_FONT_DESCRIPTION);
   g_value_take_boxed (value, description);
@@ -1089,11 +1122,30 @@ _gtk_css_shorthand_property_register (const char                        *name,
   node->query = query_func;
 }
 
+/* NB: return value is transfer: container */
+static const char **
+get_all_subproperties (void)
+{
+  const char **properties;
+  guint i, n;
+
+  n = _gtk_css_style_property_get_n_properties ();
+  properties = g_new (const char *, n + 1);
+  properties[n] = NULL;
+
+  for (i = 0; i < n; i++)
+    {
+      properties[i] = _gtk_style_property_get_name (GTK_STYLE_PROPERTY (_gtk_css_style_property_lookup_by_id (i)));
+    }
+
+  return properties;
+}
+
 void
 _gtk_css_shorthand_property_init_properties (void)
 {
   /* The order is important here, be careful when changing it */
-  const char *font_subproperties[] = { "font-family", "font-style", "font-variant", "font-weight", "font-size", NULL };
+  const char *font_subproperties[] = { "font-family", "font-style", "font-variant", "font-weight", "font-stretch", "font-size", NULL };
   const char *margin_subproperties[] = { "margin-top", "margin-right", "margin-bottom", "margin-left", NULL };
   const char *padding_subproperties[] = { "padding-top", "padding-right", "padding-bottom", "padding-left", NULL };
   const char *border_width_subproperties[] = { "border-top-width", "border-right-width", "border-bottom-width", "border-left-width", NULL };
@@ -1111,11 +1163,15 @@ _gtk_css_shorthand_property_init_properties (void)
                                          "border-top-color", "border-right-color", "border-bottom-color", "border-left-color",
                                          "border-image-source", "border-image-slice", "border-image-width", "border-image-repeat", NULL };
   const char *outline_subproperties[] = { "outline-width", "outline-style", "outline-color", NULL };
+  const char *outline_radius_subproperties[] = { "outline-top-left-radius", "outline-top-right-radius",
+                                                 "outline-bottom-right-radius", "outline-bottom-left-radius", NULL };
   const char *background_subproperties[] = { "background-image", "background-position", "background-size", "background-repeat", "background-clip", "background-origin",
                                              "background-color", NULL };
   const char *transition_subproperties[] = { "transition-property", "transition-duration", "transition-delay", "transition-timing-function", NULL };
   const char *animation_subproperties[] = { "animation-name", "animation-iteration-count", "animation-duration", "animation-delay", 
                                             "animation-timing-function", "animation-direction", "animation-fill-mode", NULL };
+
+  const char **all_subproperties;
 
   _gtk_css_shorthand_property_register   ("font",
                                           PANGO_TYPE_FONT_DESCRIPTION,
@@ -1195,6 +1251,12 @@ _gtk_css_shorthand_property_init_properties (void)
                                           parse_border,
                                           NULL,
                                           NULL);
+  _gtk_css_shorthand_property_register   ("outline-radius",
+                                          G_TYPE_INT,
+                                          outline_radius_subproperties,
+                                          parse_border_radius,
+                                          unpack_border_radius,
+                                          pack_border_radius);
   _gtk_css_shorthand_property_register   ("outline",
                                           G_TYPE_NONE,
                                           outline_subproperties,
@@ -1219,4 +1281,13 @@ _gtk_css_shorthand_property_init_properties (void)
                                           parse_animation,
                                           NULL,
                                           NULL);
+
+  all_subproperties = get_all_subproperties ();
+  _gtk_css_shorthand_property_register   ("all",
+                                          G_TYPE_NONE,
+                                          all_subproperties,
+                                          parse_all,
+                                          NULL,
+                                          NULL);
+  g_free (all_subproperties);
 }

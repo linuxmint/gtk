@@ -8,7 +8,7 @@
 <link rel="up" href="ButtonWidgets.html" title="Buttons and Toggles">
 <link rel="prev" href="GtkCheckButton.html" title="GtkCheckButton">
 <link rel="next" href="GtkToggleButton.html" title="GtkToggleButton">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -101,7 +101,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+<a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GtkRadioButton.html#gtk-radio-button-get-group" title="gtk_radio_button_get_group ()">gtk_radio_button_get_group</a> <span class="c_punctuation">()</span>
@@ -164,8 +164,8 @@
 </div>
 <div class="refsect1">
 <a name="GtkRadioButton.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBin.html" title="GtkBin">GtkBin</a>
@@ -195,7 +195,7 @@ interface component in their own right.</p>
 <p>Every radio button is a member of some group of radio buttons. When one is
 selected, all other radio buttons in the same group are deselected. A
 <a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a> is one way of giving the user a choice from many options.</p>
-<p>Radio button widgets are created with <a class="link" href="GtkRadioButton.html#gtk-radio-button-new" title="gtk_radio_button_new ()"><code class="function">gtk_radio_button_new()</code></a>, passing <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<p>Radio button widgets are created with <a class="link" href="GtkRadioButton.html#gtk-radio-button-new" title="gtk_radio_button_new ()"><code class="function">gtk_radio_button_new()</code></a>, passing <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
 as the argument if this is the first radio button in a group. In subsequent
 calls, the group you wish to add this button to should be passed as an
 argument. Optionally, <a class="link" href="GtkRadioButton.html#gtk-radio-button-new-with-label" title="gtk_radio_button_new_with_label ()"><code class="function">gtk_radio_button_new_with_label()</code></a> can be used if you
@@ -210,9 +210,9 @@ has a group assigned to it. The convenience function
 use <a class="link" href="GtkRadioButton.html#gtk-radio-button-set-group" title="gtk_radio_button_set_group ()"><code class="function">gtk_radio_button_set_group()</code></a>.</p>
 <p>The group list does not need to be freed, as each <a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a> will remove
 itself and its list item when it is destroyed.</p>
-<div class="example">
-<a name="id-1.3.9.4.10.9"></a><p class="title"><b>Example 23. How to create a group of two radio buttons.</b></p>
-<div class="example-contents">
+<div class="refsect3">
+<a name="id-1.3.9.4.10.9"></a><h4>How to create a group of two radio buttons.</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -245,21 +245,21 @@ itself and its list item when it is destroyed.</p>
 <span class="normal">   </span><span class="usertype">GtkWidget</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">window</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">radio1</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">radio2</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">box</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">entry</span><span class="symbol">;</span>
 <span class="normal">   window </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkWindow.html#gtk-window-new">gtk_window_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">GTK_WINDOW_TOPLEVEL</span><span class="symbol">);</span>
 <span class="normal">   box </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkBox.html#gtk-box-new">gtk_box_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">GTK_ORIENTATION_VERTICAL</span><span class="symbol">,</span><span class="normal"> </span><span class="number">2</span><span class="symbol">);</span>
-<span class="normal">   </span><span class="function"><a href="GtkBox.html#gtk-box-set-homogeneous">gtk_box_set_homogeneous</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_BOX</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">box</span><span class="symbol">),</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">);</span>
+<span class="normal">   </span><span class="function"><a href="GtkBox.html#gtk-box-set-homogeneous">gtk_box_set_homogeneous</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_BOX</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">box</span><span class="symbol">),</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">);</span>
 
-<span class="normal">   </span><span class="comment">/* Create a radio button with a GtkEntry widget */</span>
-<span class="normal">   radio1 </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkRadioButton.html#gtk-radio-button-new">gtk_radio_button_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">   </span><span class="comment">// Create a radio button with a GtkEntry widget</span>
+<span class="normal">   radio1 </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkRadioButton.html#gtk-radio-button-new">gtk_radio_button_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
 <span class="normal">   entry </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkEntry.html#gtk-entry-new">gtk_entry_new</a></span><span class="normal"> </span><span class="symbol">();</span>
 <span class="normal">   </span><span class="function"><a href="GtkContainer.html#gtk-container-add">gtk_container_add</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_CONTAINER</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">radio1</span><span class="symbol">),</span><span class="normal"> entry</span><span class="symbol">);</span>
 
 
-<span class="normal">   </span><span class="comment">/* Create a radio button with a label */</span>
+<span class="normal">   </span><span class="comment">// Create a radio button with a label</span>
 <span class="normal">   radio2 </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkRadioButton.html#gtk-radio-button-new-with-label-from-widget">gtk_radio_button_new_with_label_from_widget</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_RADIO_BUTTON</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">radio1</span><span class="symbol">),</span>
-<span class="normal">                                                         </span><span class="string">"I'm the second radio button."</span><span class="symbol">);</span>
+<span class="normal">                                                         </span><span class="string">"I’m the second radio button."</span><span class="symbol">);</span>
 
-<span class="normal">   </span><span class="comment">/* Pack them into a box, then show all the widgets */</span>
-<span class="normal">   </span><span class="function"><a href="GtkBox.html#gtk-box-pack-start">gtk_box_pack_start</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_BOX</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">box</span><span class="symbol">),</span><span class="normal"> radio1</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">,</span><span class="normal"> </span><span class="number">2</span><span class="symbol">);</span>
-<span class="normal">   </span><span class="function"><a href="GtkBox.html#gtk-box-pack-start">gtk_box_pack_start</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_BOX</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">box</span><span class="symbol">),</span><span class="normal"> radio2</span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">,</span><span class="normal"> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">,</span><span class="normal"> </span><span class="number">2</span><span class="symbol">);</span>
+<span class="normal">   </span><span class="comment">// Pack them into a box, then show all the widgets</span>
+<span class="normal">   </span><span class="function"><a href="GtkBox.html#gtk-box-pack-start">gtk_box_pack_start</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_BOX</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">box</span><span class="symbol">),</span><span class="normal"> radio1</span><span class="symbol">,</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">,</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">,</span><span class="normal"> </span><span class="number">2</span><span class="symbol">);</span>
+<span class="normal">   </span><span class="function"><a href="GtkBox.html#gtk-box-pack-start">gtk_box_pack_start</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_BOX</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">box</span><span class="symbol">),</span><span class="normal"> radio2</span><span class="symbol">,</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">,</span><span class="normal"> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS">TRUE</a></span><span class="symbol">,</span><span class="normal"> </span><span class="number">2</span><span class="symbol">);</span>
 <span class="normal">   </span><span class="function"><a href="GtkContainer.html#gtk-container-add">gtk_container_add</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_CONTAINER</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">),</span><span class="normal"> box</span><span class="symbol">);</span>
 <span class="normal">   </span><span class="function"><a href="GtkWidget.html#gtk-widget-show-all">gtk_widget_show_all</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">window</span><span class="symbol">);</span>
 <span class="normal">   </span><span class="keyword">return</span><span class="symbol">;</span>
@@ -269,19 +269,20 @@ itself and its list item when it is destroyed.</p>
   </table>
 </div>
 
-</div>
-<br class="example-break"><p>When an unselected button in the group is clicked the clicked button
+<p></p>
+<p>When an unselected button in the group is clicked the clicked button
 receives the <a class="link" href="GtkToggleButton.html#GtkToggleButton-toggled" title="The “toggled” signal"><span class="type">“toggled”</span></a> signal, as does the previously
 selected button.
 Inside the <a class="link" href="GtkToggleButton.html#GtkToggleButton-toggled" title="The “toggled” signal"><span class="type">“toggled”</span></a> handler, <a class="link" href="GtkToggleButton.html#gtk-toggle-button-get-active" title="gtk_toggle_button_get_active ()"><code class="function">gtk_toggle_button_get_active()</code></a>
 can be used to determine if the button has been selected or deselected.</p>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkRadioButton.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
 <a name="gtk-radio-button-new"></a><h3>gtk_radio_button_new ()</h3>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *
-gtk_radio_button_new (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *group</code></em>);</pre>
+gtk_radio_button_new (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *group</code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a>. To be of any practical value, a widget should
 then be packed into the radio button.</p>
 <div class="refsect3">
@@ -295,8 +296,8 @@ then be packed into the radio button.</p>
 <tbody><tr>
 <td class="parameter_name"><p>group</p></td>
 <td class="parameter_description"><p> an existing
-radio button group, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if you are creating a new group. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GtkRadioButton][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+radio button group, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if you are creating a new group. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GtkRadioButton][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
 </div>
@@ -326,7 +327,7 @@ should be packed into the radio button.</p>
 <tbody><tr>
 <td class="parameter_name"><p>radio_group_member</p></td>
 <td class="parameter_description"><p> an existing <a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
 </div>
@@ -340,8 +341,8 @@ should be packed into the radio button.</p>
 <div class="refsect2">
 <a name="gtk-radio-button-new-with-label"></a><h3>gtk_radio_button_new_with_label ()</h3>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *
-gtk_radio_button_new_with_label (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *group</code></em>,
-                                 <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>);</pre>
+gtk_radio_button_new_with_label (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *group</code></em>,
+                                 <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a> with a text label.</p>
 <div class="refsect3">
 <a name="id-1.3.9.4.11.4.5"></a><h4>Parameters</h4>
@@ -355,8 +356,8 @@ gtk_radio_button_new_with_label (<em class="parameter"><code><a href="http://lib
 <tr>
 <td class="parameter_name"><p>group</p></td>
 <td class="parameter_description"><p> an existing
-radio button group, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if you are creating a new group. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GtkRadioButton][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+radio button group, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if you are creating a new group. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GtkRadioButton][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>label</p></td>
@@ -378,7 +379,7 @@ radio button group, or <a href="http://library.gnome.org/devel/glib/unstable/gli
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *
 gtk_radio_button_new_with_label_from_widget
                                (<em class="parameter"><code><a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a> *radio_group_member</code></em>,
-                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>);</pre>
+                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a> with a text label, adding it to
 the same group as <em class="parameter"><code>radio_group_member</code></em>
 .</p>
@@ -393,8 +394,8 @@ the same group as <em class="parameter"><code>radio_group_member</code></em>
 <tbody>
 <tr>
 <td class="parameter_name"><p>radio_group_member</p></td>
-<td class="parameter_description"><p> widget to get radio group from or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> widget to get radio group from or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>label</p></td>
@@ -414,8 +415,8 @@ the same group as <em class="parameter"><code>radio_group_member</code></em>
 <div class="refsect2">
 <a name="gtk-radio-button-new-with-mnemonic"></a><h3>gtk_radio_button_new_with_mnemonic ()</h3>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *
-gtk_radio_button_new_with_mnemonic (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *group</code></em>,
-                                    <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>);</pre>
+gtk_radio_button_new_with_mnemonic (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *group</code></em>,
+                                    <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a> containing a label, adding it to the same
 group as <em class="parameter"><code>group</code></em>
 . The label will be created using
@@ -434,8 +435,8 @@ mnemonic for the button.</p>
 <tr>
 <td class="parameter_name"><p>group</p></td>
 <td class="parameter_description"><p> the radio button
-group. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GtkRadioButton][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+group, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GtkRadioButton][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>label</p></td>
@@ -458,7 +459,7 @@ mnemonic character</p></td>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *
 gtk_radio_button_new_with_mnemonic_from_widget
                                (<em class="parameter"><code><a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a> *radio_group_member</code></em>,
-                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>);</pre>
+                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a> containing a label. The label
 will be created using <a class="link" href="GtkLabel.html#gtk-label-new-with-mnemonic" title="gtk_label_new_with_mnemonic ()"><code class="function">gtk_label_new_with_mnemonic()</code></a>, so underscores
 in <em class="parameter"><code>label</code></em>
@@ -474,8 +475,8 @@ in <em class="parameter"><code>label</code></em>
 <tbody>
 <tr>
 <td class="parameter_name"><p>radio_group_member</p></td>
-<td class="parameter_description"><p> widget to get radio group from or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> widget to get radio group from or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>label</p></td>
@@ -497,8 +498,8 @@ mnemonic character</p></td>
 <a name="gtk-radio-button-set-group"></a><h3>gtk_radio_button_set_group ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_radio_button_set_group (<em class="parameter"><code><a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a> *radio_button</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *group</code></em>);</pre>
-<p>Sets a <a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a>'s group. It should be noted that this does not change
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *group</code></em>);</pre>
+<p>Sets a <a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a>’s group. It should be noted that this does not change
 the layout of your interface in any way, so if you are changing the group,
 it is likely you will need to re-arrange the user interface to reflect these
 changes.</p>
@@ -519,8 +520,8 @@ changes.</p>
 <tr>
 <td class="parameter_name"><p>group</p></td>
 <td class="parameter_description"><p> an existing radio
-button group, such as one returned from <a class="link" href="GtkRadioButton.html#gtk-radio-button-get-group" title="gtk_radio_button_get_group ()"><code class="function">gtk_radio_button_get_group()</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GtkRadioButton]</span></td>
+button group, such as one returned from <a class="link" href="GtkRadioButton.html#gtk-radio-button-get-group" title="gtk_radio_button_get_group ()"><code class="function">gtk_radio_button_get_group()</code></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GtkRadioButton][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -529,7 +530,7 @@ button group, such as one returned from <a class="link" href="GtkRadioButton.htm
 <hr>
 <div class="refsect2">
 <a name="gtk-radio-button-get-group"></a><h3>gtk_radio_button_get_group ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
 gtk_radio_button_get_group (<em class="parameter"><code><a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a> *radio_button</code></em>);</pre>
 <p>Retrieves the group assigned to a radio button.</p>
 <div class="refsect3">
@@ -584,7 +585,7 @@ and <a class="link" href="GtkRadioButton.html#gtk-radio-button-set-group" title=
         <td class="listing_code"><pre class="programlisting"><span class="usertype">GtkRadioButton</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">radio_button</span><span class="symbol">;</span>
 <span class="usertype">GtkRadioButton</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">last_button</span><span class="symbol">;</span>
 
-<span class="keyword">while</span><span class="normal"> </span><span class="symbol">(</span><span class="comment">/* more buttons to add */</span><span class="symbol">)</span>
+<span class="keyword">while</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"> </span><span class="symbol">...</span><span class="normal">more buttons </span><span class="usertype">to</span><span class="normal"> add</span><span class="symbol">...</span><span class="normal"> </span><span class="symbol">)</span>
 <span class="normal">  </span><span class="cbracket">{</span>
 <span class="normal">     radio_button </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkRadioButton.html#gtk-radio-button-new">gtk_radio_button_new</a></span><span class="normal"> </span><span class="symbol">(...);</span>
 
@@ -614,8 +615,8 @@ and <a class="link" href="GtkRadioButton.html#gtk-radio-button-set-group" title=
 <tr>
 <td class="parameter_name"><p>group_source</p></td>
 <td class="parameter_description"><p> a radio button object whos group we are
-joining, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to remove the radio button from its group. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+joining, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to remove the radio button from its group. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -645,7 +646,7 @@ joining, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-
 <a name="GtkRadioButton-group-changed"></a><h3>The <code class="literal">“group-changed”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkRadioButton.html" title="GtkRadioButton"><span class="type">GtkRadioButton</span></a> *button,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>        user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>        user_data)</pre>
 <p>Emitted when the group of radio buttons that a radio button belongs
 to changes. This is emitted when a radio button switches from
 being alone to being part of a group of 2 or more buttons, or
@@ -685,6 +686,6 @@ of the group that a button belongs to changes.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

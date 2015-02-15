@@ -40,29 +40,25 @@
  * @Short_description: Collection of tags that can be used together
  * @Title: GtkTextTagTable
  *
- * You may wish to begin by reading the <link linkend="TextWidget">text widget
- * conceptual overview</link> which gives an overview of all the objects and
+ * You may wish to begin by reading the
+ * [text widget conceptual overview][TextWidget]
+ * which gives an overview of all the objects and
  * data types related to the text widget and how they work together.
  *
- * <refsect2 id="GtkTextTagTable-BUILDER-UI">
- * <title>GtkTextTagTables as GtkBuildable</title>
- * <para>
- * The GtkTextTagTable implementation of the GtkBuildable interface
- * supports adding tags by specifying "tag" as the "type"
- * attribute of a &lt;child&gt; element.
+ * # GtkTextTagTables as GtkBuildable
  *
- * <example>
- * <title>A UI definition fragment specifying tags</title>
- * <programlisting><![CDATA[
+ * The GtkTextTagTable implementation of the GtkBuildable interface
+ * supports adding tags by specifying “tag” as the “type” attribute
+ * of a <child> element.
+ *
+ * An example of a UI definition fragment specifying tags:
+ * |[
  * <object class="GtkTextTagTable">
  *  <child type="tag">
  *    <object class="GtkTextTag"/>
  *  </child>
  * </object>
- * ]]></programlisting>
- * </example>
- * </para>
- * </refsect2>
+ * ]|
  */
 
 struct _GtkTextTagTablePrivate
@@ -167,7 +163,7 @@ gtk_text_tag_table_init (GtkTextTagTable *table)
  * Creates a new #GtkTextTagTable. The table contains no tags by
  * default.
  * 
- * Return value: a new #GtkTextTagTable
+ * Returns: a new #GtkTextTagTable
  **/
 GtkTextTagTable*
 gtk_text_tag_table_new (void)
@@ -240,17 +236,19 @@ gtk_text_tag_table_buildable_add_child (GtkBuildable        *buildable,
  *
  * @tag must not be in a tag table already, and may not have
  * the same name as an already-added tag.
+ *
+ * Returns: %TRUE on success.
  **/
-void
+gboolean
 gtk_text_tag_table_add (GtkTextTagTable *table,
                         GtkTextTag      *tag)
 {
   GtkTextTagTablePrivate *priv;
   guint size;
 
-  g_return_if_fail (GTK_IS_TEXT_TAG_TABLE (table));
-  g_return_if_fail (GTK_IS_TEXT_TAG (tag));
-  g_return_if_fail (tag->priv->table == NULL);
+  g_return_val_if_fail (GTK_IS_TEXT_TAG_TABLE (table), FALSE);
+  g_return_val_if_fail (GTK_IS_TEXT_TAG (tag), FALSE);
+  g_return_val_if_fail (tag->priv->table == NULL, FALSE);
 
   priv = table->priv;
 
@@ -258,7 +256,7 @@ gtk_text_tag_table_add (GtkTextTagTable *table,
     {
       g_warning ("A tag named '%s' is already in the tag table.",
                  tag->priv->name);
-      return;
+      return FALSE;
     }
   
   g_object_ref (tag);
@@ -281,6 +279,7 @@ gtk_text_tag_table_add (GtkTextTagTable *table,
   tag->priv->priority = size - 1;
 
   g_signal_emit (table, signals[TAG_ADDED], 0, tag);
+  return TRUE;
 }
 
 /**
@@ -290,7 +289,7 @@ gtk_text_tag_table_add (GtkTextTagTable *table,
  * 
  * Look up a named tag.
  * 
- * Return value: (transfer none): The tag, or %NULL if none by that name is in the table.
+ * Returns: (transfer none): The tag, or %NULL if none by that name is in the table.
  **/
 GtkTextTag*
 gtk_text_tag_table_lookup (GtkTextTagTable *table,
@@ -312,8 +311,8 @@ gtk_text_tag_table_lookup (GtkTextTagTable *table,
  * @tag: a #GtkTextTag
  *
  * Remove a tag from the table. If a #GtkTextBuffer has @table as its tag table,
- * the tag is removed from the buffer. The table's reference to the tag is
- * removed, so the tag will end up destroyed if you don't have a reference to
+ * the tag is removed from the buffer. The table’s reference to the tag is
+ * removed, so the tag will end up destroyed if you don’t have a reference to
  * it.
  **/
 void
@@ -390,7 +389,7 @@ list_foreach (gpointer data, gpointer user_data)
  *
  * Calls @func on each tag in @table, with user data @data.
  * Note that the table may not be modified while iterating 
- * over it (you can't add/remove tags).
+ * over it (you can’t add/remove tags).
  **/
 void
 gtk_text_tag_table_foreach (GtkTextTagTable       *table,
@@ -418,7 +417,7 @@ gtk_text_tag_table_foreach (GtkTextTagTable       *table,
  * 
  * Returns the size of the table (number of tags)
  * 
- * Return value: number of tags in @table
+ * Returns: number of tags in @table
  **/
 gint
 gtk_text_tag_table_get_size (GtkTextTagTable *table)

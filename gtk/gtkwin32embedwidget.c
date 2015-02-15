@@ -81,10 +81,6 @@ gtk_win32_embed_widget_class_init (GtkWin32EmbedWidgetClass *class)
 static void
 gtk_win32_embed_widget_init (GtkWin32EmbedWidget *embed_widget)
 {
-  GtkWindow *window;
-
-  window = GTK_WINDOW (embed_widget);
-
   _gtk_widget_set_is_toplevel (GTK_WIDGET (embed_widget), TRUE);
   gtk_container_set_resize_mode (GTK_CONTAINER (embed_widget), GTK_RESIZE_QUEUE);
 }
@@ -134,12 +130,7 @@ gtk_win32_embed_widget_unrealize (GtkWidget *widget)
 
   embed_widget->old_window_procedure = NULL;
   
-  if (embed_widget->parent_window != NULL)
-    {
-      gtk_widget_unregister_window (widget, embed_widget->parent_window);
-      g_object_unref (embed_widget->parent_window);
-      embed_widget->parent_window = NULL;
-    }
+  g_clear_object (&embed_widget->parent_window);
 
   GTK_WIDGET_CLASS (gtk_win32_embed_widget_parent_class)->unrealize (widget);
 }
@@ -209,7 +200,7 @@ gtk_win32_embed_widget_realize (GtkWidget *widget)
   gtk_widget_get_allocation (widget, &allocation);
 
   attributes.window_type = GDK_WINDOW_CHILD;
-  attributes.title = gtk_window_get_title (window);
+  attributes.title = (gchar *) gtk_window_get_title (window);
   _gtk_window_get_wmclass (window, &attributes.wmclass_name, &attributes.wmclass_class);
   attributes.width = allocation.width;
   attributes.height = allocation.height;
@@ -228,7 +219,7 @@ gtk_win32_embed_widget_realize (GtkWidget *widget)
 			    GDK_FOCUS_CHANGE_MASK);
 
   attributes_mask = GDK_WA_VISUAL;
-  attributes_mask |= (gtk_window_get_title (window) ? GDK_WA_TITLE : 0);
+  attributes_mask |= (attributes.title ? GDK_WA_TITLE : 0);
   attributes_mask |= (attributes.wmclass_name ? GDK_WA_WMCLASS : 0);
 
   gdk_window = gdk_window_new (embed_widget->parent_window,
@@ -252,7 +243,7 @@ gtk_win32_embed_widget_realize (GtkWidget *widget)
 static void
 gtk_win32_embed_widget_show (GtkWidget *widget)
 {
-  gtk_widget_set_visible (widget, TRUE);
+  _gtk_widget_set_visible_flag (widget, TRUE);
   
   gtk_widget_realize (widget);
   gtk_container_check_resize (GTK_CONTAINER (widget));
@@ -262,7 +253,7 @@ gtk_win32_embed_widget_show (GtkWidget *widget)
 static void
 gtk_win32_embed_widget_hide (GtkWidget *widget)
 {
-  gtk_widget_set_visible (widget, FALSE);
+  _gtk_widget_set_visible_flag (widget, FALSE);
   gtk_widget_unmap (widget);
 }
 

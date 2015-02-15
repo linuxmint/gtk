@@ -29,10 +29,10 @@
  * The #GtkCellAreaBox renders cell renderers into a row or a column
  * depending on its #GtkOrientation.
  *
- * GtkCellAreaBox uses a notion of <emphasis>packing</emphasis>. Packing
+ * GtkCellAreaBox uses a notion of packing. Packing
  * refers to adding cell renderers with reference to a particular position
  * in a #GtkCellAreaBox. There are two reference positions: the
- * <emphasis>start</emphasis> and the <emphasis>end</emphasis> of the box.
+ * start and the end of the box.
  * When the #GtkCellAreaBox is oriented in the %GTK_ORIENTATION_VERTICAL
  * orientation, the start is defined as the top of the box and the end is
  * defined as the bottom. In the %GTK_ORIENTATION_HORIZONTAL orientation
@@ -40,7 +40,7 @@
  * side.
  *
  * Alignments of #GtkCellRenderers rendered in adjacent rows can be
- * configured by configuring the #GtkCellAreaBox:align child cell property
+ * configured by configuring the #GtkCellAreaBox align child cell property
  * with gtk_cell_area_cell_set_property() or by specifying the "align"
  * argument to gtk_cell_area_box_pack_start() and gtk_cell_area_box_pack_end().
  */
@@ -312,7 +312,7 @@ gtk_cell_area_box_class_init (GtkCellAreaBoxClass *class)
                                                      0,
                                                      G_MAXINT,
                                                      0,
-                                                     GTK_PARAM_READWRITE));
+                                                     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /* Cell Properties */
   /**
@@ -1050,11 +1050,13 @@ gtk_cell_area_box_set_property (GObject       *object,
   switch (prop_id)
     {
     case PROP_ORIENTATION:
-      box->priv->orientation = g_value_get_enum (value);
-
-      /* Notify that size needs to be requested again */
-      reset_contexts (box);
-
+      if (box->priv->orientation != g_value_get_enum (value))
+        {
+          box->priv->orientation = g_value_get_enum (value);
+          /* Notify that size needs to be requested again */
+          reset_contexts (box);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_SPACING:
       gtk_cell_area_box_set_spacing (box, g_value_get_int (value));
@@ -2117,7 +2119,7 @@ _gtk_cell_area_box_group_visible (GtkCellAreaBox  *box,
  *
  * Creates a new #GtkCellAreaBox.
  *
- * Return value: a newly created #GtkCellAreaBox
+ * Returns: a newly created #GtkCellAreaBox
  *
  * Since: 3.0
  */
@@ -2223,7 +2225,7 @@ gtk_cell_area_box_pack_end (GtkCellAreaBox  *box,
  *
  * Gets the spacing added between cell renderers.
  *
- * Return value: the space added between cell renderers in @box.
+ * Returns: the space added between cell renderers in @box.
  *
  * Since: 3.0
  */

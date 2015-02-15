@@ -8,7 +8,7 @@
 <link rel="up" href="platform-support.html" title="Part VII. GTK+ Platform Support">
 <link rel="prev" href="gtk-compiling.html" title="Compiling GTK+ Applications">
 <link rel="next" href="gtk-x11.html" title="Using GTK+ on the X Window System">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -110,36 +110,16 @@ additional environment variables.
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term">misc</span></p></td>
-<td><p>Miscellaneous information</p></td>
+<td><p><span class="term">actions</span></p></td>
+<td><p>Actions and menu models.</p></td>
 </tr>
 <tr>
-<td><p><span class="term">plugsocket</span></p></td>
-<td><p>Cross-process embedding</p></td>
+<td><p><span class="term">baselines</span></p></td>
+<td><p>Baselines.</p></td>
 </tr>
 <tr>
-<td><p><span class="term">text</span></p></td>
-<td><p>Text widget internals</p></td>
-</tr>
-<tr>
-<td><p><span class="term">tree</span></p></td>
-<td><p>Tree widget internals</p></td>
-</tr>
-<tr>
-<td><p><span class="term">updates</span></p></td>
-<td><p>Visual feedback about window updates</p></td>
-</tr>
-<tr>
-<td><p><span class="term">keybindings</span></p></td>
-<td><p>Keybindings</p></td>
-</tr>
-<tr>
-<td><p><span class="term">multihead</span></p></td>
-<td><p>Working on multiple displays</p></td>
-</tr>
-<tr>
-<td><p><span class="term">modules</span></p></td>
-<td><p>Loading of modules</p></td>
+<td><p><span class="term">builder</span></p></td>
+<td><p>GtkBuilder support</p></td>
 </tr>
 <tr>
 <td><p><span class="term">geometry</span></p></td>
@@ -150,26 +130,67 @@ additional environment variables.
 <td><p>Icon themes</p></td>
 </tr>
 <tr>
-<td><p><span class="term">printing</span></p></td>
-<td><p>Printing support</p></td>
+<td><p><span class="term">interactive</span></p></td>
+<td><p>Open the <a class="link" href="gtk-running.html#interactive-debugging" title="Interactive debugging">interactive debugger</a>.</p></td>
 </tr>
 <tr>
-<td><p><span class="term">builder</span></p></td>
-<td><p>GtkBuilder support</p></td>
+<td><p><span class="term">keybindings</span></p></td>
+<td><p>Keybindings</p></td>
+</tr>
+<tr>
+<td><p><span class="term">misc</span></p></td>
+<td><p>Miscellaneous information</p></td>
+</tr>
+<tr>
+<td><p><span class="term">modules</span></p></td>
+<td><p>Loading of modules</p></td>
+</tr>
+<tr>
+<td><p><span class="term">no-css-cache</span></p></td>
+<td><p>Bypass caching for CSS style properties.</p></td>
+</tr>
+<tr>
+<td><p><span class="term">no-pixel-cache</span></p></td>
+<td><p>Disable the pixel cache.</p></td>
+</tr>
+<tr>
+<td><p><span class="term">plugsocket</span></p></td>
+<td><p>Cross-process embedding</p></td>
+</tr>
+<tr>
+<td><p><span class="term">pixel-cache</span></p></td>
+<td><p>Pixel cache.</p></td>
+</tr>
+<tr>
+<td><p><span class="term">printing</span></p></td>
+<td><p>Printing support</p></td>
 </tr>
 <tr>
 <td><p><span class="term">size-request</span></p></td>
 <td><p>Size requests</p></td>
 </tr>
 <tr>
-<td><p><span class="term">no-css-cache</span></p></td>
-<td><p>Bypass caching for CSS style properties.</p></td>
+<td><p><span class="term">text</span></p></td>
+<td><p>Text widget internals</p></td>
+</tr>
+<tr>
+<td><p><span class="term">touchscreen</span></p></td>
+<td><p>Pretend the pointer is a touchscreen device</p></td>
+</tr>
+<tr>
+<td><p><span class="term">tree</span></p></td>
+<td><p>Tree widget internals</p></td>
+</tr>
+<tr>
+<td><p><span class="term">updates</span></p></td>
+<td><p>Visual feedback about window updates</p></td>
 </tr>
 </tbody>
 </table></div>
 <p>
   The special value <code class="literal">all</code> can be used to turn on all
-  debug options.
+  debug options. The special value <code class="literal">help</code> can be used
+  to obtain a list of all supported debug options.
   </p>
 <p><b><code class="envar">GTK_MODULES</code>. </b>
     A list of modules to load. Note that GTK+ also allows to specify modules to load via a commandline option (<code class="option">--gtk-module</code>) and with the <code class="literal">gtk-modules</code> setting.
@@ -253,6 +274,14 @@ additional environment variables.
     If set, makes GTK+ use <code class="filename">$GTK_DATA_PREFIX</code>
     instead of the prefix configured when GTK+ was compiled.
   </p>
+<p><b><code class="envar">GTK_THEME</code>. </b>
+    If set, makes GTK+ use the named theme instead of the theme
+    that is specified by the gtk-theme-name setting. This is intended
+    mainly for easy debugging of theme issues.
+  
+    It is also possible to specify a theme variant to load, by appending
+    the variant name with a colon, like this: `GTK_THEME=Adwaita:dark`.
+  </p>
 <p>
 The following environment variables are used by GdkPixbuf, GDK or
 Pango, not by GTK+ itself, but we list them here for completeness
@@ -280,36 +309,12 @@ nevertheless.
 </colgroup>
 <tbody>
 <tr>
-<td><p><span class="term">misc</span></p></td>
-<td><p>Miscellaneous information</p></td>
-</tr>
-<tr>
-<td><p><span class="term">events</span></p></td>
-<td><p>Show all events received by GDK</p></td>
+<td><p><span class="term">cursor</span></p></td>
+<td><p>Information about cursor objects (only win32)</p></td>
 </tr>
 <tr>
 <td><p><span class="term">dnd</span></p></td>
 <td><p>Information about drag-and-drop</p></td>
-</tr>
-<tr>
-<td><p><span class="term">xim</span></p></td>
-<td><p>Information about XIM support</p></td>
-</tr>
-<tr>
-<td><p><span class="term">nograbs</span></p></td>
-<td><p>Turn off all pointer and keyboard grabs</p></td>
-</tr>
-<tr>
-<td><p><span class="term">multihead</span></p></td>
-<td><p>Information related to multiple screens</p></td>
-</tr>
-<tr>
-<td><p><span class="term">xinerama</span></p></td>
-<td><p>Simulate a multi-monitor setup</p></td>
-</tr>
-<tr>
-<td><p><span class="term">cursor</span></p></td>
-<td><p>Information about cursor objects (only win32)</p></td>
 </tr>
 <tr>
 <td><p><span class="term">draw</span></p></td>
@@ -318,6 +323,22 @@ nevertheless.
 <tr>
 <td><p><span class="term">eventloop</span></p></td>
 <td><p>Information about event loop operation (mostly Quartz)</p></td>
+</tr>
+<tr>
+<td><p><span class="term">misc</span></p></td>
+<td><p>Miscellaneous information</p></td>
+</tr>
+<tr>
+<td><p><span class="term">nograbs</span></p></td>
+<td><p>Turn off all pointer and keyboard grabs</p></td>
+</tr>
+<tr>
+<td><p><span class="term">xinerama</span></p></td>
+<td><p>Simulate a multi-monitor setup</p></td>
+</tr>
+<tr>
+<td><p><span class="term">xim</span></p></td>
+<td><p>Information about XIM support</p></td>
 </tr>
 </tbody>
 </table></div>
@@ -414,10 +435,38 @@ nevertheless.
     gtk_init().
   </p>
 </div>
+<hr>
+<div class="refsect2">
+<a name="interactive-debugging"></a><h3>Interactive debugging</h3>
+<img src="inspector.png"><p>
+    GTK+ includes an interactive debugger, called the GTK+ Inspector, which
+    lets you explore the widget tree of any GTK+ application at runtime, as
+    well as tweak the theme and trigger visual debugging aids. You can
+    easily try out changes at runtime before putting them into the code.
+  </p>
+<p>
+    Note that the GTK+ inspector can only show GTK+ internals. It can not
+    understand the application-specific logic of a GTK+ application. Also,
+    the fact that the GTK+ inspector is running in the application process
+    limits what it can do. It is meant as a complement to full-blown debuggers
+    and system tracing facilities such as DTrace, not as a replacement.
+  </p>
+<p>
+    To enable the GTK+ inspector, you can use the Control-Shift-I or
+    Control-Shift-D keyboard shortcuts, or set the
+    <code class="envar">GTK_DEBUG=interactive</code> environment variable.
+  </p>
+<p>
+    In some situations, it may be inappropriate to give users access to the
+    GTK+ inspector. The keyboard shortcuts can be disabled with the
+    `enable-inspector-keybinding` key in the `org.gtk.Settings.Debug`
+    GSettings schema.
+  </p>
+</div>
 </div>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

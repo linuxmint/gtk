@@ -55,6 +55,7 @@ get_module_path (void)
   const gchar *exe_prefix;
   gchar *module_path;
   gchar *default_dir;
+  gchar *pre_multiarch_dir = NULL;
   static gchar **result = NULL;
 
   if (result)
@@ -65,15 +66,17 @@ get_module_path (void)
 
   if (exe_prefix)
     default_dir = g_build_filename (exe_prefix, "lib", "gtk-3.0", NULL);
-  else
+  else {
     default_dir = g_build_filename (_gtk_get_libdir (), "gtk-3.0", NULL);
+    pre_multiarch_dir = "/usr/lib/gtk-3.0";
+  }
 
   if (module_path_env)
     module_path = g_build_path (G_SEARCHPATH_SEPARATOR_S,
-				module_path_env, default_dir, NULL);
+				module_path_env, default_dir, pre_multiarch_dir, NULL);
   else
     module_path = g_build_path (G_SEARCHPATH_SEPARATOR_S,
-				default_dir, NULL);
+				default_dir, pre_multiarch_dir, NULL);
 
   g_free (default_dir);
 
@@ -89,7 +92,7 @@ get_module_path (void)
  * 
  * Determines the search path for a particular type of module.
  * 
- * Return value: the search path for the module type. Free with g_strfreev().
+ * Returns: the search path for the module type. Free with g_strfreev().
  **/
 gchar **
 _gtk_get_module_path (const gchar *type)
@@ -165,7 +168,7 @@ module_build_la_path (const gchar *directory,
  * Looks for a dynamically module named @name of type @type in the standard GTK+
  *  module search path.
  * 
- * Return value: the pathname to the found module, or %NULL if it wasn't found.
+ * Returns: the pathname to the found module, or %NULL if it wasn’t found.
  *  Free with g_free().
  **/
 gchar *

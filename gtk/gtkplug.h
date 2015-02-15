@@ -36,7 +36,7 @@
 #include <gdk/gdkx.h>
 
 #include <gtk/gtksocket.h>
-
+#include <gtk/gtkwindow.h>
 
 G_BEGIN_DECLS
 
@@ -76,13 +76,11 @@ struct _GtkPlugClass
 GDK_AVAILABLE_IN_ALL
 GType      gtk_plug_get_type              (void) G_GNUC_CONST;
 
-#ifndef GDK_MULTIHEAD_SAFE
 GDK_AVAILABLE_IN_ALL
 void       gtk_plug_construct             (GtkPlug    *plug,
                                            Window      socket_id);
 GDK_AVAILABLE_IN_ALL
 GtkWidget *gtk_plug_new                   (Window      socket_id);
-#endif
 
 GDK_AVAILABLE_IN_ALL
 void       gtk_plug_construct_for_display (GtkPlug    *plug,

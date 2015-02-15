@@ -63,7 +63,7 @@ gboolean        _gtk_css_parser_is_string         (GtkCssParser          *parser
  * signal an error. _read_foo() will modify the data pointer and position it at
  * the first token that is broken and emit an error about the failure.
  * So only call _read_foo() when you know that you are reading a foo. _try_foo()
- * however is fine to call if you don't know yet if the token is a foo or a bar,
+ * however is fine to call if you don’t know yet if the token is a foo or a bar,
  * you can _try_bar() if try_foo() failed.
  */
 gboolean        _gtk_css_parser_try               (GtkCssParser          *parser,
@@ -96,6 +96,11 @@ void            _gtk_css_parser_skip_whitespace   (GtkCssParser          *parser
 void            _gtk_css_parser_resync            (GtkCssParser          *parser,
                                                    gboolean               sync_at_semicolon,
                                                    char                   terminator);
+
+/* XXX: Find better place to put it? */
+void            _gtk_css_print_string             (GString               *str,
+                                                   const char            *string);
+
 
 G_END_DECLS
 

@@ -47,7 +47,7 @@ G_BEGIN_DECLS
  * @GDK_ACTION_LINK: Add a link to the data. Note that this is only
  *  useful if source and destination agree on what it means.
  * @GDK_ACTION_PRIVATE: Special action which tells the source that the
- *  destination will do something that the source doesn't understand.
+ *  destination will do something that the source doesn’t understand.
  * @GDK_ACTION_ASK: Ask the user what to do with the data.
  *
  * Used in #GdkDragContext to indicate what the destination
@@ -73,6 +73,7 @@ typedef enum
  * @GDK_DRAG_PROTO_WIN32_DROPFILES: The simple WM_DROPFILES protocol.
  * @GDK_DRAG_PROTO_OLE2: The complex OLE2 DND protocol (not implemented).
  * @GDK_DRAG_PROTO_LOCAL: Intra-application DND.
+ * @GDK_DRAG_PROTO_WAYLAND: Wayland DND protocol.
  *
  * Used in #GdkDragContext to indicate the protocol according to
  * which DND is done.
@@ -85,7 +86,8 @@ typedef enum
   GDK_DRAG_PROTO_ROOTWIN,
   GDK_DRAG_PROTO_WIN32_DROPFILES,
   GDK_DRAG_PROTO_OLE2,
-  GDK_DRAG_PROTO_LOCAL
+  GDK_DRAG_PROTO_LOCAL,
+  GDK_DRAG_PROTO_WAYLAND
 } GdkDragProtocol;
 
 

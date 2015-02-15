@@ -1,4 +1,4 @@
-/* Application class
+/* Application Class
  *
  * Demonstrates a simple application.
  *
@@ -95,7 +95,6 @@ activate_about (GSimpleAction *action,
                 gpointer       user_data)
 {
   GtkWidget *window = user_data;
-  GdkPixbuf *pixbuf;
 
   const gchar *authors[] = {
     "Peter Mattis",
@@ -113,8 +112,6 @@ activate_about (GSimpleAction *action,
     NULL
   };
 
-  pixbuf = gdk_pixbuf_new_from_resource ("/application/gtk-logo-48.png", NULL);
-
   gtk_show_about_dialog (GTK_WINDOW (window),
                          "program-name", "GTK+ Code Demos",
                          "version", g_strdup_printf ("%s,\nRunning against GTK+ %d.%d.%d",
@@ -122,16 +119,15 @@ activate_about (GSimpleAction *action,
                                                      gtk_get_major_version (),
                                                      gtk_get_minor_version (),
                                                      gtk_get_micro_version ()),
-                         "copyright", "(C) 1997-2009 The GTK+ Team",
+                         "copyright", "(C) 1997-2013 The GTK+ Team",
                          "license-type", GTK_LICENSE_LGPL_2_1,
                          "website", "http://www.gtk.org",
                          "comments", "Program to demonstrate GTK+ functions.",
                          "authors", authors,
                          "documenters", documentors,
-                         "logo", pixbuf,
+                         "logo-icon-name", "gtk3-demo",
                          "title", "About GTK+ Code Demos",
                          NULL);
-  g_object_unref (pixbuf);
 }
 
 static void
@@ -342,7 +338,7 @@ main (int argc, char *argv[])
 
   gtk_init (NULL, NULL);
 
-  app = gtk_application_new ("org.gtk.Demo", 0);
+  app = gtk_application_new ("org.gtk.Demo2", 0);
   settings = g_settings_new ("org.gtk.Demo");
 
   g_action_map_add_action_entries (G_ACTION_MAP (app),
@@ -404,7 +400,7 @@ do_application (GtkWidget *toplevel)
 
   if (watch == 0)
     watch = g_bus_watch_name (G_BUS_TYPE_SESSION,
-                              "org.gtk.Demo",
+                              "org.gtk.Demo2",
                               0,
                               on_name_appeared,
                               on_name_vanished,
@@ -432,8 +428,8 @@ do_application (GtkWidget *toplevel)
   else
     {
       g_dbus_connection_call_sync (g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, NULL),
-                              "org.gtk.Demo",
-                              "/org/gtk/Demo",
+                              "org.gtk.Demo2",
+                              "/org/gtk/Demo2",
                               "org.gtk.Actions",
                               "Activate",
                               g_variant_new ("(sava{sv})", "quit", NULL, NULL),

@@ -1360,10 +1360,10 @@ gdk_event_translate (GdkEvent *event,
       return FALSE;
     }
 
-  /* Also when in a manual resize, we ignore events so that these are
-   * pushed to GdkQuartzNSWindow's sendEvent handler.
+  /* Also when in a manual resize or move , we ignore events so that
+   * these are pushed to GdkQuartzNSWindow's sendEvent handler.
    */
-  if ([(GdkQuartzNSWindow *)nswindow isInManualResize])
+  if ([(GdkQuartzNSWindow *)nswindow isInManualResizeOrMove])
     return FALSE;
 
   /* Find the right GDK window to send the event to, taking grabs and
@@ -1638,10 +1638,12 @@ _gdk_quartz_screen_get_setting (GdkScreen   *screen,
     {
       NSString *name;
       char *str;
+      gint size;
 
       GDK_QUARTZ_ALLOC_POOL;
 
       name = [[NSFont systemFontOfSize:0] familyName];
+      size = (gint)[[NSFont userFontOfSize:0] pointSize];
 
       /* Let's try to use the "views" font size (12pt) by default. This is
        * used for lists/text/other "content" which is the largest parts of
@@ -1652,7 +1654,7 @@ _gdk_quartz_screen_get_setting (GdkScreen   *screen,
       /* The size has to be hardcoded as there doesn't seem to be a way to
        * get the views font size programmatically.
        */
-      str = g_strdup_printf ("%s 12", [name UTF8String]);
+      str = g_strdup_printf ("%s %d", [name UTF8String], size);
       g_value_set_string (value, str);
       g_free (str);
 
@@ -1680,6 +1682,8 @@ _gdk_quartz_screen_get_setting (GdkScreen   *screen,
       g_value_set_boolean (value, TRUE);
 
       GDK_QUARTZ_RELEASE_POOL;
+
+      return TRUE;
     }
   
   /* FIXME: Add more settings */

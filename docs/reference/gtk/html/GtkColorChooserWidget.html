@@ -5,10 +5,10 @@
 <title>GTK+ 3 Reference Manual: GtkColorChooserWidget</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
-<link rel="up" href="SelectorWidgets.html" title="Selectors (Color/File/Font)">
+<link rel="up" href="SelectorWidgets.html" title="Selector Widgets and Dialogs">
 <link rel="prev" href="GtkColorButton.html" title="GtkColorButton">
 <link rel="next" href="GtkColorChooserDialog.html" title="GtkColorChooserDialog">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -60,7 +60,7 @@
 <col width="200px" class="properties_flags">
 </colgroup>
 <tbody><tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkColorChooserWidget.html#GtkColorChooserWidget--show-editor" title="The “show-editor” property">show-editor</a></td>
 <td class="property_flags">Read / Write</td>
 </tr></tbody>
@@ -73,16 +73,22 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GtkColorChooserWidget.html#GtkColorChooserWidget-struct" title="struct GtkColorChooserWidget">GtkColorChooserWidget</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkColorChooserWidget.html#GtkColorChooserWidgetClass" title="struct GtkColorChooserWidgetClass">GtkColorChooserWidgetClass</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="GtkColorChooserWidget.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBox.html" title="GtkBox">GtkBox</a>
@@ -112,7 +118,7 @@ use the context menu of any color of the palette, or use the
 <p>The chooser automatically remembers the last selection, as well
 as custom colors.</p>
 <p>To change the initially selected color, use <a class="link" href="GtkColorChooser.html#gtk-color-chooser-set-rgba" title="gtk_color_chooser_set_rgba ()"><code class="function">gtk_color_chooser_set_rgba()</code></a>.
-To get the selected font use <a class="link" href="GtkColorChooser.html#gtk-color-chooser-get-rgba" title="gtk_color_chooser_get_rgba ()"><code class="function">gtk_color_chooser_get_rgba()</code></a>.</p>
+To get the selected color use <a class="link" href="GtkColorChooser.html#gtk-color-chooser-get-rgba" title="gtk_color_chooser_get_rgba ()"><code class="function">gtk_color_chooser_get_rgba()</code></a>.</p>
 <p>The <a class="link" href="GtkColorChooserWidget.html" title="GtkColorChooserWidget"><span class="type">GtkColorChooserWidget</span></a> is used in the <a class="link" href="GtkColorChooserDialog.html" title="GtkColorChooserDialog"><span class="type">GtkColorChooserDialog</span></a>
 to provide a dialog for selecting colors.</p>
 </div>
@@ -137,13 +143,36 @@ gtk_color_chooser_widget_new (<em class="parameter"><code><span class="type">voi
 <a name="GtkColorChooserWidget-struct"></a><h3>struct GtkColorChooserWidget</h3>
 <pre class="programlisting">struct GtkColorChooserWidget;</pre>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GtkColorChooserWidgetClass"></a><h3>struct GtkColorChooserWidgetClass</h3>
+<pre class="programlisting">struct GtkColorChooserWidgetClass {
+  GtkBoxClass parent_class;
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.14.4.11.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody><tr>
+<td class="struct_member_name"><p><a class="link" href="GtkBox.html#GtkBoxClass" title="struct GtkBoxClass"><span class="type">GtkBoxClass</span></a> <em class="structfield"><code><a name="GtkColorChooserWidgetClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkColorChooserWidget.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GtkColorChooserWidget--show-editor"></a><h3>The <code class="literal">“show-editor”</code> property</h3>
-<pre class="programlisting">  “show-editor”              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
-<p>The ::show-editor property is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when the color chooser
+<pre class="programlisting">  “show-editor”              <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>The ::show-editor property is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when the color chooser
 is showing the single-color editor. It can be set to switch
 the color chooser into single-color editing mode.</p>
 <p>Flags: Read / Write</p>
@@ -158,6 +187,6 @@ the color chooser into single-color editing mode.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

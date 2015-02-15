@@ -35,10 +35,10 @@
 #include "gtkcsstypesprivate.h"
 #include "gtkprivatetypebuiltins.h"
 #include "gtkstylecontextprivate.h"
-#include "gtkthemingengine.h"
 #include "gtktypebuiltins.h"
 #include "gtkwin32themeprivate.h"
 
+#include "deprecated/gtkthemingengine.h"
 #include "deprecated/gtkgradientprivate.h"
 #include "deprecated/gtksymboliccolorprivate.h"
 
@@ -89,37 +89,7 @@ static void
 string_append_string (GString    *str,
                       const char *string)
 {
-  gsize len;
-
-  g_string_append_c (str, '"');
-
-  do {
-    len = strcspn (string, "\"\n\r\f");
-    g_string_append (str, string);
-    string += len;
-    switch (*string)
-      {
-      case '\0':
-        break;
-      case '\n':
-        g_string_append (str, "\\A ");
-        break;
-      case '\r':
-        g_string_append (str, "\\D ");
-        break;
-      case '\f':
-        g_string_append (str, "\\C ");
-        break;
-      case '\"':
-        g_string_append (str, "\\\"");
-        break;
-      default:
-        g_assert_not_reached ();
-        break;
-      }
-  } while (*string);
-
-  g_string_append_c (str, '"');
+  _gtk_css_print_string (str, string);
 }
 
 /*** IMPLEMENTATIONS ***/
@@ -302,7 +272,9 @@ color_value_print (const GValue *value,
     g_string_append (string, "none");
   else
     {
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       char *s = gdk_color_to_string (color);
+G_GNUC_END_IGNORE_DEPRECATIONS
       g_string_append (string, s);
       g_free (s);
     }
@@ -590,6 +562,8 @@ theming_engine_value_parse (GtkCssParser *parser,
   GtkThemingEngine *engine;
   char *str;
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
   if (_gtk_css_parser_try (parser, "none", TRUE))
     {
       g_value_set_object (value, gtk_theming_engine_load (NULL));
@@ -615,6 +589,8 @@ theming_engine_value_parse (GtkCssParser *parser,
   g_value_set_object (value, engine);
   g_free (str);
   return TRUE;
+
+G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 static void
@@ -1006,12 +982,13 @@ gtk_css_style_funcs_init (void)
                                 rgba_value_parse,
                                 rgba_value_print,
                                 rgba_value_compute);
+
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
+
   register_conversion_function (GDK_TYPE_COLOR,
                                 color_value_parse,
                                 color_value_print,
                                 color_value_compute);
-
-  G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
 
   register_conversion_function (GTK_TYPE_SYMBOLIC_COLOR,
                                 symbolic_color_value_parse,
@@ -1048,10 +1025,16 @@ gtk_css_style_funcs_init (void)
                                 string_value_parse,
                                 string_value_print,
                                 NULL);
+
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
   register_conversion_function (GTK_TYPE_THEMING_ENGINE,
                                 theming_engine_value_parse,
                                 theming_engine_value_print,
                                 NULL);
+
+  G_GNUC_END_IGNORE_DEPRECATIONS
+
   register_conversion_function (GTK_TYPE_BORDER,
                                 border_value_parse,
                                 border_value_print,

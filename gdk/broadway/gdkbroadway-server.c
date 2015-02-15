@@ -53,6 +53,8 @@ struct _GdkBroadwayServerClass
 
 static gboolean input_available_cb (gpointer stream, gpointer user_data);
 
+static GType gdk_broadway_server_get_type (void);
+
 G_DEFINE_TYPE (GdkBroadwayServer, gdk_broadway_server, G_TYPE_OBJECT)
 
 static void
@@ -498,6 +500,17 @@ _gdk_broadway_server_window_hide (GdkBroadwayServer *server,
 }
 
 void
+_gdk_broadway_server_window_focus (GdkBroadwayServer *server,
+				   gint id)
+{
+  BroadwayRequestFocusWindow msg;
+
+  msg.id = id;
+  gdk_broadway_server_send_message (server, msg,
+				    BROADWAY_REQUEST_FOCUS_WINDOW);
+}
+
+void
 _gdk_broadway_server_window_set_transient_for (GdkBroadwayServer *server,
 					       gint id, gint parent)
 {
@@ -507,43 +520,6 @@ _gdk_broadway_server_window_set_transient_for (GdkBroadwayServer *server,
   msg.parent = parent;
   gdk_broadway_server_send_message (server, msg,
 				    BROADWAY_REQUEST_SET_TRANSIENT_FOR);
-}
-
-gboolean
-_gdk_broadway_server_window_translate (GdkBroadwayServer *server,
-				       gint id,
-				       cairo_region_t *area,
-				       gint            dx,
-				       gint            dy)
-{
-  BroadwayRequestTranslate *msg;
-  cairo_rectangle_int_t rect;
-  int i, n_rects;
-  gsize msg_size;
-
-  n_rects = cairo_region_num_rectangles (area);
-
-  msg_size = sizeof (BroadwayRequestTranslate) + (n_rects-1) * sizeof (BroadwayRect);
-  msg = g_malloc (msg_size);
-
-  msg->id = id;
-  msg->dx = dx;
-  msg->dy = dy;
-  msg->n_rects = n_rects;
-  
-  for (i = 0; i < n_rects; i++)
-    {
-      cairo_region_get_rectangle (area, i, &rect);
-      msg->rects[i].x = rect.x;
-      msg->rects[i].y = rect.y;
-      msg->rects[i].width = rect.width;
-      msg->rects[i].height = rect.height;
-    }
-
-  gdk_broadway_server_send_message_with_size (server, (BroadwayRequestBase *)msg, msg_size,
-					      BROADWAY_REQUEST_TRANSLATE);
-  g_free (msg);
-  return TRUE;
 }
 
 static void *
@@ -566,12 +542,14 @@ map_named_shm (char *name, gsize size)
   res = ftruncate (fd, size);
   g_assert (res != -1);
 
+#ifdef HAVE_POSIX_FALLOCATE
   res = posix_fallocate (fd, 0, size);
   if (res != 0)
     {
       shm_unlink (name);
       g_error ("Not enough shared memory for window surface");
     }
+#endif
   
   ptr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
 
@@ -713,7 +691,7 @@ _gdk_broadway_server_create_surface (int                 width,
   data->data = create_random_shm (data->name, data->data_size);
 
   surface = cairo_image_surface_create_for_data ((guchar *)data->data,
-						 CAIRO_FORMAT_RGB24, width, height, width * sizeof (guint32));
+						 CAIRO_FORMAT_ARGB32, width, height, width * sizeof (guint32));
   g_assert (surface != NULL);
   
   cairo_surface_set_user_data (surface, &gdk_broadway_shm_cairo_key,
@@ -819,4 +797,15 @@ _gdk_broadway_server_ungrab_pointer (GdkBroadwayServer *server,
   g_free (reply);
 
   return status;
+}
+
+void
+_gdk_broadway_server_set_show_keyboard (GdkBroadwayServer *server,
+                                        gboolean show)
+{
+  BroadwayRequestSetShowKeyboard msg;
+
+  msg.show_keyboard = show;
+  gdk_broadway_server_send_message (server, msg,
+				    BROADWAY_REQUEST_SET_SHOW_KEYBOARD);
 }

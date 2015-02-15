@@ -22,7 +22,7 @@
 #ifndef __GTK_STACK_H__
 #define __GTK_STACK_H__
 
-#include <gtk/gtk.h>
+#include <gtk/gtkcontainer.h>
 
 G_BEGIN_DECLS
 
@@ -45,7 +45,19 @@ typedef enum {
   GTK_STACK_TRANSITION_TYPE_SLIDE_UP,
   GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN,
   GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT,
-  GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN
+  GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN,
+  GTK_STACK_TRANSITION_TYPE_OVER_UP,
+  GTK_STACK_TRANSITION_TYPE_OVER_DOWN,
+  GTK_STACK_TRANSITION_TYPE_OVER_LEFT,
+  GTK_STACK_TRANSITION_TYPE_OVER_RIGHT,
+  GTK_STACK_TRANSITION_TYPE_UNDER_UP,
+  GTK_STACK_TRANSITION_TYPE_UNDER_DOWN,
+  GTK_STACK_TRANSITION_TYPE_UNDER_LEFT,
+  GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT,
+  GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN,
+  GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP,
+  GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT,
+  GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT
 } GtkStackTransitionType;
 
 struct _GtkStack {
@@ -70,6 +82,9 @@ void                   gtk_stack_add_titled              (GtkStack              
                                                           GtkWidget              *child,
                                                           const gchar            *name,
                                                           const gchar            *title);
+GDK_AVAILABLE_IN_3_12
+GtkWidget *            gtk_stack_get_child_by_name       (GtkStack               *stack,
+                                                          const gchar            *name);
 GDK_AVAILABLE_IN_3_10
 void                   gtk_stack_set_visible_child       (GtkStack               *stack,
                                                           GtkWidget              *child);
@@ -99,6 +114,8 @@ void                   gtk_stack_set_transition_type     (GtkStack              
                                                           GtkStackTransitionType  transition);
 GDK_AVAILABLE_IN_3_10
 GtkStackTransitionType gtk_stack_get_transition_type     (GtkStack               *stack);
+GDK_AVAILABLE_IN_3_12
+gboolean               gtk_stack_get_transition_running  (GtkStack               *stack);
 
 G_END_DECLS
 

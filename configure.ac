@@ -9,9 +9,9 @@
 # set GTK_BINARY_AGE and GTK_INTERFACE_AGE to 0.
 
 m4_define([gtk_major_version], [3])
-m4_define([gtk_minor_version], [10])
-m4_define([gtk_micro_version], [8])
-m4_define([gtk_interface_age], [8])
+m4_define([gtk_minor_version], [14])
+m4_define([gtk_micro_version], [5])
+m4_define([gtk_interface_age], [5])
 m4_define([gtk_binary_age],
           [m4_eval(100 * gtk_minor_version + gtk_micro_version)])
 m4_define([gtk_version],
@@ -41,12 +41,13 @@ AC_CANONICAL_HOST
 m4_define([gtk_binary_version], [3.0.0])
 
 # required versions of other packages
-m4_define([glib_required_version], [2.37.5])
-m4_define([pango_required_version], [1.32.4])
-m4_define([atk_required_version], [2.7.5])
+m4_define([glib_required_version], [2.41.2])
+m4_define([pango_required_version], [1.36.7])
+m4_define([atk_required_version], [2.12.0])
 m4_define([cairo_required_version], [1.12.0])
-m4_define([gdk_pixbuf_required_version], [2.27.1])
-m4_define([introspection_required_version], [1.32.0])
+m4_define([gdk_pixbuf_required_version], [2.30.0])
+m4_define([introspection_required_version], [1.39.0])
+m4_define([wayland_required_version], [1.5.91])
 GLIB_REQUIRED_VERSION=glib_required_version
 PANGO_REQUIRED_VERSION=pango_required_version
 ATK_REQUIRED_VERSION=atk_required_version
@@ -123,6 +124,19 @@ m4_define([gail_lt_current_minus_age],[m4_eval(gail_lt_current - gail_lt_age)])
 AC_SUBST([GAIL_LT_VERSION_INFO],[gail_lt_version_info])
 AC_SUBST([GAIL_LT_CURRENT_MINUS_AGE],[gail_lt_current_minus_age])
 
+# Workaround for https://bugzilla.gnome.org/show_bug.cgi?id=721346 until fixed upstream in autoconf-archive
+if test "$cross_compiling" = "no"; then
+  if test -n "$CFLAGS"; then
+    CFLAGS_FOR_BUILD=$CFLAGS
+  fi
+  if test -n "$CPPFLAGS"; then
+    CPPFLAGS_FOR_BUILD=$CPPFLAGS
+  fi
+  if test -n "$LDFLAGS"; then
+    LDFLAGS_FOR_BUILD=$LDFLAGS
+  fi
+fi
+
 # Checks for programs.
 AC_PROG_CC
 AX_PROG_CC_FOR_BUILD
@@ -170,7 +184,13 @@ case $host in
   *-*-linux*)
     os_linux=yes
     ;;
+  *-*-darwin*)
+    os_darwin=yes
+    ;;
 esac
+
+# Define _GNU_SOURCE etc. where appropriate, e.g. for strptime() on glibc
+AC_USE_SYSTEM_EXTENSIONS
 
 dnl
 dnl Check for a working C++ compiler, but do not bail out, if none is found.
@@ -214,7 +234,7 @@ LT_OUTPUT
 AC_SYS_LARGEFILE
 
 AM_PROG_AS
-AC_PATH_PROG(NM, nm, nm)
+AC_PATH_TOOL(NM, nm, nm)
 
 AC_MSG_CHECKING([for some Win32 platform])
 case "$host" in
@@ -231,6 +251,7 @@ AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = "yes")
 AM_CONDITIONAL(OS_WIN32, test "$os_win32" = "yes")
 AM_CONDITIONAL(OS_UNIX, test "$os_win32" != "yes")
 AM_CONDITIONAL(OS_LINUX, test "$os_linux" = "yes")
+AM_CONDITIONAL(OS_DARWIN, test "$os_darwin" = "yes")
 
 if test "$os_win32" = "yes"; then
   AC_CHECK_TOOL(WINDRES, windres, no)
@@ -332,6 +353,7 @@ GDK_EXTRA_CFLAGS=
 GDK_WINDOWING=
 PANGO_PACKAGES="pango pangocairo"
 
+ENABLE_ON_X11='%'
 if test "$enable_x11_backend" = "yes"; then
   # GDK calls the xlib backend "x11," cairo calls it "xlib." Other
   # backend names are identical.
@@ -343,7 +365,9 @@ if test "$enable_x11_backend" = "yes"; then
   backend_immodules="$backend_immodules,xim"
   GDK_WINDOWING="$GDK_WINDOWING
 #define GDK_WINDOWING_X11"
+  ENABLE_ON_X11=''
 fi
+AC_SUBST(ENABLE_ON_X11)
 
 if test "$enable_win32_backend" = "yes"; then
   cairo_backends="$cairo_backends cairo-win32"
@@ -380,10 +404,16 @@ else
 fi
 AC_SUBST(DISABLE_ON_QUARTZ)
 
+AC_CHECK_LIB([rt], [shm_open], [SHM_LIBS="-lrt"], [SHM_LIBS=""])
+AC_SUBST(SHM_LIBS)
+
+AC_CHECK_FUNCS(posix_fallocate)
+
 if test "x$enable_broadway_backend" = xyes; then
   GDK_BACKENDS="$GDK_BACKENDS broadway"
   cairo_backends="$cairo_backends cairo"
-  if test "$os_unix" = "yes"; then
+  backend_immodules="$backend_immodules,broadway"
+  if test "$os_win32" != "yes"; then
     have_gio_unix=yes
   fi
   GDK_WINDOWING="$GDK_WINDOWING
@@ -396,7 +426,7 @@ fi
 
 PKG_PROG_PKG_CONFIG
 
-WAYLAND_DEPENDENCIES="wayland-client >= 1.2.0 xkbcommon >= 0.2.0 wayland-cursor"
+WAYLAND_DEPENDENCIES="wayland-client >= wayland_required_version xkbcommon >= 0.2.0 wayland-cursor >= wayland_required_version"
 if test "$enable_wayland_backend" = "maybe" ; then
   AC_PATH_PROG([WAYLAND_SCANNER],[wayland-scanner],[no])
   PKG_CHECK_EXISTS($WAYLAND_DEPENDENCIES, [have_wayland_deps=yes], [have_wayland_deps=no])
@@ -409,7 +439,6 @@ if test "$enable_wayland_backend" = "maybe" ; then
   AC_MSG_RESULT($enable_wayland_backend)
 fi
 
-DISABLE_ON_WAYLAND=''
 if test "$enable_wayland_backend" = "yes"; then
   # For the cairo image backend
   cairo_backends="$cairo_backends cairo"
@@ -417,7 +446,6 @@ if test "$enable_wayland_backend" = "yes"; then
   have_gio_unix=yes
   GDK_WINDOWING="$GDK_WINDOWING
 #define GDK_WINDOWING_WAYLAND"
-  DISABLE_ON_WAYLAND='%'
   WAYLAND_PACKAGES="$WAYLAND_DEPENDENCIES"
   AC_PATH_PROG([WAYLAND_SCANNER],[wayland-scanner],[no])
   AS_IF([test "x$WAYLAND_SCANNER" = "xno"],
@@ -428,7 +456,6 @@ if test "$enable_wayland_backend" = "yes"; then
 else
   AM_CONDITIONAL(USE_WAYLAND, false)
 fi
-AC_SUBST(DISABLE_ON_WAYLAND)
 
 # strip leading space
 GDK_BACKENDS=${GDK_BACKENDS#* }
@@ -720,9 +747,6 @@ LIBS="$LIBS $GLIB_LIBS"
 AC_CHECK_FUNCS(bind_textdomain_codeset)
 LIBS=$gtk_save_LIBS
 
-AC_CHECK_HEADERS(pwd.h,
-                 AC_DEFINE(HAVE_PWD_H, 1,
-                           [Define to 1 if pwd.h is available]))
 AC_CHECK_HEADERS(sys/mman.h,
                  AC_DEFINE(HAVE_SYS_MMAN_H, 1,
                            [Define to 1 if mman.h is available]))
@@ -888,6 +912,7 @@ AM_CONDITIONAL(INCLUDE_IM_INUKTITUT, [test x"$INCLUDE_inuktitut" = xyes])
 AM_CONDITIONAL(INCLUDE_IM_IPA, [test x"$INCLUDE_ipa" = xyes])
 AM_CONDITIONAL(INCLUDE_IM_MULTIPRESS, [test x"$INCLUDE_multipress" = xyes])
 AM_CONDITIONAL(INCLUDE_IM_QUARTZ, [test x"$INCLUDE_quartz" = xyes])
+AM_CONDITIONAL(INCLUDE_IM_BROADWAY, [test x"$INCLUDE_broadway" = xyes])
 AM_CONDITIONAL(INCLUDE_IM_THAI, [test x"$INCLUDE_thai" = xyes])
 AM_CONDITIONAL(INCLUDE_IM_TI_ER, [test x"$INCLUDE_ti_er" = xyes])
 AM_CONDITIONAL(INCLUDE_IM_TI_ET, [test x"$INCLUDE_ti_et" = xyes])
@@ -911,7 +936,9 @@ AM_CONDITIONAL(CROSS_COMPILING, test $cross_compiling = yes)
 AS_IF([test "x$enable_gtk2_dependency" = xyes],
       [AC_PATH_PROG(GTK_UPDATE_ICON_CACHE, gtk-update-icon-cache, no)
        if test x$GTK_UPDATE_ICON_CACHE = xno; then
-         REBUILD_PNGS=#
+         AC_MSG_ERROR([
+*** --enable-gtk2-dependency has been set but no existing
+*** `gtk-update-icon-cache` has been found in the path.])
        fi],
 
       [test "x$cross_compiling" = xyes],
@@ -929,21 +956,20 @@ AS_IF([test "x$enable_gtk2_dependency" = xyes],
 
        NATIVE_GDKPIXBUF_CFLAGS=`$PKG_CONFIG_FOR_BUILD --cflags gdk-pixbuf-2.0`
        NATIVE_GDKPIXBUF_LIBS=`$PKG_CONFIG_FOR_BUILD --libs gdk-pixbuf-2.0`
+       # This is the native gtk-update-icon-cache which will be used at
+       # build time, NOT the one installed on the target host.
+       GTK_UPDATE_ICON_CACHE="`cd $builddir && pwd`/gtk/native/native-update-icon-cache$BUILD_EXEEXT"
        AC_SUBST(NATIVE_GDKPIXBUF_CFLAGS)
-       AC_SUBST(NATIVE_GDKPIXBUF_LIBS)]
+       AC_SUBST(NATIVE_GDKPIXBUF_LIBS)
+       AC_SUBST(GTK_UPDATE_ICON_CACHE)],
+
+      [# In native compiling case, the gtk-update-icon-cache installed
+       # is the same as the one used during build.
+       GTK_UPDATE_ICON_CACHE="\$(abs_top_builddir)/gtk/gtk-update-icon-cache$EXEEXT"
+       AC_SUBST(GTK_UPDATE_ICON_CACHE)]
 )
 
 AM_CONDITIONAL(USE_EXTERNAL_ICON_CACHE, [test "x$enable_gtk2_dependency" = xyes])
-
-AC_PATH_PROG(GDK_PIXBUF_CSOURCE, gdk-pixbuf-csource, no)
-
-if test ! -f $srcdir/gtk/gtkbuiltincache.h &&
-   test "x$REBUILD_PNGS" = "x#" ; then
-     AC_MSG_ERROR([
-*** gtkbuiltincache.h is not in the tree, and cannot be built
-*** because you don't have libpng, or (when cross-compiling) you
-*** don't have a prebuilt gtk-update-icon-cache on the build system.])
-fi
 
 ########################################
 # Windowing system checks
@@ -1250,11 +1276,11 @@ fi
 
 # Check for gio-unix
 if test "$have_gio_unix" = "yes"; then
-  GDK_GIO_PACKAGE=gio-unix-2.0
+  GDK_GIO_PACKAGE="gio-unix-2.0 >= glib_required_version"
   AC_DEFINE([HAVE_GIO_UNIX], [1],
             [Define if gio-unix is available])
 else
-  GDK_GIO_PACKAGE=gio-2.0
+  GDK_GIO_PACKAGE="gio-2.0 >= glib_required_version"
 fi
 
 # Check for Pango flags
@@ -1299,7 +1325,7 @@ LIBS="$gtk_save_LIBS"
 CFLAGS="$saved_cflags"
 LDFLAGS="$saved_ldflags"
 
-GDK_PACKAGES="$PANGO_PACKAGES gdk-pixbuf-2.0 cairo cairo-gobject"
+GDK_PACKAGES="$PANGO_PACKAGES gdk-pixbuf-2.0 >= gdk_pixbuf_required_version cairo >= cairo_required_version cairo-gobject >= cairo_required_version"
 GDK_PRIVATE_PACKAGES="$GDK_GIO_PACKAGE $X_PACKAGES $WAYLAND_PACKAGES $cairo_backends"
 if test "x$enable_x11_backend" = xyes; then
   GDK_PRIVATE_PACKAGES="$GDK_PRIVATE_PACKAGES pangoft2"
@@ -1336,13 +1362,13 @@ fi
 
 PKG_CHECK_MODULES(ATK, $ATK_PACKAGES)
 
-GTK_PACKAGES="atk cairo cairo-gobject gdk-pixbuf-2.0 gio-2.0"
+GTK_PACKAGES="atk >= atk_required_version cairo >= cairo_required_version cairo-gobject >= cairo_required_version gdk-pixbuf-2.0 >= gdk_pixbuf_required_version gio-2.0 >= glib_required_version"
 GTK_PRIVATE_PACKAGES="$ATK_PACKAGES"
 if test "x$enable_x11_backend" = xyes; then
   GTK_PRIVATE_PACKAGES="$GTK_PRIVATE_PACKAGES pangoft2"
 fi
 if test "$have_gio_unix" = "yes"; then
-  GTK_PRIVATE_PACKAGES="$GTK_PRIVATE_PACKAGES gio-unix-2.0"
+  GTK_PRIVATE_PACKAGES="$GTK_PRIVATE_PACKAGES gio-unix-2.0 >= glib_required_version"
 fi
 GTK_EXTRA_LIBS=
 
@@ -1423,7 +1449,7 @@ AC_ARG_ENABLE(cups,
 if test "x$enable_cups" = "xno"; then
   AM_CONDITIONAL(HAVE_CUPS, false)
 else
-  AC_PATH_PROG(CUPS_CONFIG, cups-config, no)
+  AC_PATH_TOOL(CUPS_CONFIG, cups-config, no)
   if test "x$CUPS_CONFIG" = "xno"; then
     if test "x$enable_cups" = "xauto"; then
       AM_CONDITIONAL(HAVE_CUPS, false)
@@ -1504,6 +1530,37 @@ else
   fi
 fi
 
+# Checks to see if we should compile with cloudprint backend for GTK+
+#
+
+AC_ARG_ENABLE(cloudprint,
+              [AS_HELP_STRING([--disable-cloudprint],
+                              [disable cloudprint print backend])],,
+              [enable_cloudprint=auto])
+
+if test "x$enable_cloudprint" = "xno"; then
+  AM_CONDITIONAL(HAVE_CLOUDPRINT, false)
+else
+  PKG_CHECK_MODULES(REST, [rest-0.7], have_rest=yes, have_rest=no)
+  PKG_CHECK_MODULES(JSON_GLIB, [json-glib-1.0], have_json_glib=yes, have_json_glib=no)
+  if test "x$have_rest" = "xyes" -a "x$have_json_glib" = "xyes"; then
+    PRINT_BACKENDS="$PRINT_BACKENDS cloudprint"
+  fi
+  AM_CONDITIONAL(HAVE_CLOUDPRINT, test "x$have_rest" = "xyes" -a "x$have_json_glib" = "xyes")
+fi
+
+if test "x$enable_cloudprint" = "xyes" -a "x$have_rest" = "xno"; then
+    AC_MSG_ERROR([
+*** rest not found.
+])
+fi
+
+if test "x$enable_cloudprint" = "xyes" -a "x$have_json_glib" = "xno"; then
+    AC_MSG_ERROR([
+*** json-glib not found.
+])
+fi
+
 AM_CONDITIONAL(HAVE_PAPI_CUPS, test "x$have_papi" = "xyes" -a "x$CUPS_CONFIG" != "xno")
 
 gtk_save_cppflags="$CPPFLAGS"
@@ -1572,37 +1629,6 @@ GLIB_GSETTINGS
 GOBJECT_INTROSPECTION_CHECK(introspection_required_version)
 
 ##################################################
-# Packagekit module
-#################################################
-
-AC_ARG_ENABLE(packagekit,
-              [AS_HELP_STRING([--enable-packagekit=@<:@yes/no/auto@:>@],
-                              [build PackageKit open-with module [default=auto]])],
-              [enable_packagekit="$enableval"],
-              [enable_packagekit=auto])
-if test "$enable_packagekit" = "auto"; then
-  if test "$os_win32" = "yes"; then
-    enable_packagekit=no
-  else
-    enable_packagekit=yes
-  fi
-fi
-
-AC_MSG_CHECKING([whether to use PackageKit])
-build_packagekit=no
-if test "x$enable_packagekit" != "xno"; then
-  if test "$os_win32" != "yes"; then
-    build_packagekit=yes
-    AC_DEFINE(ENABLE_PACKAGEKIT, 1, [define to enable packagekit])
-  else
-    AC_MSG_ERROR([packagekit support is not available on win32])
-  fi
-fi
-AC_MSG_RESULT([$build_packagekit])
-
-AM_CONDITIONAL(ENABLE_PACKAGEKIT, test "x$build_packagekit" = "xyes")
-
-##################################################
 # colord module
 #################################################
 
@@ -1648,7 +1674,7 @@ AM_CONDITIONAL(HAVE_COLORD, test "x$have_colord" = "xyes")
 # Checks for gtk-doc and docbook-tools
 ##################################################
 
-GTK_DOC_CHECK([1.11],[--flavour no-tmpl])
+GTK_DOC_CHECK([1.20],[--flavour no-tmpl])
 
 AC_ARG_ENABLE(man,
               [AS_HELP_STRING([--enable-man],
@@ -1697,6 +1723,16 @@ if test "$enable_man" != no; then
 else
   AC_MSG_RESULT([no])
 fi
+
+AC_ARG_ENABLE(doc-cross-references,
+              AC_HELP_STRING([--disable-doc-cross-references],
+                             [cross reference symbols from other libraries @<:@default=yes@:>@]),
+              enable_doc_cross_references=$enableval,
+              enable_doc_cross_references=yes)
+
+AM_CONDITIONAL(ENABLE_DOC_CROSS_REFERENCES, test x$enable_doc_cross_references != xno)
+
+
 
 ##################################################
 # Visibility handling
@@ -1815,9 +1851,10 @@ po-properties/Makefile.in
 demos/Makefile
 demos/gtk-demo/Makefile
 demos/gtk-demo/geninclude.pl
-demos/pixbuf-demo/Makefile
 demos/widget-factory/Makefile
+demos/icon-browser/Makefile
 examples/Makefile
+examples/bp/Makefile
 examples/application1/Makefile
 examples/application2/Makefile
 examples/application3/Makefile
@@ -1827,10 +1864,12 @@ examples/application6/Makefile
 examples/application7/Makefile
 examples/application8/Makefile
 examples/application9/Makefile
+examples/application10/Makefile
 tests/Makefile
 tests/visuals/Makefile
 testsuite/Makefile
 testsuite/a11y/Makefile
+testsuite/a11y/state/Makefile
 testsuite/css/Makefile
 testsuite/css/parser/Makefile
 testsuite/gdk/Makefile
@@ -1847,10 +1886,15 @@ docs/reference/libgail-util/Makefile
 docs/reference/libgail-util/version.xml
 docs/tools/Makefile
 build/Makefile
+build/gtk-introspection-msvc.mak
 build/win32/Makefile
 build/win32/crypt/Makefile
 build/win32/vs9/Makefile
+build/win32/vs9/gtk-version-paths.vsprops
 build/win32/vs10/Makefile
+build/win32/vs10/gtk-version-paths.props
+build/win32/vs11/Makefile
+build/win32/vs12/Makefile
 gdk/Makefile
 gdk/broadway/Makefile
 gdk/x11/Makefile
@@ -1864,15 +1908,16 @@ gtk/Makefile
 gtk/makefile.msc
 gtk/gtkversion.h
 gtk/gtk-win32.rc
-gtk/a11y/Makefile
+gtk/libgtk3.manifest
+gtk/inspector/Makefile
 gtk/native/Makefile
+util/Makefile
 libgail-util/Makefile
 modules/Makefile
-modules/engines/Makefile
-modules/engines/pixbuf/Makefile
 modules/input/Makefile
 modules/printbackends/Makefile
 modules/printbackends/cups/Makefile
+modules/printbackends/cloudprint/Makefile
 modules/printbackends/lpr/Makefile
 modules/printbackends/file/Makefile
 modules/printbackends/papi/Makefile
@@ -1896,7 +1941,6 @@ fi
 echo "        Print backends:       $PRINT_BACKENDS"
 echo "        Dynamic modules:      $build_dynamic_modules"
 echo "        Included immodules:   $included_immodules"
-echo "        PackageKit support:   $build_packagekit"
 echo "        colord support:       $have_colord"
 echo "        Introspection:        $found_introspection"
 echo "        Debugging:            $enable_debug"

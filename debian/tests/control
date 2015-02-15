@@ -1,2 +1,2 @@
 Tests: build python3-gi
-Depends: libgtk-3-dev, build-essential, xvfb, python3-gi, gir1.2-gtk-3.0
+Depends: libgtk-3-dev, build-essential, xauth, xvfb, python3-gi, gir1.2-gtk-3.0

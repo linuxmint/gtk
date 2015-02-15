@@ -36,25 +36,25 @@
  * @Title: Selections
  *
  * The X selection mechanism provides a way to transfer arbitrary chunks of
- * data between programs. A <firstterm>selection</firstterm> is a essentially
+ * data between programs. A “selection” is a essentially
  * a named clipboard, identified by a string interned as a #GdkAtom. By
  * claiming ownership of a selection, an application indicates that it will
  * be responsible for supplying its contents. The most common selections are
- * <literal>PRIMARY</literal> and <literal>CLIPBOARD</literal>.
+ * `PRIMARY` and `CLIPBOARD`.
  *
  * The contents of a selection can be represented in a number of formats,
- * called <firstterm>targets</firstterm>. Each target is identified by an atom.
+ * called “targets”. Each target is identified by an atom.
  * A list of all possible targets supported by the selection owner can be
- * retrieved by requesting the special target <literal>TARGETS</literal>. When
+ * retrieved by requesting the special target `TARGETS`. When
  * a selection is retrieved, the data is accompanied by a type (an atom), and
  * a format (an integer, representing the number of bits per item).
- * See <link linkend="gdk-Properties-and-Atoms">Properties and Atoms</link>
+ * See [Properties and Atoms][gdk3-Properties-and-Atoms]
  * for more information.
  *
  * The functions in this section only contain the lowlevel parts of the
  * selection protocol. A considerably more complicated implementation is needed
  * on top of this. GTK+ contains such an implementation in the functions in
- * <literal>gtkselection.h</literal> and programmers should use those functions
+ * `gtkselection.h` and programmers should use those functions
  * instead of the ones presented here. If you plan to implement selection
  * handling directly on top of the functions here, you should refer to the
  * X Inter-client Communication Conventions Manual (ICCCM).
@@ -62,7 +62,7 @@
 
 /**
  * gdk_selection_owner_set:
- * @owner: a #GdkWindow or %NULL to indicate that the
+ * @owner: (allow-none): a #GdkWindow or %NULL to indicate that the
  *   the owner for the given should be unset.
  * @selection: an atom identifying a selection.
  * @time_: timestamp to use when setting the selection.
@@ -95,14 +95,12 @@ gdk_selection_owner_set (GdkWindow *owner,
  *
  * Determines the owner of the given selection.
  *
- * Returns: (transfer none): if there is a selection owner for
- *   this window, and it is a window known to the current
- *   process, the #GdkWindow that owns the selection, otherwise
- *   %NULL. Note that the return value may be owned
- *   by a different process if a foreign window
- *   was previously created for that window, but
- *   a new foreign window will never be created by
- *   this call.
+ * Returns: (nullable) (transfer none): if there is a selection owner
+ *   for this window, and it is a window known to the current process,
+ *   the #GdkWindow that owns the selection, otherwise %NULL. Note
+ *   that the return value may be owned by a different process if a
+ *   foreign window was previously created for that window, but a new
+ *   foreign window will never be created by this call.
  */
 GdkWindow*
 gdk_selection_owner_get (GdkAtom selection)
@@ -138,7 +136,7 @@ gdk_selection_send_notify (GdkWindow      *requestor,
 /**
  * gdk_selection_owner_set_for_display:
  * @display: the #GdkDisplay
- * @owner: a #GdkWindow or %NULL to indicate that the owner for
+ * @owner: (nullable): a #GdkWindow or %NULL to indicate that the owner for
  *         the given should be unset
  * @selection: an atom identifying a selection
  * @time_: timestamp to use when setting the selection
@@ -179,9 +177,10 @@ gdk_selection_owner_set_for_display (GdkDisplay *display,
  * process if a foreign window was previously created for that
  * window, but a new foreign window will never be created by this call.
  *
- * Returns: (transfer none): if there is a selection owner for this window,
- *    and it is a window known to the current process, the #GdkWindow that
- *    owns the selection, otherwise %NULL.
+ * Returns: (nullable) (transfer none): if there is a selection owner
+ *    for this window, and it is a window known to the current
+ *    process, the #GdkWindow that owns the selection, otherwise
+ *    %NULL.
  *
  * Since: 2.2
  */
@@ -241,7 +240,7 @@ gdk_selection_send_notify_for_display (GdkDisplay       *display,
  * will not be used by applications, who should use the #GtkClipboard
  * API instead.
  *
- * Return value: the length of the retrieved data.
+ * Returns: the length of the retrieved data.
  */
 gint
 gdk_selection_property_get (GdkWindow  *requestor,
@@ -289,7 +288,7 @@ gdk_selection_convert (GdkWindow *requestor,
  * Converts a text property in the given encoding to
  * a list of UTF-8 strings.
  *
- * Return value: the number of strings in the resulting list
+ * Returns: the number of strings in the resulting list
  *
  * Since: 2.2
  */
@@ -318,10 +317,10 @@ gdk_text_property_to_utf8_list_for_display (GdkDisplay     *display,
  * is not specified; it may be as pseudo-escape sequences
  * \x{ABCD}, or it may be in some other form of approximation.
  *
- * Return value: the newly-allocated string, or %NULL if the
- *               conversion failed. (It should not fail for
- *               any properly formed UTF-8 string unless system
- *               limits like memory or file descriptors are exceeded.)
+ * Returns: (nullable): the newly-allocated string, or %NULL if the
+ *          conversion failed. (It should not fail for any properly
+ *          formed UTF-8 string unless system limits like memory or
+ *          file descriptors are exceeded.)
  **/
 gchar *
 gdk_utf8_to_string_target (const gchar *str)

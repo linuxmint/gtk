@@ -41,7 +41,7 @@ typedef struct _GdkTimeCoord GdkTimeCoord;
  * @GDK_SOURCE_PEN: the device is a stylus of a graphics tablet or similar device.
  * @GDK_SOURCE_ERASER: the device is an eraser. Typically, this would be the other end
  *                     of a stylus on a graphics tablet.
- * @GDK_SOURCE_CURSOR: the device is a graphics tablet "puck" or similar device.
+ * @GDK_SOURCE_CURSOR: the device is a graphics tablet “puck” or similar device.
  * @GDK_SOURCE_KEYBOARD: the device is a keyboard.
  * @GDK_SOURCE_TOUCHSCREEN: the device is a direct-input touch device, such
  *     as a touchscreen or tablet. This device type has been added in 3.4.
@@ -64,9 +64,9 @@ typedef enum
 /**
  * GdkInputMode:
  * @GDK_MODE_DISABLED: the device is disabled and will not report any events.
- * @GDK_MODE_SCREEN: the device is enabled. The device's coordinate space
+ * @GDK_MODE_SCREEN: the device is enabled. The device’s coordinate space
  *                   maps to the entire screen.
- * @GDK_MODE_WINDOW: the device is enabled. The device's coordinate space
+ * @GDK_MODE_WINDOW: the device is enabled. The device’s coordinate space
  *                   is mapped to a single window. The manner in which this window
  *                   is chosen is undefined, but it will typically be the same
  *                   way in which the focus window for key events is determined.
@@ -115,7 +115,7 @@ typedef enum
  * @GDK_DEVICE_TYPE_FLOATING: Device is a physical device, currently not attached to
  *                            any virtual device.
  *
- * Indicates the device type. See <link linkend="GdkDeviceManager.description">above</link>
+ * Indicates the device type. See [above][GdkDeviceManager.description]
  * for more information about the meaning of these device types.
  */
 typedef enum {
@@ -132,9 +132,9 @@ typedef enum {
 /**
  * GdkTimeCoord:
  * @time: The timestamp for this event.
- * @axes: the values of the device's axes.
+ * @axes: the values of the device’s axes.
  *
- * The #GdkTimeCoord structure stores a single event in a motion history.
+ * A #GdkTimeCoord stores a single event in a motion history.
  */
 struct _GdkTimeCoord
 {
@@ -271,6 +271,8 @@ gboolean gdk_device_grab_info_libgtk_only (GdkDisplay  *display,
                                            GdkWindow  **grab_window,
                                            gboolean    *owner_events);
 
+GDK_AVAILABLE_IN_3_12
+GdkWindow *gdk_device_get_last_event_window (GdkDevice *device);
 
 G_END_DECLS
 

@@ -68,7 +68,7 @@ typedef enum {
  * The type of function that is used with custom filters,
  * see gtk_recent_filter_add_custom().
  *
- * Return value: %TRUE if the file should be displayed
+ * Returns: %TRUE if the file should be displayed
  */
 typedef gboolean (*GtkRecentFilterFunc) (const GtkRecentFilterInfo *filter_info,
 					 gpointer                   user_data);
@@ -76,6 +76,17 @@ typedef gboolean (*GtkRecentFilterFunc) (const GtkRecentFilterInfo *filter_info,
 
 /**
  * GtkRecentFilterInfo:
+ * @contains: #GtkRecentFilterFlags to indicate which fields are set.
+ * @uri: (nullable): The URI of the file being tested.
+ * @display_name: (nullable): The string that will be used to display
+ *    the file in the recent chooser.
+ * @mime_type: (nullable): MIME type of the file.
+ * @applications: (nullable) (array zero-terminated=1): The list of
+ *    applications that have registered the file.
+ * @groups: (nullable) (array zero-terminated=1): The groups to which
+ *    the file belongs to.
+ * @age: The number of days elapsed since the file has been
+ *    registered.
  *
  * A GtkRecentFilterInfo struct is used
  * to pass information about the tested file to gtk_recent_filter_filter().

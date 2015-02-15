@@ -46,11 +46,11 @@
  * @Title: GtkLayout
  * @See_also: #GtkDrawingArea, #GtkScrolledWindow
  *
- * #GtkLayout is similar to #GtkDrawingArea in that it's a "blank slate"
- * and doesn't do anything but paint a blank background by default. It's
+ * #GtkLayout is similar to #GtkDrawingArea in that it’s a “blank slate”
+ * and doesn’t do anything but paint a blank background by default. It's
  * different in that it supports scrolling natively (you can add it to a
- * #GtkScrolledWindow), and it can contain child widgets, since it's a
- * #GtkContainer. However if you're just going to draw, a #GtkDrawingArea
+ * #GtkScrolledWindow), and it can contain child widgets, since it’s a
+ * #GtkContainer. However if you’re just going to draw, a #GtkDrawingArea
  * is a better choice since it has lower overhead.
  *
  * When handling expose events on a #GtkLayout, you must draw to
@@ -172,10 +172,10 @@ G_DEFINE_TYPE_WITH_CODE (GtkLayout, gtk_layout, GTK_TYPE_CONTAINER,
  * @vadjustment: (allow-none): vertical scroll adjustment, or %NULL
  * 
  * Creates a new #GtkLayout. Unless you have a specific adjustment
- * you'd like the layout to use for scrolling, pass %NULL for
+ * you’d like the layout to use for scrolling, pass %NULL for
  * @hadjustment and @vadjustment.
  * 
- * Return value: a new #GtkLayout
+ * Returns: a new #GtkLayout
  **/
   
 GtkWidget*    
@@ -198,7 +198,7 @@ gtk_layout_new (GtkAdjustment *hadjustment,
  *
  * Retrieve the bin window of the layout used for drawing operations.
  *
- * Return value: (transfer none): a #GdkWindow
+ * Returns: (transfer none): a #GdkWindow
  *
  * Since: 2.14
  **/
@@ -221,7 +221,7 @@ gtk_layout_get_bin_window (GtkLayout *layout)
  *
  * See #GtkScrolledWindow, #GtkScrollbar, #GtkAdjustment for details.
  *
- * Return value: (transfer none): horizontal scroll adjustment
+ * Returns: (transfer none): horizontal scroll adjustment
  *
  * Deprecated: 3.0: Use gtk_scrollable_get_hadjustment()
  **/
@@ -243,7 +243,7 @@ gtk_layout_get_hadjustment (GtkLayout *layout)
  *
  * See #GtkScrolledWindow, #GtkScrollbar, #GtkAdjustment for details.
  *
- * Return value: (transfer none): vertical scroll adjustment
+ * Returns: (transfer none): vertical scroll adjustment
  *
  * Deprecated: 3.0: Use gtk_scrollable_get_vadjustment()
  **/
@@ -601,7 +601,7 @@ gtk_layout_set_size (GtkLayout     *layout,
  *     @layout, or %NULL
  *
  * Gets the size that has been set on the layout, and that determines
- * the total extents of the layout's scrollbar area. See
+ * the total extents of the layout’s scrollbar area. See
  * gtk_layout_set_size ().
  **/
 void
@@ -675,7 +675,7 @@ gtk_layout_class_init (GtkLayoutClass *class)
 						     0,
 						     G_MAXINT,
 						     100,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   g_object_class_install_property (gobject_class,
 				   PROP_HEIGHT,
 				   g_param_spec_uint ("height",
@@ -684,7 +684,7 @@ gtk_layout_class_init (GtkLayoutClass *class)
 						     0,
 						     G_MAXINT,
 						     100,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   widget_class->realize = gtk_layout_realize;
   widget_class->unrealize = gtk_layout_unrealize;
   widget_class->map = gtk_layout_map;
@@ -752,20 +752,26 @@ gtk_layout_set_property (GObject      *object,
       gtk_layout_do_set_vadjustment (layout, g_value_get_object (value));
       break;
     case PROP_HSCROLL_POLICY:
-      priv->hscroll_policy = g_value_get_enum (value);
-      gtk_widget_queue_resize (GTK_WIDGET (layout));
+      if (priv->hscroll_policy != g_value_get_enum (value))
+        {
+          priv->hscroll_policy = g_value_get_enum (value);
+          gtk_widget_queue_resize (GTK_WIDGET (layout));
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_VSCROLL_POLICY:
-      priv->vscroll_policy = g_value_get_enum (value);
-      gtk_widget_queue_resize (GTK_WIDGET (layout));
+      if (priv->vscroll_policy != g_value_get_enum (value))
+        {
+          priv->vscroll_policy = g_value_get_enum (value);
+          gtk_widget_queue_resize (GTK_WIDGET (layout));
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_WIDTH:
-      gtk_layout_set_size (layout, g_value_get_uint (value),
-			   priv->height);
+      gtk_layout_set_size (layout, g_value_get_uint (value), priv->height);
       break;
     case PROP_HEIGHT:
-      gtk_layout_set_size (layout, priv->width,
-			   g_value_get_uint (value));
+      gtk_layout_set_size (layout, priv->width, g_value_get_uint (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);

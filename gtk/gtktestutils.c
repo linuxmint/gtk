@@ -19,7 +19,6 @@
 
 #include "config.h"
 
-#include <gtk/gtkx.h>
 #include "gtkspinbutton.h"
 #include "gtkmain.h"
 #include "gtkbox.h"
@@ -32,6 +31,14 @@
 #include <string.h>
 #include <math.h>
 
+/* This is a hack.
+ * We want to include the same headers as gtktypefuncs.c but we are not
+ * allowed to include gtkx.h directly during GTK compilation.
+ * So....
+ */
+#undef GTK_COMPILATION
+#include <gtk/gtkx.h>
+#define GTK_COMPILATION
 
 /**
  * SECTION:gtktesting
@@ -41,10 +48,10 @@
 
 /**
  * gtk_test_init:
- * @argcp: Address of the <parameter>argc</parameter> parameter of the
+ * @argcp: Address of the `argc` parameter of the
  *        main() function. Changed if any arguments were handled.
  * @argvp: (inout) (array length=argcp): Address of the 
- *        <parameter>argv</parameter> parameter of main().
+ *        `argv` parameter of main().
  *        Any parameters understood by g_test_init() or gtk_init() are
  *        stripped before return.
  * @...: currently unused
@@ -52,8 +59,8 @@
  * This function is used to initialize a GTK+ test program.
  *
  * It will in turn call g_test_init() and gtk_init() to properly
- * initialize the testing framework and graphical toolkit. It'll 
- * also set the program's locale to "C" and prevent loading of rc 
+ * initialize the testing framework and graphical toolkit. It’ll 
+ * also set the program’s locale to “C” and prevent loading of rc 
  * files and Gtk+ modules. This is done to make tets program
  * environments as deterministic as possible.
  *
@@ -130,7 +137,7 @@ quit_main_loop_callback (GtkWidget     *widget,
  * gtk_test_widget_wait_for_draw:
  * @widget: the widget to wait for
  *
- * Enters the main loop and waits for @widget to be "drawn". In this
+ * Enters the main loop and waits for @widget to be “drawn”. In this
  * context that means it waits for the frame clock of @widget to have
  * run a full styling, layout and drawing cycle.
  *
@@ -236,7 +243,7 @@ gtk_test_widget_click (GtkWidget      *widget,
  *
  * This function will generate a @button click in the upwards or downwards
  * spin button arrow areas, usually leading to an increase or decrease of
- * spin button's value.
+ * spin button’s value.
  *
  * Returns: whether all actions neccessary for the button click simulation were carried out successfully.
  *
@@ -270,9 +277,9 @@ gtk_test_spin_button_click (GtkSpinButton  *spinner,
  *
  * This function will search @widget and all its descendants for a GtkLabel
  * widget with a text string matching @label_pattern.
- * The @label_pattern may contain asterisks '*' and question marks '?' as
+ * The @label_pattern may contain asterisks “*” and question marks “?” as
  * placeholders, g_pattern_match() is used for the matching.
- * Note that locales other than "C" tend to alter (translate" label strings,
+ * Note that locales other than "C“ tend to alter (translate” label strings,
  * so this function is genrally only useful in test programs with
  * predetermined locales, see gtk_test_init() for more details.
  *
@@ -284,24 +291,29 @@ GtkWidget*
 gtk_test_find_label (GtkWidget    *widget,
                      const gchar  *label_pattern)
 {
+  GtkWidget *label = NULL;
+
   if (GTK_IS_LABEL (widget))
     {
       const gchar *text = gtk_label_get_text (GTK_LABEL (widget));
       if (g_pattern_match_simple (label_pattern, text))
         return widget;
     }
+
   if (GTK_IS_CONTAINER (widget))
     {
-      GList *node, *list = gtk_container_get_children (GTK_CONTAINER (widget));
+      GList *node, *list;
+
+      list = gtk_container_get_children (GTK_CONTAINER (widget));
       for (node = list; node; node = node->next)
         {
-          GtkWidget *label = gtk_test_find_label (node->data, label_pattern);
+          label = gtk_test_find_label (node->data, label_pattern);
           if (label)
-            return label;
+            break;
         }
       g_list_free (list);
     }
-  return NULL;
+  return label;
 }
 
 static GList*
@@ -375,7 +387,7 @@ widget_geo_cmp (gconstpointer a,
  * ancestors for all widgets matching @widget_type.
  * Of the matching widgets, the one that is geometrically closest to
  * @base_widget will be returned.
- * The general purpose of this function is to find the most likely "action"
+ * The general purpose of this function is to find the most likely “action”
  * widget, relative to another labeling widget. Such as finding a
  * button or text entry widget, given its corresponding label widget.
  *
@@ -416,7 +428,7 @@ gtk_test_find_sibling (GtkWidget *base_widget,
  * This function will search the descendants of @widget for a widget
  * of type @widget_type that has a label matching @label_pattern next
  * to it. This is most useful for automated GUI testing, e.g. to find
- * the "OK" button in a dialog and synthesize clicks on it.
+ * the “OK” button in a dialog and synthesize clicks on it.
  * However see gtk_test_find_label(), gtk_test_find_sibling() and
  * gtk_test_widget_click() for possible caveats involving the search of
  * such widgets and synthesizing widget events.
@@ -444,7 +456,7 @@ gtk_test_find_widget (GtkWidget    *widget,
  * @percentage: value between 0 and 100.
  *
  * This function will adjust the slider position of all GtkRange
- * based widgets, such as scrollbars or scales, it'll also adjust
+ * based widgets, such as scrollbars or scales, it’ll also adjust
  * spin buttons. The adjustment value of these widgets is set to
  * a value between the lower and upper limits, according to the
  * @percentage argument.
@@ -562,7 +574,7 @@ gtk_test_text_get (GtkWidget *widget)
  *    name-value pairs, terminated by %NULL
  *
  * This function wraps g_object_new() for widget types.
- * It'll automatically show all created non window widgets, also
+ * It’ll automatically show all created non window widgets, also
  * g_object_ref_sink() them (to keep them alive across a running test)
  * and set them up for destruction during the next test teardown phase.
  *

@@ -126,9 +126,8 @@ struct _GtkBindingArg
  * @next: implementation detail
  * @signal_name: the action signal to be emitted
  * @n_args: number of arguments specified for the signal
- * @args: the arguments specified for the signal
+ * @args: (array length=n_args): the arguments specified for the signal
  *
- * <anchor id="keybinding-signals"/>
  * A GtkBindingSignal stores the necessary information to
  * activate a widget in response to a key press via a signal
  * emission.
@@ -188,12 +187,6 @@ GDK_AVAILABLE_IN_ALL
 void           gtk_binding_entry_remove      (GtkBindingSet       *binding_set,
                                               guint                keyval,
                                               GdkModifierType      modifiers);
-
-GDK_DEPRECATED_IN_3_0
-void           gtk_binding_set_add_path      (GtkBindingSet       *binding_set,
-                                              GtkPathType          path_type,
-                                              const gchar         *path_pattern,
-                                              GtkPathPriorityType  priority);
 
 G_END_DECLS
 

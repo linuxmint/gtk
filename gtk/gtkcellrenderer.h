@@ -55,8 +55,8 @@ typedef enum
 /**
  * GtkCellRendererMode:
  * @GTK_CELL_RENDERER_MODE_INERT: The cell is just for display
- *  and cannot be interacted with.  Note that this doesn't mean that eg. the
- *  row being drawn can't be selected -- just that a particular element of
+ *  and cannot be interacted with.  Note that this doesn’t mean that eg. the
+ *  row being drawn can’t be selected -- just that a particular element of
  *  it cannot be individually modified.
  * @GTK_CELL_RENDERER_MODE_ACTIVATABLE: The cell can be clicked.
  * @GTK_CELL_RENDERER_MODE_EDITABLE: The cell can be edited or otherwise modified.
@@ -90,9 +90,28 @@ struct _GtkCellRenderer
   GtkCellRendererPrivate *priv;
 };
 
+/**
+ * GtkCellRendererClass:
+ * @get_request_mode: Called to gets whether the cell renderer prefers
+ *    a height-for-width layout or a width-for-height layout.
+ * @get_preferred_width: Called to get a renderer’s natural width.
+ * @get_preferred_height_for_width: Called to get a renderer’s natural height for width.
+ * @get_preferred_height: Called to get a renderer’s natural height.
+ * @get_preferred_width_for_height: Called to get a renderer’s natural width for height.
+ * @get_aligned_area: Called to get the aligned area used by @cell inside @cell_area.
+ * @get_size: Called to get the width and height needed to render the cell. Deprecated: 3.0.
+ * @render: Called to render the content of the #GtkCellRenderer.
+ * @activate: Called to activate the content of the #GtkCellRenderer.
+ * @start_editing: Called to initiate editing the content of the #GtkCellRenderer.
+ * @editing_canceled: Signal gets emitted when the user cancels the process of editing a cell.
+ * @editing_started: Signal gets emitted when a cell starts to be edited.
+ */
 struct _GtkCellRendererClass
 {
+  /*< private >*/
   GInitiallyUnownedClass parent_class;
+
+  /*< public >*/
 
   /* vtable - not signals */
   GtkSizeRequestMode (* get_request_mode)                (GtkCellRenderer      *cell);
@@ -152,6 +171,8 @@ struct _GtkCellRendererClass
   void (* editing_started)  (GtkCellRenderer *cell,
 			     GtkCellEditable *editable,
 			     const gchar     *path);
+
+  /*< private >*/
 
   GtkCellRendererClassPrivate *priv;
 

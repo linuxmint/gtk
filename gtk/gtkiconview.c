@@ -22,7 +22,7 @@
 #include "gtkiconview.h"
 #include "gtkiconviewprivate.h"
 
-#include "gtkadjustment.h"
+#include "gtkadjustmentprivate.h"
 #include "gtkcelllayout.h"
 #include "gtkcellrenderer.h"
 #include "gtkcellareabox.h"
@@ -61,7 +61,7 @@
  * Note that if the tree model is backed by an actual tree store (as
  * opposed to a flat list where the mapping to icons is obvious),
  * #GtkIconView will only display the first level of the tree and
- * ignore the tree's branches.
+ * ignore the tree’s branches.
  */
 
 #define SCROLL_EDGE_SIZE 15
@@ -117,9 +117,7 @@ enum
 /* GObject vfuncs */
 static void             gtk_icon_view_cell_layout_init          (GtkCellLayoutIface *iface);
 static void             gtk_icon_view_dispose                   (GObject            *object);
-static GObject         *gtk_icon_view_constructor               (GType               type,
-								 guint               n_construct_properties,
-								 GObjectConstructParam *construct_properties);
+static void             gtk_icon_view_constructed               (GObject            *object);
 static void             gtk_icon_view_set_property              (GObject            *object,
 								 guint               prop_id,
 								 const GValue       *value,
@@ -158,6 +156,8 @@ static gboolean         gtk_icon_view_draw                      (GtkWidget      
                                                                  cairo_t            *cr);
 static gboolean         gtk_icon_view_motion                    (GtkWidget          *widget,
 								 GdkEventMotion     *event);
+static gboolean         gtk_icon_view_leave                     (GtkWidget          *widget,
+								 GdkEventCrossing   *event);
 static gboolean         gtk_icon_view_button_press              (GtkWidget          *widget,
 								 GdkEventButton     *event);
 static gboolean         gtk_icon_view_button_release            (GtkWidget          *widget,
@@ -342,7 +342,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
   widget_class = (GtkWidgetClass *) klass;
   container_class = (GtkContainerClass *) klass;
 
-  gobject_class->constructor = gtk_icon_view_constructor;
+  gobject_class->constructed = gtk_icon_view_constructed;
   gobject_class->dispose = gtk_icon_view_dispose;
   gobject_class->set_property = gtk_icon_view_set_property;
   gobject_class->get_property = gtk_icon_view_get_property;
@@ -359,6 +359,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
   widget_class->size_allocate = gtk_icon_view_size_allocate;
   widget_class->draw = gtk_icon_view_draw;
   widget_class->motion_notify_event = gtk_icon_view_motion;
+  widget_class->leave_notify_event = gtk_icon_view_leave;
   widget_class->button_press_event = gtk_icon_view_button_press;
   widget_class->button_release_event = gtk_icon_view_button_release;
   widget_class->key_press_event = gtk_icon_view_key_press;
@@ -400,7 +401,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 						      P_("The selection mode"),
 						      GTK_TYPE_SELECTION_MODE,
 						      GTK_SELECTION_SINGLE,
-						      GTK_PARAM_READWRITE));
+						      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkIconView:pixbuf-column:
@@ -418,7 +419,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 						     P_("Pixbuf column"),
 						     P_("Model column used to retrieve the icon pixbuf from"),
 						     -1, G_MAXINT, -1,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkIconView:text-column:
@@ -436,7 +437,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 						     P_("Text column"),
 						     P_("Model column used to retrieve the text from"),
 						     -1, G_MAXINT, -1,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   
   /**
@@ -456,7 +457,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 						     P_("Markup column"),
 						     P_("Model column used to retrieve the text if using Pango markup"),
 						     -1, G_MAXINT, -1,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   g_object_class_install_property (gobject_class,
                                    PROP_MODEL,
@@ -481,7 +482,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 						     P_("Number of columns"),
 						     P_("Number of columns to display"),
 						     -1, G_MAXINT, -1,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
 
   /**
@@ -499,7 +500,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 						     P_("Width for each item"),
 						     P_("The width used for each item"),
 						     -1, G_MAXINT, -1,
-						     GTK_PARAM_READWRITE));  
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkIconView:spacing:
@@ -515,7 +516,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 						     P_("Spacing"),
 						     P_("Space which is inserted between cells of an item"),
 						     0, G_MAXINT, 0,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkIconView:row-spacing:
@@ -531,7 +532,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 						     P_("Row Spacing"),
 						     P_("Space which is inserted between grid rows"),
 						     0, G_MAXINT, 6,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkIconView:column-spacing:
@@ -547,7 +548,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 						     P_("Column Spacing"),
 						     P_("Space which is inserted between grid columns"),
 						     0, G_MAXINT, 6,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkIconView:margin:
@@ -563,7 +564,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 						     P_("Margin"),
 						     P_("Space which is inserted at the edges of the icon view"),
 						     0, G_MAXINT, 6,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkIconView:item-orientation:
@@ -580,7 +581,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 						      P_("How the text and icon of each item are positioned relative to each other"),
 						      GTK_TYPE_ORIENTATION,
 						      GTK_ORIENTATION_VERTICAL,
-						      GTK_PARAM_READWRITE));
+						      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkIconView:reorderable:
@@ -596,7 +597,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 							 P_("Reorderable"),
 							 P_("View is reorderable"),
 							 FALSE,
-							 G_PARAM_READWRITE));
+							 G_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
     g_object_class_install_property (gobject_class,
                                      PROP_TOOLTIP_COLUMN,
@@ -606,7 +607,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
                                                        -1,
                                                        G_MAXINT,
                                                        -1,
-                                                       GTK_PARAM_READWRITE));
+                                                       GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkIconView:item-padding:
@@ -622,7 +623,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 						     P_("Item Padding"),
 						     P_("Padding around icon view items"),
 						     0, G_MAXINT, 6,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkIconView:cell-area:
@@ -656,7 +657,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
 							 P_("Activate on Single Click"),
 							 P_("Activate row on a single click"),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /* Scrollable interface properties */
   g_object_class_override_property (gobject_class, PROP_HADJUSTMENT,    "hadjustment");
@@ -669,7 +670,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
                                            g_param_spec_boxed ("selection-box-color",
                                                                P_("Selection Box Color"),
                                                                P_("Color of the selection box"),
-                                                               GDK_TYPE_COLOR,
+                                                               g_type_from_name ("GdkColor"),
                                                                GTK_PARAM_READABLE));
 
   gtk_widget_class_install_style_property (widget_class,
@@ -724,7 +725,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
    * GtkIconView::select-all:
    * @iconview: the object on which the signal is emitted
    *
-   * A <link linkend="keybinding-signals">keybinding signal</link>
+   * A [keybinding signal][GtkBindingSignal]
    * which gets emitted when the user selects all items.
    *
    * Applications should not connect to it, but may emit it with
@@ -746,7 +747,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
    * GtkIconView::unselect-all:
    * @iconview: the object on which the signal is emitted
    *
-   * A <link linkend="keybinding-signals">keybinding signal</link>
+   * A [keybinding signal][GtkBindingSignal]
    * which gets emitted when the user unselects all items.
    *
    * Applications should not connect to it, but may emit it with
@@ -768,7 +769,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
    * GtkIconView::select-cursor-item:
    * @iconview: the object on which the signal is emitted
    *
-   * A <link linkend="keybinding-signals">keybinding signal</link>
+   * A [keybinding signal][GtkBindingSignal]
    * which gets emitted when the user selects the item that is currently
    * focused.
    *
@@ -791,7 +792,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
    * GtkIconView::toggle-cursor-item:
    * @iconview: the object on which the signal is emitted
    *
-   * A <link linkend="keybinding-signals">keybinding signal</link>
+   * A [keybinding signal][GtkBindingSignal]
    * which gets emitted when the user toggles whether the currently
    * focused item is selected or not. The exact effect of this 
    * depend on the selection mode.
@@ -815,7 +816,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
    * GtkIconView::activate-cursor-item:
    * @iconview: the object on which the signal is emitted
    *
-   * A <link linkend="keybinding-signals">keybinding signal</link>
+   * A [keybinding signal][GtkBindingSignal]
    * which gets emitted when the user activates the currently 
    * focused item. 
    *
@@ -841,7 +842,7 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
    * @count: the number of @step units to move
    *
    * The ::move-cursor signal is a
-   * <link linkend="keybinding-signals">keybinding signal</link>
+   * [keybinding signal][GtkBindingSignal]
    * which gets emitted when the user initiates a cursor movement.
    *
    * Applications should not connect to it, but may emit it with
@@ -849,12 +850,9 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
    * programmatically.
    *
    * The default bindings for this signal include
-   * <itemizedlist>
-   * <listitem>Arrow keys which move by individual steps</listitem>
-   * <listitem>Home/End keys which move to the first/last item</listitem>
-   * <listitem>PageUp/PageDown which move by "pages"</listitem>
-   * </itemizedlist>
-   *
+   * - Arrow keys which move by individual steps
+   * - Home/End keys which move to the first/last item
+   * - PageUp/PageDown which move by "pages"
    * All of these will extend the selection when combined with
    * the Shift modifier.
    */
@@ -995,22 +993,15 @@ gtk_icon_view_init (GtkIconView *icon_view)
 }
 
 /* GObject methods */
-static GObject *
-gtk_icon_view_constructor (GType               type,
-			   guint               n_construct_properties,
-			   GObjectConstructParam *construct_properties)
+
+static void
+gtk_icon_view_constructed (GObject *object)
 {
-  GtkIconView        *icon_view;
-  GObject            *object;
+  GtkIconView *icon_view = GTK_ICON_VIEW (object);
 
-  object = G_OBJECT_CLASS (gtk_icon_view_parent_class)->constructor
-    (type, n_construct_properties, construct_properties);
-
-  icon_view = (GtkIconView *) object;
+  G_OBJECT_CLASS (gtk_icon_view_parent_class)->constructed (object);
 
   gtk_icon_view_ensure_cell_area (icon_view, NULL);
-
-  return object;
 }
 
 static void
@@ -1138,12 +1129,20 @@ gtk_icon_view_set_property (GObject      *object,
       gtk_icon_view_set_vadjustment (icon_view, g_value_get_object (value));
       break;
     case PROP_HSCROLL_POLICY:
-      icon_view->priv->hscroll_policy = g_value_get_enum (value);
-      gtk_widget_queue_resize (GTK_WIDGET (icon_view));
+      if (icon_view->priv->hscroll_policy != g_value_get_enum (value))
+        {
+          icon_view->priv->hscroll_policy = g_value_get_enum (value);
+          gtk_widget_queue_resize (GTK_WIDGET (icon_view));
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_VSCROLL_POLICY:
-      icon_view->priv->vscroll_policy = g_value_get_enum (value);
-      gtk_widget_queue_resize (GTK_WIDGET (icon_view));
+      if (icon_view->priv->vscroll_policy != g_value_get_enum (value))
+        {
+          icon_view->priv->vscroll_policy = g_value_get_enum (value);
+          gtk_widget_queue_resize (GTK_WIDGET (icon_view));
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
 
     default:
@@ -1311,6 +1310,7 @@ gtk_icon_view_realize (GtkWidget *widget)
                            GDK_SCROLL_MASK |
                            GDK_SMOOTH_SCROLL_MASK |
                            GDK_POINTER_MOTION_MASK |
+                           GDK_LEAVE_NOTIFY_MASK |
                            GDK_BUTTON_PRESS_MASK |
                            GDK_BUTTON_RELEASE_MASK |
                            GDK_KEY_PRESS_MASK |
@@ -1454,7 +1454,7 @@ adjust_wrap_width (GtkIconView *icon_view)
  * * padded size
  *   This is the cell size plus the item padding on each side.
  * * spaced size
- *   This is the padded size plus the spacing. This is what's used for most
+ *   This is the padded size plus the spacing. This is what’s used for most
  *   calculations because it can (ab)use the following formula:
  *   iconview_size = 2 * margin + n_items * spaced_size - spacing
  * So when reading this code and fixing my bugs where I confuse these two, be
@@ -2022,9 +2022,11 @@ gtk_icon_view_motion (GtkWidget      *widget,
 	  icon_view->priv->event_last_x = event->x;
 	  icon_view->priv->event_last_y = event->y;
 
-	  if (icon_view->priv->scroll_timeout_id == 0)
+	  if (icon_view->priv->scroll_timeout_id == 0) {
 	    icon_view->priv->scroll_timeout_id = gdk_threads_add_timeout (30, rubberband_scroll_timeout, 
 								icon_view);
+	    g_source_set_name_by_id (icon_view->priv->scroll_timeout_id, "[gtk+] rubberband_scroll_timeout");
+	  }
  	}
       else 
 	remove_scroll_timeout (icon_view);
@@ -2040,24 +2042,43 @@ gtk_icon_view_motion (GtkWidget      *widget,
                                                FALSE,
                                                &cell);
 
-      if (item != NULL)
+      if (item != last_prelight_item)
         {
-          item->prelight = TRUE;
-          gtk_icon_view_queue_draw_item (icon_view, item);
-        }
+          if (item != NULL)
+            {
+              gtk_icon_view_queue_draw_item (icon_view, item);
+            }
 
-      if (last_prelight_item != NULL &&
-          last_prelight_item != item)
-        {
-          last_prelight_item->prelight = FALSE;
-          gtk_icon_view_queue_draw_item (icon_view,
-                                         icon_view->priv->last_prelight);
-        }
+          if (last_prelight_item != NULL)
+            {
+              gtk_icon_view_queue_draw_item (icon_view,
+                                             icon_view->priv->last_prelight);
+            }
 
-      icon_view->priv->last_prelight = item;
+          icon_view->priv->last_prelight = item;
+        }
     }
   
   return TRUE;
+}
+
+static gboolean
+gtk_icon_view_leave (GtkWidget        *widget,
+                     GdkEventCrossing *event)
+{
+  GtkIconView *icon_view;
+  GtkIconViewPrivate *priv;
+
+  icon_view = GTK_ICON_VIEW (widget);
+  priv = icon_view->priv;
+
+  if (priv->last_prelight)
+    {
+      gtk_icon_view_queue_draw_item (icon_view, priv->last_prelight);
+      priv->last_prelight = NULL;
+    }
+
+  return FALSE;
 }
 
 static void
@@ -2183,13 +2204,13 @@ gtk_icon_view_remove_editable (GtkCellArea            *area,
  * @start_editing: %TRUE if the specified cell should start being edited.
  *
  * Sets the current keyboard focus to be at @path, and selects it.  This is
- * useful when you want to focus the user's attention on a particular item.
+ * useful when you want to focus the user’s attention on a particular item.
  * If @cell is not %NULL, then focus is given to the cell specified by 
  * it. Additionally, if @start_editing is %TRUE, then editing should be 
  * started in the specified cell.  
  *
- * This function is often followed by <literal>gtk_widget_grab_focus 
- * (icon_view)</literal> in order to give keyboard focus to the widget.  
+ * This function is often followed by `gtk_widget_grab_focus 
+ * (icon_view)` in order to give keyboard focus to the widget.  
  * Please note that editing can only happen when the widget is realized.
  *
  * Since: 2.8
@@ -2241,12 +2262,12 @@ gtk_icon_view_set_cursor (GtkIconView     *icon_view,
  *        focus cell, or %NULL
  *
  * Fills in @path and @cell with the current cursor path and cell. 
- * If the cursor isn't currently set, then *@path will be %NULL.  
+ * If the cursor isn’t currently set, then *@path will be %NULL.  
  * If no cell currently has focus, then *@cell will be %NULL.
  *
  * The returned #GtkTreePath must be freed with gtk_tree_path_free().
  *
- * Return value: %TRUE if the cursor is set.
+ * Returns: %TRUE if the cursor is set.
  *
  * Since: 2.8
  **/
@@ -2371,8 +2392,7 @@ gtk_icon_view_button_press (GtkWidget      *widget,
 	      icon_view->priv->press_start_y = event->y;
 	    }
 
-	  if (!icon_view->priv->last_single_clicked)
-	    icon_view->priv->last_single_clicked = item;
+          icon_view->priv->last_single_clicked = item;
 
 	  /* cancel the current editing, if it exists */
 	  gtk_cell_area_stop_editing (icon_view->priv->cell_area, TRUE);
@@ -2515,7 +2535,6 @@ gtk_icon_view_update_rubberband (gpointer data)
   gint x, y;
   GdkRectangle old_area;
   GdkRectangle new_area;
-  GdkRectangle common;
   cairo_region_t *invalid_region;
   
   icon_view = GTK_ICON_VIEW (data);
@@ -2544,23 +2563,6 @@ gtk_icon_view_update_rubberband (gpointer data)
   invalid_region = cairo_region_create_rectangle (&old_area);
   cairo_region_union_rectangle (invalid_region, &new_area);
 
-  gdk_rectangle_intersect (&old_area, &new_area, &common);
-  if (common.width > 2 && common.height > 2)
-    {
-      cairo_region_t *common_region;
-
-      /* make sure the border is invalidated */
-      common.x += 1;
-      common.y += 1;
-      common.width -= 2;
-      common.height -= 2;
-      
-      common_region = cairo_region_create_rectangle (&common);
-
-      cairo_region_subtract (invalid_region, common_region);
-      cairo_region_destroy (common_region);
-    }
-  
   gdk_window_invalidate_region (icon_view->priv->bin_window, invalid_region, TRUE);
     
   cairo_region_destroy (invalid_region);
@@ -2596,8 +2598,6 @@ gtk_icon_view_start_rubberbanding (GtkIconView  *icon_view,
 
   icon_view->priv->doing_rubberband = TRUE;
   icon_view->priv->rubberband_device = device;
-
-  gtk_device_grab_add (GTK_WIDGET (icon_view), device, TRUE);
 }
 
 static void
@@ -2605,9 +2605,6 @@ gtk_icon_view_stop_rubberbanding (GtkIconView *icon_view)
 {
   if (!icon_view->priv->doing_rubberband)
     return;
-
-  gtk_device_grab_remove (GTK_WIDGET (icon_view),
-                          icon_view->priv->rubberband_device);
 
   icon_view->priv->doing_rubberband = FALSE;
   icon_view->priv->rubberband_device = NULL;
@@ -3131,7 +3128,7 @@ gtk_icon_view_paint_item (GtkIconView     *icon_view,
       flags |= GTK_CELL_RENDERER_SELECTED;
     }
 
-  if (item->prelight)
+  if (item == priv->last_prelight)
     {
       state |= GTK_STATE_FLAG_PRELIGHT;
       flags |= GTK_CELL_RENDERER_PRELIT;
@@ -3139,19 +3136,16 @@ gtk_icon_view_paint_item (GtkIconView     *icon_view,
 
   gtk_style_context_set_state (style_context, state);
 
-  if (item->selected)
-    {
-      gtk_render_background (style_context, cr,
-                             x - icon_view->priv->item_padding,
-                             y - icon_view->priv->item_padding,
-                             item->cell_area.width  + icon_view->priv->item_padding * 2,
-                             item->cell_area.height + icon_view->priv->item_padding * 2);
-      gtk_render_frame (style_context, cr,
-                        x - icon_view->priv->item_padding,
-                        y - icon_view->priv->item_padding,
-                        item->cell_area.width  + icon_view->priv->item_padding * 2,
-                        item->cell_area.height + icon_view->priv->item_padding * 2);
-    }
+  gtk_render_background (style_context, cr,
+                         x - priv->item_padding,
+                         y - priv->item_padding,
+                         item->cell_area.width  + priv->item_padding * 2,
+                         item->cell_area.height + priv->item_padding * 2);
+  gtk_render_frame (style_context, cr,
+                    x - priv->item_padding,
+                    y - priv->item_padding,
+                    item->cell_area.width  + priv->item_padding * 2,
+                    item->cell_area.height + priv->item_padding * 2);
 
   cell_area.x      = x;
   cell_area.y      = y;
@@ -4272,22 +4266,22 @@ gtk_icon_view_scroll_to_item (GtkIconView     *icon_view,
   vadj = icon_view->priv->vadjustment;
 
   if (y + item_area.y < 0)
-    gtk_adjustment_set_value (vadj,
-                              gtk_adjustment_get_value (vadj)
-                                + y + item_area.y);
+    gtk_adjustment_animate_to_value (vadj,
+                                     gtk_adjustment_get_value (vadj)
+                                     + y + item_area.y);
   else if (y + item_area.y + item_area.height > allocation.height)
-    gtk_adjustment_set_value (vadj,
-                              gtk_adjustment_get_value (vadj)
-                                + y + item_area.y + item_area.height - allocation.height);
+    gtk_adjustment_animate_to_value (vadj,
+                                     gtk_adjustment_get_value (vadj)
+                                     + y + item_area.y + item_area.height - allocation.height);
 
   if (x + item_area.x < 0)
-    gtk_adjustment_set_value (hadj,
-                              gtk_adjustment_get_value (hadj)
-                                + x + item_area.x);
+    gtk_adjustment_animate_to_value (hadj,
+                                     gtk_adjustment_get_value (hadj)
+                                     + x + item_area.x);
   else if (x + item_area.x + item_area.width > allocation.width)
-    gtk_adjustment_set_value (hadj,
-                              gtk_adjustment_get_value (hadj)
-                                + x + item_area.x + item_area.width - allocation.width);
+    gtk_adjustment_animate_to_value (hadj,
+                                     gtk_adjustment_get_value (hadj)
+                                     + x + item_area.x + item_area.width - allocation.width);
 
   gtk_adjustment_changed (hadj);
   gtk_adjustment_changed (vadj);
@@ -4366,7 +4360,7 @@ _gtk_icon_view_set_cell_data (GtkIconView     *icon_view,
  * 
  * Creates a new #GtkIconView widget
  * 
- * Return value: A newly created #GtkIconView widget
+ * Returns: A newly created #GtkIconView widget
  *
  * Since: 2.6
  **/
@@ -4383,7 +4377,7 @@ gtk_icon_view_new (void)
  * Creates a new #GtkIconView widget using the
  * specified @area to layout cells inside the icons.
  * 
- * Return value: A newly created #GtkIconView widget
+ * Returns: A newly created #GtkIconView widget
  *
  * Since: 3.0
  **/
@@ -4399,7 +4393,7 @@ gtk_icon_view_new_with_area (GtkCellArea *area)
  * 
  * Creates a new #GtkIconView widget with the model @model.
  * 
- * Return value: A newly created #GtkIconView widget.
+ * Returns: A newly created #GtkIconView widget.
  *
  * Since: 2.6 
  **/
@@ -4456,7 +4450,7 @@ gtk_icon_view_convert_widget_to_bin_window_coords (GtkIconView *icon_view,
  * See gtk_icon_view_convert_widget_to_bin_window_coords() for converting
  * widget coordinates to bin_window coordinates.
  * 
- * Return value: The #GtkTreePath corresponding to the icon or %NULL
+ * Returns: The #GtkTreePath corresponding to the icon or %NULL
  * if no icon exists at that position.
  *
  * Since: 2.6 
@@ -4497,7 +4491,7 @@ gtk_icon_view_get_path_at_pos (GtkIconView *icon_view,
  * See gtk_icon_view_convert_widget_to_bin_window_coords() for converting
  * widget coordinates to bin_window coordinates.
  * 
- * Return value: %TRUE if an item exists at the specified position
+ * Returns: %TRUE if an item exists at the specified position
  *
  * Since: 2.8
  **/
@@ -4541,7 +4535,7 @@ gtk_icon_view_get_item_at_pos (GtkIconView      *icon_view,
  *
  * This function is only valid if @icon_view is realized.
  *
- * Return value: %FALSE if there is no such item, %TRUE otherwise
+ * Returns: %FALSE if there is no such item, %TRUE otherwise
  *
  * Since: 3.6
  */
@@ -4669,9 +4663,9 @@ gtk_icon_view_set_tooltip_cell (GtkIconView     *icon_view,
  * tooltips the item returned will be the cursor item. When %TRUE, then any of
  * @model, @path and @iter which have been provided will be set to point to
  * that row and the corresponding model. @x and @y will always be converted
- * to be relative to @icon_view's bin_window if @keyboard_tooltip is %FALSE.
+ * to be relative to @icon_view’s bin_window if @keyboard_tooltip is %FALSE.
  *
- * Return value: whether or not the given tooltip context points to a item
+ * Returns: whether or not the given tooltip context points to a item
  *
  * Since: 2.12
  */
@@ -4762,18 +4756,18 @@ gtk_icon_view_set_tooltip_query_cb (GtkWidget  *widget,
 /**
  * gtk_icon_view_set_tooltip_column:
  * @icon_view: a #GtkIconView
- * @column: an integer, which is a valid column number for @icon_view's model
+ * @column: an integer, which is a valid column number for @icon_view’s model
  *
  * If you only plan to have simple (text-only) tooltips on full items, you
  * can use this function to have #GtkIconView handle these automatically
- * for you. @column should be set to the column in @icon_view's model
+ * for you. @column should be set to the column in @icon_view’s model
  * containing the tooltip texts, or -1 to disable this feature.
  *
  * When enabled, #GtkWidget:has-tooltip will be set to %TRUE and
  * @icon_view will connect a #GtkWidget::query-tooltip signal handler.
  *
  * Note that the signal handler sets the text with gtk_tooltip_set_markup(),
- * so &amp;, &lt;, etc have to be escaped in the text.
+ * so &, <, etc have to be escaped in the text.
  *
  * Since: 2.12
  */
@@ -4811,10 +4805,10 @@ gtk_icon_view_set_tooltip_column (GtkIconView *icon_view,
  * gtk_icon_view_get_tooltip_column:
  * @icon_view: a #GtkIconView
  *
- * Returns the column of @icon_view's model which is being used for
- * displaying tooltips on @icon_view's rows.
+ * Returns the column of @icon_view’s model which is being used for
+ * displaying tooltips on @icon_view’s rows.
  *
- * Return value: the index of the tooltip column that is currently being
+ * Returns: the index of the tooltip column that is currently being
  * used, or -1 if this is disabled.
  *
  * Since: 2.12
@@ -4839,7 +4833,7 @@ gtk_icon_view_get_tooltip_column (GtkIconView *icon_view)
  * 
  * Both paths should be freed with gtk_tree_path_free() after use.
  * 
- * Return value: %TRUE, if valid paths were placed in @start_path and @end_path
+ * Returns: %TRUE, if valid paths were placed in @start_path and @end_path
  *
  * Since: 2.8
  **/
@@ -4952,7 +4946,7 @@ gtk_icon_view_set_selection_mode (GtkIconView      *icon_view,
  * 
  * Gets the selection mode of the @icon_view.
  *
- * Return value: the current selection mode
+ * Returns: the current selection mode
  *
  * Since: 2.6 
  **/
@@ -5097,7 +5091,7 @@ gtk_icon_view_set_model (GtkIconView *icon_view,
  * Returns the model the #GtkIconView is based on.  Returns %NULL if the
  * model is unset.
  *
- * Return value: (transfer none): A #GtkTreeModel, or %NULL if none is
+ * Returns: (transfer none): A #GtkTreeModel, or %NULL if none is
  *     currently being used.
  *
  * Since: 2.6 
@@ -5255,7 +5249,7 @@ gtk_icon_view_set_text_column (GtkIconView *icon_view,
  *
  * Returns the column with text for @icon_view.
  *
- * Returns: the text column, or -1 if it's unset.
+ * Returns: the text column, or -1 if it’s unset.
  *
  * Since: 2.6
  */
@@ -5318,7 +5312,7 @@ gtk_icon_view_set_markup_column (GtkIconView *icon_view,
  *
  * Returns the column with markup text for @icon_view.
  *
- * Returns: the markup column, or -1 if it's unset.
+ * Returns: the markup column, or -1 if it’s unset.
  *
  * Since: 2.6
  */
@@ -5380,7 +5374,7 @@ gtk_icon_view_set_pixbuf_column (GtkIconView *icon_view,
  *
  * Returns the column with pixbufs for @icon_view.
  *
- * Returns: the pixbuf column, or -1 if it's unset.
+ * Returns: the pixbuf column, or -1 if it’s unset.
  *
  * Since: 2.6
  */
@@ -5453,15 +5447,15 @@ gtk_icon_view_unselect_path (GtkIconView *icon_view,
  *
  * Creates a list of paths of all selected items. Additionally, if you are
  * planning on modifying the model after calling this function, you may
- * want to convert the returned list into a list of #GtkTreeRowReference<!-- -->s.
+ * want to convert the returned list into a list of #GtkTreeRowReferences.
  * To do this, you can use gtk_tree_row_reference_new().
  *
  * To free the return value, use:
- * |[
+ * |[<!-- language="C" -->
  * g_list_free_full (list, (GDestroyNotify) gtk_tree_path_free);
  * ]|
  *
- * Return value: (element-type GtkTreePath) (transfer full): A #GList containing a #GtkTreePath for each selected row.
+ * Returns: (element-type GtkTreePath) (transfer full): A #GList containing a #GtkTreePath for each selected row.
  *
  * Since: 2.6
  **/
@@ -5556,7 +5550,7 @@ gtk_icon_view_unselect_all (GtkIconView *icon_view)
  * Returns %TRUE if the icon pointed to by @path is currently
  * selected. If @path does not point to a valid location, %FALSE is returned.
  * 
- * Return value: %TRUE if @path is selected.
+ * Returns: %TRUE if @path is selected.
  *
  * Since: 2.6
  **/
@@ -5705,7 +5699,7 @@ gtk_icon_view_set_item_orientation (GtkIconView    *icon_view,
  * Returns the value of the ::item-orientation property which determines 
  * whether the labels are drawn beside the icons instead of below. 
  * 
- * Return value: the relative position of texts and icons 
+ * Returns: the relative position of texts and icons 
  *
  * Since: 2.6
  **/
@@ -5755,7 +5749,7 @@ gtk_icon_view_set_columns (GtkIconView *icon_view,
  * 
  * Returns the value of the ::columns property.
  * 
- * Return value: the number of columns, or -1
+ * Returns: the number of columns, or -1
  *
  * Since: 2.6
  */
@@ -5805,7 +5799,7 @@ gtk_icon_view_set_item_width (GtkIconView *icon_view,
  * 
  * Returns the value of the ::item-width property.
  * 
- * Return value: the width of a single item, or -1
+ * Returns: the width of a single item, or -1
  *
  * Since: 2.6
  */
@@ -5854,7 +5848,7 @@ gtk_icon_view_set_spacing (GtkIconView *icon_view,
  * 
  * Returns the value of the ::spacing property.
  * 
- * Return value: the space between cells 
+ * Returns: the space between cells 
  *
  * Since: 2.6
  */
@@ -5901,7 +5895,7 @@ gtk_icon_view_set_row_spacing (GtkIconView *icon_view,
  * 
  * Returns the value of the ::row-spacing property.
  * 
- * Return value: the space between rows
+ * Returns: the space between rows
  *
  * Since: 2.6
  */
@@ -5948,7 +5942,7 @@ gtk_icon_view_set_column_spacing (GtkIconView *icon_view,
  * 
  * Returns the value of the ::column-spacing property.
  * 
- * Return value: the space between columns
+ * Returns: the space between columns
  *
  * Since: 2.6
  */
@@ -5996,7 +5990,7 @@ gtk_icon_view_set_margin (GtkIconView *icon_view,
  * 
  * Returns the value of the ::margin property.
  * 
- * Return value: the space at the borders 
+ * Returns: the space at the borders 
  *
  * Since: 2.6
  */
@@ -6014,7 +6008,7 @@ gtk_icon_view_get_margin (GtkIconView *icon_view)
  * @item_padding: the item padding
  *
  * Sets the #GtkIconView:item-padding property which specifies the padding
- * around each of the icon view's items.
+ * around each of the icon view’s items.
  *
  * Since: 2.18
  */
@@ -6043,7 +6037,7 @@ gtk_icon_view_set_item_padding (GtkIconView *icon_view,
  * 
  * Returns the value of the ::item-padding property.
  * 
- * Return value: the padding around items
+ * Returns: the padding around items
  *
  * Since: 2.18
  */
@@ -6057,7 +6051,7 @@ gtk_icon_view_get_item_padding (GtkIconView *icon_view)
 
 /* Get/set whether drag_motion requested the drag data and
  * drag_data_received should thus not actually insert the data,
- * since the data doesn't result from a drop.
+ * since the data doesn’t result from a drop.
  */
 static void
 set_status_pending (GdkDragContext *context,
@@ -6670,6 +6664,7 @@ gtk_icon_view_drag_motion (GtkWidget      *widget,
 
 	  icon_view->priv->scroll_timeout_id =
 	    gdk_threads_add_timeout_full (G_PRIORITY_DEFAULT, 50, drag_scroll_timeout, data, (GDestroyNotify) drag_scroll_data_free);
+	  g_source_set_name_by_id (icon_view->priv->scroll_timeout_id, "[gtk+] drag_scroll_timeout");
 	}
 
       if (target == gdk_atom_intern_static_string ("GTK_TREE_MODEL_ROW"))
@@ -7047,7 +7042,7 @@ gtk_icon_view_get_drag_dest_item (GtkIconView              *icon_view,
  * 
  * Determines the destination item for a given position.
  * 
- * Return value: whether there is an item at the given position.
+ * Returns: whether there is an item at the given position.
  *
  * Since: 2.8
  **/
@@ -7109,7 +7104,7 @@ gtk_icon_view_get_dest_item_at_pos (GtkIconView              *icon_view,
  * Creates a #cairo_surface_t representation of the item at @path.  
  * This image is used for a drag icon.
  *
- * Return value: (transfer full): a newly-allocated surface of the drag icon.
+ * Returns: (transfer full): a newly-allocated surface of the drag icon.
  * 
  * Since: 2.8
  **/
@@ -7174,7 +7169,7 @@ gtk_icon_view_create_drag_icon (GtkIconView *icon_view,
  * Retrieves whether the user can reorder the list via drag-and-drop. 
  * See gtk_icon_view_set_reorderable().
  *
- * Return value: %TRUE if the list can be reordered.
+ * Returns: %TRUE if the list can be reordered.
  *
  * Since: 2.8
  **/
@@ -7276,7 +7271,7 @@ gtk_icon_view_set_activate_on_single_click (GtkIconView *icon_view,
  *
  * Gets the setting set by gtk_icon_view_set_activate_on_single_click().
  *
- * Return value: %TRUE if item-activated will be emitted on a single click
+ * Returns: %TRUE if item-activated will be emitted on a single click
  *
  * Since: 3.8
  **/

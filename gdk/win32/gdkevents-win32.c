@@ -26,7 +26,7 @@
  */
 
 /* Cannot use TrackMouseEvent, as the stupid WM_MOUSELEAVE message
- * doesn't tell us where the mouse has gone. Thus we cannot use it to
+ * doesn’t tell us where the mouse has gone. Thus we cannot use it to
  * generate a correct GdkNotifyType. Pity, as using TrackMouseEvent
  * otherwise would make it possible to reliably generate
  * GDK_LEAVE_NOTIFY events, which would help get rid of those pesky
@@ -92,11 +92,6 @@
 
 static gboolean gdk_event_translate (MSG        *msg,
 				     gint       *ret_valp);
-static void     handle_wm_paint     (MSG        *msg,
-				     GdkWindow  *window,
-				     gboolean    return_exposes,
-				     GdkEvent  **event);
-
 static gboolean gdk_event_prepare  (GSource     *source,
 				    gint        *timeout);
 static gboolean gdk_event_check    (GSource     *source);
@@ -234,7 +229,7 @@ generate_grab_broken_event (GdkDeviceManager *device_manager,
   event->grab_broken.implicit = FALSE;
   event->grab_broken.grab_window = grab_window;
   gdk_event_set_device (event, device);
-  gdk_event_set_source_device (event, device);
+  gdk_event_set_source_device (event, source_device);
 
   _gdk_win32_append_event (event);
 }
@@ -292,7 +287,7 @@ _gdk_win32_window_procedure (HWND   hwnd,
   retval = inner_window_procedure (hwnd, message, wparam, lparam);
   debug_indent -= 2;
 
-  GDK_NOTE (EVENTS, g_print (" => %I64d%s", (gint64) retval, (debug_indent == 0 ? "\n" : "")));
+  GDK_NOTE (EVENTS, g_print (" => %" G_GINT64_FORMAT "%s", (gint64) retval, (debug_indent == 0 ? "\n" : "")));
 
   return retval;
 }
@@ -1009,13 +1004,13 @@ apply_event_filters (GdkWindow  *window,
  * On Windows, transient windows will not have their own taskbar entries.
  * Because of this, we must hide and restore groups of transients in both
  * directions.  That is, all transient children must be hidden or restored
- * with this window, but if this window's transient owner also has a
- * transient owner then this window's transient owner must be hidden/restored
+ * with this window, but if this window’s transient owner also has a
+ * transient owner then this window’s transient owner must be hidden/restored
  * with this one.  And etc, up the chain until we hit an ancestor that has no
  * transient owner.
  *
- * It would be a good idea if applications don't chain transient windows
- * together.  There's a limit to how much evil GTK can try to shield you
+ * It would be a good idea if applications don’t chain transient windows
+ * together.  There’s a limit to how much evil GTK can try to shield you
  * from.
  */
 static void
@@ -1517,9 +1512,7 @@ adjust_drag (LONG *drag,
 
 static void
 handle_wm_paint (MSG        *msg,
-		 GdkWindow  *window,
-		 gboolean    return_exposes,
-		 GdkEvent  **event)
+		 GdkWindow  *window)
 {
   HRGN hrgn = CreateRectRgn (0, 0, 0, 0);
   HDC hdc;
@@ -1535,11 +1528,10 @@ handle_wm_paint (MSG        *msg,
 
   hdc = BeginPaint (msg->hwnd, &paintstruct);
 
-  GDK_NOTE (EVENTS, g_print (" %s %s dc %p%s",
+  GDK_NOTE (EVENTS, g_print (" %s %s dc %p",
 			     _gdk_win32_rect_to_string (&paintstruct.rcPaint),
 			     (paintstruct.fErase ? "erase" : ""),
-			     hdc,
-			     (return_exposes ? " return_exposes" : "")));
+			     hdc));
 
   EndPaint (msg->hwnd, &paintstruct);
 
@@ -1547,38 +1539,6 @@ handle_wm_paint (MSG        *msg,
       (paintstruct.rcPaint.bottom == paintstruct.rcPaint.top))
     {
       GDK_NOTE (EVENTS, g_print (" (empty paintstruct, ignored)"));
-      DeleteObject (hrgn);
-      return;
-    }
-
-  if (return_exposes)
-    {
-      if (!GDK_WINDOW_DESTROYED (window))
-	{
-	  GList *list = _gdk_display->queued_events;
-
-	  *event = gdk_event_new (GDK_EXPOSE);
-	  (*event)->expose.window = window;
-	  (*event)->expose.area.x = paintstruct.rcPaint.left;
-	  (*event)->expose.area.y = paintstruct.rcPaint.top;
-	  (*event)->expose.area.width = paintstruct.rcPaint.right - paintstruct.rcPaint.left;
-	  (*event)->expose.area.height = paintstruct.rcPaint.bottom - paintstruct.rcPaint.top;
-	  (*event)->expose.region = _gdk_win32_hrgn_to_region (hrgn);
-	  (*event)->expose.count = 0;
-
-	  while (list != NULL)
-	    {
-	      GdkEventPrivate *evp = list->data;
-
-	      if (evp->event.any.type == GDK_EXPOSE &&
-		  evp->event.any.window == window &&
-		  !(evp->flags & GDK_EVENT_PENDING))
-		evp->event.expose.count++;
-
-	      list = list->next;
-	    }
-	}
-
       DeleteObject (hrgn);
       return;
     }
@@ -1655,6 +1615,45 @@ handle_display_change (void)
   _gdk_root_window_size_init ();
   g_signal_emit_by_name (_gdk_screen, "size_changed");
 }
+
+static gboolean
+handle_nchittest (HWND hwnd,
+                  GdkWindow *window,
+                  gint16 screen_x,
+                  gint16 screen_y,
+                  gint *ret_valp)
+{
+  RECT rect;
+  LONG style;
+
+  if (window == NULL || window->input_shape == NULL)
+    return FALSE;
+
+  style = GetWindowLong (hwnd, GWL_STYLE);
+
+  /* Assume that these styles are incompatible with CSD,
+   * so there's no reason for us to override the defaults.
+   */
+  if (style & (WS_BORDER | WS_THICKFRAME))
+    return FALSE;
+
+  if (!GetWindowRect (hwnd, &rect))
+    return FALSE;
+
+  rect.left = screen_x - rect.left;
+  rect.top = screen_y - rect.top;
+
+  /* If it's inside the rect, return FALSE and let DefWindowProc() handle it */
+  if (cairo_region_contains_point (window->input_shape, rect.left, rect.top))
+    return FALSE;
+
+  /* Otherwise override DefWindowProc() and tell WM that the point is not
+   * within the window
+   */
+  *ret_valp = HTNOWHERE;
+  return TRUE;
+}
+
 
 static void
 generate_button_event (GdkEventType      type,
@@ -1853,7 +1852,7 @@ gdk_event_translate (MSG  *msg,
   GdkWindow *window = NULL;
   GdkWindowImplWin32 *impl;
 
-  GdkWindow *orig_window, *new_window;
+  GdkWindow *new_window;
 
   GdkDeviceManager *device_manager;
   GdkDeviceManagerWin32 *device_manager_win32;
@@ -1885,7 +1884,6 @@ gdk_event_translate (MSG  *msg,
     }
 
   window = gdk_win32_handle_table_lookup (msg->hwnd);
-  orig_window = window;
 
   if (window == NULL)
     {
@@ -2613,7 +2611,7 @@ gdk_event_translate (MSG  *msg,
       break;
 
     case WM_PAINT:
-      handle_wm_paint (msg, window, FALSE, NULL);
+      handle_wm_paint (msg, window);
       break;
 
     case WM_SETCURSOR:
@@ -3076,8 +3074,27 @@ gdk_event_translate (MSG  *msg,
 	}
       else
 	{
-	  mmi->ptMaxTrackSize.x = 30000;
-	  mmi->ptMaxTrackSize.y = 30000;
+	  HMONITOR winmon;
+	  MONITORINFO moninfo;
+
+	  winmon = MonitorFromWindow (GDK_WINDOW_HWND (window), MONITOR_DEFAULTTONEAREST);
+
+	  moninfo.cbSize = sizeof (moninfo);
+
+	  if (GetMonitorInfoA (winmon, &moninfo))
+	    {
+	      mmi->ptMaxTrackSize.x = moninfo.rcWork.right - moninfo.rcWork.left;
+	      mmi->ptMaxTrackSize.y = moninfo.rcWork.bottom - moninfo.rcWork.top;
+	    }
+	  else
+	    {
+	      /* Apparently, this is just a very big number (bigger than any widget
+               * could realistically be) to make sure the window is as big as
+               * possible when maximized.
+               */
+	      mmi->ptMaxTrackSize.x = 30000;
+	      mmi->ptMaxTrackSize.y = 30000;
+	    }
 	}
 
       if (impl->hint_flags & (GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE))
@@ -3251,11 +3268,17 @@ gdk_event_translate (MSG  *msg,
       break;
 
     case WM_ACTIVATEAPP:
-      GDK_NOTE (EVENTS, g_print (" %s thread: %I64d",
+      GDK_NOTE (EVENTS, g_print (" %s thread: %" G_GINT64_FORMAT,
 				 msg->wParam ? "YES" : "NO",
 				 (gint64) msg->lParam));
       if (msg->wParam && GDK_WINDOW_IS_MAPPED (window))
 	ensure_stacking_on_activate_app (msg, window);
+      break;
+    case WM_NCHITTEST:
+      /* TODO: pass all messages to DwmDefWindowProc() first! */
+      return_val = handle_nchittest (msg->hwnd, window,
+                                     GET_X_LPARAM (msg->lParam),
+                                     GET_Y_LPARAM (msg->lParam), ret_valp);
       break;
 
       /* Handle WINTAB events here, as we know that gdkinput.c will
@@ -3328,7 +3351,7 @@ gdk_event_prepare (GSource *source,
   *timeout = -1;
 
   if (_gdk_display->event_pause_count > 0)
-    retval = FALSE;
+    retval =_gdk_event_queue_find_first (_gdk_display) != NULL;
   else
     retval = (_gdk_event_queue_find_first (_gdk_display) != NULL ||
               (modal_win32_dialog == NULL &&
@@ -3347,7 +3370,7 @@ gdk_event_check (GSource *source)
   gdk_threads_enter ();
 
   if (_gdk_display->event_pause_count > 0)
-    retval = FALSE;
+    retval = _gdk_event_queue_find_first (_gdk_display) != NULL;
   else if (event_poll_fd.revents & G_IO_IN)
     retval = (_gdk_event_queue_find_first (_gdk_display) != NULL ||
               (modal_win32_dialog == NULL &&

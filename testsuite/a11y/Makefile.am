@@ -1,6 +1,8 @@
 include $(top_srcdir)/Makefile.decl
 NULL =
 
+SUBDIRS = state
+
 check_PROGRAMS = $(TEST_PROGS)
 
 AM_CPPFLAGS =				\
@@ -20,7 +22,10 @@ LDADD = \
 
 # work around random file systems showing up in the file chooser,
 # breaking the 'pickers' test
-TESTS_ENVIRONMENT = GIO_USE_VOLUME_MONITOR=unix
+TESTS_ENVIRONMENT = 			\
+	GIO_USE_VOLUME_MONITOR=unix 	\
+	GSETTINGS_BACKEND=memory	\
+	G_ENABLE_DIAGNOSTIC=0
 
 TEST_PROGS += accessibility-dump
 
@@ -34,10 +39,7 @@ TEST_PROGS += derive
 
 TEST_PROGS += value
 
-# the focus test has no chance of working until
-# all the idle handlers in gail are gone
-#
-# TEST_PROGS += focus
+TEST_PROGS += misc
 
 TEST_PROGS += tree-relationships
 
@@ -60,6 +62,7 @@ testdata = \
 	expander.ui expander.txt \
 	assistant.ui assistant.txt \
 	pickers.ui pickers.txt \
+	label.ui label.txt \
 	lockbutton.ui lockbutton.txt \
 	spinner.ui spinner.txt \
 	progress.ui progress.txt \
@@ -72,10 +75,15 @@ testdata = \
 	scale-drawvalue.ui scale-drawvalue.txt \
 	placeholder-text.ui placeholder-text.txt \
 	menu.ui menu.txt \
+	menubutton.ui menubutton.txt \
+	menubutton2.ui menubutton2.txt \
+	menubutton3.ui menubutton3.txt \
 	combos.ui combos.txt \
 	listbox.ui listbox.txt \
 	stack.ui stack.txt \
 	headerbar.ui headerbar.txt \
+	tree.ui tree.txt \
+	actionbar.ui actionbar.txt \
 	$(NULL)
 
 test_in_files = \
@@ -86,19 +94,20 @@ test_in_files = \
 	a11yderive.test.in \
 	a11ytext.test.in \
 	a11yutil.test.in \
+	a11ymisc.test.in \
 	$(NULL)
 
 EXTRA_DIST += $(test_in_files) $(testdata)
 
 if BUILDOPT_INSTALL_TESTS
-insttestdir=$(pkglibexecdir)/installed-tests
+insttestdir=$(libexecdir)/installed-tests/$(PACKAGE)
 insttest_PROGRAMS = $(TEST_PROGS)
 
 a11ytestdir = $(insttestdir)/a11ytests
 a11ytest_DATA = $(testdata)
 
 substitutions = \
-	-e s,@pkglibexecdir\@,$(pkglibexecdir),g \
+	-e s,@libexecdir\@,$(libexecdir),g \
 	$(NULL)
 
 test_files = $(test_in_files:.test.in=.test)

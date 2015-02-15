@@ -40,8 +40,8 @@
 #ifdef GDK_WINDOWING_QUARTZ
 /* When the gdk_quartz_display_open function is removed We can
  * immediately include gdkquartzdisplaymanager.h here instead of
- * gdkprivate-quartz.h so that we won't have to enable -xobjective-c
- * for the "generic" GDK source code.
+ * gdkprivate-quartz.h so that we won’t have to enable -xobjective-c
+ * for the “generic” GDK source code.
  * #include "quartz/gdkquartzdisplaymanager.h"
  */
 #include "quartz/gdkprivate-quartz.h"
@@ -69,13 +69,13 @@
  * notification when displays appear or disappear or the default display
  * changes.
  *
- * You can use gdk_display_manager_get() to obtain the GdkDisplayManager
+ * You can use gdk_display_manager_get() to obtain the #GdkDisplayManager
  * singleton, but that should be rarely necessary. Typically, initializing
  * GTK+ opens a display that you can work with without ever accessing the
- * GdkDisplayManager.
+ * #GdkDisplayManager.
  *
  * The GDK library can be built with support for multiple backends.
- * The GdkDisplayManager object determines which backend is used
+ * The #GdkDisplayManager object determines which backend is used
  * at runtime.
  *
  * When writing backend-specific code that is supposed to work with
@@ -85,26 +85,25 @@
  * you are building your application against. At runtime, use type-check
  * macros like GDK_IS_X11_DISPLAY() to find out which backend is in use:
  *
- * <example id="backend-specific">
- * <title>Backend-specific code</title>
- * <programlisting>
+ * ## Backend-specific code ## {#backend-specific}
+ *
+ * |[<!-- language="C" -->
  * #ifdef GDK_WINDOWING_X11
  *   if (GDK_IS_X11_DISPLAY (display))
  *     {
- *       /&ast; make X11-specific calls here &ast;/
+ *       // make X11-specific calls here
  *     }
  *   else
  * #endif
  * #ifdef GDK_WINDOWING_QUARTZ
  *   if (GDK_IS_QUARTZ_DISPLAY (display))
  *     {
- *       /&ast; make Quartz-specific calls here &ast;/
+ *       // make Quartz-specific calls here
 *     }
  *   else
  * #endif
  *   g_error ("Unsupported GDK backend");
- * </programlisting>
- * </example>
+ * ]|
  */
 
 
@@ -225,14 +224,14 @@ static const gchar *allowed_backends;
  * By default, GDK tries all included backends.
  *
  * For example,
- * <programlisting>
+ * |[<!-- language="C" -->
  * gdk_set_allowed_backends ("wayland,quartz,*");
- * </programlisting>
+ * ]|
  * instructs GDK to try the Wayland backend first,
  * followed by the Quartz backend, and then all
  * others.
  *
- * If the <envar>GDK_BACKEND</envar> environment variable
+ * If the `GDK_BACKEND` environment variable
  * is set, it determines what backends are tried in what
  * order, while still respecting the set of allowed backends
  * that are specified by this function.
@@ -286,7 +285,7 @@ static GdkBackend gdk_backends[] = {
  * Gets the singleton #GdkDisplayManager object.
  *
  * When called for the first time, this function consults the
- * <envar>GDK_BACKEND</envar> environment variable to find out which
+ * `GDK_BACKEND` environment variable to find out which
  * of the supported GDK backends to use (in case GDK has been compiled
  * with multiple backends). Applications can use gdk_set_allowed_backends()
  * to limit what backends can be used.
@@ -314,8 +313,8 @@ gdk_display_manager_get (void)
  *
  * Gets the default #GdkDisplay.
  *
- * Returns: (transfer none): a #GdkDisplay, or %NULL
- *     if there is no default display.
+ * Returns: (nullable) (transfer none): a #GdkDisplay, or %NULL if
+ *     there is no default display.
  *
  * Since: 2.2
  */
@@ -329,11 +328,11 @@ gdk_display_manager_get_default_display (GdkDisplayManager *manager)
  * gdk_display_get_default:
  *
  * Gets the default #GdkDisplay. This is a convenience
- * function for
- * <literal>gdk_display_manager_get_default_display (gdk_display_manager_get ())</literal>.
+ * function for:
+ * `gdk_display_manager_get_default_display (gdk_display_manager_get ())`.
  *
- * Returns: (transfer none): a #GdkDisplay, or %NULL if there is no default
- *   display.
+ * Returns: (nullable) (transfer none): a #GdkDisplay, or %NULL if
+ *   there is no default display.
  *
  * Since: 2.2
  */
@@ -349,7 +348,8 @@ gdk_display_get_default (void)
  * Gets the default screen for the default display. (See
  * gdk_display_get_default ()).
  *
- * Returns: (transfer none): a #GdkScreen, or %NULL if there is no default display.
+ * Returns: (nullable) (transfer none): a #GdkScreen, or %NULL if
+ *     there is no default display.
  *
  * Since: 2.2
  */
@@ -393,7 +393,7 @@ gdk_display_manager_set_default_display (GdkDisplayManager *manager,
  *
  * List all currently open displays.
  *
- * Return value: (transfer container) (element-type GdkDisplay): a newly
+ * Returns: (transfer container) (element-type GdkDisplay): a newly
  *     allocated #GSList of #GdkDisplay objects. Free with g_slist_free()
  *     when you are done with it.
  *
@@ -412,8 +412,8 @@ gdk_display_manager_list_displays (GdkDisplayManager *manager)
  *
  * Opens a display.
  *
- * Return value: (transfer none): a #GdkDisplay, or %NULL
- *     if the display could not be opened
+ * Returns: (nullable) (transfer none): a #GdkDisplay, or %NULL if the
+ *     display could not be opened
  *
  * Since: 3.0
  */

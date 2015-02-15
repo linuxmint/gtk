@@ -20,6 +20,10 @@
 
 #include "config.h"
 
+#include "reftest-compare.h"
+#include "reftest-module.h"
+#include "reftest-snapshot.h"
+
 #include <string.h>
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
@@ -42,7 +46,7 @@ static const GOptionEntry test_args[] = {
   { "directory",        'd', 0, G_OPTION_ARG_FILENAME, &arg_base_dir,
     "Directory to run tests from", "DIR" },
   { "direction",       0, 0, G_OPTION_ARG_STRING, &arg_direction,
-    "Set text direction", "DIRECTION" },
+    "Set text direction", "ltr|rtl" },
   { NULL }
 };
 
@@ -68,6 +72,8 @@ parse_command_line (int *argc, char ***argv)
     gtk_widget_set_default_direction (GTK_TEXT_DIR_RTL);
   else if (g_strcmp0 (arg_direction, "ltr") == 0)
     gtk_widget_set_default_direction (GTK_TEXT_DIR_LTR);
+  else if (arg_direction != NULL)
+    g_printerr ("Invalid argument passed to --direction argument. Valid arguments are 'ltr' and 'rtl'\n");
 
   return TRUE;
 }
@@ -105,6 +111,27 @@ get_output_dir (void)
   return output_dir;
 }
 
+static void
+get_components_of_test_file (const char  *test_file,
+                             char       **directory,
+                             char       **basename)
+{
+  if (directory)
+    {
+      *directory = g_path_get_dirname (test_file);
+    }
+
+  if (basename)
+    {
+      char *base = g_path_get_basename (test_file);
+      
+      if (g_str_has_suffix (base, ".ui"))
+        base[strlen (base) - strlen (".ui")] = '\0';
+
+      *basename = base;
+    }
+}
+
 static char *
 get_output_file (const char *test_file,
                  const char *extension)
@@ -112,9 +139,7 @@ get_output_file (const char *test_file,
   const char *output_dir = get_output_dir ();
   char *result, *base;
 
-  base = g_path_get_basename (test_file);
-  if (g_str_has_suffix (base, ".ui"))
-    base[strlen (base) - strlen (".ui")] = '\0';
+  get_components_of_test_file (test_file, NULL, &base);
 
   result = g_strconcat (output_dir, G_DIR_SEPARATOR_S, base, extension, NULL);
   g_free (base);
@@ -128,13 +153,17 @@ get_test_file (const char *test_file,
                gboolean    must_exist)
 {
   GString *file = g_string_new (NULL);
+  char *dir, *base;
 
-  if (g_str_has_suffix (test_file, ".ui"))
-    g_string_append_len (file, test_file, strlen (test_file) - strlen (".ui"));
-  else
-    g_string_append (file, test_file);
-  
+  get_components_of_test_file (test_file, &dir, &base);
+
+  file = g_string_new (dir);
+  g_string_append (file, G_DIR_SEPARATOR_S);
+  g_string_append (file, base);
   g_string_append (file, extension);
+
+  g_free (dir);
+  g_free (base);
 
   if (must_exist &&
       !g_file_test (file->str, G_FILE_TEST_EXISTS))
@@ -180,131 +209,12 @@ remove_extra_css (GtkStyleProvider *provider)
                                                 provider);
 }
 
-static GtkWidget *
-builder_get_toplevel (GtkBuilder *builder)
-{
-  GSList *list, *walk;
-  GtkWidget *window = NULL;
-
-  list = gtk_builder_get_objects (builder);
-  for (walk = list; walk; walk = walk->next)
-    {
-      if (GTK_IS_WINDOW (walk->data) &&
-          gtk_widget_get_parent (walk->data) == NULL)
-        {
-          window = walk->data;
-          break;
-        }
-    }
-  
-  g_slist_free (list);
-
-  return window;
-}
-
 static gboolean
 quit_when_idle (gpointer loop)
 {
   g_main_loop_quit (loop);
 
   return G_SOURCE_REMOVE;
-}
-
-static void
-check_for_draw (GdkEvent *event, gpointer loop)
-{
-  if (event->type == GDK_EXPOSE)
-    {
-      g_idle_add (quit_when_idle, loop);
-      gdk_event_handler_set ((GdkEventFunc) gtk_main_do_event, NULL, NULL);
-    }
-
-  gtk_main_do_event (event);
-}
-
-static cairo_surface_t *
-snapshot_widget (GtkWidget *widget, SnapshotMode mode)
-{
-  cairo_surface_t *surface;
-  cairo_pattern_t *bg;
-  GMainLoop *loop;
-  cairo_t *cr;
-
-  g_assert (gtk_widget_get_realized (widget));
-
-  surface = gdk_window_create_similar_surface (gtk_widget_get_window (widget),
-                                               CAIRO_CONTENT_COLOR,
-                                               gtk_widget_get_allocated_width (widget),
-                                               gtk_widget_get_allocated_height (widget));
-
-  loop = g_main_loop_new (NULL, FALSE);
-  /* We wait until the widget is drawn for the first time.
-   * We can not wait for a GtkWidget::draw event, because that might not
-   * happen if the window is fully obscured by windowed child widgets.
-   * Alternatively, we could wait for an expose event on widget's window.
-   * Both of these are rather hairy, not sure what's best. */
-  gdk_event_handler_set (check_for_draw, loop, NULL);
-  g_main_loop_run (loop);
-
-  cr = cairo_create (surface);
-
-  switch (mode)
-    {
-    case SNAPSHOT_WINDOW:
-      {
-        GdkWindow *window = gtk_widget_get_window (widget);
-        if (gdk_window_get_window_type (window) == GDK_WINDOW_TOPLEVEL ||
-            gdk_window_get_window_type (window) == GDK_WINDOW_FOREIGN)
-          {
-            /* give the WM/server some time to sync. They need it.
-             * Also, do use popups instead of toplevls in your tests
-             * whenever you can. */
-            gdk_display_sync (gdk_window_get_display (window));
-            g_timeout_add (500, quit_when_idle, loop);
-            g_main_loop_run (loop);
-          }
-        gdk_cairo_set_source_window (cr, window, 0, 0);
-        cairo_paint (cr);
-      }
-      break;
-    case SNAPSHOT_DRAW:
-      bg = gdk_window_get_background_pattern (gtk_widget_get_window (widget));
-      if (bg)
-        {
-          cairo_set_source (cr, bg);
-          cairo_paint (cr);
-        }
-      gtk_widget_draw (widget, cr);
-      break;
-    default:
-      g_assert_not_reached();
-      break;
-    }
-
-  cairo_destroy (cr);
-  g_main_loop_unref (loop);
-  gtk_widget_destroy (widget);
-
-  return surface;
-}
-
-static cairo_surface_t *
-snapshot_ui_file (const char *ui_file)
-{
-  GtkWidget *window;
-  GtkBuilder *builder;
-  GError *error = NULL;
-
-  builder = gtk_builder_new ();
-  gtk_builder_add_from_file (builder, ui_file, &error);
-  g_assert_no_error (error);
-  window = builder_get_toplevel (builder);
-  g_object_unref (builder);
-  g_assert (window);
-
-  gtk_widget_show (window);
-
-  return snapshot_widget (window, SNAPSHOT_WINDOW);
 }
 
 static void
@@ -320,153 +230,18 @@ save_image (cairo_surface_t *surface,
   g_free (filename);
 }
 
-static void
-get_surface_size (cairo_surface_t *surface,
-                  int             *width,
-                  int             *height)
+static gboolean
+known_fail(const char *test_name)
 {
-  GdkRectangle area;
-  cairo_t *cr;
+  char *filename = get_test_file (test_name, ".ui.known_fail", TRUE);
 
-  cr = cairo_create (surface);
-  if (!gdk_cairo_get_clip_rectangle (cr, &area))
+  if (filename)
     {
-      g_assert_not_reached ();
+      g_free (filename);
+      return TRUE;
     }
 
-  g_assert (area.x == 0 && area.y == 0);
-  g_assert (area.width > 0 && area.height > 0);
-
-  *width = area.width;
-  *height = area.height;
-}
-
-static cairo_surface_t *
-coerce_surface_for_comparison (cairo_surface_t *surface,
-                               int              width,
-                               int              height)
-{
-  cairo_surface_t *coerced;
-  cairo_t *cr;
-
-  coerced = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
-                                        width,
-                                        height);
-  cr = cairo_create (coerced);
-  
-  cairo_set_source_surface (cr, surface, 0, 0);
-  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-  cairo_paint (cr);
-
-  cairo_destroy (cr);
-  cairo_surface_destroy (surface);
-
-  g_assert (cairo_surface_status (coerced) == CAIRO_STATUS_SUCCESS);
-
-  return coerced;
-}
-
-/* Compares two CAIRO_FORMAT_ARGB32 buffers, returning NULL if the
- * buffers are equal or a surface containing a diff between the two
- * surfaces.
- *
- * This function should be rewritten to compare all formats supported by
- * cairo_format_t instead of taking a mask as a parameter.
- *
- * This function is originally from cairo:test/buffer-diff.c.
- * Copyright © 2004 Richard D. Worth
- */
-static cairo_surface_t *
-buffer_diff_core (const guchar *buf_a,
-                  int           stride_a,
-		  const guchar *buf_b,
-                  int           stride_b,
-		  int		width,
-		  int		height)
-{
-  int x, y;
-  guchar *buf_diff = NULL;
-  int stride_diff = 0;
-  cairo_surface_t *diff = NULL;
-
-  for (y = 0; y < height; y++)
-    {
-      const guint32 *row_a = (const guint32 *) (buf_a + y * stride_a);
-      const guint32 *row_b = (const guint32 *) (buf_b + y * stride_b);
-      guint32 *row = (guint32 *) (buf_diff + y * stride_diff);
-
-      for (x = 0; x < width; x++)
-        {
-          int channel;
-          guint32 diff_pixel = 0;
-
-          /* check if the pixels are the same */
-          if (row_a[x] == row_b[x])
-            continue;
-        
-          if (diff == NULL)
-            {
-              diff = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
-                                                 width,
-                                                 height);
-              g_assert (cairo_surface_status (diff) == CAIRO_STATUS_SUCCESS);
-              buf_diff = cairo_image_surface_get_data (diff);
-              stride_diff = cairo_image_surface_get_stride (diff);
-              row = (guint32 *) (buf_diff + y * stride_diff);
-            }
-
-          /* calculate a difference value for all 4 channels */
-          for (channel = 0; channel < 4; channel++)
-            {
-              int value_a = (row_a[x] >> (channel*8)) & 0xff;
-              int value_b = (row_b[x] >> (channel*8)) & 0xff;
-              guint diff;
-
-              diff = ABS (value_a - value_b);
-              diff *= 4;  /* emphasize */
-              if (diff)
-                diff += 128; /* make sure it's visible */
-              if (diff > 255)
-                diff = 255;
-              diff_pixel |= diff << (channel*8);
-            }
-
-          if ((diff_pixel & 0x00ffffff) == 0)
-            {
-              /* alpha only difference, convert to luminance */
-              guint8 alpha = diff_pixel >> 24;
-              diff_pixel = alpha * 0x010101;
-            }
-          
-          row[x] = diff_pixel;
-      }
-  }
-
-  return diff;
-}
-
-static cairo_surface_t *
-compare_surfaces (const char *test_file,
-                  cairo_surface_t *surface1,
-                  cairo_surface_t *surface2)
-{
-  int w1, h1, w2, h2, w, h;
-  cairo_surface_t *diff;
-  
-  get_surface_size (surface1, &w1, &h1);
-  get_surface_size (surface2, &w2, &h2);
-  w = MAX (w1, w2);
-  h = MAX (h1, h2);
-  surface1 = coerce_surface_for_comparison (surface1, w, h);
-  surface2 = coerce_surface_for_comparison (surface2, w, h);
-
-  diff = buffer_diff_core (cairo_image_surface_get_data (surface1),
-                           cairo_image_surface_get_stride (surface1),
-                           cairo_image_surface_get_data (surface2),
-                           cairo_image_surface_get_stride (surface2),
-                           w, h);
-
-  return diff;
+  return FALSE;
 }
 
 static void
@@ -480,11 +255,11 @@ test_ui_file (GFile *file)
 
   provider = add_extra_css (ui_file, ".css");
 
-  ui_image = snapshot_ui_file (ui_file);
+  ui_image = reftest_snapshot_ui_file (ui_file);
   
   reference_file = get_test_file (ui_file, ".ref.ui", TRUE);
   if (reference_file)
-    reference_image = snapshot_ui_file (reference_file);
+    reference_image = reftest_snapshot_ui_file (reference_file);
   else
     {
       reference_image = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 1, 1);
@@ -493,14 +268,20 @@ test_ui_file (GFile *file)
     }
   g_free (reference_file);
 
-  diff_image = compare_surfaces (ui_file, ui_image, reference_image);
+  diff_image = reftest_compare_surfaces (ui_image, reference_image);
 
   save_image (ui_image, ui_file, ".out.png");
   save_image (reference_image, ui_file, ".ref.png");
   if (diff_image)
     {
       save_image (diff_image, ui_file, ".diff.png");
-      g_test_fail ();
+      if (known_fail(ui_file))
+        {
+          printf("KNOWN FAILURE - %s\n", ui_file);
+          g_test_message ("KNOWN FAIL: %s", ui_file);
+        }
+      else
+        g_test_fail ();
     }
 
   remove_extra_css (provider);

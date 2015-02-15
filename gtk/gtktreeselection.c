@@ -22,6 +22,7 @@
 #include "gtkrbtree.h"
 #include "gtkmarshalers.h"
 #include "gtkintl.h"
+#include "gtkprivate.h"
 #include "gtktypebuiltins.h"
 #include "a11y/gtktreeviewaccessibleprivate.h"
 
@@ -30,10 +31,10 @@
  * SECTION:gtktreeselection
  * @Short_description: The selection object for GtkTreeView
  * @Title: GtkTreeSelection
- * @See_also: #GtkTreeView, #GtkTreeViewColumn, #GtkTreeDnd, #GtkTreeMode,
+ * @See_also: #GtkTreeView, #GtkTreeViewColumn, #GtkTreeModel,
  *   #GtkTreeSortable, #GtkTreeModelSort, #GtkListStore, #GtkTreeStore,
  *   #GtkCellRenderer, #GtkCellEditable, #GtkCellRendererPixbuf,
- *   #GtkCellRendererText, #GtkCellRendererToggle
+ *   #GtkCellRendererText, #GtkCellRendererToggle, [GtkTreeView drag-and-drop][gtk3-GtkTreeView-drag-and-drop]
  *
  * The #GtkTreeSelection object is a helper object to manage the selection
  * for a #GtkTreeView widget.  The #GtkTreeSelection object is
@@ -130,8 +131,7 @@ gtk_tree_selection_class_init (GtkTreeSelectionClass *class)
                                              P_("Selection mode"),
                                              GTK_TYPE_SELECTION_MODE,
                                              GTK_SELECTION_SINGLE,
-                                             G_PARAM_READWRITE |
-                                             G_PARAM_STATIC_STRINGS);
+                                             GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
 
   /* Install all properties */
   g_object_class_install_properties (object_class, N_PROPERTIES, properties);
@@ -221,7 +221,7 @@ gtk_tree_selection_get_property (GObject *object,
  * Creates a new #GtkTreeSelection object.  This function should not be invoked,
  * as each #GtkTreeView will create its own #GtkTreeSelection.
  *
- * Return value: A newly created #GtkTreeSelection object.
+ * Returns: A newly created #GtkTreeSelection object.
  **/
 GtkTreeSelection*
 _gtk_tree_selection_new (void)
@@ -240,7 +240,7 @@ _gtk_tree_selection_new (void)
  * Creates a new #GtkTreeSelection object.  This function should not be invoked,
  * as each #GtkTreeView will create its own #GtkTreeSelection.
  *
- * Return value: A newly created #GtkTreeSelection object.
+ * Returns: A newly created #GtkTreeSelection object.
  **/
 GtkTreeSelection*
 _gtk_tree_selection_new_with_tree_view (GtkTreeView *tree_view)
@@ -363,7 +363,7 @@ gtk_tree_selection_set_mode (GtkTreeSelection *selection,
  * Gets the selection mode for @selection. See
  * gtk_tree_selection_set_mode().
  *
- * Return value: the current selection mode
+ * Returns: the current selection mode
  **/
 GtkSelectionMode
 gtk_tree_selection_get_mode (GtkTreeSelection *selection)
@@ -377,7 +377,7 @@ gtk_tree_selection_get_mode (GtkTreeSelection *selection)
  * gtk_tree_selection_set_select_function:
  * @selection: A #GtkTreeSelection.
  * @func: The selection function. May be %NULL
- * @data: The selection function's data. May be %NULL
+ * @data: The selection function’s data. May be %NULL
  * @destroy: The destroy function for user data.  May be %NULL
  *
  * Sets the selection function.
@@ -413,7 +413,7 @@ gtk_tree_selection_set_select_function (GtkTreeSelection     *selection,
  *
  * Returns the current selection function.
  *
- * Return value: The function.
+ * Returns: The function.
  *
  * Since: 2.14
  **/
@@ -431,7 +431,7 @@ gtk_tree_selection_get_select_function (GtkTreeSelection *selection)
  *
  * Returns the user data for the selection function.
  *
- * Return value: The user data.
+ * Returns: The user data.
  **/
 gpointer
 gtk_tree_selection_get_user_data (GtkTreeSelection *selection)
@@ -447,7 +447,7 @@ gtk_tree_selection_get_user_data (GtkTreeSelection *selection)
  * 
  * Returns the tree view associated with @selection.
  * 
- * Return value: (transfer none): A #GtkTreeView
+ * Returns: (transfer none): A #GtkTreeView
  **/
 GtkTreeView *
 gtk_tree_selection_get_tree_view (GtkTreeSelection *selection)
@@ -469,7 +469,7 @@ gtk_tree_selection_get_tree_view (GtkTreeSelection *selection)
  * with the current model as a convenience.  This function will not work if you
  * use @selection is #GTK_SELECTION_MULTIPLE.
  *
- * Return value: TRUE, if there is a selected node.
+ * Returns: TRUE, if there is a selected node.
  **/
 gboolean
 gtk_tree_selection_get_selected (GtkTreeSelection  *selection,
@@ -480,7 +480,7 @@ gtk_tree_selection_get_selected (GtkTreeSelection  *selection,
   GtkRBTree *tree;
   GtkRBNode *node;
   GtkTreePath *anchor_path;
-  gboolean retval;
+  gboolean retval = FALSE;
   gboolean found_node;
 
   g_return_val_if_fail (GTK_IS_TREE_SELECTION (selection), FALSE);
@@ -501,8 +501,6 @@ gtk_tree_selection_get_selected (GtkTreeSelection  *selection,
 
   if (anchor_path == NULL)
     return FALSE;
-
-  retval = FALSE;
 
   found_node = !_gtk_tree_view_find_node (priv->tree_view,
                                           anchor_path,
@@ -540,15 +538,15 @@ gtk_tree_selection_get_selected (GtkTreeSelection  *selection,
  *
  * Creates a list of path of all selected rows. Additionally, if you are
  * planning on modifying the model after calling this function, you may
- * want to convert the returned list into a list of #GtkTreeRowReference<!-- -->s.
+ * want to convert the returned list into a list of #GtkTreeRowReferences.
  * To do this, you can use gtk_tree_row_reference_new().
  *
  * To free the return value, use:
- * |[
+ * |[<!-- language="C" -->
  * g_list_free_full (list, (GDestroyNotify) gtk_tree_path_free);
  * ]|
  *
- * Return value: (element-type GtkTreePath) (transfer full): A #GList containing a #GtkTreePath for each selected row.
+ * Returns: (element-type GtkTreePath) (transfer full): A #GList containing a #GtkTreePath for each selected row.
  *
  * Since: 2.2
  **/
@@ -670,7 +668,7 @@ gtk_tree_selection_count_selected_rows_helper (GtkRBTree *tree,
  *
  * Returns the number of rows that have been selected in @tree.
  *
- * Return value: The number of rows selected.
+ * Returns: The number of rows selected.
  * 
  * Since: 2.2
  **/
@@ -1021,7 +1019,7 @@ gtk_tree_selection_unselect_iter (GtkTreeSelection *selection,
  * Returns %TRUE if the row pointed to by @path is currently selected.  If @path
  * does not point to a valid location, %FALSE is returned
  * 
- * Return value: %TRUE if @path is selected.
+ * Returns: %TRUE if @path is selected.
  **/
 gboolean
 gtk_tree_selection_path_is_selected (GtkTreeSelection *selection,
@@ -1061,7 +1059,7 @@ gtk_tree_selection_path_is_selected (GtkTreeSelection *selection,
  * 
  * Returns %TRUE if the row at @iter is currently selected.
  * 
- * Return value: %TRUE, if @iter is selected
+ * Returns: %TRUE, if @iter is selected
  **/
 gboolean
 gtk_tree_selection_iter_is_selected (GtkTreeSelection *selection,
@@ -1470,7 +1468,7 @@ _gtk_tree_selection_row_is_selectable (GtkTreeSelection *selection,
  */
 
 /*
- * docs about the 'override_browse_mode', we set this flag when we want to
+ * docs about the “override_browse_mode”, we set this flag when we want to
  * unset select the node and override the select browse mode behaviour (that is
  * 'one node should *always* be selected').
  */

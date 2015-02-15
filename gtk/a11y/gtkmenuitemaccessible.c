@@ -38,8 +38,9 @@ static void menu_item_deselect (GtkMenuItem *item);
 static GtkWidget *get_label_from_container   (GtkWidget *container);
 static gchar     *get_text_from_label_widget (GtkWidget *widget);
 
-static gint menu_item_add_gtk    (GtkContainer   *container,
-                                  GtkWidget      *widget);
+static gint menu_item_insert_gtk (GtkMenuShell   *shell,
+                                  GtkWidget      *widget,
+                                  gint            position);
 static gint menu_item_remove_gtk (GtkContainer   *container,
                                   GtkWidget      *widget);
 
@@ -60,11 +61,13 @@ gtk_menu_item_accessible_initialize (AtkObject *obj,
   GtkWidget *menu;
 
   ATK_OBJECT_CLASS (gtk_menu_item_accessible_parent_class)->initialize (obj, data);
-
   g_signal_connect (data, "select", G_CALLBACK (menu_item_select), NULL);
   g_signal_connect (data, "deselect", G_CALLBACK (menu_item_deselect), NULL);
 
   widget = GTK_WIDGET (data);
+  if ((gtk_widget_get_state_flags (widget) & GTK_STATE_FLAG_PRELIGHT) != 0)
+    GTK_MENU_ITEM_ACCESSIBLE (obj)->priv->selected = TRUE;
+
   parent = gtk_widget_get_parent (widget);
   if (GTK_IS_MENU (parent))
     {
@@ -85,7 +88,7 @@ gtk_menu_item_accessible_initialize (AtkObject *obj,
   menu = gtk_menu_item_get_submenu (GTK_MENU_ITEM (data));
   if (menu)
     {
-      g_signal_connect (menu, "add", G_CALLBACK (menu_item_add_gtk), NULL);
+      g_signal_connect (menu, "insert", G_CALLBACK (menu_item_insert_gtk), NULL);
       g_signal_connect (menu, "remove", G_CALLBACK (menu_item_remove_gtk), NULL);
     }
 }
@@ -462,10 +465,37 @@ find_accel_by_closure (GtkAccelKey *key,
   return data == (gpointer) closure;
 }
 
+static GtkWidget *
+find_item_label (GtkWidget *item)
+{
+  GtkWidget *child;
+
+  child = gtk_bin_get_child (GTK_BIN (item));
+  if (GTK_IS_CONTAINER (child))
+    {
+      GList *children, *l;
+      children = gtk_container_get_children (GTK_CONTAINER (child));
+      for (l = children; l; l = l->next)
+        {
+          if (GTK_IS_LABEL (l->data))
+            {
+              child = l->data;
+              break;
+            }
+        }
+      g_list_free (children);
+    }
+
+  if (GTK_IS_LABEL (child))
+    return child;
+
+  return NULL;
+}
+
 /* This function returns a string of the form A;B;C where A is
  * the keybinding for the widget; B is the keybinding to traverse
  * from the menubar and C is the accelerator. The items in the
- * keybinding to traverse from the menubar are separated by ":".
+ * keybinding to traverse from the menubar are separated by “:”.
  */
 static const gchar *
 gtk_menu_item_accessible_get_keybinding (AtkAction *action,
@@ -494,8 +524,7 @@ gtk_menu_item_accessible_get_keybinding (AtkAction *action,
       guint key_val;
       gchar *key, *temp_keybinding;
 
-      child = gtk_bin_get_child (GTK_BIN (temp_item));
-      if (child == NULL)
+      if (gtk_bin_get_child (GTK_BIN (temp_item)) == NULL)
         return NULL;
 
       parent = gtk_widget_get_parent (temp_item);
@@ -513,6 +542,7 @@ gtk_menu_item_accessible_get_keybinding (AtkAction *action,
               gtk_window_get_mnemonic_modifier (GTK_WINDOW (toplevel));
         }
 
+      child = find_item_label (temp_item);
       if (GTK_IS_LABEL (child))
         {
           key_val = gtk_label_get_mnemonic_keyval (GTK_LABEL (child));
@@ -560,17 +590,27 @@ gtk_menu_item_accessible_get_keybinding (AtkAction *action,
   parent = gtk_widget_get_parent (item);
   if (GTK_IS_MENU (parent))
     {
-      GtkAccelGroup *group;
-      GtkAccelKey *key;
-
-      group = gtk_menu_get_accel_group (GTK_MENU (parent));
-      if (group)
-        key = gtk_accel_group_find (group, find_accel_by_widget, item);
-      else
+      child = find_item_label (item);
+      if (GTK_IS_ACCEL_LABEL (child))
         {
-          key = NULL;
-          child = gtk_bin_get_child (GTK_BIN (item));
-          if (GTK_IS_ACCEL_LABEL (child))
+          guint accel_key;
+          GdkModifierType accel_mods;
+
+          gtk_accel_label_get_accel (GTK_ACCEL_LABEL (child), &accel_key, &accel_mods);
+
+          if (accel_key)
+            accelerator = gtk_accelerator_name (accel_key, accel_mods);
+        }
+        
+      if (!accelerator)
+        {
+          GtkAccelGroup *group;
+          GtkAccelKey *key = NULL;
+
+          group = gtk_menu_get_accel_group (GTK_MENU (parent));
+          if (group)
+            key = gtk_accel_group_find (group, find_accel_by_widget, item);
+          else if (GTK_IS_ACCEL_LABEL (child))
             {
               GtkAccelLabel *accel_label;
               GClosure      *accel_closure;
@@ -585,10 +625,10 @@ gtk_menu_item_accessible_get_keybinding (AtkAction *action,
                   g_closure_unref (accel_closure);
                 }
             }
-        }
 
-     if (key)
-       accelerator = gtk_accelerator_name (key->accel_key, key->accel_mods);
+         if (key)
+           accelerator = gtk_accelerator_name (key->accel_key, key->accel_mods);
+        }
    }
 
   /* Concatenate the bindings */
@@ -843,19 +883,18 @@ atk_selection_interface_init (AtkSelectionIface *iface)
 }
 
 static gint
-menu_item_add_gtk (GtkContainer *container,
-                   GtkWidget    *widget)
+menu_item_insert_gtk (GtkMenuShell *shell,
+                      GtkWidget    *widget,
+                      gint          position)
 {
   GtkWidget *parent_widget;
 
-  g_return_val_if_fail (GTK_IS_MENU (container), 1);
+  g_return_val_if_fail (GTK_IS_MENU (shell), 1);
 
-  parent_widget = gtk_menu_get_attach_widget (GTK_MENU (container));
+  parent_widget = gtk_menu_get_attach_widget (GTK_MENU (shell));
   if (GTK_IS_MENU_ITEM (parent_widget))
-    {
-      GTK_CONTAINER_ACCESSIBLE_CLASS (gtk_menu_item_accessible_parent_class)->add_gtk (container, widget, gtk_widget_get_accessible (parent_widget));
+    GTK_CONTAINER_ACCESSIBLE_CLASS (gtk_menu_item_accessible_parent_class)->add_gtk (GTK_CONTAINER (shell), widget, gtk_widget_get_accessible (parent_widget));
 
-    }
   return 1;
 }
 
@@ -874,6 +913,7 @@ menu_item_remove_gtk (GtkContainer *container,
     }
   return 1;
 }
+
 static void
 menu_item_select (GtkMenuItem *item)
 {

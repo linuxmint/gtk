@@ -27,31 +27,29 @@
  * @Title: GtkAssistant
  *
  * A #GtkAssistant is a widget used to represent a generally complex
- * operation splitted in several steps, guiding the user through its pages
- * and controlling the page flow to collect the necessary data.
+ * operation splitted in several steps, guiding the user through its
+ * pages and controlling the page flow to collect the necessary data.
  *
- * The design of GtkAssistant is that it controls what buttons to show and
- * to make sensitive, based on what it knows about the page sequence and
- * the <link linkend="GtkAssistantPageType">type</link> of each page, in
- * addition to state information like the page
- * <link linkend="gtk-assistant-set-page-complete">completion</link> and
- * <link linkend="gtk-assistant-commit">committed</link> status.
+ * The design of GtkAssistant is that it controls what buttons to show
+ * and to make sensitive, based on what it knows about the page sequence
+ * and the [type][GtkAssistantPageType] of each page,
+ * in addition to state information like the page
+ * [completion][gtk-assistant-set-page-complete]
+ * and [committed][gtk-assistant-commit] status.
  *
- * If you have a case that doesn't quite fit in #GtkAssistants way of
- * handling buttons, you can use the #GTK_ASSISTANT_PAGE_CUSTOM page type
- * and handle buttons yourself.
+ * If you have a case that doesn’t quite fit in #GtkAssistants way of
+ * handling buttons, you can use the #GTK_ASSISTANT_PAGE_CUSTOM page
+ * type and handle buttons yourself.
  *
- * <refsect2 id="GtkAssistant-BUILDER-UI">
- * <title>GtkAssistant as GtkBuildable</title>
- * <para>
- * The GtkAssistant implementation of the GtkBuildable interface exposes the
- * @action_area as internal children with the name "action_area".
+ * # GtkAssistant as GtkBuildable
  *
- * To add pages to an assistant in GtkBuilder, simply add it as a
- * &lt;child&gt; to the GtkAssistant object, and set its child properties
+ * The GtkAssistant implementation of the #GtkBuildable interface
+ * exposes the @action_area as internal children with the name
+ * “action_area”.
+ *
+ * To add pages to an assistant in #GtkBuilder, simply add it as a
+ * child to the GtkAssistant object, and set its child properties
  * as necessary.
- * </para>
- * </refsect2>
  */
 
 #include "config.h"
@@ -109,6 +107,9 @@ struct _GtkAssistantPrivate
   GtkWidget *sidebar_frame;
   GtkWidget *content;
   GtkWidget *action_area;
+  GtkWidget *headerbar;
+  gint use_header_bar;
+  gboolean constructed;
 
   GList     *pages;
   GSList    *visited_pages;
@@ -170,9 +171,6 @@ static void       gtk_assistant_do_set_page_side_image       (GtkAssistant  *ass
                                                               GtkWidget     *page,
                                                               GdkPixbuf     *pixbuf);
 
-static gboolean   assistant_sidebar_draw_cb                  (GtkWidget     *widget,
-							      cairo_t       *cr,
-							      gpointer       user_data);
 static void       on_assistant_close                         (GtkWidget     *widget,
 							      GtkAssistant  *assistant);
 static void       on_assistant_apply                         (GtkWidget     *widget,
@@ -207,7 +205,13 @@ enum
   PREPARE,
   APPLY,
   CLOSE,
+  ESCAPE,
   LAST_SIGNAL
+};
+
+enum {
+  PROP_0,
+  PROP_USE_HEADER_BAR
 };
 
 static guint signals [LAST_SIGNAL] = { 0 };
@@ -218,6 +222,161 @@ G_DEFINE_TYPE_WITH_CODE (GtkAssistant, gtk_assistant, GTK_TYPE_WINDOW,
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE,
                                                 gtk_assistant_buildable_interface_init))
 
+static void
+set_use_header_bar (GtkAssistant *assistant,
+                    gint          use_header_bar)
+{
+  GtkAssistantPrivate *priv = assistant->priv;
+
+  if (use_header_bar == -1)
+    return;
+
+  priv->use_header_bar = use_header_bar;
+}
+
+static void
+gtk_assistant_set_property (GObject      *object,
+                            guint         prop_id,
+                            const GValue *value,
+                            GParamSpec   *pspec)
+{
+  GtkAssistant *assistant = GTK_ASSISTANT (object);
+
+  switch (prop_id)
+    {
+    case PROP_USE_HEADER_BAR:
+      set_use_header_bar (assistant, g_value_get_int (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+    }
+}
+
+static void
+gtk_assistant_get_property (GObject      *object,
+                            guint         prop_id,
+                            GValue       *value,
+                            GParamSpec   *pspec)
+{
+  GtkAssistant *assistant = GTK_ASSISTANT (object);
+  GtkAssistantPrivate *priv = assistant->priv;
+
+  switch (prop_id)
+    {
+    case PROP_USE_HEADER_BAR:
+      g_value_set_int (value, priv->use_header_bar);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+    }
+}
+
+static void
+add_cb (GtkContainer *container,
+        GtkWidget    *widget,
+        GtkAssistant *assistant)
+{
+  GtkAssistantPrivate *priv = assistant->priv;
+
+  if (priv->use_header_bar)
+    g_warning ("Content added to the action area of a assistant using header bars");
+
+  gtk_widget_show (GTK_WIDGET (container));
+}
+
+static void
+apply_use_header_bar (GtkAssistant *assistant)
+{
+  GtkAssistantPrivate *priv = assistant->priv;
+
+  gtk_widget_set_visible (priv->action_area, !priv->use_header_bar);
+  gtk_widget_set_visible (priv->headerbar, priv->use_header_bar);
+  if (!priv->use_header_bar)
+    gtk_window_set_titlebar (GTK_WINDOW (assistant), NULL);
+  if (priv->use_header_bar)
+    g_signal_connect (priv->action_area, "add", G_CALLBACK (add_cb), assistant);
+}
+
+static void
+add_to_header_bar (GtkAssistant *assistant,
+                   GtkWidget    *child)
+{
+  GtkAssistantPrivate *priv = assistant->priv;
+
+  gtk_widget_set_valign (child, GTK_ALIGN_CENTER);
+
+  if (child == priv->back || child == priv->cancel)
+    gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->headerbar), child);
+  else
+    gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->headerbar), child);
+}
+
+static void
+add_action_widgets (GtkAssistant *assistant)
+{
+  GtkAssistantPrivate *priv = assistant->priv;
+  GList *children;
+  GList *l;
+
+  if (priv->use_header_bar)
+    {
+      children = gtk_container_get_children (GTK_CONTAINER (priv->action_area));
+      for (l = children; l != NULL; l = l->next)
+        {
+          GtkWidget *child = l->data;
+          gboolean has_default;
+
+          has_default = gtk_widget_has_default (child);
+
+          g_object_ref (child);
+          gtk_container_remove (GTK_CONTAINER (priv->action_area), child);
+          add_to_header_bar (assistant, child);
+          g_object_unref (child);
+
+          if (has_default)
+            {
+              gtk_widget_grab_default (child);
+              gtk_style_context_add_class (gtk_widget_get_style_context (child), GTK_STYLE_CLASS_SUGGESTED_ACTION);
+            }
+        }
+      g_list_free (children);
+    }
+}
+
+static void
+gtk_assistant_constructed (GObject *object)
+{
+  GtkAssistant *assistant = GTK_ASSISTANT (object);
+  GtkAssistantPrivate *priv = assistant->priv;
+
+  G_OBJECT_CLASS (gtk_assistant_parent_class)->constructed (object);
+
+  priv->constructed = TRUE;
+  if (priv->use_header_bar == -1)
+    priv->use_header_bar = FALSE;
+
+  add_action_widgets (assistant);
+  apply_use_header_bar (assistant);
+}
+
+static void
+escape_cb (GtkAssistant *assistant)
+{
+  GtkAssistantPrivate *priv = assistant->priv;
+
+  /* Do not allow cancelling in the middle of a progress page */
+  if (priv->current_page &&
+      (priv->current_page->type != GTK_ASSISTANT_PAGE_PROGRESS ||
+       priv->current_page->complete))
+    g_signal_emit (assistant, signals [CANCEL], 0, NULL);
+
+  /* don't run any user handlers - this is not a public signal */
+  g_signal_stop_emission (assistant, signals[ESCAPE], 0);
+}
 
 static void
 gtk_assistant_class_init (GtkAssistantClass *class)
@@ -225,10 +384,15 @@ gtk_assistant_class_init (GtkAssistantClass *class)
   GObjectClass *gobject_class;
   GtkWidgetClass *widget_class;
   GtkContainerClass *container_class;
+  GtkBindingSet *binding_set;
 
   gobject_class   = (GObjectClass *) class;
   widget_class    = (GtkWidgetClass *) class;
   container_class = (GtkContainerClass *) class;
+
+  gobject_class->constructed  = gtk_assistant_constructed;
+  gobject_class->set_property = gtk_assistant_set_property;
+  gobject_class->get_property = gtk_assistant_get_property;
 
   widget_class->destroy = gtk_assistant_destroy;
   widget_class->map = gtk_assistant_map;
@@ -326,6 +490,37 @@ gtk_assistant_class_init (GtkAssistantClass *class)
                   NULL, NULL,
                   g_cclosure_marshal_VOID__VOID,
                   G_TYPE_NONE, 0);
+
+  signals[ESCAPE] =
+    g_signal_new_class_handler (I_("escape"),
+                                G_TYPE_FROM_CLASS (gobject_class),
+                                G_SIGNAL_RUN_FIRST | G_SIGNAL_ACTION,
+                                G_CALLBACK (escape_cb),
+                                NULL, NULL,
+                                g_cclosure_marshal_VOID__VOID,
+                                G_TYPE_NONE, 0);
+
+  binding_set = gtk_binding_set_by_class (class);
+  gtk_binding_entry_add_signal (binding_set, GDK_KEY_Escape, 0, "escape", 0);
+
+  /**
+   * GtkAssistant:use-header-bar:
+   *
+   * %TRUE if the assistant uses a #GtkHeaderBar for action buttons
+   * instead of the action-area.
+   *
+   * For technical reasons, this property is declared as an integer
+   * property, but you should only set it to %TRUE or %FALSE.
+   *
+   * Since: 3.12
+   */
+  g_object_class_install_property (gobject_class,
+                                   PROP_USE_HEADER_BAR,
+                                   g_param_spec_int ("use-header-bar",
+                                                     P_("Use Header Bar"),
+                                                     P_("Use Header Bar for actions."),
+                                                     -1, 1, -1,
+                                                     GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT_ONLY));
 
   gtk_widget_class_install_style_property (widget_class,
                                            g_param_spec_int ("header-padding",
@@ -430,9 +625,10 @@ gtk_assistant_class_init (GtkAssistantClass *class)
   /* Bind class to template
    */
   gtk_widget_class_set_template_from_resource (widget_class,
-					       "/org/gtk/libgtk/gtkassistant.ui");
+					       "/org/gtk/libgtk/ui/gtkassistant.ui");
 
   gtk_widget_class_bind_template_child_internal_private (widget_class, GtkAssistant, action_area);
+  gtk_widget_class_bind_template_child_internal_private (widget_class, GtkAssistant, headerbar);
   gtk_widget_class_bind_template_child_private (widget_class, GtkAssistant, content);
   gtk_widget_class_bind_template_child_private (widget_class, GtkAssistant, cancel);
   gtk_widget_class_bind_template_child_private (widget_class, GtkAssistant, forward);
@@ -445,7 +641,6 @@ gtk_assistant_class_init (GtkAssistantClass *class)
   gtk_widget_class_bind_template_child_private (widget_class, GtkAssistant, button_size_group);
   gtk_widget_class_bind_template_child_private (widget_class, GtkAssistant, title_size_group);
 
-  gtk_widget_class_bind_template_callback (widget_class, assistant_sidebar_draw_cb);
   gtk_widget_class_bind_template_callback (widget_class, assistant_remove_page_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_assistant_close);
   gtk_widget_class_bind_template_callback (widget_class, on_assistant_apply);
@@ -768,6 +963,8 @@ set_current_page (GtkAssistant *assistant,
 
   update_title_state (assistant);
 
+  gtk_window_set_title (GTK_WINDOW (assistant), priv->current_page->title);
+
   gtk_notebook_set_current_page (GTK_NOTEBOOK (priv->content), page_num);
 
   /* update buttons state, flow may have changed */
@@ -897,23 +1094,6 @@ alternative_button_order (GtkAssistant *assistant)
   return result;
 }
 
-static gboolean
-assistant_sidebar_draw_cb (GtkWidget *widget,
-                           cairo_t *cr,
-                           gpointer user_data)
-{
-  gint width, height;
-  GtkStyleContext *context;
-
-  width = gtk_widget_get_allocated_width (widget);
-  height = gtk_widget_get_allocated_height (widget);
-  context = gtk_widget_get_style_context (widget);
-
-  gtk_render_background (context, cr, 0, 0, width, height);
-
-  return FALSE;
-}
-
 static void
 on_page_notify_visibility (GtkWidget  *widget,
                            GParamSpec *arg,
@@ -1007,6 +1187,10 @@ gtk_assistant_init (GtkAssistant *assistant)
   priv->forward_function_data = assistant;
   priv->forward_data_destroy = NULL;
 
+  g_object_get (gtk_widget_get_settings (GTK_WIDGET (assistant)),
+                "gtk-dialogs-use-header", &priv->use_header_bar,
+                NULL);
+
   gtk_widget_init_template (GTK_WIDGET (assistant));
 
   if (alternative_button_order (assistant))
@@ -1078,12 +1262,16 @@ gtk_assistant_get_child_property (GtkContainer *container,
                           gtk_assistant_get_page_title (assistant, child));
       break;
     case CHILD_PROP_PAGE_HEADER_IMAGE:
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       g_value_set_object (value,
-                          ((GtkAssistantPage*) find_page (assistant, child))->header_image);
+                          gtk_assistant_get_page_header_image (assistant, child));
+G_GNUC_END_IGNORE_DEPRECATIONS
       break;
     case CHILD_PROP_PAGE_SIDEBAR_IMAGE:
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       g_value_set_object (value,
-                          ((GtkAssistantPage*) find_page (assistant, child))->sidebar_image);
+                          gtk_assistant_get_page_side_image (assistant, child));
+G_GNUC_END_IGNORE_DEPRECATIONS
       break;
     case CHILD_PROP_PAGE_COMPLETE:
       g_value_set_boolean (value,
@@ -1271,7 +1459,7 @@ gtk_assistant_remove (GtkContainer *container,
  *
  * Creates a new #GtkAssistant.
  *
- * Return value: a newly created #GtkAssistant
+ * Returns: a newly created #GtkAssistant
  *
  * Since: 2.10
  */
@@ -1291,7 +1479,7 @@ gtk_assistant_new (void)
  *
  * Returns the page number of the current page.
  *
- * Return value: The index (starting from 0) of the current
+ * Returns: The index (starting from 0) of the current
  *     page in the @assistant, or -1 if the @assistant has no pages,
  *     or no current page.
  *
@@ -1436,7 +1624,7 @@ gtk_assistant_previous_page (GtkAssistant *assistant)
  *
  * Returns the number of pages in the @assistant
  *
- * Return value: the number of pages in the @assistant
+ * Returns: the number of pages in the @assistant
  *
  * Since: 2.10
  */
@@ -1460,7 +1648,7 @@ gtk_assistant_get_n_pages (GtkAssistant *assistant)
  *
  * Returns the child widget contained in page number @page_num.
  *
- * Return value: (transfer none): the child widget, or %NULL
+ * Returns: (transfer none): the child widget, or %NULL
  *     if @page_num is out of bounds
  *
  * Since: 2.10
@@ -1498,7 +1686,7 @@ gtk_assistant_get_nth_page (GtkAssistant *assistant,
  *
  * Prepends a page to the @assistant.
  *
- * Return value: the index (starting at 0) of the inserted page
+ * Returns: the index (starting at 0) of the inserted page
  *
  * Since: 2.10
  */
@@ -1519,7 +1707,7 @@ gtk_assistant_prepend_page (GtkAssistant *assistant,
  *
  * Appends a page to the @assistant.
  *
- * Return value: the index (starting at 0) of the inserted page
+ * Returns: the index (starting at 0) of the inserted page
  *
  * Since: 2.10
  */
@@ -1542,7 +1730,7 @@ gtk_assistant_append_page (GtkAssistant *assistant,
  *
  * Inserts a page in the @assistant at a given position.
  *
- * Return value: the index (starting from 0) of the inserted page
+ * Returns: the index (starting from 0) of the inserted page
  *
  * Since: 2.10
  */
@@ -1570,15 +1758,17 @@ gtk_assistant_insert_page (GtkAssistant *assistant,
   page_info->current_title = gtk_label_new (NULL);
   gtk_widget_set_no_show_all (page_info->current_title, TRUE);
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   /* Note: we need to use misc alignment here as long as GtkLabel
    * pays attention to it. GtkWiget::halign is ineffective, since
    * all the labels are getting the same size anyway, due to the
    * size group.
    */
   gtk_misc_set_alignment (GTK_MISC (page_info->regular_title), 0, 0.5);
-  gtk_widget_show (page_info->regular_title);
-
   gtk_misc_set_alignment (GTK_MISC (page_info->current_title), 0, 0.5);
+G_GNUC_END_IGNORE_DEPRECATIONS
+
+  gtk_widget_show (page_info->regular_title);
   gtk_widget_hide (page_info->current_title);
 
   context = gtk_widget_get_style_context (page_info->current_title);
@@ -1619,7 +1809,7 @@ gtk_assistant_insert_page (GtkAssistant *assistant,
  * @page_num: the index of a page in the @assistant,
  *     or -1 to remove the last page
  *
- * Removes the @page_num's page from @assistant.
+ * Removes the @page_num’s page from @assistant.
  *
  * Since: 3.2
  */
@@ -1691,6 +1881,17 @@ gtk_assistant_set_forward_page_func (GtkAssistant         *assistant,
     update_buttons_state (assistant);
 }
 
+static void
+add_to_action_area (GtkAssistant *assistant,
+                    GtkWidget    *child)
+{
+  GtkAssistantPrivate *priv = assistant->priv;
+
+  gtk_widget_set_valign (child, GTK_ALIGN_BASELINE);
+
+  gtk_box_pack_end (GTK_BOX (priv->action_area), child, FALSE, FALSE, 0);
+}
+
 /**
  * gtk_assistant_add_action_widget:
  * @assistant: a #GtkAssistant
@@ -1719,7 +1920,10 @@ gtk_assistant_add_action_widget (GtkAssistant *assistant,
         update_actions_size (assistant);
     }
 
-  gtk_box_pack_end (GTK_BOX (priv->action_area), child, FALSE, FALSE, 0);
+  if (priv->constructed && priv->use_header_bar)
+    add_to_header_bar (assistant, child);
+  else
+    add_to_action_area (assistant, child);
 }
 
 /**
@@ -1800,7 +2004,7 @@ gtk_assistant_set_page_title (GtkAssistant *assistant,
  *
  * Gets the title for @page.
  *
- * Return value: the title for @page
+ * Returns: the title for @page
  *
  * Since: 2.10
  */
@@ -1879,7 +2083,7 @@ gtk_assistant_set_page_type (GtkAssistant         *assistant,
  *
  * Gets the page type of @page.
  *
- * Return value: the page type of @page
+ * Returns: the page type of @page
  *
  * Since: 2.10
  */
@@ -1963,8 +2167,8 @@ gtk_assistant_do_set_page_header_image (GtkAssistant *assistant,
  *
  * Gets the header image for @page.
  *
- * Return value: (transfer none): the header image for @page,
- *     or %NULL if there's no header image for the page
+ * Returns: (transfer none): the header image for @page,
+ *     or %NULL if there’s no header image for the page
  *
  * Since: 2.10
  *
@@ -2054,8 +2258,8 @@ gtk_assistant_do_set_page_side_image (GtkAssistant *assistant,
  *
  * Gets the side image for @page.
  *
- * Return value: (transfer none): the side image for @page,
- *     or %NULL if there's no side image for the page
+ * Returns: (transfer none): the side image for @page,
+ *     or %NULL if there’s no side image for the page
  *
  * Since: 2.10
  *
@@ -2132,7 +2336,7 @@ gtk_assistant_set_page_complete (GtkAssistant *assistant,
  *
  * Gets whether @page is complete.
  *
- * Return value: %TRUE if @page is complete.
+ * Returns: %TRUE if @page is complete.
  *
  * Since: 2.10
  */
@@ -2225,7 +2429,7 @@ gtk_assistant_accessible_get_n_children (AtkObject *accessible)
   if (widget == NULL)
     return 0;
 
-  return g_list_length (GTK_ASSISTANT (widget)->priv->pages) + 1;
+  return g_list_length (GTK_ASSISTANT (widget)->priv->pages) + 2;
 }
 
 static AtkObject *
@@ -2259,6 +2463,11 @@ gtk_assistant_accessible_ref_child (AtkObject *accessible,
   else if (index == n_pages)
     {
       child = priv->action_area;
+      title = NULL;
+    }
+  else if (index == n_pages + 1)
+    {
+      child = priv->headerbar;
       title = NULL;
     }
   else

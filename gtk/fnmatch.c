@@ -35,13 +35,6 @@
 
 #include <glib.h>
 
-/* We need to make sure that all constants are defined
- * to properly compile this file
- */
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
-
 static gunichar
 get_char (const char **str)
 {
@@ -240,7 +233,7 @@ gtk_fnmatch_intern (const char *pattern,
  *  it matches, nonzero if not.
  *
  * GTK+ used to use a old version of GNU fnmatch() that was buggy
- * in various ways and didn't handle UTF-8. The following is
+ * in various ways and didn’t handle UTF-8. The following is
  * converted to UTF-8. To simplify the process of making it
  * correct, this is special-cased to the combinations of flags
  * that gtkfilesel.c uses.

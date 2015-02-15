@@ -55,6 +55,7 @@ window1
                           variant: <omitted>
                           weight: <omitted>
                           wrap-mode: word
+      <AtkHypertext>
     label2
       "label"
       parent: box1
@@ -95,6 +96,7 @@ window1
                           variant: <omitted>
                           weight: <omitted>
                           wrap-mode: word
+      <AtkHypertext>
     label3
       "label"
       parent: box1
@@ -135,6 +137,7 @@ window1
                           variant: <omitted>
                           weight: <omitted>
                           wrap-mode: word
+      <AtkHypertext>
     entry1
       "text"
       parent: box1
@@ -291,8 +294,8 @@ window1
       layer: widget
       alpha: 1
       <AtkText>
-      text: 
-      character count: 0
+      text: 46
+      character count: 2
       caret offset: 0
       default attributes: bg-color: <omitted>
                           bg-full-height: 0

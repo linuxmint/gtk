@@ -122,7 +122,7 @@ gtk_check_menu_item_class_init (GtkCheckMenuItemClass *klass)
                                                          P_("Active"),
                                                          P_("Whether the menu item is checked"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   g_object_class_install_property (gobject_class,
                                    PROP_INCONSISTENT,
@@ -130,7 +130,7 @@ gtk_check_menu_item_class_init (GtkCheckMenuItemClass *klass)
                                                          P_("Inconsistent"),
                                                          P_("Whether to display an \"inconsistent\" state"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   g_object_class_install_property (gobject_class,
                                    PROP_DRAW_AS_RADIO,
@@ -138,7 +138,7 @@ gtk_check_menu_item_class_init (GtkCheckMenuItemClass *klass)
                                                          P_("Draw as radio menu item"),
                                                          P_("Whether the menu item looks like a radio menu item"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   gtk_widget_class_install_style_property (widget_class,
                                            g_param_spec_int ("indicator-size",
@@ -314,7 +314,7 @@ gtk_check_menu_item_new_with_mnemonic (const gchar *label)
  * @check_menu_item: a #GtkCheckMenuItem.
  * @is_active: boolean value indicating whether the check box is active.
  *
- * Sets the active state of the menu item's check box.
+ * Sets the active state of the menu item’s check box.
  */
 void
 gtk_check_menu_item_set_active (GtkCheckMenuItem *check_menu_item,
@@ -339,7 +339,7 @@ gtk_check_menu_item_set_active (GtkCheckMenuItem *check_menu_item,
  * Returns whether the check menu item is active. See
  * gtk_check_menu_item_set_active ().
  * 
- * Return value: %TRUE if the menu item is checked.
+ * Returns: %TRUE if the menu item is checked.
  */
 gboolean
 gtk_check_menu_item_get_active (GtkCheckMenuItem *check_menu_item)
@@ -381,16 +381,16 @@ gtk_check_menu_item_toggled (GtkCheckMenuItem *check_menu_item)
 /**
  * gtk_check_menu_item_set_inconsistent:
  * @check_menu_item: a #GtkCheckMenuItem
- * @setting: %TRUE to display an "inconsistent" third state check
+ * @setting: %TRUE to display an “inconsistent” third state check
  *
  * If the user has selected a range of elements (such as some text or
  * spreadsheet cells) that are affected by a boolean setting, and the
  * current values in that range are inconsistent, you may want to
- * display the check in an "in between" state. This function turns on
- * "in between" display.  Normally you would turn off the inconsistent
+ * display the check in an “in between” state. This function turns on
+ * “in between” display.  Normally you would turn off the inconsistent
  * state again if the user explicitly selects a setting. This has to be
  * done manually, gtk_check_menu_item_set_inconsistent() only affects
- * visual appearance, it doesn't affect the semantics of the widget.
+ * visual appearance, it doesn’t affect the semantics of the widget.
  * 
  **/
 void
@@ -419,7 +419,7 @@ gtk_check_menu_item_set_inconsistent (GtkCheckMenuItem *check_menu_item,
  * 
  * Retrieves the value set by gtk_check_menu_item_set_inconsistent().
  * 
- * Return value: %TRUE if inconsistent
+ * Returns: %TRUE if inconsistent
  **/
 gboolean
 gtk_check_menu_item_get_inconsistent (GtkCheckMenuItem *check_menu_item)
@@ -466,7 +466,7 @@ gtk_check_menu_item_set_draw_as_radio (GtkCheckMenuItem *check_menu_item,
  * 
  * Returns whether @check_menu_item looks like a #GtkRadioMenuItem
  * 
- * Return value: Whether @check_menu_item looks like a #GtkRadioMenuItem
+ * Returns: Whether @check_menu_item looks like a #GtkRadioMenuItem
  * 
  * Since: 2.4
  **/
@@ -575,8 +575,8 @@ gtk_real_check_menu_item_draw_indicator (GtkCheckMenuItem *check_menu_item,
 
       if (priv->inconsistent)
         state |= GTK_STATE_FLAG_INCONSISTENT;
-      else if (priv->active)
-        state |= GTK_STATE_FLAG_ACTIVE;
+      if (priv->active)
+        state |= GTK_STATE_FLAG_CHECKED;
 
       gtk_style_context_set_state (context, state);
 
@@ -649,7 +649,6 @@ gtk_check_menu_item_set_property (GObject      *object,
       break;
     }
 }
-
 
 /* Private */
 

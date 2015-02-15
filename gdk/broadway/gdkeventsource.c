@@ -18,6 +18,7 @@
 #include "config.h"
 
 #include "gdkeventsource.h"
+#include "gdkdevicemanager-broadway.h"
 
 #include "gdkinternals.h"
 
@@ -62,10 +63,7 @@ gdk_event_source_prepare (GSource *source,
 
   *timeout = -1;
 
-  if (display->event_pause_count > 0)
-    retval = FALSE;
-  else
-    retval = (_gdk_event_queue_find_first (display) != NULL);
+  retval = (_gdk_event_queue_find_first (display) != NULL);
 
   gdk_threads_leave ();
 
@@ -80,9 +78,8 @@ gdk_event_source_check (GSource *source)
 
   gdk_threads_enter ();
 
-  if (event_source->display->event_pause_count > 0)
-    retval = FALSE;
-  else if (event_source->event_poll_fd.revents & G_IO_IN)
+  if (event_source->display->event_pause_count > 0 ||
+      event_source->event_poll_fd.revents & G_IO_IN)
     retval = (_gdk_event_queue_find_first (event_source->display) != NULL);
   else
     retval = FALSE;
@@ -97,10 +94,13 @@ _gdk_broadway_events_got_input (BroadwayInputMsg *message)
 {
   GdkDisplay *display = gdk_display_get_default ();
   GdkBroadwayDisplay *display_broadway = GDK_BROADWAY_DISPLAY (display);
+  GdkBroadwayDeviceManager *device_manager;
   GdkScreen *screen;
   GdkWindow *window;
   GdkEvent *event = NULL;
   GList *node;
+
+  device_manager = GDK_BROADWAY_DEVICE_MANAGER (gdk_display_get_device_manager (display));
 
   switch (message->base.type) {
   case BROADWAY_EVENT_ENTER:
@@ -121,14 +121,6 @@ _gdk_broadway_events_got_input (BroadwayInputMsg *message)
 
 	node = _gdk_event_queue_append (display, event);
 	_gdk_windowing_got_event (display, node, event, message->base.serial);
-
-	event = gdk_event_new (GDK_FOCUS_CHANGE);
-	event->focus_change.window = g_object_ref (window);
-	event->focus_change.in = TRUE;
-	gdk_event_set_device (event, display->core_pointer);
-
-	node = _gdk_event_queue_append (display, event);
-	_gdk_windowing_got_event (display, node, event, message->base.serial);
       }
     break;
   case BROADWAY_EVENT_LEAVE:
@@ -145,14 +137,6 @@ _gdk_broadway_events_got_input (BroadwayInputMsg *message)
 	event->crossing.state = message->pointer.state;
 	event->crossing.mode = message->crossing.mode;
 	event->crossing.detail = GDK_NOTIFY_ANCESTOR;
-	gdk_event_set_device (event, display->core_pointer);
-
-	node = _gdk_event_queue_append (display, event);
-	_gdk_windowing_got_event (display, node, event, message->base.serial);
-
-	event = gdk_event_new (GDK_FOCUS_CHANGE);
-	event->focus_change.window = g_object_ref (window);
-	event->focus_change.in = FALSE;
 	gdk_event_set_device (event, display->core_pointer);
 
 	node = _gdk_event_queue_append (display, event);
@@ -225,10 +209,59 @@ _gdk_broadway_events_got_input (BroadwayInputMsg *message)
       }
 
     break;
+  case BROADWAY_EVENT_TOUCH:
+    window = g_hash_table_lookup (display_broadway->id_ht, GINT_TO_POINTER (message->touch.event_window_id));
+    if (window)
+      {
+        GdkEventType event_type = 0;
+
+        switch (message->touch.touch_type) {
+        case 0:
+          event_type = GDK_TOUCH_BEGIN;
+          break;
+        case 1:
+          event_type = GDK_TOUCH_UPDATE;
+          break;
+        case 2:
+          event_type = GDK_TOUCH_END;
+          break;
+        default:
+          g_printerr ("_gdk_broadway_events_got_input - Unknown touch type %d\n", message->touch.touch_type);
+        }
+
+        if (event_type != GDK_TOUCH_BEGIN &&
+            message->touch.is_emulated && _gdk_broadway_moveresize_handle_event (display, message))
+          break;
+
+	event = gdk_event_new (event_type);
+	event->touch.window = g_object_ref (window);
+	event->touch.sequence = GUINT_TO_POINTER(message->touch.sequence_id);
+	event->touch.emulating_pointer = message->touch.is_emulated;
+	event->touch.time = message->base.time;
+	event->touch.x = message->touch.win_x;
+	event->touch.y = message->touch.win_y;
+	event->touch.x_root = message->touch.root_x;
+	event->touch.y_root = message->touch.root_y;
+	event->touch.state = message->touch.state;
+
+	gdk_event_set_device (event, device_manager->core_pointer);
+	gdk_event_set_source_device (event, device_manager->touchscreen);
+
+        if (message->touch.is_emulated)
+          _gdk_event_set_pointer_emulated (event, TRUE);
+
+        if (event_type == GDK_TOUCH_BEGIN || event_type == GDK_TOUCH_UPDATE)
+          event->touch.state |= GDK_BUTTON1_MASK;
+
+	node = _gdk_event_queue_append (display, event);
+	_gdk_windowing_got_event (display, node, event, message->base.serial);
+      }
+
+    break;
   case BROADWAY_EVENT_KEY_PRESS:
   case BROADWAY_EVENT_KEY_RELEASE:
     window = g_hash_table_lookup (display_broadway->id_ht,
-				  GINT_TO_POINTER (message->key.mouse_window_id));
+				  GINT_TO_POINTER (message->key.window_id));
     if (window)
       {
 	event = gdk_event_new (message->base.type == 'k' ? GDK_KEY_PRESS : GDK_KEY_RELEASE);
@@ -238,7 +271,7 @@ _gdk_broadway_events_got_input (BroadwayInputMsg *message)
 	event->key.state = message->key.state;
 	event->key.hardware_keycode = message->key.key;
 	event->key.length = 0;
-	gdk_event_set_device (event, display->core_pointer);
+	gdk_event_set_device (event, device_manager->core_keyboard);
 
 	node = _gdk_event_queue_append (display, event);
 	_gdk_windowing_got_event (display, node, event, message->base.serial);
@@ -297,6 +330,29 @@ _gdk_broadway_events_got_input (BroadwayInputMsg *message)
 
     _gdk_window_update_size (window);
     _gdk_broadway_screen_size_changed (screen, &message->screen_resize_notify);
+    break;
+
+  case BROADWAY_EVENT_FOCUS:
+    window = g_hash_table_lookup (display_broadway->id_ht, GINT_TO_POINTER (message->focus.old_id));
+    if (window)
+      {
+	event = gdk_event_new (GDK_FOCUS_CHANGE);
+	event->focus_change.window = g_object_ref (window);
+	event->focus_change.in = FALSE;
+	gdk_event_set_device (event, display->core_pointer);
+	node = _gdk_event_queue_append (display, event);
+	_gdk_windowing_got_event (display, node, event, message->base.serial);
+      }
+    window = g_hash_table_lookup (display_broadway->id_ht, GINT_TO_POINTER (message->focus.new_id));
+    if (window)
+      {
+	event = gdk_event_new (GDK_FOCUS_CHANGE);
+	event->focus_change.window = g_object_ref (window);
+	event->focus_change.in = TRUE;
+	gdk_event_set_device (event, display->core_pointer);
+	node = _gdk_event_queue_append (display, event);
+	_gdk_windowing_got_event (display, node, event, message->base.serial);
+      }
     break;
 
   default:

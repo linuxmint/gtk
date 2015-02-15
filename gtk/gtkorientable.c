@@ -37,7 +37,7 @@
  * realized as subclasses of a common base class (e.g #GtkBox/#GtkHBox/#GtkVBox
  * or #GtkScale/#GtkHScale/#GtkVScale). #GtkOrientable is more flexible in that
  * it allows the orientation to be changed at runtime, allowing the widgets
- * to 'flip'.
+ * to “flip”.
  *
  * #GtkOrientable was introduced in GTK+ 2.16.
  */
@@ -62,13 +62,13 @@ gtk_orientable_default_init (GtkOrientableInterface *iface)
                                                           P_("The orientation of the orientable"),
                                                           GTK_TYPE_ORIENTATION,
                                                           GTK_ORIENTATION_HORIZONTAL,
-                                                          GTK_PARAM_READWRITE));
+                                                          GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 }
 
 /**
  * gtk_orientable_set_orientation:
  * @orientable: a #GtkOrientable
- * @orientation: the orientable's new orientation.
+ * @orientation: the orientable’s new orientation.
  *
  * Sets the orientation of the @orientable.
  *
@@ -94,7 +94,7 @@ gtk_orientable_set_orientation (GtkOrientable  *orientable,
  *
  * Retrieves the orientation of the @orientable.
  *
- * Return value: the orientation of the @orientable.
+ * Returns: the orientation of the @orientable.
  *
  * Since: 2.16
  **/

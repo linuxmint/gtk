@@ -5,10 +5,10 @@
 <title>GTK+ 3 Reference Manual: GtkFileChooserButton</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
-<link rel="up" href="SelectorWidgets.html" title="Selectors (Color/File/Font)">
+<link rel="up" href="SelectorWidgets.html" title="Selector Widgets and Dialogs">
 <link rel="prev" href="GtkFileChooser.html" title="GtkFileChooser">
 <link rel="next" href="GtkFileChooserDialog.html" title="GtkFileChooserDialog">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -60,7 +60,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<td class="function_type">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GtkFileChooserButton.html#gtk-file-chooser-button-get-title" title="gtk_file_chooser_button_get_title ()">gtk_file_chooser_button_get_title</a> <span class="c_punctuation">()</span>
@@ -76,7 +76,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkFileChooserButton.html#gtk-file-chooser-button-get-width-chars" title="gtk_file_chooser_button_get_width_chars ()">gtk_file_chooser_button_get_width_chars</a> <span class="c_punctuation">()</span>
@@ -92,7 +92,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkFileChooserButton.html#gtk-file-chooser-button-get-focus-on-click" title="gtk_file_chooser_button_get_focus_on_click ()">gtk_file_chooser_button_get_focus_on_click</a> <span class="c_punctuation">()</span>
@@ -125,18 +125,18 @@
 <td class="property_flags">Write / Construct Only</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkFileChooserButton.html#GtkFileChooserButton--focus-on-click" title="The “focus-on-click” property">focus-on-click</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkFileChooserButton.html#GtkFileChooserButton--title" title="The “title” property">title</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GtkFileChooserButton.html#GtkFileChooserButton--width-chars" title="The “width-chars” property">width-chars</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -165,16 +165,22 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GtkFileChooserButton.html#GtkFileChooserButton-struct" title="struct GtkFileChooserButton">GtkFileChooserButton</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkFileChooserButton.html#GtkFileChooserButtonClass" title="struct GtkFileChooserButtonClass">GtkFileChooserButtonClass</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="GtkFileChooserButton.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBox.html" title="GtkBox">GtkBox</a>
@@ -199,10 +205,10 @@ file.  It implements the <a class="link" href="GtkFileChooser.html" title="GtkFi
 file name with a button to bring up a <a class="link" href="GtkFileChooserDialog.html" title="GtkFileChooserDialog"><span class="type">GtkFileChooserDialog</span></a>.
 The user can then use that dialog to change the file associated with
 that button.  This widget does not support setting the
-<a class="link" href="GtkFileChooser.html#GtkFileChooser--select-multiple" title="The “select-multiple” property"><span class="type">“select-multiple”</span></a> property to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
-<div class="example">
-<a name="id-1.3.14.7.10.3"></a><p class="title"><b>Example 57. Create a button to let the user select a file in /etc</b></p>
-<div class="example-contents">
+<a class="link" href="GtkFileChooser.html#GtkFileChooser--select-multiple" title="The “select-multiple” property"><span class="type">“select-multiple”</span></a> property to <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
+<div class="refsect3">
+<a name="id-1.3.14.7.10.3"></a><h4>Create a button to let the user select a file in /etc</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -217,7 +223,7 @@ that button.  This widget does not support setting the
         <td class="listing_code"><pre class="programlisting"><span class="cbracket">{</span>
 <span class="normal">  </span><span class="usertype">GtkWidget</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">button</span><span class="symbol">;</span>
 
-<span class="normal">  button </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkFileChooserButton.html#gtk-file-chooser-button-new">gtk_file_chooser_button_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-I18N.html#gettext-macro">_</a></span><span class="symbol">(</span><span class="string">"Select a file"</span><span class="symbol">),</span>
+<span class="normal">  button </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="GtkFileChooserButton.html#gtk-file-chooser-button-new">gtk_file_chooser_button_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-I18N.html#gettext-macro">_</a></span><span class="symbol">(</span><span class="string">"Select a file"</span><span class="symbol">),</span>
 <span class="normal">                                        GTK_FILE_CHOOSER_ACTION_OPEN</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="function"><a href="GtkFileChooser.html#gtk-file-chooser-set-current-folder">gtk_file_chooser_set_current_folder</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">GTK_FILE_CHOOSER</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">button</span><span class="symbol">),</span>
 <span class="normal">                                       </span><span class="string">"/etc"</span><span class="symbol">);</span>
@@ -227,15 +233,15 @@ that button.  This widget does not support setting the
   </table>
 </div>
 
-</div>
-<br class="example-break"><p>The <a class="link" href="GtkFileChooserButton.html" title="GtkFileChooserButton"><span class="type">GtkFileChooserButton</span></a> supports the <a class="link" href="GtkFileChooser.html#GtkFileChooserAction" title="enum GtkFileChooserAction"><span class="type">GtkFileChooserAction</span></a>s
+<p></p>
+<p>The <a class="link" href="GtkFileChooserButton.html" title="GtkFileChooserButton"><span class="type">GtkFileChooserButton</span></a> supports the <a href="GtkFileChooser.html#GtkFileChooserAction"><span class="type">GtkFileChooserActions</span></a>
 <a class="link" href="GtkFileChooser.html#GTK-FILE-CHOOSER-ACTION-OPEN:CAPS"><code class="literal">GTK_FILE_CHOOSER_ACTION_OPEN</code></a> and <a class="link" href="GtkFileChooser.html#GTK-FILE-CHOOSER-ACTION-SELECT-FOLDER:CAPS"><code class="literal">GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER</code></a>.</p>
-<div class="important">
-The <a class="link" href="GtkFileChooserButton.html" title="GtkFileChooserButton"><span class="type">GtkFileChooserButton</span></a> will ellipsize the label,
-and will thus request little horizontal space.  To give the button
-more space, you should call <a class="link" href="GtkWidget.html#gtk-widget-get-preferred-size" title="gtk_widget_get_preferred_size ()"><code class="function">gtk_widget_get_preferred_size()</code></a>,
+<div class="blockquote"><blockquote class="blockquote"><p>The <a class="link" href="GtkFileChooserButton.html" title="GtkFileChooserButton"><span class="type">GtkFileChooserButton</span></a> will ellipsize the label, and will thus
+request little horizontal space.  To give the button more space,
+you should call <a class="link" href="GtkWidget.html#gtk-widget-get-preferred-size" title="gtk_widget_get_preferred_size ()"><code class="function">gtk_widget_get_preferred_size()</code></a>,
 <a class="link" href="GtkFileChooserButton.html#gtk-file-chooser-button-set-width-chars" title="gtk_file_chooser_button_set_width_chars ()"><code class="function">gtk_file_chooser_button_set_width_chars()</code></a>, or pack the button in
-such a way that other interface elements give space to the widget.
+such a way that other interface elements give space to the
+widget.</p></blockquote></div>
 </div>
 </div>
 <div class="refsect1">
@@ -243,7 +249,7 @@ such a way that other interface elements give space to the widget.
 <div class="refsect2">
 <a name="gtk-file-chooser-button-new"></a><h3>gtk_file_chooser_button_new ()</h3>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *
-gtk_file_chooser_button_new (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+gtk_file_chooser_button_new (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
                              <em class="parameter"><code><a class="link" href="GtkFileChooser.html#GtkFileChooserAction" title="enum GtkFileChooserAction"><span class="type">GtkFileChooserAction</span></a> action</code></em>);</pre>
 <p>Creates a new file-selecting button widget.</p>
 <div class="refsect3">
@@ -301,8 +307,8 @@ order for the button to take over the file selected in the dialog.</p>
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>dialog</p></td>
-<td class="parameter_description"><p>the widget to use as dialog</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> the widget to use as dialog. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> Gtk.Dialog]</span></td>
 </tr></tbody>
 </table></div>
 </div>
@@ -316,7 +322,7 @@ order for the button to take over the file selected in the dialog.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-file-chooser-button-get-title"></a><h3>gtk_file_chooser_button_get_title ()</h3>
-<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gtk_file_chooser_button_get_title (<em class="parameter"><code><a class="link" href="GtkFileChooserButton.html" title="GtkFileChooserButton"><span class="type">GtkFileChooserButton</span></a> *button</code></em>);</pre>
 <p>Retrieves the title of the browse dialog used by <em class="parameter"><code>button</code></em>
 . The returned value
@@ -338,7 +344,7 @@ should not be modified or freed.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.14.7.11.4.6"></a><h4>Returns</h4>
-<p> a pointer to the browse dialog's title.</p>
+<p> a pointer to the browse dialog’s title.</p>
 <p></p>
 </div>
 <p class="since">Since 2.6</p>
@@ -348,7 +354,7 @@ should not be modified or freed.</p>
 <a name="gtk-file-chooser-button-set-title"></a><h3>gtk_file_chooser_button_set_title ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_file_chooser_button_set_title (<em class="parameter"><code><a class="link" href="GtkFileChooserButton.html" title="GtkFileChooserButton"><span class="type">GtkFileChooserButton</span></a> *button</code></em>,
-                                   <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>);</pre>
+                                   <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>);</pre>
 <p>Modifies the <em class="parameter"><code>title</code></em>
  of the browse dialog used by <em class="parameter"><code>button</code></em>
 .</p>
@@ -379,11 +385,11 @@ gtk_file_chooser_button_set_title (<em class="parameter"><code><a class="link" h
 <hr>
 <div class="refsect2">
 <a name="gtk-file-chooser-button-get-width-chars"></a><h3>gtk_file_chooser_button_get_width_chars ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 gtk_file_chooser_button_get_width_chars
                                (<em class="parameter"><code><a class="link" href="GtkFileChooserButton.html" title="GtkFileChooserButton"><span class="type">GtkFileChooserButton</span></a> *button</code></em>);</pre>
 <p>Retrieves the width in characters of the <em class="parameter"><code>button</code></em>
- widget's entry and/or label.</p>
+ widget’s entry and/or label.</p>
 <div class="refsect3">
 <a name="id-1.3.14.7.11.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -412,7 +418,7 @@ gtk_file_chooser_button_get_width_chars
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_file_chooser_button_set_width_chars
                                (<em class="parameter"><code><a class="link" href="GtkFileChooserButton.html" title="GtkFileChooserButton"><span class="type">GtkFileChooserButton</span></a> *button</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_chars</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_chars</code></em>);</pre>
 <p>Sets the width (in characters) that <em class="parameter"><code>button</code></em>
  will use to <em class="parameter"><code>n_chars</code></em>
 .</p>
@@ -443,7 +449,7 @@ gtk_file_chooser_button_set_width_chars
 <hr>
 <div class="refsect2">
 <a name="gtk-file-chooser-button-get-focus-on-click"></a><h3>gtk_file_chooser_button_get_focus_on_click ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_file_chooser_button_get_focus_on_click
                                (<em class="parameter"><code><a class="link" href="GtkFileChooserButton.html" title="GtkFileChooserButton"><span class="type">GtkFileChooserButton</span></a> *button</code></em>);</pre>
 <p>Returns whether the button grabs focus when it is clicked with the mouse.
@@ -465,7 +471,7 @@ See <a class="link" href="GtkFileChooserButton.html#gtk-file-chooser-button-set-
 </div>
 <div class="refsect3">
 <a name="id-1.3.14.7.11.8.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the button grabs focus when it is clicked with
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the button grabs focus when it is clicked with
 the mouse.</p>
 <p></p>
 </div>
@@ -477,10 +483,10 @@ the mouse.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_file_chooser_button_set_focus_on_click
                                (<em class="parameter"><code><a class="link" href="GtkFileChooserButton.html" title="GtkFileChooserButton"><span class="type">GtkFileChooserButton</span></a> *button</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> focus_on_click</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> focus_on_click</code></em>);</pre>
 <p>Sets whether the button will grab focus when it is clicked with the mouse.
 Making mouse clicks not grab focus is useful in places like toolbars where
-you don't want the keyboard focus removed from the main area of the
+you don’t want the keyboard focus removed from the main area of the
 application.</p>
 <div class="refsect3">
 <a name="id-1.3.14.7.11.9.5"></a><h4>Parameters</h4>
@@ -513,6 +519,39 @@ application.</p>
 <a name="GtkFileChooserButton-struct"></a><h3>struct GtkFileChooserButton</h3>
 <pre class="programlisting">struct GtkFileChooserButton;</pre>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GtkFileChooserButtonClass"></a><h3>struct GtkFileChooserButtonClass</h3>
+<pre class="programlisting">struct GtkFileChooserButtonClass {
+  GtkBoxClass parent_class;
+
+
+  void (* file_set) (GtkFileChooserButton *fc);
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.14.7.12.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GtkBox.html#GtkBoxClass" title="struct GtkBoxClass"><span class="type">GtkBoxClass</span></a> <em class="structfield"><code><a name="GtkFileChooserButtonClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkFileChooserButtonClass.file-set"></a>file_set</code></em> ()</p></td>
+<td class="struct_member_description"><p>Signal emitted when the user selects a file.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkFileChooserButton.property-details"></a><h2>Property Details</h2>
@@ -526,7 +565,7 @@ application.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkFileChooserButton--focus-on-click"></a><h3>The <code class="literal">“focus-on-click”</code> property</h3>
-<pre class="programlisting">  “focus-on-click”           <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “focus-on-click”           <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>Whether the <a class="link" href="GtkFileChooserButton.html" title="GtkFileChooserButton"><span class="type">GtkFileChooserButton</span></a> button grabs focus when it is clicked
 with the mouse.</p>
 <p>Flags: Read / Write</p>
@@ -536,7 +575,7 @@ with the mouse.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkFileChooserButton--title"></a><h3>The <code class="literal">“title”</code> property</h3>
-<pre class="programlisting">  “title”                    <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “title”                    <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>Title to put on the <a class="link" href="GtkFileChooserDialog.html" title="GtkFileChooserDialog"><span class="type">GtkFileChooserDialog</span></a> associated with the button.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: "Select a File"</p>
@@ -545,7 +584,7 @@ with the mouse.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkFileChooserButton--width-chars"></a><h3>The <code class="literal">“width-chars”</code> property</h3>
-<pre class="programlisting">  “width-chars”              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “width-chars”              <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>The width of the entry and label inside the button, in characters.</p>
 <p>Flags: Read / Write</p>
 <p>Allowed values: &gt;= -1</p>
@@ -559,9 +598,9 @@ with the mouse.</p>
 <a name="GtkFileChooserButton-file-set"></a><h3>The <code class="literal">“file-set”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkFileChooserButton.html" title="GtkFileChooserButton"><span class="type">GtkFileChooserButton</span></a> *widget,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>              user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>              user_data)</pre>
 <p>The ::file-set signal is emitted when the user selects a file.</p>
-<p>Note that this signal is only emitted when the <span class="emphasis"><em>user</em></span>
+<p>Note that this signal is only emitted when the user
 changes the file.</p>
 <div class="refsect3">
 <a name="id-1.3.14.7.14.2.6"></a><h4>Parameters</h4>
@@ -596,6 +635,6 @@ changes the file.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

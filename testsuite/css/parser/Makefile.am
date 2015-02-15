@@ -30,6 +30,11 @@ clean-local:
 	rm $(builddir)/*.out.css || true
 
 test_data = \
+	animation-crash-3.12.css \
+	animation-crash-3.12.errors \
+	animation-crash-3.12.ref.css \
+	animation-shorthand-crash.css \
+	animation-shorthand-crash.ref.css \
 	at-invalid-01.css \
 	at-invalid-01.errors \
 	at-invalid-01.ref.css \
@@ -176,6 +181,9 @@ test_data = \
 	border.ref.css \
 	border-color-currentcolor.css \
 	border-color-currentcolor.ref.css \
+	border-infloop-3.12.css \
+	border-infloop-3.12.errors \
+	border-infloop-3.12.ref.css \
 	border-radius.css \
 	border-radius.errors \
 	border-radius.ref.css \
@@ -320,6 +328,11 @@ test_data = \
 	no-semicolon.ref.css \
 	nth-child.css \
 	nth-child.ref.css \
+	property-name-errors.css \
+	property-name-errors.errors \
+	property-name-errors.ref.css \
+	pseudo-classes-known.css \
+	pseudo-classes-known.ref.css \
 	pseudo-classes-unknown.css \
 	pseudo-classes-unknown.errors \
 	pseudo-classes-unknown.ref.css \
@@ -333,7 +346,12 @@ test_data = \
 	single-slash.css \
 	single-slash.errors\
 	single-slash.ref.css \
+	string-values.css \
+	string-values.ref.css \
 	test.png \
+	text-shadow-invalid-but-worked-in-3.12.css \
+	text-shadow-invalid-but-worked-in-3.12.errors \
+	text-shadow-invalid-but-worked-in-3.12.ref.css \
 	transition.css \
 	transition.ref.css \
 	value-inherit.css \
@@ -351,12 +369,12 @@ test_data = \
 EXTRA_DIST += $(test_in_files) $(test_data)
 
 if BUILDOPT_INSTALL_TESTS
-insttestdir=$(pkglibexecdir)/installed-tests/css/parser
+insttestdir=$(libexecdir)/installed-tests/$(PACKAGE)/css/parser
 insttest_PROGRAMS = $(TEST_PROGS)
 insttest_DATA = $(test_data)
 
 substitutions = \
-	-e s,@pkglibexecdir\@,$(pkglibexecdir),g \
+	-e s,@libexecdir\@,$(libexecdir),g \
 	$(NULL)
 
 test_files = $(test_in_files:.test.in=.test)

@@ -40,22 +40,21 @@
  * can use all of the methods available there.  It also implements the
  * #GtkTreeSortable interface so it can be sorted by the view.
  * Finally, it also implements the tree
- * <link linkend="gtk3-GtkTreeView-drag-and-drop">drag and drop</link>
+ * [drag and drop][gtk3-GtkTreeView-drag-and-drop]
  * interfaces.
  *
  * The #GtkListStore can accept most GObject types as a column type, though
- * it can't accept all custom types.  Internally, it will keep a copy of
+ * it can’t accept all custom types.  Internally, it will keep a copy of
  * data passed in (such as a string or a boxed pointer).  Columns that
- * accept #GObject<!-- -->s are handled a little differently.  The
+ * accept #GObjects are handled a little differently.  The
  * #GtkListStore will keep a reference to the object instead of copying the
  * value.  As a result, if the object is modified, it is up to the
  * application writer to call gtk_tree_model_row_changed() to emit the
  * #GtkTreeModel::row_changed signal.  This most commonly affects lists with
- * #GdkPixbuf<!-- -->s stored.
+ * #GdkPixbufs stored.
  *
- * <example>
- * <title>Creating a simple list store.</title>
- * <programlisting>
+ * An example for creating a simple list store:
+ * |[<!-- language="C" -->
  * enum {
  *   COLUMN_STRING,
  *   COLUMN_INT,
@@ -88,9 +87,8 @@
  *                           COLUMN_BOOLEAN,  FALSE,
  *                           -1);
  *
- *       /<!---->* As the store will keep a copy of the string internally, we
- *        * free some_data.
- *        *<!---->/
+ *       // As the store will keep a copy of the string internally,
+ *       // we free some_data.
  *       g_free (some_data);
  *     }
  *
@@ -104,21 +102,20 @@
  *                       COLUMN_BOOLEAN, TRUE,
  *                       -1);
  * }
- * </programlisting>
- * </example>
+ * ]|
  *
- * <refsect2>
- * <title>Performance Considerations</title>
- * Internally, the #GtkListStore was implemented with a linked list with a
- * tail pointer prior to GTK+ 2.6.  As a result, it was fast at data
+ * # Performance Considerations
+ *
+ * Internally, the #GtkListStore was implemented with a linked list with
+ * a tail pointer prior to GTK+ 2.6.  As a result, it was fast at data
  * insertion and deletion, and not fast at random data access.  The
  * #GtkListStore sets the #GTK_TREE_MODEL_ITERS_PERSIST flag, which means
- * that #GtkTreeIter<!-- -->s can be cached while the row exists.  Thus, if
+ * that #GtkTreeIters can be cached while the row exists.  Thus, if
  * access to a particular row is needed often and your code is expected to
  * run on older versions of GTK+, it is worth keeping the iter around.
- * </refsect2>
- * <refsect2>
- * <title>Atomic Operations</title>
+ *
+ * # Atomic Operations
+ *
  * It is important to note that only the methods
  * gtk_list_store_insert_with_values() and gtk_list_store_insert_with_valuesv()
  * are atomic, in the sense that the row is being appended to the store and the
@@ -133,31 +130,26 @@
  * to append rows to the #GtkListStore will cause the
  * #GtkTreeModelFilterVisibleFunc to be visited with an empty row first; the
  * function must be prepared for that.
- * </refsect2>
- * <refsect2 id="GtkListStore-BUILDER-UI">
- * <title>GtkListStore as GtkBuildable</title>
- * <para>
+ *
+ * # GtkListStore as GtkBuildable
+ *
  * The GtkListStore implementation of the GtkBuildable interface allows
- * to specify the model columns with a &lt;columns&gt; element that may
- * contain multiple &lt;column&gt; elements, each specifying one model
- * column. The "type" attribute specifies the data type for the column.
+ * to specify the model columns with a <columns> element that may contain
+ * multiple <column> elements, each specifying one model column. The “type”
+ * attribute specifies the data type for the column.
  *
  * Additionally, it is possible to specify content for the list store
- * in the UI definition, with the &lt;data&gt; element. It can contain
- * multiple &lt;row&gt; elements, each specifying to content for one
- * row of the list model. Inside a &lt;row&gt;, the &lt;col&gt; elements
- * specify the content for individual cells.
+ * in the UI definition, with the <data> element. It can contain multiple
+ * <row> elements, each specifying to content for one row of the list model.
+ * Inside a <row>, the <col> elements specify the content for individual cells.
  *
- * Note that it is probably more common to define your models
- * in the code, and one might consider it a layering violation
- * to specify the content of a list store in a UI definition,
- * <emphasis>data</emphasis>, not <emphasis>presentation</emphasis>,
- * and common wisdom is to separate the two, as far as possible.
- * <!-- FIXME a bit inconclusive -->
+ * Note that it is probably more common to define your models in the code,
+ * and one might consider it a layering violation to specify the content of
+ * a list store in a UI definition, data, not presentation, and common wisdom
+ * is to separate the two, as far as possible.
  *
- * <example>
- * <title>A UI Definition fragment for a list store</title>
- * <programlisting><![CDATA[
+ * An example of a UI Definition fragment for a list store:
+ * |[<!-- language="C" -->
  * <object class="GtkListStore">
  *   <columns>
  *     <column type="gchararray"/>
@@ -177,10 +169,7 @@
  *     </row>
  *   </data>
  * </object>
- * ]]></programlisting>
- * </example>
- * </para>
- * </refsect2>
+ * ]|
  */
 
 
@@ -416,11 +405,11 @@ iter_is_valid (GtkTreeIter  *iter,
  * in.  Note that only types derived from standard GObject fundamental types
  * are supported.
  *
- * As an example, <literal>gtk_list_store_new (3, G_TYPE_INT, G_TYPE_STRING,
- * GDK_TYPE_PIXBUF);</literal> will create a new #GtkListStore with three columns, of type
+ * As an example, `gtk_list_store_new (3, G_TYPE_INT, G_TYPE_STRING,
+ * GDK_TYPE_PIXBUF);` will create a new #GtkListStore with three columns, of type
  * int, string and #GdkPixbuf respectively.
  *
- * Return value: a new #GtkListStore
+ * Returns: a new #GtkListStore
  */
 GtkListStore *
 gtk_list_store_new (gint n_columns,
@@ -459,14 +448,13 @@ gtk_list_store_new (gint n_columns,
 
 
 /**
- * gtk_list_store_newv:
+ * gtk_list_store_newv: (rename-to gtk_list_store_new)
  * @n_columns: number of columns in the list store
  * @types: (array length=n_columns): an array of #GType types for the columns, from first to last
  *
  * Non-vararg creation function.  Used primarily by language bindings.
  *
- * Return value: (transfer full): a new #GtkListStore
- * Rename to: gtk_list_store_new
+ * Returns: (transfer full): a new #GtkListStore
  **/
 GtkListStore *
 gtk_list_store_newv (gint   n_columns,
@@ -1073,7 +1061,7 @@ gtk_list_store_set_valist_internal (GtkListStore *list_store,
 }
 
 /**
- * gtk_list_store_set_valuesv:
+ * gtk_list_store_set_valuesv: (rename-to gtk_list_store_set)
  * @list_store: A #GtkListStore
  * @iter: A valid #GtkTreeIter for the row being modified
  * @columns: (array length=n_values): an array of column numbers
@@ -1087,7 +1075,6 @@ gtk_list_store_set_valist_internal (GtkListStore *list_store,
  * change is not known until run-time.
  *
  * Since: 2.12
- * Rename to: gtk_list_store_set
  */
 void
 gtk_list_store_set_valuesv (GtkListStore *list_store,
@@ -1175,8 +1162,8 @@ gtk_list_store_set_valist (GtkListStore *list_store,
  * The variable argument list should contain integer column numbers,
  * each column number followed by the value to be set.
  * The list is terminated by a -1. For example, to set column 0 with type
- * %G_TYPE_STRING to "Foo", you would write <literal>gtk_list_store_set (store, iter,
- * 0, "Foo", -1)</literal>.
+ * %G_TYPE_STRING to “Foo”, you would write `gtk_list_store_set (store, iter,
+ * 0, "Foo", -1)`.
  *
  * The value will be referenced by the store if it is a %G_TYPE_OBJECT, and it
  * will be copied if it is a %G_TYPE_STRING or %G_TYPE_BOXED.
@@ -1202,7 +1189,7 @@ gtk_list_store_set (GtkListStore *list_store,
  * @iter is set to be the next valid row, or invalidated if it pointed 
  * to the last row in @list_store.
  *
- * Return value: %TRUE if @iter is valid, %FALSE if not.
+ * Returns: %TRUE if @iter is valid, %FALSE if not.
  **/
 gboolean
 gtk_list_store_remove (GtkListStore *list_store,
@@ -1452,12 +1439,12 @@ gtk_list_store_clear (GtkListStore *list_store)
  * @list_store: A #GtkListStore.
  * @iter: A #GtkTreeIter.
  *
- * <warning>This function is slow. Only use it for debugging and/or testing
- * purposes.</warning>
+ * > This function is slow. Only use it for debugging and/or testing
+ * > purposes.
  *
  * Checks if the given iter is a valid iter for this #GtkListStore.
  *
- * Return value: %TRUE if the iter is valid, %FALSE if the iter is invalid.
+ * Returns: %TRUE if the iter is valid, %FALSE if the iter is invalid.
  *
  * Since: 2.2
  **/
@@ -1688,8 +1675,8 @@ gtk_list_store_reorder_func (GSequenceIter *a,
  * @store: A #GtkListStore.
  * @new_order: (array zero-terminated=1): an array of integers mapping the new
  *      position of each child to its old position before the re-ordering,
- *      i.e. @new_order<literal>[newpos] = oldpos</literal>. It must have
- *      exactly as many items as the list store's length.
+ *      i.e. @new_order`[newpos] = oldpos`. It must have
+ *      exactly as many items as the list store’s length.
  *
  * Reorders @store to follow the order indicated by @new_order. Note that
  * this function only works with unsorted stores.
@@ -2174,9 +2161,9 @@ gtk_list_store_has_default_sort_func (GtkTreeSortable *sortable)
  * values given to this function.
  *
  * Calling
- * <literal>gtk_list_store_insert_with_values (list_store, iter, position...)</literal>
+ * `gtk_list_store_insert_with_values (list_store, iter, position...)`
  * has the same effect as calling
- * |[
+ * |[<!-- language="C" -->
  * gtk_list_store_insert (list_store, iter, position);
  * gtk_list_store_set (list_store, iter, ...);
  * ]|

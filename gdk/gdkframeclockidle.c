@@ -12,9 +12,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
@@ -243,6 +241,7 @@ maybe_start_idle (GdkFrameClockIdle *clock_idle)
                                                               gdk_frame_clock_flush_idle,
                                                               g_object_ref (clock_idle),
                                                               (GDestroyNotify) g_object_unref);
+          g_source_set_name_by_id (priv->flush_idle_id, "[gtk+] gdk_frame_clock_flush_idle");
         }
 
       if (!priv->in_paint_idle &&
@@ -253,6 +252,7 @@ maybe_start_idle (GdkFrameClockIdle *clock_idle)
                                                               gdk_frame_clock_paint_idle,
                                                               g_object_ref (clock_idle),
                                                               (GDestroyNotify) g_object_unref);
+          g_source_set_name_by_id (priv->paint_idle_id, "[gtk+] gdk_frame_clock_paint_idle");
         }
     }
 }

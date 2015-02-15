@@ -30,8 +30,7 @@
 #include "gtkentry.h"
 #include "gtkentryprivate.h"
 #include "gtkintl.h"
-#include "gtktoolbar.h"
-#include "gtktoolitem.h"
+#include "gtkprivate.h"
 #include "gtkstylecontext.h"
 #include "gtksearchbar.h"
 
@@ -43,7 +42,7 @@
  * #GtkSearchBar is a container made to have a search entry (possibly
  * with additional connex widgets, such as drop-down menus, or buttons)
  * built-in. The search bar would appear when a search is started through
- * typing on the keyboard, or the application's search mode is toggled on.
+ * typing on the keyboard, or the application’s search mode is toggled on.
  *
  * For keyboard presses to start a search, events will need to be
  * forwarded from the top-level window that contains the search bar.
@@ -56,14 +55,9 @@
  * The following example shows you how to create a more complex search
  * entry.
  *
- * <example>
- * <title>Creating a search bar</title>
- * <programlisting>
- * <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="text" href="../../../../examples/search-bar.c">
- *  <xi:fallback>FIXME: MISSING XINCLUDE CONTENT</xi:fallback>
- * </xi:include>
- * </programlisting>
- * </example>
+ * ## Creating a search bar
+ *
+ * [A simple example](https://git.gnome.org/browse/gtk+/tree/examples/search-bar.c)
  *
  * Since: 3.10
  */
@@ -71,7 +65,7 @@
 typedef struct {
   /* Template widgets */
   GtkWidget   *revealer;
-  GtkWidget   *toolbar;
+  GtkWidget   *tool_box;
   GtkWidget   *box_center;
   GtkWidget   *close_button;
 
@@ -168,23 +162,25 @@ preedit_changed_cb (GtkEntry  *entry,
  * gtk_search_bar_connect_entry(), this function will return
  * immediately with a warning.
  *
- * <example>
- * <title>Showing the search bar on key presses</title>
- * <programlisting><![CDATA[
+ * ## Showing the search bar on key presses
+ *
+ * |[<!-- language="C" -->
  * static gboolean
- * window_key_press_event_cb (GtkWidget *widget,
- *                            GdkEvent  *event,
- *                            gpointer   user_data)
+ * on_key_press_event (GtkWidget *widget,
+ *                     GdkEvent  *event,
+ *                     gpointer   user_data)
  * {
- *   return gtk_search_bar_handle_event (GTK_SEARCH_BAR (user_data), event);
+ *   GtkSearchBar *bar = GTK_SEARCH_BAR (user_data);
+ *   return gtk_search_bar_handle_event (bar, event);
  * }
  *
- * g_signal_connect (window, "key-press-event",
- *                   G_CALLBACK (window_key_press_event_cb), search_bar);
- * ]]></programlisting>
- * </example>
+ * g_signal_connect (window,
+ *                  "key-press-event",
+ *                   G_CALLBACK (on_key_press_event),
+ *                   search_bar);
+ * ]|
  *
- * Return value: %GDK_EVENT_STOP if the key press event resulted
+ * Returns: %GDK_EVENT_STOP if the key press event resulted
  *     in text being entered in the search entry (and revealing
  *     the search bar if necessary), %GDK_EVENT_PROPAGATE otherwise.
  *
@@ -254,17 +250,36 @@ reveal_child_changed_cb (GObject      *object,
   gboolean reveal_child;
 
   g_object_get (object, "reveal-child", &reveal_child, NULL);
+  if (reveal_child)
+    gtk_widget_set_child_visible (priv->revealer, TRUE);
+
   if (reveal_child == priv->reveal_child)
     return;
 
   priv->reveal_child = reveal_child;
 
-  if (reveal_child)
-    _gtk_entry_grab_focus (GTK_ENTRY (priv->entry), FALSE);
-  else
-    gtk_entry_set_text (GTK_ENTRY (priv->entry), "");
+  if (priv->entry)
+    {
+      if (reveal_child)
+        _gtk_entry_grab_focus (GTK_ENTRY (priv->entry), FALSE);
+      else
+        gtk_entry_set_text (GTK_ENTRY (priv->entry), "");
+    }
 
   g_object_notify (G_OBJECT (bar), "search-mode-enabled");
+}
+
+static void
+child_revealed_changed_cb (GObject      *object,
+                           GParamSpec   *pspec,
+                           GtkSearchBar *bar)
+{
+  GtkSearchBarPrivate *priv = gtk_search_bar_get_instance_private (bar);
+  gboolean val;
+
+  g_object_get (object, "child-revealed", &val, NULL);
+  if (!val)
+    gtk_widget_set_child_visible (priv->revealer, FALSE);
 }
 
 static void
@@ -286,7 +301,7 @@ gtk_search_bar_add (GtkContainer *container,
   /* When constructing the widget, we want the revealer to be added
    * as the first child of the search bar, as an implementation detail.
    * After that, the child added by the application should be added
-   * to the toolbar's box_center.
+   * to box_center.
    */
   if (priv->box_center == NULL)
     {
@@ -364,6 +379,25 @@ gtk_search_bar_dispose (GObject *object)
   G_OBJECT_CLASS (gtk_search_bar_parent_class)->dispose (object);
 }
 
+static gboolean
+gtk_search_bar_draw (GtkWidget *widget,
+                     cairo_t *cr)
+{
+  gint width, height;
+  GtkStyleContext *context;
+
+  width = gtk_widget_get_allocated_width (widget);
+  height = gtk_widget_get_allocated_height (widget);
+  context = gtk_widget_get_style_context (widget);
+
+  gtk_render_background (context, cr, 0, 0, width, height);
+  gtk_render_frame (context, cr, 0, 0, width, height);
+
+  GTK_WIDGET_CLASS (gtk_search_bar_parent_class)->draw (widget, cr);
+
+  return FALSE;
+}
+
 static void
 gtk_search_bar_class_init (GtkSearchBarClass *klass)
 {
@@ -374,6 +408,7 @@ gtk_search_bar_class_init (GtkSearchBarClass *klass)
   object_class->dispose = gtk_search_bar_dispose;
   object_class->set_property = gtk_search_bar_set_property;
   object_class->get_property = gtk_search_bar_get_property;
+  widget_class->draw = gtk_search_bar_draw;
 
   container_class->add = gtk_search_bar_add;
 
@@ -388,7 +423,7 @@ gtk_search_bar_class_init (GtkSearchBarClass *klass)
                                                                  P_("Search Mode Enabled"),
                                                                  P_("Whether the search mode is on and the search bar shown"),
                                                                  FALSE,
-                                                                 G_PARAM_READWRITE);
+                                                                 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkEntry:show-close-button:
@@ -399,12 +434,12 @@ gtk_search_bar_class_init (GtkSearchBarClass *klass)
                                                                P_("Show Close Button"),
                                                                P_("Whether to show the close button in the toolbar"),
                                                                FALSE,
-                                                               G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
+                                                               GTK_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_EXPLICIT_NOTIFY);
 
   g_object_class_install_properties (object_class, LAST_PROPERTY, widget_props);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/libgtk/gtksearchbar.ui");
-  gtk_widget_class_bind_template_child_internal_private (widget_class, GtkSearchBar, toolbar);
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/libgtk/ui/gtksearchbar.ui");
+  gtk_widget_class_bind_template_child_internal_private (widget_class, GtkSearchBar, tool_box);
   gtk_widget_class_bind_template_child_internal_private (widget_class, GtkSearchBar, revealer);
   gtk_widget_class_bind_template_child_internal_private (widget_class, GtkSearchBar, box_center);
   gtk_widget_class_bind_template_child_internal_private (widget_class, GtkSearchBar, close_button);
@@ -414,17 +449,28 @@ static void
 gtk_search_bar_init (GtkSearchBar *bar)
 {
   GtkSearchBarPrivate *priv = gtk_search_bar_get_instance_private (bar);
+  GtkStyleContext *context;
 
   gtk_widget_init_template (GTK_WIDGET (bar));
 
-  gtk_widget_show_all (priv->toolbar);
+  /* We use child-visible to avoid the unexpanded revealer
+   * peaking out by 1 pixel
+   */
+  gtk_widget_set_child_visible (priv->revealer, FALSE);
 
   g_signal_connect (priv->revealer, "notify::reveal-child",
                     G_CALLBACK (reveal_child_changed_cb), bar);
+  g_signal_connect (priv->revealer, "notify::child-revealed",
+                    G_CALLBACK (child_revealed_changed_cb), bar);
 
   gtk_widget_set_no_show_all (priv->close_button, TRUE);
   g_signal_connect (priv->close_button, "clicked",
                     G_CALLBACK (close_button_clicked_cb), bar);
+
+  context = gtk_widget_get_style_context (GTK_WIDGET (bar));
+  gtk_style_context_add_class (context, "search-bar");
+  gtk_style_context_add_class (context, GTK_STYLE_CLASS_HORIZONTAL);
+
 };
 
 /**
@@ -432,9 +478,9 @@ gtk_search_bar_init (GtkSearchBar *bar)
  *
  * Creates a #GtkSearchBar. You will need to tell it about
  * which widget is going to be your text entry using
- * gtk_search_bar_set_entry().
+ * gtk_search_bar_connect_entry().
  *
- * Return value: a new #GtkSearchBar
+ * Returns: a new #GtkSearchBar
  *
  * Since: 3.10
  */
@@ -451,7 +497,7 @@ gtk_search_bar_new (void)
  *
  * Connects the #GtkEntry widget passed as the one to be used in
  * this search bar. The entry should be a descendant of the search bar.
- * This is only required if the entry isn't the direct child of the
+ * This is only required if the entry isn’t the direct child of the
  * search bar (as in our main example).
  *
  * Since: 3.10
@@ -487,7 +533,7 @@ gtk_search_bar_connect_entry (GtkSearchBar *bar,
  *
  * Returns whether the search mode is on or off.
  *
- * Return value: whether search mode is toggled on
+ * Returns: whether search mode is toggled on
  *
  * Since: 3.10
  */
@@ -527,7 +573,7 @@ gtk_search_bar_set_search_mode (GtkSearchBar *bar,
  *
  * Returns whether the close button is shown.
  *
- * Return value: whether the close button is shown
+ * Returns: whether the close button is shown
  *
  * Since: 3.10
  */
@@ -547,7 +593,7 @@ gtk_search_bar_get_show_close_button (GtkSearchBar *bar)
  * @visible: whether the close button will be shown or not
  *
  * Shows or hides the close button. Applications that
- * already have a "search" toggle button should not show a close
+ * already have a “search” toggle button should not show a close
  * button in their search bar, as it duplicates the role of the
  * toggle button.
  *
@@ -561,5 +607,11 @@ gtk_search_bar_set_show_close_button (GtkSearchBar *bar,
 
   g_return_if_fail (GTK_IS_SEARCH_BAR (bar));
 
-  gtk_widget_set_visible (priv->close_button, visible);
+  visible = visible != FALSE;
+
+  if (gtk_widget_get_visible (priv->close_button) != visible)
+    {
+      gtk_widget_set_visible (priv->close_button, visible);
+      g_object_notify (G_OBJECT (bar), "show-close-button");
+    }
 }

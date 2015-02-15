@@ -18,7 +18,13 @@
 #ifndef __GTK_X_H__
 #define __GTK_X_H__
 
+#if defined (GTK_COMPILATION)
+#error "<gtk/gtkx.h> must not be included by GTK+ headers."
+#endif
+
 #define __GTKX_H_INSIDE__
+
+#include <gtk/gtk.h>
 
 #include <gtk/gtksocket.h>
 #include <gtk/gtkplug.h>

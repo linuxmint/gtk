@@ -8,7 +8,7 @@
 <link rel="up" href="Application.html" title="Application support">
 <link rel="prev" href="GtkApplicationWindow.html" title="GtkApplicationWindow">
 <link rel="next" href="Builder.html" title="Interface builder">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -45,7 +45,7 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="function_type">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<td class="function_type">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GtkActionable.html#gtk-actionable-get-action-name" title="gtk_actionable_get_action_name ()">gtk_actionable_get_action_name</a> <span class="c_punctuation">()</span>
@@ -61,7 +61,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-GVariant.html#GVariant"><span class="returnvalue">GVariant</span></a> *
+<a href="https://developer.gnome.org/glib/unstable/glib-GVariant.html#GVariant"><span class="returnvalue">GVariant</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GtkActionable.html#gtk-actionable-get-action-target-value" title="gtk_actionable_get_action_target_value ()">gtk_actionable_get_action_target_value</a> <span class="c_punctuation">()</span>
@@ -105,13 +105,13 @@
 <tbody>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkActionable.html#GtkActionable--action-name" title="The “action-name” property">action-name</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *</td>
+<a href="https://developer.gnome.org/glib/unstable/glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkActionable.html#GtkActionable--action-target" title="The “action-target” property">action-target</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -167,16 +167,17 @@ actions on a <a class="link" href="GtkApplicationWindow.html" title="GtkApplicat
 <p>It primarily consists of two properties: <a class="link" href="GtkActionable.html#GtkActionable--action-name" title="The “action-name” property"><span class="type">“action-name”</span></a>
 and <a class="link" href="GtkActionable.html#GtkActionable--action-target" title="The “action-target” property"><span class="type">“action-target”</span></a>. There are also some convenience APIs
 for setting these properties.</p>
-<p>This interface is presently only meaningful if used on a widget that
-is (or will be) located inside of a <a class="link" href="GtkApplicationWindow.html" title="GtkApplicationWindow"><span class="type">GtkApplicationWindow</span></a> and can
-only be used to associate the widget with actions on that window, or
-its associated <a class="link" href="GtkApplication.html" title="GtkApplication"><span class="type">GtkApplication</span></a>.</p>
+<p>The action will be looked up in action groups that are found among
+the widgets ancestors. Most commonly, these will be the actions with
+the "win" or "app" prefix that are associated with the <a class="link" href="GtkApplicationWindow.html" title="GtkApplicationWindow"><span class="type">GtkApplicationWindow</span></a>
+or "GtkApplication, but other action groups that are added with
+<a class="link" href="GtkWidget.html#gtk-widget-insert-action-group" title="gtk_widget_insert_action_group ()"><code class="function">gtk_widget_insert_action_group()</code></a> will be consulted as well.</p>
 </div>
 <div class="refsect1">
 <a name="GtkActionable.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
 <a name="gtk-actionable-get-action-name"></a><h3>gtk_actionable_get_action_name ()</h3>
-<pre class="programlisting">const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gtk_actionable_get_action_name (<em class="parameter"><code><a class="link" href="GtkActionable.html" title="GtkActionable"><span class="type">GtkActionable</span></a> *actionable</code></em>);</pre>
 <p>Gets the action name for <em class="parameter"><code>actionable</code></em>
 .</p>
@@ -198,7 +199,7 @@ gtk_actionable_get_action_name (<em class="parameter"><code><a class="link" href
 </div>
 <div class="refsect3">
 <a name="id-1.3.4.4.11.2.7"></a><h4>Returns</h4>
-<p> the action name, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none is set</p>
+<p> the action name, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none is set</p>
 <p></p>
 </div>
 <p class="since">Since 3.4</p>
@@ -208,16 +209,16 @@ gtk_actionable_get_action_name (<em class="parameter"><code><a class="link" href
 <a name="gtk-actionable-set-action-name"></a><h3>gtk_actionable_set_action_name ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_actionable_set_action_name (<em class="parameter"><code><a class="link" href="GtkActionable.html" title="GtkActionable"><span class="type">GtkActionable</span></a> *actionable</code></em>,
-                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *action_name</code></em>);</pre>
+                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *action_name</code></em>);</pre>
 <p>Specifies the name of the action with which this widget should be
 associated.  If <em class="parameter"><code>action_name</code></em>
- is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> then the widget will be
+ is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> then the widget will be
 unassociated from any previous action.</p>
 <p>Usually this function is used when the widget is located (or will be
 located) within the hierarchy of a <a class="link" href="GtkApplicationWindow.html" title="GtkApplicationWindow"><span class="type">GtkApplicationWindow</span></a>.</p>
-<p>Names are of the form "win.save" or "app.quit" for actions on the
+<p>Names are of the form “win.save” or “app.quit” for actions on the
 containing <a class="link" href="GtkApplicationWindow.html" title="GtkApplicationWindow"><span class="type">GtkApplicationWindow</span></a> or its associated <a class="link" href="GtkApplication.html" title="GtkApplication"><span class="type">GtkApplication</span></a>,
-respectively.  This is the same form used for actions in the <a href="http://library.gnome.org/devel/gio/unstable/GMenu.html"><span class="type">GMenu</span></a>
+respectively.  This is the same form used for actions in the <a href="https://developer.gnome.org/gio/unstable/GMenu.html"><span class="type">GMenu</span></a>
 associated with the window.</p>
 <div class="refsect3">
 <a name="id-1.3.4.4.11.3.7"></a><h4>Parameters</h4>
@@ -235,7 +236,7 @@ associated with the window.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>action_name</p></td>
-<td class="parameter_description"><p>an action name, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
+<td class="parameter_description"><p>an action name, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -246,7 +247,7 @@ associated with the window.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-actionable-get-action-target-value"></a><h3>gtk_actionable_get_action_target_value ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-GVariant.html#GVariant"><span class="returnvalue">GVariant</span></a> *
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-GVariant.html#GVariant"><span class="returnvalue">GVariant</span></a> *
 gtk_actionable_get_action_target_value
                                (<em class="parameter"><code><a class="link" href="GtkActionable.html" title="GtkActionable"><span class="type">GtkActionable</span></a> *actionable</code></em>);</pre>
 <p>Gets the current target value of <em class="parameter"><code>actionabe</code></em>
@@ -280,21 +281,21 @@ gtk_actionable_get_action_target_value
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_actionable_set_action_target_value
                                (<em class="parameter"><code><a class="link" href="GtkActionable.html" title="GtkActionable"><span class="type">GtkActionable</span></a> *actionable</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *target_value</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *target_value</code></em>);</pre>
 <p>Sets the target value of an actionable widget.</p>
 <p>If <em class="parameter"><code>target_value</code></em>
- is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> then the target value is unset.</p>
+ is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> then the target value is unset.</p>
 <p>The target value has two purposes.  First, it is used as the
 parameter to activation of the action associated with the
 <a class="link" href="GtkActionable.html" title="GtkActionable"><span class="type">GtkActionable</span></a> widget. Second, it is used to determine if the widget
-should be rendered as "active" - the widget is active if the state
+should be rendered as “active” - the widget is active if the state
 is equal to the given target.</p>
-<p>Consider the example of associating a set of buttons with a <a href="http://library.gnome.org/devel/gio/unstable/GAction.html"><span class="type">GAction</span></a>
-with string state in a typical "radio button" situation.  Each button
+<p>Consider the example of associating a set of buttons with a <a href="https://developer.gnome.org/gio/unstable/GAction.html"><span class="type">GAction</span></a>
+with string state in a typical “radio button” situation.  Each button
 will be associated with the same action, but with a different target
 value for that action.  Clicking on a particular button will activate
 the action with the target of that button, which will typically cause
-the action's state to change to that value.  Since the action's state
+the action’s state to change to that value.  Since the action’s state
 is now equal to the target value of the button, the button will now
 be rendered as active (and the other buttons, with different targets,
 rendered inactive).</p>
@@ -314,7 +315,7 @@ rendered inactive).</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>target_value</p></td>
-<td class="parameter_description"><p>a <a href="http://library.gnome.org/devel/glib/unstable/glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> to set as the target value, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
+<td class="parameter_description"><p>a <a href="https://developer.gnome.org/glib/unstable/glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> to set as the target value, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -327,10 +328,10 @@ rendered inactive).</p>
 <a name="gtk-actionable-set-action-target"></a><h3>gtk_actionable_set_action_target ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_actionable_set_action_target (<em class="parameter"><code><a class="link" href="GtkActionable.html" title="GtkActionable"><span class="type">GtkActionable</span></a> *actionable</code></em>,
-                                  <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format_string</code></em>,
+                                  <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format_string</code></em>,
                                   <em class="parameter"><code>...</code></em>);</pre>
 <p>Sets the target of an actionable widget.</p>
-<p>This is a convenience function that calls <a href="http://library.gnome.org/devel/glib/unstable/glib-GVariant.html#g-variant-new"><code class="function">g_variant_new()</code></a> for
+<p>This is a convenience function that calls <a href="https://developer.gnome.org/glib/unstable/glib-GVariant.html#g-variant-new"><code class="function">g_variant_new()</code></a> for
 <em class="parameter"><code>format_string</code></em>
  and uses the result to call
 <a class="link" href="GtkActionable.html#gtk-actionable-set-action-target-value" title="gtk_actionable_set_action_target_value ()"><code class="function">gtk_actionable_set_action_target_value()</code></a>.</p>
@@ -373,7 +374,7 @@ name at the same time, you can use
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_actionable_set_detailed_action_name
                                (<em class="parameter"><code><a class="link" href="GtkActionable.html" title="GtkActionable"><span class="type">GtkActionable</span></a> *actionable</code></em>,
-                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *detailed_action_name</code></em>);</pre>
+                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *detailed_action_name</code></em>);</pre>
 <p>Sets the action-name and associated string target value of an
 actionable widget.</p>
 <p>This allows for the effect of both <a class="link" href="GtkActionable.html#gtk-actionable-set-action-name" title="gtk_actionable_set_action_name ()"><code class="function">gtk_actionable_set_action_name()</code></a>
@@ -420,8 +421,6 @@ as the target.</p>
 <div class="refsect2">
 <a name="GtkActionableInterface"></a><h3>struct GtkActionableInterface</h3>
 <pre class="programlisting">struct GtkActionableInterface {
-  GTypeInterface g_iface;
-
   const gchar * (* get_action_name)             (GtkActionable *actionable);
   void          (* set_action_name)             (GtkActionable *actionable,
                                                  const gchar   *action_name);
@@ -441,11 +440,6 @@ as the target.</p>
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GTypeInterface"><span class="type">GTypeInterface</span></a> <em class="structfield"><code><a name="GtkActionableInterface.g-iface"></a>g_iface</code></em>;</p></td>
-<td> </td>
-<td> </td>
-</tr>
-<tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GtkActionableInterface.get-action-name"></a>get_action_name</code></em> ()</p></td>
 <td class="struct_member_description"><p>virtual pointer for <a class="link" href="GtkActionable.html#gtk-actionable-get-action-name" title="gtk_actionable_get_action_name ()"><code class="function">gtk_actionable_get_action_name()</code></a></p></td>
 <td class="struct_member_annotations"> </td>
@@ -462,7 +456,7 @@ as the target.</p>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GtkActionableInterface.set-action-target-value"></a>set_action_target_value</code></em> ()</p></td>
-<td class="struct_member_description"><p>virtual pointer for gtk_actionable_set_action_target_value</p></td>
+<td class="struct_member_description"><p>virtual pointer for <a class="link" href="GtkActionable.html#gtk-actionable-set-action-target-value" title="gtk_actionable_set_action_target_value ()"><code class="function">gtk_actionable_set_action_target_value()</code></a></p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
@@ -474,7 +468,7 @@ as the target.</p>
 <a name="GtkActionable.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GtkActionable--action-name"></a><h3>The <code class="literal">“action-name”</code> property</h3>
-<pre class="programlisting">  “action-name”              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “action-name”              <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>The name of the associated action, like 'app.quit'.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: NULL</p>
@@ -482,7 +476,7 @@ as the target.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkActionable--action-target"></a><h3>The <code class="literal">“action-target”</code> property</h3>
-<pre class="programlisting">  “action-target”            <a href="http://library.gnome.org/devel/glib/unstable/glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *</pre>
+<pre class="programlisting">  “action-target”            <a href="https://developer.gnome.org/glib/unstable/glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *</pre>
 <p>The parameter for action invocations.</p>
 <p>Flags: Read / Write</p>
 <p>Allowed values: GVariant&lt;*&gt;</p>
@@ -492,6 +486,6 @@ as the target.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

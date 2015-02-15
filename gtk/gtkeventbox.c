@@ -114,14 +114,14 @@ gtk_event_box_class_init (GtkEventBoxClass *class)
                                                         P_("Visible Window"),
                                                         P_("Whether the event box is visible, as opposed to invisible and only used to trap events."),
                                                         TRUE,
-                                                        GTK_PARAM_READWRITE));
+                                                        GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   g_object_class_install_property (gobject_class,
                                    PROP_ABOVE_CHILD,
                                    g_param_spec_boolean ("above-child",
                                                         P_("Above child"),
                                                         P_("Whether the event-trapping window of the eventbox is above the window of the child widget as opposed to below it."),
                                                         FALSE,
-                                                        GTK_PARAM_READWRITE));
+                                                        GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 }
 
 static void
@@ -205,7 +205,7 @@ gtk_event_box_get_property (GObject     *object,
  * Returns whether the event box has a visible window.
  * See gtk_event_box_set_visible_window() for details.
  *
- * Return value: %TRUE if the event box window is visible
+ * Returns: %TRUE if the event box window is visible
  *
  * Since: 2.4
  */
@@ -243,20 +243,18 @@ gtk_event_box_get_visible_window (GtkEventBox *event_box)
  * you want to set the background to a different color or
  * draw on it.
  *
- * <note><para>
  * There is one unexpected issue for an invisible event box that has its
  * window below the child. (See gtk_event_box_set_above_child().)
  * Since the input-only window is not an ancestor window of any windows
  * that descendent widgets of the event box create, events on these
- * windows aren't propagated up by the windowing system, but only by GTK+.
- * The practical effect of this is if an event isn't in the event
+ * windows aren’t propagated up by the windowing system, but only by GTK+.
+ * The practical effect of this is if an event isn’t in the event
  * mask for the descendant window (see gtk_widget_add_events()),
- * it won't be received by the event box.
- * </para><para>
- * This problem doesn't occur for visible event boxes, because in
+ * it won’t be received by the event box.
+ * 
+ * This problem doesn’t occur for visible event boxes, because in
  * that case, the event box window is actually the ancestor of the
  * descendant windows, not just at the same place on the screen.
- * </para></note>
  *
  * Since: 2.4
  */
@@ -310,7 +308,7 @@ gtk_event_box_set_visible_window (GtkEventBox *event_box,
  * windows of its child. See gtk_event_box_set_above_child()
  * for details.
  *
- * Return value: %TRUE if the event box window is above the
+ * Returns: %TRUE if the event box window is above the
  *     window of its child
  *
  * Since: 2.4
@@ -413,8 +411,7 @@ gtk_event_box_realize (GtkWidget *widget)
                         | GDK_BUTTON_RELEASE_MASK
                         | GDK_EXPOSURE_MASK
                         | GDK_ENTER_NOTIFY_MASK
-                        | GDK_LEAVE_NOTIFY_MASK
-                        | GDK_SCROLL_MASK;
+                        | GDK_LEAVE_NOTIFY_MASK;
 
   priv = GTK_EVENT_BOX (widget)->priv;
 
@@ -503,11 +500,8 @@ gtk_event_box_get_preferred_width (GtkWidget *widget,
   GtkBin *bin = GTK_BIN (widget);
   GtkWidget *child;
 
-  if (minimum)
-    *minimum = 0;
-
-  if (natural)
-    *natural = 0;
+  *minimum = 0;
+  *natural = 0;
 
   child = gtk_bin_get_child (bin);
   if (child && gtk_widget_get_visible (child))
@@ -525,11 +519,8 @@ gtk_event_box_get_preferred_height_and_baseline_for_width (GtkWidget *widget,
   GtkBin *bin = GTK_BIN (widget);
   GtkWidget *child;
 
-  if (minimum)
-    *minimum = 0;
-
-  if (natural)
-    *natural = 0;
+  *minimum = 0;
+  *natural = 0;
 
   if (minimum_baseline)
     *minimum_baseline = -1;
@@ -623,6 +614,9 @@ gtk_event_box_draw (GtkWidget *widget,
       gtk_render_background (context, cr, 0, 0,
                              gtk_widget_get_allocated_width (widget),
                              gtk_widget_get_allocated_height (widget));
+      gtk_render_frame (context, cr, 0, 0,
+                        gtk_widget_get_allocated_width (widget),
+                        gtk_widget_get_allocated_height (widget));
     }
 
   GTK_WIDGET_CLASS (gtk_event_box_parent_class)->draw (widget, cr);

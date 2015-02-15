@@ -41,7 +41,7 @@
 #include "gtklabel.h"
 #include "gtklinkbutton.h"
 #include "gtkmarshalers.h"
-#include "gtknotebook.h"
+#include "gtkstack.h"
 #include "gtkorientable.h"
 #include "gtkscrolledwindow.h"
 #include "gtktextview.h"
@@ -50,8 +50,13 @@
 #include "gtkmessagedialog.h"
 #include "gtktogglebutton.h"
 #include "gtktypebuiltins.h"
+#include "gtkstack.h"
+#include "gtkstackswitcher.h"
+#include "gtksettings.h"
+#include "gtkheaderbar.h"
 #include "gtkprivate.h"
 #include "gtkintl.h"
+#include "gtkdialogprivate.h"
 
 
 /**
@@ -63,59 +68,66 @@
  * a program like its logo, name, copyright, website and license. It is
  * also possible to give credits to the authors, documenters, translators
  * and artists who have worked on the program. An about dialog is typically
- * opened when the user selects the <literal>About</literal> option from
- * the <literal>Help</literal> menu. All parts of the dialog are optional.
+ * opened when the user selects the `About` option from the `Help` menu.
+ * All parts of the dialog are optional.
  *
- * About dialog often contain links and email addresses. GtkAboutDialog
+ * About dialogs often contain links and email addresses. GtkAboutDialog
  * displays these as clickable links. By default, it calls gtk_show_uri()
  * when a user clicks one. The behaviour can be overridden with the
  * #GtkAboutDialog::activate-link signal.
+ *
+ * To specify a person with an email address, use a string like
+ * "Edgar Allan Poe <edgar@poe.com>". To specify a website with a title,
+ * use a string like "GTK+ team http://www.gtk.org".
  *
  * To make constructing a GtkAboutDialog as convenient as possible, you can
  * use the function gtk_show_about_dialog() which constructs and shows a dialog
  * and keeps it around so that it can be shown again.
  *
- * Note that GTK+ sets a default title of <literal>_("About &percnt;s")</literal>
- * on the dialog window (where &percnt;s is replaced by the name of the
- * application, but in order to ensure proper translation of the title,
- * applications should set the title property explicitly when constructing
- * a GtkAboutDialog, as shown in the following example:
- * <informalexample><programlisting>
+ * Note that GTK+ sets a default title of `_("About %s")` on the dialog
+ * window (where \%s is replaced by the name of the application, but in
+ * order to ensure proper translation of the title, applications should
+ * set the title property explicitly when constructing a GtkAboutDialog,
+ * as shown in the following example:
+ * |[<!-- language="C" -->
  * gtk_show_about_dialog (NULL,
  *                        "program-name", "ExampleCode",
  *                        "logo", example_logo,
  *                        "title" _("About ExampleCode"),
  *                        NULL);
- * </programlisting></informalexample>
+ * ]|
  *
  * It is also possible to show a #GtkAboutDialog like any other #GtkDialog,
  * e.g. using gtk_dialog_run(). In this case, you might need to know that
- * the 'Close' button returns the #GTK_RESPONSE_CANCEL response id.
+ * the “Close” button returns the #GTK_RESPONSE_CANCEL response id.
  */
 
-static GdkColor default_link_color = { 0, 0, 0, 0xeeee };
-static GdkColor default_visited_link_color = { 0, 0x5555, 0x1a1a, 0x8b8b };
+typedef struct
+{
+  const gchar *name;
+  const gchar *url;
+} LicenseInfo;
 
 /* Translators: this is the license preamble; the string at the end
- * contains the URL of the license.
+ * contains the name of the license as link text.
  */
-static const gchar *gtk_license_preamble = N_("This program comes with ABSOLUTELY NO WARRANTY;\nfor details, visit <a href=\"%s\">%s</a>");
+static const gchar *gtk_license_preamble = N_("This program comes with ABSOLUTELY NO WARRANTY.\nSee the <a href=\"%s\">%s</a> for details.");
 
-/* URLs for each GtkLicense type; keep in the same order as the enumeration */
-static const gchar *gtk_license_urls[] = {
-  NULL,
-  NULL,
-
-  "http://www.gnu.org/licenses/old-licenses/gpl-2.0.html",
-  "http://www.gnu.org/licenses/gpl.html",
-
-  "http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html",
-  "http://www.gnu.org/licenses/lgpl.html",
-
-  "http://opensource.org/licenses/bsd-license.php",
-  "http://opensource.org/licenses/mit-license.php",
-
-  "http://opensource.org/licenses/artistic-license-2.0.php"
+/* LicenseInfo for each GtkLicense type; keep in the same order as the enumeration */
+static const LicenseInfo gtk_license_info [] = {
+  { N_("License"), NULL },
+  { N_("Custom License") , NULL },
+  { N_("GNU General Public License, version 2 or later"), "http://www.gnu.org/licenses/old-licenses/gpl-2.0.html" },
+  { N_("GNU General Public License, version 3 or later"), "http://www.gnu.org/licenses/gpl-3.0.html" },
+  { N_("GNU Lesser General Public License, version 2.1 or later"), "http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html" },
+  { N_("GNU Lesser General Public License, version 3 or later"), "http://www.gnu.org/licenses/lgpl-3.0.html" },
+  { N_("BSD 2-Clause License"), "http://opensource.org/licenses/bsd-license.php" },
+  { N_("The MIT License (MIT)"), "http://opensource.org/licenses/mit-license.php" },
+  { N_("Artistic License 2.0"), "http://opensource.org/licenses/artistic-license-2.0.php" },
+  { N_("GNU General Public License, version 2 only"), "http://www.gnu.org/licenses/old-licenses/gpl-2.0.html" },
+  { N_("GNU General Public License, version 3 only"), "http://www.gnu.org/licenses/gpl-3.0.html" },
+  { N_("GNU Lesser General Public License, version 2.1 only"), "http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html" },
+  { N_("GNU Lesser General Public License, version 3 only"), "http://www.gnu.org/licenses/lgpl-3.0.html" }
 };
 
 typedef struct
@@ -124,7 +136,7 @@ typedef struct
   gchar **people;
 } CreditSection;
 
-struct _GtkAboutDialogPrivate 
+struct _GtkAboutDialogPrivate
 {
   gchar *name;
   gchar *version;
@@ -142,10 +154,14 @@ struct _GtkAboutDialogPrivate
 
   GSList *credit_sections;
 
-  gint credits_page;
-  gint license_page;
+  gboolean credits_page_initialized;
+  gboolean license_page_initialized;
 
-  GtkWidget *notebook;
+  GtkWidget *stack;
+  GtkWidget *stack_switcher;
+  GtkWidget *credits_button;
+  GtkWidget *license_button;
+
   GtkWidget *logo_image;
   GtkWidget *name_label;
   GtkWidget *version_label;
@@ -154,8 +170,8 @@ struct _GtkAboutDialogPrivate
   GtkWidget *license_label;
   GtkWidget *website_label;
 
-  GtkWidget *credits_button;
-  GtkWidget *license_button;
+  GtkWidget *credits_page;
+  GtkWidget *license_page;
 
   GtkWidget *credits_grid;
   GtkWidget *license_view;
@@ -169,11 +185,9 @@ struct _GtkAboutDialogPrivate
 
   guint hovering_over_link : 1;
   guint wrap_license : 1;
+  guint in_child_changed : 1;
+  guint in_switch_page : 1;
 };
-
-/* The indexes of the credits and license page in the builder xml */
-#define CREDITS_PAGE_ID  1
-#define LICENSE_PAGE_ID  2
 
 enum
 {
@@ -192,7 +206,8 @@ enum
   PROP_LOGO,
   PROP_LOGO_ICON_NAME,
   PROP_WRAP_LICENSE,
-  PROP_LICENSE_TYPE
+  PROP_LICENSE_TYPE,
+  LAST_PROP
 };
 
 static void                 gtk_about_dialog_finalize       (GObject            *object);
@@ -214,17 +229,11 @@ static void                 set_cursor_if_appropriate       (GtkAboutDialog     
                                                              GdkDevice          *device,
                                                              gint                x,
                                                              gint                y);
-static void                 display_credits_page            (GtkWidget          *button,
-                                                             gpointer            data);
-static void                 display_license_page            (GtkWidget          *button,
-                                                             gpointer            data);
+static void                 populate_credits_page           (GtkAboutDialog     *about);
+static void                 populate_license_page           (GtkAboutDialog     *about);
 static void                 close_cb                        (GtkAboutDialog     *about);
 static gboolean             gtk_about_dialog_activate_link  (GtkAboutDialog     *about,
                                                              const gchar        *uri);
-static void                 credits_button_clicked          (GtkButton          *button,
-							     gpointer            data);
-static void                 license_button_clicked          (GtkButton          *button,
-							     gpointer            data);
 static gboolean             emit_activate_link              (GtkAboutDialog     *about,
 							     const gchar        *uri);
 static gboolean             text_view_key_press_event       (GtkWidget          *text_view,
@@ -236,10 +245,10 @@ static gboolean             text_view_event_after           (GtkWidget          
 static gboolean             text_view_motion_notify_event   (GtkWidget          *text_view,
 							     GdkEventMotion     *event,
 							     GtkAboutDialog     *about);
-static gboolean             text_view_visibility_notify_event(GtkWidget          *text_view,
-							      GdkEventVisibility *event,
-							      GtkAboutDialog     *about);
-
+static void                 toggle_credits                  (GtkToggleButton    *button,
+                                                             gpointer            user_data);
+static void                 toggle_license                  (GtkToggleButton    *button,
+                                                             gpointer            user_data);
 
 enum {
   ACTIVATE_LINK,
@@ -247,9 +256,38 @@ enum {
 };
 
 static guint signals[LAST_SIGNAL] = { 0 };
+static GParamSpec *props[LAST_PROP] = { NULL, };
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtkAboutDialog, gtk_about_dialog, GTK_TYPE_DIALOG)
 
+static gboolean
+stack_visible_child_notify (GtkStack       *stack,
+                            GParamSpec     *pspec,
+                            GtkAboutDialog *about)
+{
+  GtkAboutDialogPrivate *priv = about->priv;
+  GtkWidget *child;
+
+  child = gtk_stack_get_visible_child (stack);
+  if (child == priv->credits_page)
+    {
+      if (!priv->credits_page_initialized)
+        {
+          populate_credits_page (about);
+          priv->credits_page_initialized = TRUE;
+        }
+    }
+  else if (child == priv->license_page)
+    {
+      if (!priv->license_page_initialized)
+        {
+          populate_license_page (about);
+          priv->license_page_initialized = TRUE;
+        }
+    }
+
+  return FALSE;
+}
 
 static void
 gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
@@ -299,13 +337,12 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.12
    */
-  g_object_class_install_property (object_class,
-                                   PROP_NAME,
-                                   g_param_spec_string ("program-name",
-                                                        P_("Program name"),
-                                                        P_("The name of the program. If this is not set, it defaults to g_get_application_name()"),
-                                                        NULL,
-                                                        GTK_PARAM_READWRITE));
+  props[PROP_NAME] =
+    g_param_spec_string ("program-name",
+                         P_("Program name"),
+                         P_("The name of the program. If this is not set, it defaults to g_get_application_name()"),
+                         NULL,
+                         GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkAboutDialog:version:
@@ -314,13 +351,12 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.6
    */
-  g_object_class_install_property (object_class,
-                                   PROP_VERSION,
-                                   g_param_spec_string ("version",
-                                                        P_("Program version"),
-                                                        P_("The version of the program"),
-                                                        NULL,
-                                                        GTK_PARAM_READWRITE));
+  props[PROP_VERSION] =
+    g_param_spec_string ("version",
+                         P_("Program version"),
+                         P_("The version of the program"),
+                         NULL,
+                         GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkAboutDialog:copyright:
@@ -329,13 +365,12 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.6
    */
-  g_object_class_install_property (object_class,
-                                   PROP_COPYRIGHT,
-                                   g_param_spec_string ("copyright",
-                                                        P_("Copyright string"),
-                                                        P_("Copyright information for the program"),
-                                                        NULL,
-                                                        GTK_PARAM_READWRITE));
+  props[PROP_COPYRIGHT] =
+    g_param_spec_string ("copyright",
+                         P_("Copyright string"),
+                         P_("Copyright information for the program"),
+                         NULL,
+                         GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
         
 
   /**
@@ -347,13 +382,12 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.6
    */
-  g_object_class_install_property (object_class,
-                                   PROP_COMMENTS,
-                                   g_param_spec_string ("comments",
-                                                        P_("Comments string"),
-                                                        P_("Comments about the program"),
-                                                        NULL,
-                                                        GTK_PARAM_READWRITE));
+  props[PROP_COMMENTS] =
+    g_param_spec_string ("comments",
+                         P_("Comments string"),
+                         P_("Comments about the program"),
+                         NULL,
+                         GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkAboutDialog:license:
@@ -369,13 +403,12 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.6
    */
-  g_object_class_install_property (object_class,
-                                   PROP_LICENSE,
-                                   g_param_spec_string ("license",
-                                                        _("License"),
-                                                        _("The license of the program"),
-                                                        NULL,
-                                                        GTK_PARAM_READWRITE));
+  props[PROP_LICENSE] =
+    g_param_spec_string ("license",
+                         P_("License"),
+                         P_("The license of the program"),
+                         NULL,
+                         GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkAboutDialog:license-type:
@@ -398,14 +431,13 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 3.0
    */
-  g_object_class_install_property (object_class,
-                                   PROP_LICENSE_TYPE,
-                                   g_param_spec_enum ("license-type",
-                                                      P_("License Type"),
-                                                      P_("The license type of the program"),
-                                                      GTK_TYPE_LICENSE,
-                                                      GTK_LICENSE_UNKNOWN,
-                                                      GTK_PARAM_READWRITE));
+  props[PROP_LICENSE_TYPE] =
+    g_param_spec_enum ("license-type",
+                       P_("License Type"),
+                       P_("The license type of the program"),
+                       GTK_TYPE_LICENSE,
+                       GTK_LICENSE_UNKNOWN,
+                       GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkAboutDialog:website:
@@ -415,13 +447,12 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.6
    */
-  g_object_class_install_property (object_class,
-                                   PROP_WEBSITE,
-                                   g_param_spec_string ("website",
-                                                        P_("Website URL"),
-                                                        P_("The URL for the link to the website of the program"),
-                                                        NULL,
-                                                        GTK_PARAM_READWRITE));
+  props[PROP_WEBSITE] =
+    g_param_spec_string ("website",
+                         P_("Website URL"),
+                         P_("The URL for the link to the website of the program"),
+                         NULL,
+                         GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkAboutDialog:website-label:
@@ -430,13 +461,12 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.6
    */
-  g_object_class_install_property (object_class,
-                                   PROP_WEBSITE_LABEL,
-                                   g_param_spec_string ("website-label",
-                                                        P_("Website label"),
-                                                        P_("The label for the link to the website of the program"),
-                                                        NULL,
-                                                        GTK_PARAM_READWRITE));
+  props[PROP_WEBSITE_LABEL] =
+    g_param_spec_string ("website-label",
+                         P_("Website label"),
+                         P_("The label for the link to the website of the program"),
+                         NULL,
+                         GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkAboutDialog:authors:
@@ -447,13 +477,12 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.6
    */
-  g_object_class_install_property (object_class,
-                                   PROP_AUTHORS,
-                                   g_param_spec_boxed ("authors",
-                                                       P_("Authors"),
-                                                       P_("List of authors of the program"),
-                                                       G_TYPE_STRV,
-                                                       GTK_PARAM_READWRITE));
+  props[PROP_AUTHORS] =
+    g_param_spec_boxed ("authors",
+                        P_("Authors"),
+                        P_("List of authors of the program"),
+                        G_TYPE_STRV,
+                        GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkAboutDialog:documenters:
@@ -464,13 +493,12 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.6
    */
-  g_object_class_install_property (object_class,
-                                   PROP_DOCUMENTERS,
-                                   g_param_spec_boxed ("documenters",
-                                                       P_("Documenters"),
-                                                       P_("List of people documenting the program"),
-                                                       G_TYPE_STRV,
-                                                       GTK_PARAM_READWRITE));
+  props[PROP_DOCUMENTERS] =
+    g_param_spec_boxed ("documenters",
+                        P_("Documenters"),
+                        P_("List of people documenting the program"),
+                        G_TYPE_STRV,
+                        GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkAboutDialog:artists:
@@ -481,14 +509,12 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.6
    */
-  g_object_class_install_property (object_class,
-                                   PROP_ARTISTS,
-                                   g_param_spec_boxed ("artists",
-                                                       P_("Artists"),
-                                                       P_("List of people who have contributed artwork to the program"),
-                                                       G_TYPE_STRV,
-                                                       GTK_PARAM_READWRITE));
-
+  props[PROP_ARTISTS] =
+    g_param_spec_boxed ("artists",
+                        P_("Artists"),
+                        P_("List of people who have contributed artwork to the program"),
+                        G_TYPE_STRV,
+                        GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkAboutDialog:translator-credits:
@@ -499,29 +525,27 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.6
    */
-  g_object_class_install_property (object_class,
-                                   PROP_TRANSLATOR_CREDITS,
-                                   g_param_spec_string ("translator-credits",
-                                                        P_("Translator credits"),
-                                                        P_("Credits to the translators. This string should be marked as translatable"),
-                                                        NULL,
-                                                        GTK_PARAM_READWRITE));
-        
+  props[PROP_TRANSLATOR_CREDITS] =
+    g_param_spec_string ("translator-credits",
+                         P_("Translator credits"),
+                         P_("Credits to the translators. This string should be marked as translatable"),
+                         NULL,
+                         GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
+
   /**
    * GtkAboutDialog:logo:
    *
-   * A logo for the about box. If this is not set, it defaults to
-   * gtk_window_get_default_icon_list().
+   * A logo for the about box. If it is %NULL, the default window icon
+   * set with gtk_window_set_default_icon() will be used.
    *
    * Since: 2.6
    */
-  g_object_class_install_property (object_class,
-                                   PROP_LOGO,
-                                   g_param_spec_object ("logo",
-                                                        P_("Logo"),
-                                                        P_("A logo for the about box. If this is not set, it defaults to gtk_window_get_default_icon_list()"),
-                                                        GDK_TYPE_PIXBUF,
-                                                        GTK_PARAM_READWRITE));
+  props[PROP_LOGO] =
+    g_param_spec_object ("logo",
+                         P_("Logo"),
+                         P_("A logo for the about box. If this is not set, it defaults to gtk_window_get_default_icon_list()"),
+                         GDK_TYPE_PIXBUF,
+                         GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkAboutDialog:logo-icon-name:
@@ -531,13 +555,13 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.6
    */
-  g_object_class_install_property (object_class,
-                                   PROP_LOGO_ICON_NAME,
-                                   g_param_spec_string ("logo-icon-name",
-                                                        P_("Logo Icon Name"),
-                                                        P_("A named icon to use as the logo for the about box."),
-                                                        "image-missing",
-                                                        GTK_PARAM_READWRITE));
+  props[PROP_LOGO_ICON_NAME] =
+    g_param_spec_string ("logo-icon-name",
+                         P_("Logo Icon Name"),
+                         P_("A named icon to use as the logo for the about box."),
+                         "image-missing",
+                         GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
+
   /**
    * GtkAboutDialog:wrap-license:
    *
@@ -545,20 +569,22 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
    *
    * Since: 2.8
    */
-  g_object_class_install_property (object_class,
-                                   PROP_WRAP_LICENSE,
-                                   g_param_spec_boolean ("wrap-license",
-                                                         P_("Wrap license"),
-                                                         P_("Whether to wrap the license text."),
-                                                         FALSE,
-                                                         GTK_PARAM_READWRITE));
+  props[PROP_WRAP_LICENSE] =
+    g_param_spec_boolean ("wrap-license",
+                          P_("Wrap license"),
+                          P_("Whether to wrap the license text."),
+                          FALSE,
+                          GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
+
+  g_object_class_install_properties (object_class, LAST_PROP, props);
 
   /* Bind class to template
    */
   gtk_widget_class_set_template_from_resource (widget_class,
-					       "/org/gtk/libgtk/gtkaboutdialog.ui");
+					       "/org/gtk/libgtk/ui/gtkaboutdialog.ui");
 
-  gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, notebook);
+  gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, stack);
+  gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, stack_switcher);
   gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, logo_image);
   gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, name_label);
   gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, version_label);
@@ -566,18 +592,16 @@ gtk_about_dialog_class_init (GtkAboutDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, copyright_label);
   gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, license_label);
   gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, website_label);
-  gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, credits_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, license_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, credits_page);
+  gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, license_page);
   gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, credits_grid);
   gtk_widget_class_bind_template_child_private (widget_class, GtkAboutDialog, license_view);
 
-  gtk_widget_class_bind_template_callback (widget_class, credits_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, license_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, emit_activate_link);
   gtk_widget_class_bind_template_callback (widget_class, text_view_event_after);
   gtk_widget_class_bind_template_callback (widget_class, text_view_key_press_event);
-  gtk_widget_class_bind_template_callback (widget_class, text_view_visibility_notify_event);
   gtk_widget_class_bind_template_callback (widget_class, text_view_motion_notify_event);
+  gtk_widget_class_bind_template_callback (widget_class, stack_visible_child_notify);
 }
 
 static gboolean
@@ -592,14 +616,28 @@ emit_activate_link (GtkAboutDialog *about,
 }
 
 static void
+update_stack_switcher_visibility (GtkAboutDialog *about)
+{
+  GtkAboutDialogPrivate *priv = about->priv;
+
+  if (gtk_widget_get_visible (priv->credits_page) ||
+      gtk_widget_get_visible (priv->license_page))
+    gtk_widget_show (priv->stack_switcher);
+  else
+    gtk_widget_hide (priv->stack_switcher);
+}
+
+static void
 update_license_button_visibility (GtkAboutDialog *about)
 {
   GtkAboutDialogPrivate *priv = about->priv;
 
-  if (priv->license_type == GTK_LICENSE_CUSTOM && priv->license != NULL)
-    gtk_widget_show (priv->license_button);
+  if (priv->license_type == GTK_LICENSE_CUSTOM && priv->license != NULL && priv->license[0] != '\0')
+    gtk_widget_show (priv->license_page);
   else
-    gtk_widget_hide (priv->license_button);
+    gtk_widget_hide (priv->license_page);
+
+  update_stack_switcher_visibility (about);
 }
 
 static void
@@ -616,70 +654,67 @@ update_credits_button_visibility (GtkAboutDialog *about)
           strcmp (priv->translator_credits, "translator_credits") &&
           strcmp (priv->translator_credits, "translator-credits")));
   if (show)
-    gtk_widget_show (priv->credits_button);
+    gtk_widget_show (priv->credits_page);
   else
-    gtk_widget_hide (priv->credits_button);
+    gtk_widget_hide (priv->credits_page);
+
+  update_stack_switcher_visibility (about);
 }
 
 static void
 switch_page (GtkAboutDialog *about,
-             gint            page)
+             const gchar    *name)
 {
   GtkAboutDialogPrivate *priv = about->priv;
 
-  gtk_notebook_set_current_page (GTK_NOTEBOOK (priv->notebook), page);
+  gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), name);
+
+  priv->in_switch_page = TRUE;
+  if (priv->credits_button)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->credits_button),
+                                  g_str_equal (name, "credits"));
+  if (priv->license_button)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->license_button),
+                                  g_str_equal (name, "license"));
+  priv->in_switch_page = FALSE;
 }
 
 static void
-display_main_page (GtkButton *button,
-                   gpointer   data)
+apply_use_header_bar (GtkAboutDialog *about)
 {
-  GtkAboutDialog *about = (GtkAboutDialog *)data;
-
-  switch_page (about, 0);
-}
-
-static void
-credits_button_clicked (GtkButton *button,
-                        gpointer   data)
-{
-  GtkAboutDialog *about = (GtkAboutDialog *)data;
   GtkAboutDialogPrivate *priv = about->priv;
-  gboolean active;
+  gboolean use_header_bar;
 
-  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button));
-
-  if (active)
+  g_object_get (about, "use-header-bar", &use_header_bar, NULL);
+  if (!use_header_bar)
     {
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->license_button), FALSE);
-      display_credits_page (NULL, data);
-    }
-  else
-    {
-      display_main_page (NULL, data);
-    }
-}
+      GtkWidget *action_area;
 
-static void
-license_button_clicked (GtkButton *button,
-                        gpointer   data)
-{
-  GtkAboutDialog *about = (GtkAboutDialog *)data;
-  GtkAboutDialogPrivate *priv = about->priv;
-  gboolean active;
+      G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+      action_area = gtk_dialog_get_action_area (GTK_DIALOG (about));
+      G_GNUC_END_IGNORE_DEPRECATIONS
 
-  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button));
+      priv->credits_button = gtk_toggle_button_new_with_mnemonic (_("C_redits"));
+      g_object_bind_property (priv->credits_page, "visible",
+                              priv->credits_button, "visible", G_BINDING_SYNC_CREATE);
+      g_signal_connect (priv->credits_button, "toggled", G_CALLBACK (toggle_credits), about);
+      gtk_container_add_with_properties (GTK_CONTAINER (action_area), priv->credits_button,
+                                         "secondary", TRUE,
+                                         NULL);
 
-  if (active)
-    {
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->credits_button), FALSE);
-      display_license_page (NULL, data);
-    }
-  else
-    {
-      display_main_page (NULL, data);
+      priv->license_button = gtk_toggle_button_new_with_mnemonic (_("_License"));
+      g_object_bind_property (priv->license_page, "visible",
+                              priv->license_button, "visible", G_BINDING_SYNC_CREATE);
+      g_signal_connect (priv->license_button, "toggled", G_CALLBACK (toggle_license), about);
+      gtk_container_add_with_properties (GTK_CONTAINER (action_area), priv->license_button,
+                                         "secondary", TRUE,
+                                         NULL);
+
+
+      gtk_dialog_add_button (GTK_DIALOG (about), _("_Close"), GTK_RESPONSE_DELETE_EVENT);
     }
 }
+
 static void
 gtk_about_dialog_init (GtkAboutDialog *about)
 {
@@ -711,8 +746,12 @@ gtk_about_dialog_init (GtkAboutDialog *about)
   gtk_dialog_set_default_response (GTK_DIALOG (about), GTK_RESPONSE_CANCEL);
 
   gtk_widget_init_template (GTK_WIDGET (about));
+  gtk_dialog_set_use_header_bar_from_setting (GTK_DIALOG (about));
 
-  switch_page (about, 0);
+  apply_use_header_bar (about);
+
+  switch_page (about, "main");
+  update_stack_switcher_visibility (about);
 
   /* force defaults */
   gtk_about_dialog_set_program_name (about, NULL);
@@ -765,7 +804,6 @@ gtk_about_dialog_set_property (GObject      *object,
                                GParamSpec   *pspec)
 {
   GtkAboutDialog *about = GTK_ABOUT_DIALOG (object);
-  GtkAboutDialogPrivate *priv = about->priv;
 
   switch (prop_id)
     {
@@ -812,7 +850,7 @@ gtk_about_dialog_set_property (GObject      *object,
       gtk_about_dialog_set_logo_icon_name (about, g_value_get_string (value));
       break;
     case PROP_WRAP_LICENSE:
-      priv->wrap_license = g_value_get_boolean (value);
+      gtk_about_dialog_set_wrap_license (about, g_value_get_boolean (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -891,6 +929,36 @@ gtk_about_dialog_get_property (GObject    *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
     }
+}
+
+static void
+toggle_credits (GtkToggleButton *button,
+                gpointer         user_data)
+{
+  GtkAboutDialog *about = user_data;
+  GtkAboutDialogPrivate *priv = about->priv;
+  gboolean show_credits;
+
+  if (priv->in_switch_page)
+    return;
+
+  show_credits = gtk_toggle_button_get_active (button);
+  switch_page (about, show_credits ? "credits" : "main");
+}
+
+static void
+toggle_license (GtkToggleButton *button,
+                gpointer         user_data)
+{
+  GtkAboutDialog *about = user_data;
+  GtkAboutDialogPrivate *priv = about->priv;
+  gboolean show_license;
+
+  if (priv->in_switch_page)
+    return;
+
+  show_license = gtk_toggle_button_get_active (button);
+  switch_page (about, show_license ? "license" : "main");
 }
 
 static gboolean
@@ -977,7 +1045,7 @@ gtk_about_dialog_show (GtkWidget *widget)
  *
  * Returns the program name displayed in the about dialog.
  *
- * Return value: The program name. The string is owned by the about
+ * Returns: The program name. The string is owned by the about
  *  dialog and must not be modified.
  *
  * Since: 2.12
@@ -1047,7 +1115,7 @@ gtk_about_dialog_set_program_name (GtkAboutDialog *about,
 
   update_name_version (about);
 
-  g_object_notify (G_OBJECT (about), "program-name");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_NAME]);
 }
 
 
@@ -1057,7 +1125,7 @@ gtk_about_dialog_set_program_name (GtkAboutDialog *about,
  *
  * Returns the version string.
  *
- * Return value: The version string. The string is owned by the about
+ * Returns: The version string. The string is owned by the about
  *  dialog and must not be modified.
  *
  * Since: 2.6
@@ -1096,7 +1164,7 @@ gtk_about_dialog_set_version (GtkAboutDialog *about,
 
   update_name_version (about);
 
-  g_object_notify (G_OBJECT (about), "version");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_VERSION]);
 }
 
 /**
@@ -1105,7 +1173,7 @@ gtk_about_dialog_set_version (GtkAboutDialog *about,
  *
  * Returns the copyright string.
  *
- * Return value: The copyright string. The string is owned by the about
+ * Returns: The copyright string. The string is owned by the about
  *  dialog and must not be modified.
  *
  * Since: 2.6
@@ -1121,7 +1189,7 @@ gtk_about_dialog_get_copyright (GtkAboutDialog *about)
 /**
  * gtk_about_dialog_set_copyright:
  * @about: a #GtkAboutDialog
- * @copyright: (allow-none) the copyright string
+ * @copyright: (allow-none): the copyright string
  *
  * Sets the copyright string to display in the about dialog.
  * This should be a short string of one or two lines.
@@ -1155,7 +1223,7 @@ gtk_about_dialog_set_copyright (GtkAboutDialog *about,
   else
     gtk_widget_hide (priv->copyright_label);
 
-  g_object_notify (G_OBJECT (about), "copyright");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_COPYRIGHT]);
 }
 
 /**
@@ -1164,7 +1232,7 @@ gtk_about_dialog_set_copyright (GtkAboutDialog *about,
  *
  * Returns the comments string.
  *
- * Return value: The comments. The string is owned by the about
+ * Returns: The comments. The string is owned by the about
  *  dialog and must not be modified.
  *
  * Since: 2.6
@@ -1212,7 +1280,7 @@ gtk_about_dialog_set_comments (GtkAboutDialog *about,
     }
   g_free (tmp);
 
-  g_object_notify (G_OBJECT (about), "comments");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_COMMENTS]);
 }
 
 /**
@@ -1221,7 +1289,7 @@ gtk_about_dialog_set_comments (GtkAboutDialog *about,
  *
  * Returns the license information.
  *
- * Return value: The license information. The string is owned by the about
+ * Returns: The license information. The string is owned by the about
  *  dialog and must not be modified.
  *
  * Since: 2.6
@@ -1273,8 +1341,8 @@ gtk_about_dialog_set_license (GtkAboutDialog *about,
 
   update_license_button_visibility (about);
 
-  g_object_notify (G_OBJECT (about), "license");
-  g_object_notify (G_OBJECT (about), "license-type");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_LICENSE]);
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_LICENSE_TYPE]);
 }
 
 /**
@@ -1322,7 +1390,7 @@ gtk_about_dialog_set_wrap_license (GtkAboutDialog *about,
     {
        priv->wrap_license = wrap_license;
 
-       g_object_notify (G_OBJECT (about), "wrap-license");
+       g_object_notify_by_pspec (G_OBJECT (about), props[PROP_WRAP_LICENSE]);
     }
 }
 
@@ -1332,7 +1400,7 @@ gtk_about_dialog_set_wrap_license (GtkAboutDialog *about,
  *
  * Returns the website URL.
  *
- * Return value: The website URL. The string is owned by the about
+ * Returns: The website URL. The string is owned by the about
  *  dialog and must not be modified.
  *
  * Since: 2.6
@@ -1375,7 +1443,7 @@ gtk_about_dialog_set_website (GtkAboutDialog *about,
 
   update_website (about);
 
-  g_object_notify (G_OBJECT (about), "website");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_WEBSITE]);
 }
 
 /**
@@ -1384,7 +1452,7 @@ gtk_about_dialog_set_website (GtkAboutDialog *about,
  *
  * Returns the label used for the website link.
  *
- * Return value: The label used for the website link. The string is
+ * Returns: The label used for the website link. The string is
  *     owned by the about dialog and must not be modified.
  *
  * Since: 2.6
@@ -1427,7 +1495,7 @@ gtk_about_dialog_set_website_label (GtkAboutDialog *about,
 
   update_website (about);
 
-  g_object_notify (G_OBJECT (about), "website-label");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_WEBSITE_LABEL]);
 }
 
 /**
@@ -1437,7 +1505,7 @@ gtk_about_dialog_set_website_label (GtkAboutDialog *about,
  * Returns the string which are displayed in the authors tab
  * of the secondary credits dialog.
  *
- * Return value: (array zero-terminated=1) (transfer none): A
+ * Returns: (array zero-terminated=1) (transfer none): A
  *  %NULL-terminated string array containing the authors. The array is
  *  owned by the about dialog and must not be modified.
  *
@@ -1482,7 +1550,7 @@ gtk_about_dialog_set_authors (GtkAboutDialog  *about,
 
   update_credits_button_visibility (about);
 
-  g_object_notify (G_OBJECT (about), "authors");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_AUTHORS]);
 }
 
 /**
@@ -1492,7 +1560,7 @@ gtk_about_dialog_set_authors (GtkAboutDialog  *about,
  * Returns the string which are displayed in the documenters
  * tab of the secondary credits dialog.
  *
- * Return value: (array zero-terminated=1) (transfer none): A
+ * Returns: (array zero-terminated=1) (transfer none): A
  *  %NULL-terminated string array containing the documenters. The
  *  array is owned by the about dialog and must not be modified.
  *
@@ -1537,7 +1605,7 @@ gtk_about_dialog_set_documenters (GtkAboutDialog *about,
 
   update_credits_button_visibility (about);
 
-  g_object_notify (G_OBJECT (about), "documenters");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_DOCUMENTERS]);
 }
 
 /**
@@ -1547,7 +1615,7 @@ gtk_about_dialog_set_documenters (GtkAboutDialog *about,
  * Returns the string which are displayed in the artists tab
  * of the secondary credits dialog.
  *
- * Return value: (array zero-terminated=1) (transfer none): A
+ * Returns: (array zero-terminated=1) (transfer none): A
  *  %NULL-terminated string array containing the artists. The array is
  *  owned by the about dialog and must not be modified.
  *
@@ -1592,7 +1660,7 @@ gtk_about_dialog_set_artists (GtkAboutDialog *about,
 
   update_credits_button_visibility (about);
 
-  g_object_notify (G_OBJECT (about), "artists");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_ARTISTS]);
 }
 
 /**
@@ -1602,7 +1670,7 @@ gtk_about_dialog_set_artists (GtkAboutDialog *about,
  * Returns the translator credits string which is displayed
  * in the translators tab of the secondary credits dialog.
  *
- * Return value: The translator credits string. The string is
+ * Returns: The translator credits string. The string is
  *   owned by the about dialog and must not be modified.
  *
  * Since: 2.6
@@ -1627,12 +1695,13 @@ gtk_about_dialog_get_translator_credits (GtkAboutDialog *about)
  * of the language which is currently used in the user interface.
  * Using gettext(), a simple way to achieve that is to mark the
  * string for translation:
- * |[
- *  gtk_about_dialog_set_translator_credits (about, _("translator-credits"));
+ * |[<!-- language="C" -->
+ *  gtk_about_dialog_set_translator_credits (about,
+ *                                           _("translator-credits"));
  * ]|
- * It is a good idea to use the customary msgid "translator-credits" for this
+ * It is a good idea to use the customary msgid “translator-credits” for this
  * purpose, since translators will already know the purpose of that msgid, and
- * since #GtkAboutDialog will detect if "translator-credits" is untranslated
+ * since #GtkAboutDialog will detect if “translator-credits” is untranslated
  * and hide the tab.
  *
  * Since: 2.6
@@ -1654,7 +1723,7 @@ gtk_about_dialog_set_translator_credits (GtkAboutDialog *about,
 
   update_credits_button_visibility (about);
 
-  g_object_notify (G_OBJECT (about), "translator-credits");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_TRANSLATOR_CREDITS]);
 }
 
 /**
@@ -1663,7 +1732,7 @@ gtk_about_dialog_set_translator_credits (GtkAboutDialog *about,
  *
  * Returns the pixbuf displayed as logo in the about dialog.
  *
- * Return value: (transfer none): the pixbuf displayed as logo. The
+ * Returns: (transfer none): the pixbuf displayed as logo. The
  *   pixbuf is owned by the about dialog. If you want to keep a
  *   reference to it, you have to call g_object_ref() on it.
  *
@@ -1708,7 +1777,7 @@ gtk_about_dialog_set_logo (GtkAboutDialog *about,
   g_object_freeze_notify (G_OBJECT (about));
 
   if (gtk_image_get_storage_type (GTK_IMAGE (priv->logo_image)) == GTK_IMAGE_ICON_NAME)
-    g_object_notify (G_OBJECT (about), "logo-icon-name");
+    g_object_notify_by_pspec (G_OBJECT (about), props[PROP_LOGO_ICON_NAME]);
 
   if (logo != NULL)
     gtk_image_set_from_pixbuf (GTK_IMAGE (priv->logo_image), logo);
@@ -1725,7 +1794,7 @@ gtk_about_dialog_set_logo (GtkAboutDialog *about,
         }
     }
 
-  g_object_notify (G_OBJECT (about), "logo");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_LOGO]);
 
   g_object_thaw_notify (G_OBJECT (about));
 }
@@ -1736,7 +1805,7 @@ gtk_about_dialog_set_logo (GtkAboutDialog *about,
  *
  * Returns the icon name displayed as logo in the about dialog.
  *
- * Return value: the icon name displayed as logo. The string is
+ * Returns: the icon name displayed as logo. The string is
  *   owned by the dialog. If you want to keep a reference
  *   to it, you have to call g_strdup() on it.
  *
@@ -1783,7 +1852,7 @@ gtk_about_dialog_set_logo_icon_name (GtkAboutDialog *about,
   g_object_freeze_notify (G_OBJECT (about));
 
   if (gtk_image_get_storage_type (GTK_IMAGE (priv->logo_image)) == GTK_IMAGE_PIXBUF)
-    g_object_notify (G_OBJECT (about), "logo");
+    g_object_notify_by_pspec (G_OBJECT (about), props[PROP_LOGO]);
 
   if (icon_name)
     {
@@ -1827,7 +1896,7 @@ gtk_about_dialog_set_logo_icon_name (GtkAboutDialog *about,
       gtk_image_clear (GTK_IMAGE (priv->logo_image));
     }
 
-  g_object_notify (G_OBJECT (about), "logo-icon-name");
+  g_object_notify_by_pspec (G_OBJECT (about), props[PROP_LOGO_ICON_NAME]);
 
   g_object_thaw_notify (G_OBJECT (about));
 }
@@ -1852,21 +1921,12 @@ follow_if_link (GtkAboutDialog *about,
 
       if (uri && !g_slist_find_custom (priv->visited_links, uri, (GCompareFunc)strcmp))
         {
-          GdkColor *style_visited_link_color;
-          GdkColor color;
+          GdkRGBA visited_link_color;
+          GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET (about));
+          GtkStateFlags state = gtk_widget_get_state_flags (GTK_WIDGET (about));
+          gtk_style_context_get_color (context, state | GTK_STATE_FLAG_VISITED, &visited_link_color);
 
-          gtk_widget_style_get (GTK_WIDGET (about),
-                                "visited-link-color", &style_visited_link_color,
-                                NULL);
-          if (style_visited_link_color)
-            {
-              color = *style_visited_link_color;
-              gdk_color_free (style_visited_link_color);
-            }
-          else
-            color = default_visited_link_color;
-
-          g_object_set (G_OBJECT (tag), "foreground-gdk", &color, NULL);
+          g_object_set (G_OBJECT (tag), "foreground-rgba", visited_link_color, NULL);
 
           priv->visited_links = g_slist_prepend (priv->visited_links, g_strdup (uri));
         }
@@ -1997,43 +2057,6 @@ text_view_motion_notify_event (GtkWidget *text_view,
   return FALSE;
 }
 
-
-static gboolean
-text_view_visibility_notify_event (GtkWidget          *text_view,
-                                   GdkEventVisibility *event,
-                                   GtkAboutDialog     *about)
-{
-  GdkDeviceManager *device_manager;
-  GdkDisplay *display;
-  GList *devices, *d;
-  gint wx, wy, bx, by;
-
-  display = gdk_window_get_display (event->window);
-  device_manager = gdk_display_get_device_manager (display);
-  devices = gdk_device_manager_list_devices (device_manager, GDK_DEVICE_TYPE_MASTER);
-
-  for (d = devices; d; d = d->next)
-    {
-      GdkDevice *dev = d->data;
-
-      if (gdk_device_get_source (dev) == GDK_SOURCE_KEYBOARD)
-        continue;
-
-      gdk_window_get_device_position (gtk_widget_get_window (text_view), dev,
-                                      &wx, &wy, NULL);
-
-      gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view),
-                                             GTK_TEXT_WINDOW_WIDGET,
-                                             wx, wy, &bx, &by);
-
-      set_cursor_if_appropriate (about, GTK_TEXT_VIEW (text_view), dev, bx, by);
-    }
-
-  g_list_free (devices);
-
-  return FALSE;
-}
-
 static GtkTextBuffer *
 text_buffer_new (GtkAboutDialog  *about,
 		 gchar          **strings)
@@ -2041,35 +2064,17 @@ text_buffer_new (GtkAboutDialog  *about,
   gchar **p;
   gchar *q0, *q1, *q2, *r1, *r2;
   GtkTextBuffer *buffer;
-  GdkColor *style_link_color;
-  GdkColor *style_visited_link_color;
-  GdkColor color;
-  GdkColor link_color;
-  GdkColor visited_link_color;
+  GdkRGBA color;
+  GdkRGBA link_color;
+  GdkRGBA visited_link_color;
   GtkAboutDialogPrivate *priv = about->priv;
   GtkTextIter start_iter, end_iter;
   GtkTextTag *tag;
+  GtkStateFlags state = gtk_widget_get_state_flags (GTK_WIDGET (about));
+  GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET (about));
 
-  gtk_widget_style_get (GTK_WIDGET (about),
-                        "link-color", &style_link_color,
-                        "visited-link-color", &style_visited_link_color,
-                        NULL);
-  if (style_link_color)
-    {
-      link_color = *style_link_color;
-      gdk_color_free (style_link_color);
-    }
-  else
-    link_color = default_link_color;
-
-  if (style_visited_link_color)
-    {
-      visited_link_color = *style_visited_link_color;
-      gdk_color_free (style_visited_link_color);
-    }
-  else
-    visited_link_color = default_visited_link_color;
-
+  gtk_style_context_get_color (context, state | GTK_STATE_FLAG_LINK, &link_color);
+  gtk_style_context_get_color (context, state | GTK_STATE_FLAG_VISITED, &visited_link_color);
   buffer = gtk_text_buffer_new (NULL);
 
   for (p = strings; *p; p++)
@@ -2080,6 +2085,9 @@ text_buffer_new (GtkAboutDialog  *about,
           q1 = strchr (q0, '<');
           q2 = q1 ? strchr (q1, '>') : NULL;
           r1 = strstr (q0, "http://");
+          r2 = strstr (q0, "https://");
+          if (!r1 || (r1 && r2 && r2 < r1))
+            r1 = r2;
           if (r1)
             {
               r2 = strpbrk (r1, " \n\t>");
@@ -2127,7 +2135,7 @@ text_buffer_new (GtkAboutDialog  *about,
                 color = link_color;
 
               tag = gtk_text_buffer_create_tag (buffer, NULL,
-                                                "foreground-gdk", &color,
+                                                "foreground-rgba", &color,
                                                 "underline", PANGO_UNDERLINE_SINGLE,
                                                 NULL);
               if (strcmp (link_type, "email") == 0)
@@ -2205,6 +2213,9 @@ add_credits_section (GtkAboutDialog *about,
           q1 = strchr (q0, '<');
           q2 = q1 ? strchr (q1, '>') : NULL;
           r1 = strstr (q0, "http://");
+          r2 = strstr (q0, "https://");
+          if (!r1 || (r1 && r2 && r2 < r1))
+            r1 = r2;
           if (r1)
             {
               r2 = strpbrk (r1, " \n\t");
@@ -2278,6 +2289,8 @@ add_credits_section (GtkAboutDialog *about,
 
       label = gtk_label_new (str->str);
       gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
+      g_signal_connect_swapped (label, "activate-link",
+                                G_CALLBACK (emit_activate_link), about);
       g_string_free (str, TRUE);
       gtk_widget_set_halign (label, GTK_ALIGN_START);
       gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
@@ -2333,22 +2346,6 @@ populate_credits_page (GtkAboutDialog *about)
 }
 
 static void
-display_credits_page (GtkWidget *button,
-                      gpointer   data)
-{
-  GtkAboutDialog *about = (GtkAboutDialog *)data;
-  GtkAboutDialogPrivate *priv = about->priv;
-
-  if (priv->credits_page == 0)
-    {
-      populate_credits_page (about);
-      priv->credits_page = CREDITS_PAGE_ID;
-    }
-
-  switch_page (about, priv->credits_page);
-}
-
-static void
 populate_license_page (GtkAboutDialog *about)
 {
   GtkAboutDialogPrivate *priv = about->priv;
@@ -2364,22 +2361,6 @@ populate_license_page (GtkAboutDialog *about)
   g_object_unref (buffer);
 }
 
-static void
-display_license_page (GtkWidget *button,
-                      gpointer   data)
-{
-  GtkAboutDialog *about = (GtkAboutDialog *)data;
-  GtkAboutDialogPrivate *priv = about->priv;
-
-  if (priv->license_page == 0)
-    {
-      populate_license_page (about);
-      priv->license_page = LICENSE_PAGE_ID;
-    }
-
-  switch_page (about, priv->license_page);
-}
-
 /**
  * gtk_about_dialog_new:
  *
@@ -2392,19 +2373,14 @@ display_license_page (GtkWidget *button,
 GtkWidget *
 gtk_about_dialog_new (void)
 {
-  GtkAboutDialog *dialog = g_object_new (GTK_TYPE_ABOUT_DIALOG, NULL);
-
-  return GTK_WIDGET (dialog);
+  return g_object_new (GTK_TYPE_ABOUT_DIALOG, NULL);
 }
 
 static void
 close_cb (GtkAboutDialog *about)
 {
-  GtkAboutDialogPrivate *priv = about->priv;
+  switch_page (about, "main");
 
-  switch_page (about, 0);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->credits_button), FALSE);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->license_button), FALSE);
   gtk_widget_hide (GTK_WIDGET (about));
 }
 
@@ -2414,7 +2390,7 @@ close_cb (GtkAboutDialog *about)
  * @first_property_name: the name of the first property
  * @...: value of first property, followed by more properties, %NULL-terminated
  *
- * This is a convenience function for showing an application's about box.
+ * This is a convenience function for showing an application’s about box.
  * The constructed dialog is associated with the parent window and
  * reused for future invocations of this function.
  *
@@ -2489,7 +2465,7 @@ gtk_about_dialog_set_license_type (GtkAboutDialog *about,
 
   g_return_if_fail (GTK_IS_ABOUT_DIALOG (about));
   g_return_if_fail (license_type >= GTK_LICENSE_UNKNOWN &&
-                    license_type <= GTK_LICENSE_ARTISTIC);
+                    license_type <= GTK_LICENSE_LGPL_3_0_ONLY);
 
   priv = about->priv;
 
@@ -2502,16 +2478,18 @@ gtk_about_dialog_set_license_type (GtkAboutDialog *about,
       /* custom licenses use the contents of the :license property */
       if (priv->license_type != GTK_LICENSE_CUSTOM)
         {
+          const gchar *name;
           const gchar *url;
           gchar *license_string;
           GString *str;
 
-          url = gtk_license_urls[priv->license_type];
+          name = _(gtk_license_info[priv->license_type].name);
+          url = gtk_license_info[priv->license_type].url;
           if (url == NULL)
             url = priv->website_url;
 
           str = g_string_sized_new (256);
-          g_string_append_printf (str, _(gtk_license_preamble), url, url);
+          g_string_append_printf (str, _(gtk_license_preamble), url, name);
 
           g_free (priv->license);
           priv->license = g_string_free (str, FALSE);
@@ -2525,15 +2503,15 @@ gtk_about_dialog_set_license_type (GtkAboutDialog *about,
 
           update_license_button_visibility (about);
 
-          g_object_notify (G_OBJECT (about), "wrap-license");
-          g_object_notify (G_OBJECT (about), "license");
+          g_object_notify_by_pspec (G_OBJECT (about), props[PROP_WRAP_LICENSE]);
+          g_object_notify_by_pspec (G_OBJECT (about), props[PROP_LICENSE]);
         }
       else
         {
           gtk_widget_show (priv->license_label);
         }
 
-      g_object_notify (G_OBJECT (about), "license-type");
+      g_object_notify_by_pspec (G_OBJECT (about), props[PROP_LICENSE_TYPE]);
 
       g_object_thaw_notify (G_OBJECT (about));
     }
@@ -2545,7 +2523,7 @@ gtk_about_dialog_set_license_type (GtkAboutDialog *about,
  *
  * Retrieves the license set using gtk_about_dialog_set_license_type()
  *
- * Return value: a #GtkLicense value
+ * Returns: a #GtkLicense value
  *
  * Since: 3.0
  */

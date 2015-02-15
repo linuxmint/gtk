@@ -7,6 +7,7 @@ gtk_accel_label_get_type
 gtk_accel_map_get_type
 gtk_accessible_get_type
 gtk_actionable_get_type
+gtk_action_bar_get_type
 gtk_action_get_type
 gtk_action_group_get_type
 gtk_activatable_get_type
@@ -63,6 +64,7 @@ gtk_entry_buffer_get_type
 gtk_entry_completion_get_type
 gtk_entry_get_type
 gtk_event_box_get_type
+gtk_event_controller_get_type
 gtk_expander_get_type
 gtk_file_chooser_button_get_type
 gtk_file_chooser_dialog_get_type
@@ -70,6 +72,8 @@ gtk_file_chooser_get_type
 gtk_file_chooser_widget_get_type
 gtk_file_filter_get_type
 gtk_fixed_get_type
+gtk_flow_box_get_type
+gtk_flow_box_child_get_type
 gtk_font_button_get_type
 gtk_font_chooser_get_type
 gtk_font_chooser_dialog_get_type
@@ -77,6 +81,15 @@ gtk_font_chooser_widget_get_type
 gtk_font_selection_dialog_get_type
 gtk_font_selection_get_type
 gtk_frame_get_type
+gtk_gesture_get_type
+gtk_gesture_drag_get_type
+gtk_gesture_long_press_get_type
+gtk_gesture_multi_press_get_type
+gtk_gesture_pan_get_type
+gtk_gesture_rotate_get_type
+gtk_gesture_single_get_type
+gtk_gesture_swipe_get_type
+gtk_gesture_zoom_get_type
 gtk_grid_get_type
 gtk_handle_box_get_type
 gtk_hbox_get_type
@@ -123,7 +136,8 @@ gtk_page_setup_unix_dialog_get_type
 gtk_paned_get_type
 gtk_paper_size_get_type
 gtk_places_sidebar_get_type
-%gtk_plug_get_type
+gtk_plug_get_type
+gtk_popover_get_type
 gtk_printer_get_type
 gtk_print_context_get_type
 gtk_print_job_get_type
@@ -157,7 +171,7 @@ gtk_separator_menu_item_get_type
 gtk_separator_tool_item_get_type
 gtk_settings_get_type
 gtk_size_group_get_type
-%gtk_socket_get_type
+gtk_socket_get_type
 gtk_spin_button_get_type
 gtk_spinner_get_type
 gtk_stack_get_type

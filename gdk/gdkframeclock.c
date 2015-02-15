@@ -12,9 +12,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
@@ -62,7 +60,7 @@
  * as g_get_monotonic_time(). The frame time does not advance during
  * the time a frame is being painted, and outside of a frame, an attempt
  * is made so that all calls to gdk_frame_clock_get_frame_time() that
- * are called at a "similar" time get the same value. This means that
+ * are called at a “similar” time get the same value. This means that
  * if different animations are timed by looking at the difference in
  * time between an initial value from gdk_frame_clock_get_frame_time()
  * and the value inside the #GdkFrameClock::update signal of the clock,
@@ -254,14 +252,14 @@ gdk_frame_clock_init (GdkFrameClock *clock)
  * @frame_clock: a #GdkFrameClock
  *
  * Gets the time that should currently be used for animations.  Inside
- * the processing of a frame, it's the time used to compute the
+ * the processing of a frame, it’s the time used to compute the
  * animation position of everything in a frame. Outside of a frame, it's
- * the time of the conceptual "previous frame," which may be either
- * the actual previous frame time, or if that's too old, an updated
+ * the time of the conceptual “previous frame,” which may be either
+ * the actual previous frame time, or if that’s too old, an updated
  * time.
  *
  * Since: 3.8
- * Return value: a timestamp in microseconds, in the timescale of
+ * Returns: a timestamp in microseconds, in the timescale of
  *  of g_get_monotonic_time().
  */
 gint64
@@ -382,14 +380,14 @@ gdk_frame_clock_get_frame_counter (GdkFrameClock *frame_clock)
  * gdk_frame_clock_get_history_start:
  * @frame_clock: a #GdkFrameClock
  *
- * #GdkFrameClock internally keeps a history of #GdkFrameTiming
+ * #GdkFrameClock internally keeps a history of #GdkFrameTimings
  * objects for recent frames that can be retrieved with
  * gdk_frame_clock_get_timings(). The set of stored frames
  * is the set from the counter values given by
  * gdk_frame_clock_get_history_start() and
  * gdk_frame_clock_get_frame_counter(), inclusive.
  *
- * Return value: the frame counter value for the oldest frame
+ * Returns: the frame counter value for the oldest frame
  *  that is available in the internal frame history of the
  *  #GdkFrameClock.
  * Since: 3.8
@@ -438,7 +436,7 @@ _gdk_frame_clock_begin_frame (GdkFrameClock *frame_clock)
  * for the current frame or a recent frame. The #GdkFrameTimings
  * object may not yet be complete: see gdk_frame_timings_get_complete().
  *
- * Return value: the #GdkFrameTimings object for the specified
+ * Returns: (nullable): the #GdkFrameTimings object for the specified
  *  frame, or %NULL if it is not available. See
  *  gdk_frame_clock_get_history_start().
  * Since: 3.8
@@ -471,10 +469,10 @@ gdk_frame_clock_get_timings (GdkFrameClock *frame_clock,
  *
  * Gets the frame timings for the current frame.
  *
- * Returns: the #GdkFrameTimings for the frame currently being
- *  processed, or even no frame is being processed, for the
- *  previous frame. Before any frames have been procesed,
- *  returns %NULL.
+ * Returns: (nullable): the #GdkFrameTimings for the frame currently
+ *  being processed, or even no frame is being processed, for the
+ *  previous frame. Before any frames have been procesed, returns
+ *  %NULL.
  * Since: 3.8
  */
 GdkFrameTimings *

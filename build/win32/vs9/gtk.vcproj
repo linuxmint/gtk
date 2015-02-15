@@ -21,7 +21,7 @@
  <Configurations>
   <Configuration
    Name="Debug|Win32"
-   InheritedPropertySheets=".\gtk-gen-sources.vsprops"
+   InheritedPropertySheets=".\gtk-gen-srcs.vsprops"
    ConfigurationType="2"
    CharacterSet="2"
    >
@@ -31,7 +31,7 @@
    <Tool
     Name="VCCLCompilerTool"
     Optimization="0"
-    AdditionalIncludeDirectories="..\..\..\gdk;..\..\..\gdk\win32;..\..\..\gtk"
+    AdditionalIncludeDirectories="..\..\..\gtk;..\..\..\gdk;..\..\..\gdk\win32"
     PreprocessorDefinitions="_DEBUG;G_ENABLE_DEBUG;$(GtkDefines)"
     MinimalRebuild="true"
     BasicRuntimeChecks="3"
@@ -53,7 +53,7 @@
   </Configuration>
   <Configuration
    Name="Release|Win32"
-   InheritedPropertySheets=".\gtk-gen-sources.vsprops"
+   InheritedPropertySheets=".\gtk-gen-srcs.vsprops"
    ConfigurationType="2"
    CharacterSet="2"
    WholeProgramOptimization="1"
@@ -63,7 +63,7 @@
    />
    <Tool
     Name="VCCLCompilerTool"
-    AdditionalIncludeDirectories="..\..\..\gdk;..\..\..\gdk\win32;..\..\..\gtk"
+    AdditionalIncludeDirectories="..\..\..\gtk;..\..\..\gdk;..\..\..\gdk\win32"
     PreprocessorDefinitions="$(GtkDefines)"
     RuntimeLibrary="2"
     UsePrecompiledHeader="0"
@@ -85,7 +85,7 @@
   </Configuration>
   <Configuration
    Name="Debug|x64"
-   InheritedPropertySheets=".\gtk-gen-sources.vsprops"
+   InheritedPropertySheets=".\gtk-gen-srcs.vsprops"
    ConfigurationType="2"
    CharacterSet="2"
    >
@@ -95,7 +95,7 @@
    <Tool
     Name="VCCLCompilerTool"
     Optimization="0"
-    AdditionalIncludeDirectories="..\..\..\gdk;..\..\..\gdk\win32;..\..\..\gtk"
+    AdditionalIncludeDirectories="..\..\..\gtk;..\..\..\gdk;..\..\..\gdk\win32"
     PreprocessorDefinitions="_DEBUG;G_ENABLE_DEBUG;$(GtkDefines)"
     MinimalRebuild="true"
     BasicRuntimeChecks="3"
@@ -117,7 +117,7 @@
   </Configuration>
   <Configuration
    Name="Release|x64"
-   InheritedPropertySheets=".\gtk-gen-sources.vsprops"
+   InheritedPropertySheets=".\gtk-gen-srcs.vsprops"
    ConfigurationType="2"
    CharacterSet="2"
    WholeProgramOptimization="1"
@@ -127,7 +127,7 @@
    />
    <Tool
     Name="VCCLCompilerTool"
-    AdditionalIncludeDirectories="..\..\..\gdk;..\..\..\gdk\win32;..\..\..\gtk"
+    AdditionalIncludeDirectories="..\..\..\gtk;..\..\..\gdk;..\..\..\gdk\win32"
     PreprocessorDefinitions="$(GtkDefines)"
     RuntimeLibrary="2"
     UsePrecompiledHeader="0"
@@ -192,16 +192,103 @@
      />
     </FileConfiguration>
    </File>
+   <File RelativePath="..\..\..\gtk\gtk-win32.rc.in">
+    <FileConfiguration Name="Debug|Win32">
+    <Tool Name="VCCustomBuildTool"
+      Description="Generating GTK+ Win32 Version Resource..."
+      CommandLine="$(GenerateGtkWin32RC)"
+      Outputs="..\..\..\gtk\gtk-win32.rc;..\..\..\gtk\libgtk3.manifest"
+     />
+    </FileConfiguration>
+    <FileConfiguration Name="Release|Win32">
+     <Tool Name="VCCustomBuildTool"
+      Description="Generating GTK+ Win32 Version Resource..."
+      CommandLine="$(GenerateGtkWin32RC)"
+      Outputs="..\..\..\gtk\gtk-win32.rc;..\..\..\gtk\libgtk3.manifest"
+     />
+    </FileConfiguration>
+    <FileConfiguration Name="Debug|x64">
+     <Tool Name="VCCustomBuildTool"
+      Description="Generating GTK+ Win32 Version Resource..."
+      CommandLine="$(GenerateGtkWin32RC)"
+      Outputs="..\..\..\gtk\gtk-win32.rc;..\..\..\gtk\libgtk3.manifest"
+     />
+    </FileConfiguration>
+    <FileConfiguration Name="Release|x64">
+     <Tool Name="VCCustomBuildTool"
+      Description="Generating GTK+ Win32 Version Resource..."
+      CommandLine="$(GenerateGtkWin32RC)"
+      Outputs="..\..\..\gtk\gtk-win32.rc;..\..\..\gtk\libgtk3.manifest"
+     />
+    </FileConfiguration>
+   </File>
    <File RelativePath="..\..\..\gtk\gtk-win32.rc" />
+   <File RelativePath="..\..\..\gtk\libgtk3.manifest" />
   </Filter>
   <Filter
    Name="Source Files"
    Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
    UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
    >
+   <File RelativePath="..\..\..\gtk\a11y\gtkaccessibility.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkaccessibilitymisc.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkaccessibilityutil.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkarrowaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkbooleancellaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkbuttonaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkcellaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkcellaccessibleparent.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkcheckmenuitemaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkcolorswatchaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkcomboboxaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkcontaineraccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkcontainercellaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkentryaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkexpanderaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkflowboxaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkflowboxchildaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkframeaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkiconviewaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkimageaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkimagecellaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtklabelaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtklevelbaraccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtklinkbuttonaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtklistboxaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtklistboxrowaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtklockbuttonaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkmenuaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkmenubuttonaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkmenushellaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkmenuitemaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtknotebookaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtknotebookpageaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkpanedaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkpopoveraccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkprogressbaraccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkradiobuttonaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkradiomenuitemaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkrangeaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkrenderercellaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkscaleaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkscalebuttonaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkscrolledwindowaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkspinbuttonaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkspinneraccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkstatusbaraccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkswitchaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtktextcellaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtktextviewaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtktogglebuttonaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtktoplevelaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtktreeviewaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkwidgetaccessible.c" />
+   <File RelativePath="..\..\..\gtk\a11y\gtkwindowaccessible.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkactivatable.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkaction.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkactiongroup.c" />
+   <File RelativePath="..\..\..\gtk\deprecated\gtkalignment.c" />
+   <File RelativePath="..\..\..\gtk\deprecated\gtkarrow.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkcolorsel.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkcolorseldialog.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkfontsel.c" />
@@ -216,14 +303,18 @@
    <File RelativePath="..\..\..\gtk\deprecated\gtkhsv.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkiconfactory.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkimagemenuitem.c" />
+   <File RelativePath="..\..\..\gtk\deprecated\gtkmisc.c" />
+   <File RelativePath="..\..\..\gtk\deprecated\gtknumerableicon.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkradioaction.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkrc.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkrecentaction.c" />
+   <File RelativePath="..\..\..\gtk\deprecated\gtkstatusicon.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkstock.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkstyle.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtksymboliccolor.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtktable.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtktearoffmenuitem.c" />
+   <File RelativePath="..\..\..\gtk\deprecated\gtkthemingengine.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtktoggleaction.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkuimanager.c" />
    <File RelativePath="..\..\..\gtk\deprecated\gtkvbbox.c" />
@@ -247,19 +338,17 @@
    <File RelativePath="..\..\..\gtk\gtkaccellabel.c" />
    <File RelativePath="..\..\..\gtk\gtkaccelmap.c" />
    <File RelativePath="..\..\..\gtk\gtkaccessible.c" />
+   <File RelativePath="..\..\..\gtk\gtkactionbar.c" />
    <File RelativePath="..\..\..\gtk\gtkactionhelper.c" />
    <File RelativePath="..\..\..\gtk\gtkadjustment.c" />
-   <File RelativePath="..\..\..\gtk\gtkalignment.c" />
    <File RelativePath="..\..\..\gtk\gtkallocatedbitmask.c" />
    <File RelativePath="..\..\..\gtk\gtkappchooser.c" />
    <File RelativePath="..\..\..\gtk\gtkappchooserwidget.c" />
    <File RelativePath="..\..\..\gtk\gtkappchooserbutton.c" />
    <File RelativePath="..\..\..\gtk\gtkappchooserdialog.c" />
-   <File RelativePath="..\..\..\gtk\gtkappchoosermodule.c" />
-   <File RelativePath="..\..\..\gtk\gtkappchooseronline.c" />
    <File RelativePath="..\..\..\gtk\gtkapplication.c" />
+   <File RelativePath="..\..\..\gtk\gtkapplicationimpl.c" />
    <File RelativePath="..\..\..\gtk\gtkapplicationwindow.c" />
-   <File RelativePath="..\..\..\gtk\gtkarrow.c" />
    <File RelativePath="..\..\..\gtk\gtkaspectframe.c" />
    <File RelativePath="..\..\..\gtk\gtkassistant.c" />
    <File RelativePath="..\..\..\gtk\gtkbbox.c" />
@@ -269,7 +358,6 @@
    <File RelativePath="..\..\..\gtk\gtkborder.c" />
    <File RelativePath="..\..\..\gtk\gtkborderimage.c" />
    <File RelativePath="..\..\..\gtk\gtkbox.c" />
-   <File RelativePath="..\..\..\gtk\gtkbubblewindow.c" />
    <File RelativePath="..\..\..\gtk\gtkbuildable.c" />
    <File RelativePath="..\..\..\gtk\gtkbuilder.c" />
    <File RelativePath="..\..\..\gtk\gtkbuilderparser.c" />
@@ -321,6 +409,7 @@
    <File RelativePath="..\..\..\gtk\gtkcssimage.c" />
    <File RelativePath="..\..\..\gtk\gtkcssimagecrossfade.c" />
    <File RelativePath="..\..\..\gtk\gtkcssimagegradient.c" />
+   <File RelativePath="..\..\..\gtk\gtkcssimageicontheme.c" />
    <File RelativePath="..\..\..\gtk\gtkcssimagelinear.c" />
    <File RelativePath="..\..\..\gtk\gtkcssimagesurface.c" />
    <File RelativePath="..\..\..\gtk\gtkcssimageurl.c" />
@@ -348,8 +437,10 @@
    <File RelativePath="..\..\..\gtk\gtkcssstylefuncs.c" />
    <File RelativePath="..\..\..\gtk\gtkcssstyleproperty.c" />
    <File RelativePath="..\..\..\gtk\gtkcssstylepropertyimpl.c" />
+   <File RelativePath="..\..\..\gtk\gtkcsstransformvalue.c" />
    <File RelativePath="..\..\..\gtk\gtkcsstransition.c" />
    <File RelativePath="..\..\..\gtk\gtkcsstypedvalue.c" />
+   <File RelativePath="..\..\..\gtk\gtkcssunsetvalue.c" />
    <File RelativePath="..\..\..\gtk\gtkcssvalue.c" />
    <File RelativePath="..\..\..\gtk\gtkcsstypes.c" />
    <File RelativePath="..\..\..\gtk\gtkdialog.c" />
@@ -359,10 +450,10 @@
    <File RelativePath="..\..\..\gtk\gtkentrybuffer.c" />
    <File RelativePath="..\..\..\gtk\gtkentrycompletion.c" />
    <File RelativePath="..\..\..\gtk\gtkeventbox.c" />
+   <File RelativePath="..\..\..\gtk\gtkeventcontroller.c" />
    <File RelativePath="..\..\..\gtk\gtkexpander.c" />
    <File RelativePath="..\..\..\gtk\gtkfilechooser.c" />
    <File RelativePath="..\..\..\gtk\gtkfilechooserbutton.c" />
-   <File RelativePath="..\..\..\gtk\gtkfilechooserdefault.c" />
    <File RelativePath="..\..\..\gtk\gtkfilechooserdialog.c" />
    <File RelativePath="..\..\..\gtk\gtkfilechooserembed.c" />
    <File RelativePath="..\..\..\gtk\gtkfilechooserentry.c" />
@@ -372,6 +463,7 @@
    <File RelativePath="..\..\..\gtk\gtkfilesystem.c" />
    <File RelativePath="..\..\..\gtk\gtkfilesystemmodel.c" />
    <File RelativePath="..\..\..\gtk\gtkfixed.c" />
+   <File RelativePath="..\..\..\gtk\gtkflowbox.c" />
    <File RelativePath="..\..\..\gtk\gtkfontbutton.c" />
    <File RelativePath="..\..\..\gtk\gtkfontchooser.c" />
    <File RelativePath="..\..\..\gtk\gtkfontchooserdialog.c" />
@@ -379,6 +471,15 @@
    <File RelativePath="..\..\..\gtk\gtkfontchooserwidget.c" />
    <File RelativePath="..\..\..\gtk\gtkframe.c" />
    <File RelativePath="..\..\..\gtk\gtkgladecatalog.c" />
+   <File RelativePath="..\..\..\gtk\gtkgesture.c" />
+   <File RelativePath="..\..\..\gtk\gtkgesturedrag.c" />
+   <File RelativePath="..\..\..\gtk\gtkgesturelongpress.c" />
+   <File RelativePath="..\..\..\gtk\gtkgesturemultipress.c" />
+   <File RelativePath="..\..\..\gtk\gtkgesturepan.c" />
+   <File RelativePath="..\..\..\gtk\gtkgesturerotate.c" />
+   <File RelativePath="..\..\..\gtk\gtkgesturesingle.c" />
+   <File RelativePath="..\..\..\gtk\gtkgestureswipe.c" />
+   <File RelativePath="..\..\..\gtk\gtkgesturezoom.c" />
    <File RelativePath="..\..\..\gtk\gtkgrid.c" />
    <File RelativePath="..\..\..\gtk\gtkheaderbar.c" />
    <File RelativePath="..\..\..\gtk\gtkhsla.c" />
@@ -395,6 +496,7 @@
    <File RelativePath="..\..\..\gtk\gtkinfobar.c" />
    <File RelativePath="..\..\..\gtk\gtkinvisible.c" />
    <File RelativePath="..\..\..\gtk\gtkkeyhash.c" />
+   <File RelativePath="..\..\..\gtk\gtkkineticscrolling.c" />
    <File RelativePath="..\..\..\gtk\gtklabel.c" />
    <File RelativePath="..\..\..\gtk\gtklayout.c" />
    <File RelativePath="..\..\..\gtk\gtklevelbar.c" />
@@ -403,24 +505,25 @@
    <File RelativePath="..\..\..\gtk\gtkliststore.c" />
    <File RelativePath="..\..\..\gtk\gtklockbutton.c" />
    <File RelativePath="..\..\..\gtk\gtkmain.c" />
+   <File RelativePath="..\..\..\gtk\gtkmagnifier.c" />
    <File RelativePath="..\..\..\gtk\gtkmarshalers.c" />
    <File RelativePath="..\..\..\gtk\gtkmenu.c" />
    <File RelativePath="..\..\..\gtk\gtkmenubar.c" />
    <File RelativePath="..\..\..\gtk\gtkmenubutton.c" />
    <File RelativePath="..\..\..\gtk\gtkmenuitem.c" />
+   <File RelativePath="..\..\..\gtk\gtkmenusectionbox.c" />
    <File RelativePath="..\..\..\gtk\gtkmenushell.c" />
    <File RelativePath="..\..\..\gtk\gtkmenutracker.c" />
    <File RelativePath="..\..\..\gtk\gtkmenutrackeritem.c" />
    <File RelativePath="..\..\..\gtk\gtkmenutoolbutton.c" />
    <File RelativePath="..\..\..\gtk\gtkmessagedialog.c" />
-   <File RelativePath="..\..\..\gtk\gtkmisc.c" />
    <File RelativePath="..\..\..\gtk\gtkmnemonichash.c" />
    <File RelativePath="..\..\..\gtk\gtkmodelmenuitem.c" />
+   <File RelativePath="..\..\..\gtk\gtkmodelbutton.c" />
    <File RelativePath="..\..\..\gtk\gtkmodifierstyle.c" />
    <File RelativePath="..\..\..\gtk\gtkmodules.c" />
    <File RelativePath="..\..\..\gtk\gtkmountoperation.c" />
    <File RelativePath="..\..\..\gtk\gtknotebook.c" />
-   <File RelativePath="..\..\..\gtk\gtknumerableicon.c" />
    <File RelativePath="..\..\..\gtk\gtkoffscreenwindow.c" />
    <File RelativePath="..\..\..\gtk\gtkorientable.c" />
    <File RelativePath="..\..\..\gtk\gtkoverlay.c" />
@@ -430,7 +533,6 @@
    <File RelativePath="..\..\..\gtk\gtkpapersize.c" />
    <File RelativePath="..\..\..\gtk\gtkpathbar.c" />
    <File RelativePath="..\..\..\gtk\gtkplacessidebar.c" />
-   <File RelativePath="..\..\..\gtk\gtkpressandhold.c" />
    <File RelativePath="..\..\..\gtk\gtkprintcontext.c" />
    <File RelativePath="..\..\..\gtk\gtkprintoperation.c" />
    <File RelativePath="..\..\..\gtk\gtkprintoperationpreview.c" />
@@ -440,6 +542,7 @@
    <File RelativePath="..\..\..\gtk\gtkprivatetypebuiltins.c" />
    <File RelativePath="..\..\..\gtk\gtkprogressbar.c" />
    <File RelativePath="..\..\..\gtk\gtkpixelcache.c" />
+   <File RelativePath="..\..\..\gtk\gtkpopover.c" />
    <File RelativePath="..\..\..\gtk\gtkradiobutton.c" />
    <File RelativePath="..\..\..\gtk\gtkradiomenuitem.c" />
    <File RelativePath="..\..\..\gtk\gtkradiotoolbutton.c" />
@@ -475,7 +578,6 @@
    <File RelativePath="..\..\..\gtk\gtkstack.c" />
    <File RelativePath="..\..\..\gtk\gtkstackswitcher.c" />
    <File RelativePath="..\..\..\gtk\gtkstatusbar.c" />
-   <File RelativePath="..\..\..\gtk\gtkstatusicon.c" />
    <File RelativePath="..\..\..\gtk\gtkstyleanimation.c" />
    <File RelativePath="..\..\..\gtk\gtkstylecascade.c" />
    <File RelativePath="..\..\..\gtk\gtkstylecontext.c" />
@@ -503,7 +605,6 @@
    <File RelativePath="..\..\..\gtk\gtktextutil.c" />
    <File RelativePath="..\..\..\gtk\gtktextview.c" />
    <File RelativePath="..\..\..\gtk\gtkthemingbackground.c" />
-   <File RelativePath="..\..\..\gtk\gtkthemingengine.c" />
    <File RelativePath="..\..\..\gtk\gtktogglebutton.c" />
    <File RelativePath="..\..\..\gtk\gtktoggletoolbutton.c" />
    <File RelativePath="..\..\..\gtk\gtktoolbar.c" />
@@ -531,11 +632,10 @@
    <File RelativePath="..\..\..\gtk\gtkwidget.c" />
    <File RelativePath="..\..\..\gtk\gtkwidgetpath.c" />
    <File RelativePath="..\..\..\gtk\gtkwindow.c" />
+   <File RelativePath="..\..\..\gtk\gtkwindowgroup.c" />
    <File RelativePath="..\..\..\gtk\gtkwin32theme.c" />
    <File RelativePath="..\..\..\gtk\gtkclipboard.c" />
-   <File RelativePath="..\..\..\gtk\gtkclipboard-wayland.c" />
    <File RelativePath="..\..\..\gtk\gtkdnd.c" />
-   <File RelativePath="..\..\..\gtk\gtkappchooseronlinepk.c" />
    <File RelativePath="..\..\..\gtk\gtkprint-win32.c" />
    <File RelativePath="..\..\..\gtk\gtkprintoperation-win32.c" />
    <File RelativePath="..\..\..\gtk\gtkwin32.c" />

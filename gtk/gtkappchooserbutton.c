@@ -332,7 +332,8 @@ gtk_app_chooser_button_populate (GtkAppChooserButton *self)
 
   if (self->priv->show_default_item)
     {
-      default_app = g_app_info_get_default_for_type (self->priv->content_type, FALSE);
+      if (self->priv->content_type)
+        default_app = g_app_info_get_default_for_type (self->priv->content_type, FALSE);
 
       if (default_app != NULL)
         {
@@ -615,7 +616,7 @@ gtk_app_chooser_button_class_init (GtkAppChooserButtonClass *klass)
                           P_("Include an 'Other…' item"),
                           P_("Whether the combobox should include an item that triggers a GtkAppChooserDialog"),
                           FALSE,
-                          G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS);
+                          G_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_STATIC_STRINGS|G_PARAM_EXPLICIT_NOTIFY);
   g_object_class_install_property (oclass, PROP_SHOW_DIALOG_ITEM, pspec);
 
   /**
@@ -632,7 +633,7 @@ gtk_app_chooser_button_class_init (GtkAppChooserButtonClass *klass)
                           P_("Show default item"),
                           P_("Whether the combobox should show the default application on top"),
                           FALSE,
-                          G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS);
+                          G_PARAM_READWRITE|G_PARAM_CONSTRUCT|G_PARAM_STATIC_STRINGS|G_PARAM_EXPLICIT_NOTIFY);
   g_object_class_install_property (oclass, PROP_SHOW_DEFAULT_ITEM, pspec);
 
 
@@ -646,7 +647,7 @@ gtk_app_chooser_button_class_init (GtkAppChooserButtonClass *klass)
                                P_("Heading"),
                                P_("The text to show at the top of the dialog"),
                                NULL,
-                               G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                               G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS|G_PARAM_EXPLICIT_NOTIFY);
   g_object_class_install_property (oclass, PROP_HEADING, pspec);
 
 

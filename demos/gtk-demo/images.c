@@ -50,18 +50,21 @@ progressive_updated_callback (GdkPixbufLoader *loader,
                               gpointer     data)
 {
   GtkWidget *image;
+  GdkPixbuf *pixbuf;
 
   image = GTK_WIDGET (data);
 
   /* We know the pixbuf inside the GtkImage has changed, but the image
-   * itself doesn't know this; so queue a redraw.  If we wanted to be
-   * really efficient, we could use a drawing area or something
-   * instead of a GtkImage, so we could control the exact position of
-   * the pixbuf on the display, then we could queue a draw for only
-   * the updated area of the image.
+   * itself doesn't know this; so give it a hint by setting the pixbuf
+   * again. Queuing a redraw used to be sufficient, but nowadays GtkImage
+   * uses GtkIconHelper which caches the pixbuf state and will just redraw
+   * from the cache.
    */
 
-  gtk_widget_queue_draw (image);
+  pixbuf = gtk_image_get_pixbuf (GTK_IMAGE (image));
+  g_object_ref (pixbuf);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image), pixbuf);
+  g_object_unref (pixbuf);
 }
 
 static gint
@@ -270,6 +273,7 @@ start_progressive_loading (GtkWidget *image)
   load_timeout = gdk_threads_add_timeout (150,
                                 progressive_timeout,
                                 image);
+  g_source_set_name_by_id (load_timeout, "[gtk+] progressive_timeout");
 }
 
 static void
@@ -329,7 +333,6 @@ do_images (GtkWidget *do_widget)
   GtkWidget *image;
   GtkWidget *label;
   GtkWidget *button;
-  GdkPixbuf *pixbuf;
   GIcon     *gicon;
 
   if (!window)
@@ -361,11 +364,7 @@ do_images (GtkWidget *do_widget)
       gtk_widget_set_valign (frame, GTK_ALIGN_CENTER);
       gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
 
-      pixbuf = gdk_pixbuf_new_from_resource ("/images/gtk-logo-old.png", NULL);
-      /* The image loading must work, we ensure that the resources are valid. */
-      g_assert (pixbuf);
-
-      image = gtk_image_new_from_pixbuf (pixbuf);
+      image = gtk_image_new_from_icon_name ("gtk3-demo", GTK_ICON_SIZE_DIALOG);
 
       gtk_container_add (GTK_CONTAINER (frame), image);
 

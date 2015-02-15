@@ -18,10 +18,12 @@
 #include "config.h"
 
 #include "gtkdialog.h"
+#include "gtkdialogprivate.h"
 #include "gtkbutton.h"
 #include "gtkbox.h"
 #include "gtkprivate.h"
 #include "gtkintl.h"
+#include "gtksettings.h"
 
 #include "gtkcolorchooserprivate.h"
 #include "gtkcolorchooserdialog.h"
@@ -42,9 +44,6 @@
 struct _GtkColorChooserDialogPrivate
 {
   GtkWidget *chooser;
-
-  GtkWidget *select_button;
-  GtkWidget *cancel_button;
 };
 
 enum
@@ -92,10 +91,12 @@ color_activated_cb (GtkColorChooser *chooser,
 }
 
 static void
-selected_cb (GtkButton *button,
-             GtkDialog *dialog)
+gtk_color_chooser_dialog_response (GtkDialog *dialog,
+                                   gint       response_id,
+                                   gpointer   user_data)
 {
-  save_color (GTK_COLOR_CHOOSER_DIALOG (dialog));
+  if (response_id == GTK_RESPONSE_OK)
+    save_color (GTK_COLOR_CHOOSER_DIALOG (dialog));
 }
 
 static void
@@ -104,6 +105,17 @@ gtk_color_chooser_dialog_init (GtkColorChooserDialog *cc)
   cc->priv = gtk_color_chooser_dialog_get_instance_private (cc);
 
   gtk_widget_init_template (GTK_WIDGET (cc));
+  gtk_dialog_set_use_header_bar_from_setting (GTK_DIALOG (cc));
+
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+  gtk_dialog_set_alternative_button_order (GTK_DIALOG (cc),
+                                           GTK_RESPONSE_OK,
+                                           GTK_RESPONSE_CANCEL,
+                                           -1);
+G_GNUC_END_IGNORE_DEPRECATIONS
+
+  g_signal_connect (cc, "response",
+                    G_CALLBACK (gtk_color_chooser_dialog_response), NULL);
 }
 
 static void
@@ -113,7 +125,8 @@ gtk_color_chooser_dialog_map (GtkWidget *widget)
    * even if it was showing the editor the last time it was used.
    */
   g_object_set (GTK_COLOR_CHOOSER_DIALOG (widget)->priv->chooser,
-                "show-editor", FALSE, NULL);
+                "show-editor", FALSE,
+                NULL);
 
   GTK_WIDGET_CLASS (gtk_color_chooser_dialog_parent_class)->map (widget);
 }
@@ -168,7 +181,11 @@ gtk_color_chooser_dialog_set_property (GObject      *object,
       gtk_color_chooser_set_rgba (cc, g_value_get_boxed (value));
       break;
     case PROP_USE_ALPHA:
-      gtk_color_chooser_set_use_alpha (GTK_COLOR_CHOOSER (cd->priv->chooser), g_value_get_boolean (value));
+      if (gtk_color_chooser_get_use_alpha (GTK_COLOR_CHOOSER (cd->priv->chooser)) != g_value_get_boolean (value))
+        {
+          gtk_color_chooser_set_use_alpha (GTK_COLOR_CHOOSER (cd->priv->chooser), g_value_get_boolean (value));
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_SHOW_EDITOR:
       g_object_set (cd->priv->chooser,
@@ -201,11 +218,8 @@ gtk_color_chooser_dialog_class_init (GtkColorChooserDialogClass *class)
   /* Bind class to template
    */
   gtk_widget_class_set_template_from_resource (widget_class,
-					       "/org/gtk/libgtk/gtkcolorchooserdialog.ui");
+					       "/org/gtk/libgtk/ui/gtkcolorchooserdialog.ui");
   gtk_widget_class_bind_template_child_private (widget_class, GtkColorChooserDialog, chooser);
-  gtk_widget_class_bind_template_child_private (widget_class, GtkColorChooserDialog, cancel_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GtkColorChooserDialog, select_button);
-  gtk_widget_class_bind_template_callback (widget_class, selected_cb);
   gtk_widget_class_bind_template_callback (widget_class, propagate_notify);
   gtk_widget_class_bind_template_callback (widget_class, color_activated_cb);
 }
@@ -256,7 +270,7 @@ gtk_color_chooser_dialog_iface_init (GtkColorChooserInterface *iface)
  *
  * Creates a new #GtkColorChooserDialog.
  *
- * Return value: a new #GtkColorChooserDialog
+ * Returns: a new #GtkColorChooserDialog
  *
  * Since: 3.4
  */

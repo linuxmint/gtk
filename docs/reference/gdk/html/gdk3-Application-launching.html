@@ -8,7 +8,7 @@
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="gdk3-Wayland-Interaction.html" title="Wayland Interaction">
 <link rel="next" href="gdk3-Testing.html" title="Testing">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -131,8 +131,8 @@
 </div>
 <div class="refsect1">
 <a name="gdk3-Application-launching.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gio/unstable/GAppInfo.html#GAppLaunchContext">GAppLaunchContext</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gio/unstable/GAppInfo.html#GAppLaunchContext">GAppLaunchContext</a>
         <span class="lineart">╰──</span> GdkAppLaunchContext
 </pre>
 </div>
@@ -143,13 +143,13 @@
 </div>
 <div class="refsect1">
 <a name="gdk3-Application-launching.description"></a><h2>Description</h2>
-<p>GdkAppLaunchContext is an implementation of <a href="http://library.gnome.org/devel/gio/unstable/GAppInfo.html#GAppLaunchContext"><span class="type">GAppLaunchContext</span></a> that
+<p>GdkAppLaunchContext is an implementation of <a href="https://developer.gnome.org/gio/unstable/GAppInfo.html#GAppLaunchContext"><span class="type">GAppLaunchContext</span></a> that
 handles launching an application in a graphical context. It provides
 startup notification and allows to launch applications on a specific
 screen or workspace.</p>
-<div class="example">
-<a name="id-1.2.28.9.3"></a><p class="title"><b>Example 5. Launching an application</b></p>
-<div class="example-contents"><div class="informalexample">
+<div class="refsect3">
+<a name="id-1.2.27.9.3"></a><h4>Launching an application</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -171,17 +171,17 @@ screen or workspace.</p>
 <span class="function"><a href="gdk3-Application-launching.html#gdk-app-launch-context-set-screen">gdk_app_launch_context_set_screen</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">screen</span><span class="symbol">);</span>
 <span class="function"><a href="gdk3-Application-launching.html#gdk-app-launch-context-set-timestamp">gdk_app_launch_context_set_timestamp</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">event</span><span class="symbol">-&gt;</span><span class="normal">time</span><span class="symbol">);</span>
 
-<span class="keyword">if</span><span class="normal"> </span><span class="symbol">(!</span><span class="function"><a href="http://library.gnome.org/devel/gio/unstable/GAppInfo.html#g-app-info-launch-default-for-uri">g_app_info_launch_default_for_uri</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"http://www.gtk.org"</span><span class="symbol">,</span><span class="normal"> context</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">error</span><span class="symbol">))</span>
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Message-Logging.html#g-warning">g_warning</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Launching failed: %s</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">,</span><span class="normal"> error</span><span class="symbol">-&gt;</span><span class="normal">message</span><span class="symbol">);</span>
+<span class="keyword">if</span><span class="normal"> </span><span class="symbol">(!</span><span class="function"><a href="https://developer.gnome.org/gio/unstable/GAppInfo.html#g-app-info-launch-default-for-uri">g_app_info_launch_default_for_uri</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"http://www.gtk.org"</span><span class="symbol">,</span><span class="normal"> context</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">error</span><span class="symbol">))</span>
+<span class="normal">  </span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Message-Logging.html#g-warning">g_warning</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Launching failed: %s</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">,</span><span class="normal"> error</span><span class="symbol">-&gt;</span><span class="normal">message</span><span class="symbol">);</span>
 
-<span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">context</span><span class="symbol">);</span></pre></td>
+<span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">context</span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
+
+<p></p>
 </div>
-</div>
-<br class="example-break">
 </div>
 <div class="refsect1">
 <a name="gdk3-Application-launching.functions_details"></a><h2>Functions</h2>
@@ -195,7 +195,7 @@ gdk_app_launch_context_new (<em class="parameter"><code><span class="type">void<
 </div>
 <p>Creates a new <a class="link" href="gdk3-Application-launching.html#GdkAppLaunchContext"><span class="type">GdkAppLaunchContext</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.28.10.2.7"></a><h4>Returns</h4>
+<a name="id-1.2.27.10.2.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="gdk3-Application-launching.html#GdkAppLaunchContext"><span class="type">GdkAppLaunchContext</span></a></p>
 <p></p>
 </div>
@@ -214,7 +214,7 @@ gdk_app_launch_context_set_display (<em class="parameter"><code><a class="link" 
 <p>Sets the display on which applications will be launched when
 using this context. See also <a class="link" href="gdk3-Application-launching.html#gdk-app-launch-context-set-screen" title="gdk_app_launch_context_set_screen ()"><code class="function">gdk_app_launch_context_set_screen()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.28.10.3.7"></a><h4>Parameters</h4>
+<a name="id-1.2.27.10.3.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -254,7 +254,7 @@ If neither <em class="parameter"><code>screen</code></em>
  are set, the default screen and
 display are used.</p>
 <div class="refsect3">
-<a name="id-1.2.28.10.4.6"></a><h4>Parameters</h4>
+<a name="id-1.2.27.10.4.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -282,18 +282,17 @@ display are used.</p>
 <a name="gdk-app-launch-context-set-desktop"></a><h3>gdk_app_launch_context_set_desktop ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gdk_app_launch_context_set_desktop (<em class="parameter"><code><a class="link" href="gdk3-Application-launching.html#GdkAppLaunchContext"><span class="type">GdkAppLaunchContext</span></a> *context</code></em>,
-                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> desktop</code></em>);</pre>
+                                    <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> desktop</code></em>);</pre>
 <p>Sets the workspace on which applications will be launched when
 using this context when running under a window manager that
-supports multiple workspaces, as described in the</p>
-<a class="ulink" href="http://www.freedesktop.org/Standards/wm-spec" target="_top">Extended
-Window Manager Hints</a>.
+supports multiple workspaces, as described in the
+<a class="ulink" href="http://www.freedesktop.org/Standards/wm-spec" target="_top">Extended Window Manager Hints</a>.</p>
 <p>When the workspace is not specified or <em class="parameter"><code>desktop</code></em>
  is set to -1,
 it is up to the window manager to pick one, typically it will
 be the current workspace.</p>
 <div class="refsect3">
-<a name="id-1.2.28.10.5.7"></a><h4>Parameters</h4>
+<a name="id-1.2.27.10.5.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -321,7 +320,7 @@ be the current workspace.</p>
 <a name="gdk-app-launch-context-set-timestamp"></a><h3>gdk_app_launch_context_set_timestamp ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gdk_app_launch_context_set_timestamp (<em class="parameter"><code><a class="link" href="gdk3-Application-launching.html#GdkAppLaunchContext"><span class="type">GdkAppLaunchContext</span></a> *context</code></em>,
-                                      <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> timestamp</code></em>);</pre>
+                                      <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> timestamp</code></em>);</pre>
 <p>Sets the timestamp of <em class="parameter"><code>context</code></em>
 . The timestamp should ideally
 be taken from the event that triggered the launch.</p>
@@ -330,7 +329,7 @@ focus to the newly launched application when the user is busy
 typing in another window. This is also known as 'focus stealing
 prevention'.</p>
 <div class="refsect3">
-<a name="id-1.2.28.10.6.6"></a><h4>Parameters</h4>
+<a name="id-1.2.27.10.6.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -358,14 +357,14 @@ prevention'.</p>
 <a name="gdk-app-launch-context-set-icon"></a><h3>gdk_app_launch_context_set_icon ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gdk_app_launch_context_set_icon (<em class="parameter"><code><a class="link" href="gdk3-Application-launching.html#GdkAppLaunchContext"><span class="type">GdkAppLaunchContext</span></a> *context</code></em>,
-                                 <em class="parameter"><code><a href="http://library.gnome.org/devel/gio/unstable/GIcon.html"><span class="type">GIcon</span></a> *icon</code></em>);</pre>
+                                 <em class="parameter"><code><a href="https://developer.gnome.org/gio/unstable/GIcon.html"><span class="type">GIcon</span></a> *icon</code></em>);</pre>
 <p>Sets the icon for applications that are launched with this
 context.</p>
 <p>Window Managers can use this information when displaying startup
 notification.</p>
 <p>See also <a class="link" href="gdk3-Application-launching.html#gdk-app-launch-context-set-icon-name" title="gdk_app_launch_context_set_icon_name ()"><code class="function">gdk_app_launch_context_set_icon_name()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.28.10.7.7"></a><h4>Parameters</h4>
+<a name="id-1.2.27.10.7.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -380,8 +379,8 @@ notification.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>icon</p></td>
-<td class="parameter_description"><p> a <a href="http://library.gnome.org/devel/gio/unstable/GIcon.html"><span class="type">GIcon</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> a <a href="https://developer.gnome.org/gio/unstable/GIcon.html"><span class="type">GIcon</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -405,10 +404,10 @@ in desktop files. See also <a class="link" href="gdk3-Application-launching.html
 If neither <em class="parameter"><code>icon</code></em>
  or <em class="parameter"><code>icon_name</code></em>
  is set, the icon is taken from either
-the file that is passed to launched application or from the <a href="http://library.gnome.org/devel/gio/unstable/GAppInfo.html"><span class="type">GAppInfo</span></a>
+the file that is passed to launched application or from the <a href="https://developer.gnome.org/gio/unstable/GAppInfo.html"><span class="type">GAppInfo</span></a>
 for the launched application itself.</p>
 <div class="refsect3">
-<a name="id-1.2.28.10.8.6"></a><h4>Parameters</h4>
+<a name="id-1.2.27.10.8.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -423,8 +422,8 @@ for the launched application itself.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>icon_name</p></td>
-<td class="parameter_description"><p> an icon name, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> an icon name, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -451,6 +450,6 @@ for the launched application itself.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

@@ -33,26 +33,32 @@
  * by default on the level bar: #GTK_LEVEL_BAR_OFFSET_LOW and
  * #GTK_LEVEL_BAR_OFFSET_HIGH, with values 0.25 and 0.75 respectively.
  *
- * <example>
- * <title>Adding a custom offset on the bar</title>
- * <programlisting>
+ * ## Adding a custom offset on the bar
+ *
+ * |[<!-- language="C" -->
  *
  * static GtkWidget *
  * create_level_bar (void)
  * {
- *   GtkWidget *level_bar;
+ *   GtkWidget *widget;
+ *   GtkLevelBar *bar;
  *
- *   level_bar = gtk_level_bar_new ();
+ *   widget = gtk_level_bar_new ();
+ *   bar = GTK_LEVEL_BAR (widget);
  *
- *   /<!---->* This changes the value of the default low offset *<!---->/
- *   gtk_level_bar_add_offset_value (GTK_LEVEL_BAR (level_bar),
- *                                   GTK_LEVEL_BAR_OFFSET_LOW, 0.10);
+ *   /<!---->* This changes the value of the default low offset
+ *   *<!---->/
+ *
+ *   gtk_level_bar_add_offset_value (bar,
+ *                                   GTK_LEVEL_BAR_OFFSET_LOW,
+ *                                   0.10);
  *
  *   /<!---->* This adds a new offset to the bar; the application will
- *    * be able to change its color by using the following selector,
- *    * either by adding it to its CSS file or using
- *    * gtk_css_provider_load_from_data() and gtk_style_context_add_provider()
- *    *
+ *    be able to change its color by using the following selector,
+ *    either by adding it to its CSS file or using
+ *    gtk_css_provider_load_from_data() and
+ *    gtk_style_context_add_provider()
+ *
  *    * .level-bar.fill-block.level-my-offset {
  *    *   background-color: green;
  *    *   border-style: solid;
@@ -60,15 +66,14 @@
  *    *   border-style: 1px;
  *    * }
  *    *<!---->/
- *   gtk_level_bar_add_offset_value (GTK_LEVEL_BAR (level_bar),
- *                                   "my-offset", 0.60);
  *
- *   return level_bar;
+ *   gtk_level_bar_add_offset_value (bar, "my-offset", 0.60);
+ *
+ *   return widget;
  * }
- * </programlisting>
- * </example>
+ * ]|
  *
- * The default interval of values is between zero and one, but it's possible to
+ * The default interval of values is between zero and one, but it’s possible to
  * modify the interval using gtk_level_bar_set_min_value() and
  * gtk_level_bar_set_max_value(). The value will be always drawn in proportion to
  * the admissible interval, i.e. a value of 15 with a specified interval between
@@ -77,7 +82,7 @@
  * as a finite and number of separated blocks instead of a single one. The number
  * of blocks that will be rendered is equal to the number of units specified by
  * the admissible interval.
- * For instance, to build a bar rendered with five blocks, it's sufficient to
+ * For instance, to build a bar rendered with five blocks, it’s sufficient to
  * set the minimum value to 0 and the maximum value to 5 after changing the indicator
  * mode to discrete.
  *
@@ -93,6 +98,7 @@
 #include "gtkstylecontext.h"
 #include "gtktypebuiltins.h"
 #include "gtkwidget.h"
+#include "gtkwidgetprivate.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -540,10 +546,8 @@ gtk_level_bar_get_preferred_width (GtkWidget *widget,
   else
     width += block_width;
 
-  if (minimum)
-    *minimum = width;
-  if (natural)
-    *natural = width;
+  *minimum = width;
+  *natural = width;
 }
 
 static void
@@ -567,10 +571,17 @@ gtk_level_bar_get_preferred_height (GtkWidget *widget,
   else
     height += block_height;
 
-  if (minimum)
-    *minimum = height;
-  if (natural)
-    *natural = height;
+  *minimum = height;
+  *natural = height;
+}
+
+static void
+gtk_level_bar_size_allocate (GtkWidget     *widget,
+                             GtkAllocation *allocation)
+{
+  GTK_WIDGET_CLASS (gtk_level_bar_parent_class)->size_allocate (widget, allocation);
+
+  _gtk_widget_set_simple_clip (widget, NULL);
 }
 
 static void
@@ -787,15 +798,15 @@ gtk_level_bar_buildable_init (GtkBuildableIface *iface)
 }
 
 static void
-gtk_level_bar_set_orientation (GtkLevelBar *self,
-                                  GtkOrientation  orientation)
+gtk_level_bar_set_orientation (GtkLevelBar    *self,
+                               GtkOrientation  orientation)
 {
   if (self->priv->orientation != orientation)
     {
       self->priv->orientation = orientation;
       _gtk_orientable_set_style_classes (GTK_ORIENTABLE (self));
-
       gtk_widget_queue_resize (GTK_WIDGET (self));
+      g_object_notify (G_OBJECT (self), "orientation");
     }
 }
 
@@ -888,6 +899,7 @@ gtk_level_bar_class_init (GtkLevelBarClass *klass)
   oclass->finalize = gtk_level_bar_finalize;
 
   wclass->draw = gtk_level_bar_draw;
+  wclass->size_allocate = gtk_level_bar_size_allocate;
   wclass->get_preferred_width = gtk_level_bar_get_preferred_width;
   wclass->get_preferred_height = gtk_level_bar_get_preferred_height;
 
@@ -930,7 +942,8 @@ gtk_level_bar_class_init (GtkLevelBarClass *klass)
                          P_("Currently filled value level"),
                          P_("Currently filled value level of the level bar"),
                          0.0, G_MAXDOUBLE, 0.0,
-                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                         G_PARAM_READWRITE|G_PARAM_STATIC_STRINGS|G_PARAM_EXPLICIT_NOTIFY);
+
   /**
    * GtkLevelBar:min-value:
    *
@@ -944,7 +957,8 @@ gtk_level_bar_class_init (GtkLevelBarClass *klass)
                          P_("Minimum value level for the bar"),
                          P_("Minimum value level that can be displayed by the bar"),
                          0.0, G_MAXDOUBLE, 0.0,
-                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                         G_PARAM_READWRITE|G_PARAM_STATIC_STRINGS|G_PARAM_EXPLICIT_NOTIFY);
+
   /**
    * GtkLevelBar:max-value:
    *
@@ -958,11 +972,12 @@ gtk_level_bar_class_init (GtkLevelBarClass *klass)
                          P_("Maximum value level for the bar"),
                          P_("Maximum value level that can be displayed by the bar"),
                          0.0, G_MAXDOUBLE, 1.0,
-                         G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                         G_PARAM_READWRITE|G_PARAM_STATIC_STRINGS|G_PARAM_EXPLICIT_NOTIFY);
+
   /**
    * GtkLevelBar:mode:
    *
-   * The #GtkLevelBar:bar-mode property determines the way #GtkLevelBar
+   * The #GtkLevelBar:mode property determines the way #GtkLevelBar
    * interprets the value properties to draw the level fill area.
    * Specifically, when the value is #GTK_LEVEL_BAR_MODE_CONTINUOUS,
    * #GtkLevelBar will draw a single block representing the current value in
@@ -979,7 +994,7 @@ gtk_level_bar_class_init (GtkLevelBarClass *klass)
                        P_("The mode of the value indicator displayed by the bar"),
                        GTK_TYPE_LEVEL_BAR_MODE,
                        GTK_LEVEL_BAR_MODE_CONTINUOUS,
-                       G_PARAM_READWRITE);
+                       G_PARAM_READWRITE|G_PARAM_STATIC_STRINGS|G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkLevelBar:inverted:
@@ -994,7 +1009,7 @@ gtk_level_bar_class_init (GtkLevelBarClass *klass)
                           P_("Inverted"),
                           P_("Invert the direction in which the level bar grows"),
                           FALSE,
-                          G_PARAM_READWRITE);
+                          G_PARAM_READWRITE|G_PARAM_STATIC_STRINGS|G_PARAM_EXPLICIT_NOTIFY);
 
   /**
    * GtkLevelBar:min-block-height:
@@ -1290,7 +1305,7 @@ gtk_level_bar_set_mode (GtkLevelBar     *self,
  *
  * Return the value of the #GtkLevelBar:inverted property.
  *
- * Return value: %TRUE if the level bar is inverted
+ * Returns: %TRUE if the level bar is inverted
  *
  * Since: 3.8
  */
@@ -1315,19 +1330,13 @@ void
 gtk_level_bar_set_inverted (GtkLevelBar *self,
                             gboolean     inverted)
 {
-  GtkLevelBarPrivate *priv;
-
   g_return_if_fail (GTK_IS_LEVEL_BAR (self));
 
-  priv = self->priv;
-
-  if (priv->inverted != inverted)
+  if (self->priv->inverted != inverted)
     {
-      priv->inverted = inverted;
-
+      self->priv->inverted = inverted;
       gtk_widget_queue_resize (GTK_WIDGET (self));
-
-      g_object_notify (G_OBJECT (self), "inverted");
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_INVERTED]);
     }
 }
 
@@ -1368,7 +1377,7 @@ gtk_level_bar_remove_offset_value (GtkLevelBar *self,
  * Adds a new offset marker on @self at the position specified by @value.
  * When the bar value is in the interval topped by @value (or between @value
  * and #GtkLevelBar:max-value in case the offset is the last one on the bar)
- * a style class named <literal>level-</literal>@name will be applied
+ * a style class named `level-`@name will be applied
  * when rendering the level bar fill.
  * If another offset marker named @name exists, its value will be
  * replaced by @value.

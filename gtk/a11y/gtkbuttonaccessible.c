@@ -122,8 +122,10 @@ get_label_from_button (GtkWidget *button)
   GtkWidget *child;
 
   child = gtk_bin_get_child (GTK_BIN (button));
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   if (GTK_IS_ALIGNMENT (child))
     child = gtk_bin_get_child (GTK_BIN (child));
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   if (GTK_IS_CONTAINER (child))
     child = find_label_child (GTK_CONTAINER (child));
@@ -405,7 +407,8 @@ gtk_button_accessible_get_image_position (AtkImage     *image,
   if (button_image != NULL)
     {
       obj = gtk_widget_get_accessible (button_image);
-      atk_component_get_position (ATK_COMPONENT (obj), x, y, coord_type);
+      atk_component_get_extents (ATK_COMPONENT (obj), x, y, NULL, NULL,
+                                 coord_type);
     }
   else
     {

@@ -103,7 +103,6 @@ static gboolean gtk_link_button_button_press (GtkWidget        *widget,
 					      GdkEventButton   *event);
 static void     gtk_link_button_clicked      (GtkButton        *button);
 static gboolean gtk_link_button_popup_menu   (GtkWidget        *widget);
-static void     gtk_link_button_style_updated (GtkWidget        *widget);
 static void     gtk_link_button_unrealize    (GtkWidget        *widget);
 static gboolean gtk_link_button_enter_cb     (GtkWidget        *widget,
 					      GdkEventCrossing *event,
@@ -130,9 +129,6 @@ static const GtkTargetEntry link_drop_types[] = {
   { "_NETSCAPE_URL", 0, 0 }
 };
 
-static const GdkColor default_link_color = { 0, 0, 0, 0xeeee };
-static const GdkColor default_visited_link_color = { 0, 0x5555, 0x1a1a, 0x8b8b };
-
 static guint link_signals[LAST_SIGNAL] = { 0, };
 
 G_DEFINE_TYPE_WITH_PRIVATE (GtkLinkButton, gtk_link_button, GTK_TYPE_BUTTON)
@@ -151,7 +147,6 @@ gtk_link_button_class_init (GtkLinkButtonClass *klass)
   
   widget_class->button_press_event = gtk_link_button_button_press;
   widget_class->popup_menu = gtk_link_button_popup_menu;
-  widget_class->style_updated = gtk_link_button_style_updated;
   widget_class->unrealize = gtk_link_button_unrealize;
   
   container_class->add = gtk_link_button_add;
@@ -168,12 +163,13 @@ gtk_link_button_class_init (GtkLinkButtonClass *klass)
    * Since: 2.10
    */
   g_object_class_install_property (gobject_class,
-  				   PROP_URI,
-  				   g_param_spec_string ("uri",
-  				   			P_("URI"),
-  				   			P_("The URI bound to this button"),
-  				   			NULL,
-  				   			G_PARAM_READWRITE));
+                                   PROP_URI,
+                                   g_param_spec_string ("uri",
+                                                        P_("URI"),
+                                                        P_("The URI bound to this button"),
+                                                        NULL,
+                                                        GTK_PARAM_READWRITE));
+
   /**
    * GtkLinkButton:visited:
    *
@@ -183,12 +179,12 @@ gtk_link_button_class_init (GtkLinkButtonClass *klass)
    * Since: 2.14
    */
   g_object_class_install_property (gobject_class,
-  				   PROP_VISITED,
-  				   g_param_spec_boolean ("visited",
+                                   PROP_VISITED,
+                                   g_param_spec_boolean ("visited",
                                                          P_("Visited"),
                                                          P_("Whether this link has been visited."),
                                                          FALSE,
-                                                         G_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkLinkButton::activate-link:
@@ -222,7 +218,8 @@ gtk_link_button_init (GtkLinkButton *link_button)
   link_button->priv = gtk_link_button_get_instance_private (link_button);
 
   gtk_button_set_relief (GTK_BUTTON (link_button), GTK_RELIEF_NONE);
-  
+  gtk_widget_set_state_flags (GTK_WIDGET (link_button), GTK_STATE_FLAG_LINK, FALSE);
+
   g_signal_connect (link_button, "enter-notify-event",
   		    G_CALLBACK (gtk_link_button_enter_cb), NULL);
   g_signal_connect (link_button, "leave-notify-event",
@@ -233,7 +230,7 @@ gtk_link_button_init (GtkLinkButton *link_button)
   g_object_set (link_button, "has-tooltip", TRUE, NULL);
   g_signal_connect (link_button, "query-tooltip",
                     G_CALLBACK (gtk_link_button_query_tooltip_cb), NULL);
-  
+
   /* enable drag source */
   gtk_drag_source_set (GTK_WIDGET (link_button),
   		       GDK_BUTTON1_MASK,
@@ -296,46 +293,6 @@ gtk_link_button_set_property (GObject      *object,
 }
 
 static void
-set_link_color (GtkLinkButton *link_button)
-{
-  GdkColor *link_color = NULL;
-  GtkWidget *label;
-  GdkRGBA rgba;
-
-  label = gtk_bin_get_child (GTK_BIN (link_button));
-  if (!GTK_IS_LABEL (label))
-    return;
-
-  if (link_button->priv->visited)
-    {
-      gtk_widget_style_get (GTK_WIDGET (link_button),
-			    "visited-link-color", &link_color, NULL);
-      if (!link_color)
-	link_color = (GdkColor *) &default_visited_link_color;
-    }
-  else
-    {
-      gtk_widget_style_get (GTK_WIDGET (link_button),
-			    "link-color", &link_color, NULL);
-      if (!link_color)
-	link_color = (GdkColor *) &default_link_color;
-    }
-
-  rgba.red = link_color->red / 65535.;
-  rgba.green = link_color->green / 65535.;
-  rgba.blue = link_color->blue / 65535.;
-  rgba.alpha = 1;
-  gtk_widget_override_color (label, GTK_STATE_FLAG_NORMAL, &rgba);
-  gtk_widget_override_color (label, GTK_STATE_FLAG_ACTIVE, &rgba);
-  gtk_widget_override_color (label, GTK_STATE_FLAG_PRELIGHT, &rgba);
-  gtk_widget_override_color (label, GTK_STATE_FLAG_SELECTED, &rgba);
-
-  if (link_color != &default_link_color &&
-      link_color != &default_visited_link_color)
-    gdk_color_free (link_color);
-}
-
-static void
 set_link_underline (GtkLinkButton *link_button)
 {
   GtkWidget *label;
@@ -362,16 +319,7 @@ gtk_link_button_add (GtkContainer *container,
 {
   GTK_CONTAINER_CLASS (gtk_link_button_parent_class)->add (container, widget);
 
-  set_link_color (GTK_LINK_BUTTON (container));
   set_link_underline (GTK_LINK_BUTTON (container));
-}
-
-static void
-gtk_link_button_style_updated (GtkWidget *widget)
-{
-  GTK_WIDGET_CLASS (gtk_link_button_parent_class)->style_updated (widget);
-
-  set_link_color (GTK_LINK_BUTTON (widget));
 }
 
 static void
@@ -626,7 +574,7 @@ gtk_link_button_drag_data_get_cb (GtkWidget        *widget,
  *
  * Creates a new #GtkLinkButton with the URI as its text.
  *
- * Return value: a new link button widget.
+ * Returns: a new link button widget.
  *
  * Since: 2.10
  */
@@ -676,7 +624,7 @@ gtk_link_button_new (const gchar *uri)
  *
  * Creates a new #GtkLinkButton containing a label.
  *
- * Return value: (transfer none): a new link button widget.
+ * Returns: (transfer none): a new link button widget.
  *
  * Since: 2.10
  */
@@ -725,13 +673,14 @@ gtk_link_button_query_tooltip_cb (GtkWidget    *widget,
 }
 
 
+
 /**
  * gtk_link_button_set_uri:
  * @link_button: a #GtkLinkButton
  * @uri: a valid URI
  *
  * Sets @uri as the URI where the #GtkLinkButton points. As a side-effect
- * this unsets the 'visited' state of the button.
+ * this unsets the “visited” state of the button.
  *
  * Since: 2.10
  */
@@ -760,7 +709,7 @@ gtk_link_button_set_uri (GtkLinkButton *link_button,
  *
  * Retrieves the URI set using gtk_link_button_set_uri().
  *
- * Return value: a valid URI.  The returned string is owned by the link button
+ * Returns: a valid URI.  The returned string is owned by the link button
  *   and should not be modified or freed.
  *
  * Since: 2.10
@@ -776,9 +725,9 @@ gtk_link_button_get_uri (GtkLinkButton *link_button)
 /**
  * gtk_link_button_set_visited:
  * @link_button: a #GtkLinkButton
- * @visited: the new 'visited' state
+ * @visited: the new “visited” state
  *
- * Sets the 'visited' state of the URI where the #GtkLinkButton
+ * Sets the “visited” state of the URI where the #GtkLinkButton
  * points.  See gtk_link_button_get_visited() for more details.
  *
  * Since: 2.14
@@ -795,7 +744,16 @@ gtk_link_button_set_visited (GtkLinkButton *link_button,
     {
       link_button->priv->visited = visited;
 
-      set_link_color (link_button);
+      if (visited)
+        {
+          gtk_widget_unset_state_flags (GTK_WIDGET (link_button), GTK_STATE_FLAG_LINK);
+          gtk_widget_set_state_flags (GTK_WIDGET (link_button), GTK_STATE_FLAG_VISITED, FALSE);
+        }
+      else
+        {
+          gtk_widget_unset_state_flags (GTK_WIDGET (link_button), GTK_STATE_FLAG_VISITED);
+          gtk_widget_set_state_flags (GTK_WIDGET (link_button), GTK_STATE_FLAG_LINK, FALSE);
+        }
 
       g_object_notify (G_OBJECT (link_button), "visited");
     }
@@ -805,13 +763,13 @@ gtk_link_button_set_visited (GtkLinkButton *link_button,
  * gtk_link_button_get_visited:
  * @link_button: a #GtkLinkButton
  *
- * Retrieves the 'visited' state of the URI where the #GtkLinkButton
+ * Retrieves the “visited” state of the URI where the #GtkLinkButton
  * points. The button becomes visited when it is clicked. If the URI
- * is changed on the button, the 'visited' state is unset again.
+ * is changed on the button, the “visited” state is unset again.
  *
  * The state may also be changed using gtk_link_button_set_visited().
  *
- * Return value: %TRUE if the link has been visited, %FALSE otherwise
+ * Returns: %TRUE if the link has been visited, %FALSE otherwise
  *
  * Since: 2.14
  */

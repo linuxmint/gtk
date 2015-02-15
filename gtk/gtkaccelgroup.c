@@ -44,15 +44,15 @@
  *
  * A #GtkAccelGroup represents a group of keyboard accelerators,
  * typically attached to a toplevel #GtkWindow (with
- * gtk_window_add_accel_group()). Usually you won't need to create a
+ * gtk_window_add_accel_group()). Usually you won’t need to create a
  * #GtkAccelGroup directly; instead, when using #GtkUIManager, GTK+
  * automatically sets up the accelerators for your menus in the ui
- * manager's #GtkAccelGroup.
+ * manager’s #GtkAccelGroup.
  *
- * Note that <firstterm>accelerators</firstterm> are different from
- * <firstterm>mnemonics</firstterm>. Accelerators are shortcuts for
- * activating a menu item; they appear alongside the menu item they're a
- * shortcut for. For example "Ctrl+Q" might appear alongside the "Quit"
+ * Note that “accelerators” are different from
+ * “mnemonics”. Accelerators are shortcuts for
+ * activating a menu item; they appear alongside the menu item they’re a
+ * shortcut for. For example “Ctrl+Q” might appear alongside the “Quit”
  * menu item. Mnemonics are shortcuts for GUI elements such as text
  * entries or buttons; they appear as underlined characters. See
  * gtk_label_new_with_mnemonic(). Menu items can have both accelerators
@@ -80,14 +80,17 @@ static guint  default_accel_mod_mask     = (GDK_SHIFT_MASK   |
                                             GDK_HYPER_MASK   |
                                             GDK_META_MASK);
 
-
 enum {
   PROP_0,
   PROP_IS_LOCKED,
   PROP_MODIFIER_MASK,
+  N_PROPERTIES
 };
 
+static GParamSpec *obj_properties[N_PROPERTIES] = { NULL, };
+
 G_DEFINE_TYPE_WITH_PRIVATE (GtkAccelGroup, gtk_accel_group, G_TYPE_OBJECT)
+
 
 /* --- functions --- */
 static void
@@ -102,22 +105,24 @@ gtk_accel_group_class_init (GtkAccelGroupClass *class)
 
   class->accel_changed = NULL;
 
-  g_object_class_install_property (object_class,
-                                   PROP_IS_LOCKED,
-                                   g_param_spec_boolean ("is-locked",
-                                                         "Is locked",
-                                                         "Is the accel group locked",
-                                                         FALSE,
-                                                         G_PARAM_READABLE));
+  obj_properties [PROP_IS_LOCKED] =
+    g_param_spec_boolean ("is-locked",
+                          "Is locked",
+                          "Is the accel group locked",
+                          FALSE,
+                          G_PARAM_READABLE);
 
-  g_object_class_install_property (object_class,
-                                   PROP_MODIFIER_MASK,
-                                   g_param_spec_flags ("modifier-mask",
-                                                       "Modifier Mask",
-                                                       "Modifier Mask",
-                                                       GDK_TYPE_MODIFIER_TYPE,
-                                                       default_accel_mod_mask,
-                                                       G_PARAM_READABLE));
+  obj_properties [PROP_MODIFIER_MASK] =
+    g_param_spec_flags ("modifier-mask",
+                        "Modifier Mask",
+                        "Modifier Mask",
+                        GDK_TYPE_MODIFIER_TYPE,
+                        default_accel_mod_mask,
+                        G_PARAM_READABLE);
+
+   g_object_class_install_properties (object_class,
+                                      N_PROPERTIES,
+                                      obj_properties);
 
   /**
    * GtkAccelGroup::accel-activate:
@@ -429,7 +434,7 @@ gtk_accel_group_lock (GtkAccelGroup *accel_group)
 
   if (accel_group->priv->lock_count == 1) {
     /* State change from unlocked to locked */
-    g_object_notify (G_OBJECT (accel_group), "is-locked");
+    g_object_notify_by_pspec (G_OBJECT (accel_group), obj_properties[PROP_IS_LOCKED]);
   }
 }
 
@@ -449,7 +454,7 @@ gtk_accel_group_unlock (GtkAccelGroup *accel_group)
 
   if (accel_group->priv->lock_count < 1) {
     /* State change from locked to unlocked */
-    g_object_notify (G_OBJECT (accel_group), "is-locked");
+    g_object_notify_by_pspec (G_OBJECT (accel_group), obj_properties[PROP_IS_LOCKED]);
   }
 }
 
@@ -495,8 +500,8 @@ quick_accel_add (GtkAccelGroup   *accel_group,
 
   /* insert at position, ref closure */
   accel_group->priv->priv_accels = g_renew (GtkAccelGroupEntry, accel_group->priv->priv_accels, accel_group->priv->n_accels);
-  g_memmove (accel_group->priv->priv_accels + pos + 1, accel_group->priv->priv_accels + pos,
-             (i - pos) * sizeof (accel_group->priv->priv_accels[0]));
+  memmove (accel_group->priv->priv_accels + pos + 1, accel_group->priv->priv_accels + pos,
+           (i - pos) * sizeof (accel_group->priv->priv_accels[0]));
   accel_group->priv->priv_accels[pos].key.accel_key = accel_key;
   accel_group->priv->priv_accels[pos].key.accel_mods = accel_mods;
   accel_group->priv->priv_accels[pos].key.accel_flags = accel_flags;
@@ -559,8 +564,8 @@ quick_accel_remove (GtkAccelGroup *accel_group,
 
   /* physically remove */
   accel_group->priv->n_accels -= 1;
-  g_memmove (entry, entry + 1,
-             (accel_group->priv->n_accels - pos) * sizeof (accel_group->priv->priv_accels[0]));
+  memmove (entry, entry + 1,
+           (accel_group->priv->n_accels - pos) * sizeof (accel_group->priv->priv_accels[0]));
 
   /* and notify */
   if (accel_quark)
@@ -959,7 +964,7 @@ gtk_accel_groups_activate (GObject         *object,
  *
  * Determines whether a given keyval and modifier mask constitute
  * a valid keyboard accelerator. For example, the #GDK_KEY_a keyval
- * plus #GDK_CONTROL_MASK is valid - this is a "Ctrl+a" accelerator.
+ * plus #GDK_CONTROL_MASK is valid - this is a “Ctrl+a” accelerator.
  * But, you can't, for instance, use the #GDK_KEY_Control_L keyval
  * as an accelerator.
  *
@@ -1436,15 +1441,15 @@ out:
  * @accelerator_mods: (out) (allow-none): return location for accelerator
  *     modifier mask, %NULL
  *
- * Parses a string representing an accelerator. The
- * format looks like "&lt;Control&gt;a" or "&lt;Shift&gt;&lt;Alt&gt;F1"
- * or "&lt;Release&gt;z" (the last one is for key release).
+ * Parses a string representing an accelerator. The format looks like
+ * “<Control>a” or “<Shift><Alt>F1” or “<Release>z” (the last one is
+ * for key release).
  *
- * The parser is fairly liberal and allows lower or upper case,
- * and also abbreviations such as "&lt;Ctl&gt;" and "&lt;Ctrl&gt;".
- * Key names are parsed using gdk_keyval_from_name(). For character
- * keys the name is not the symbol, but the lowercase name, e.g. one
- * would use "&lt;Ctrl&gt;minus" instead of "&lt;Ctrl&gt;-".
+ * The parser is fairly liberal and allows lower or upper case, and also
+ * abbreviations such as “<Ctl>” and “<Ctrl>”. Key names are parsed using
+ * gdk_keyval_from_name(). For character keys the name is not the symbol,
+ * but the lowercase name, e.g. one would use “<Ctrl>minus” instead of
+ * “<Ctrl>-”.
  *
  * If the parse fails, @accelerator_key and @accelerator_mods will
  * be set to 0 (zero).
@@ -1465,7 +1470,7 @@ gtk_accelerator_parse (const gchar     *accelerator,
  * @accelerator_mods: accelerator modifier mask
  *
  * Converts an accelerator keyval and modifier mask
- * into a string parseable by gtk_accelerator_parse_full(),
+ * into a string parseable by gtk_accelerator_parse_with_keycode(),
  * similarly to gtk_accelerator_name() but handling keycodes.
  * This is only useful for system-level components, applications
  * should use gtk_accelerator_parse() instead.
@@ -1504,10 +1509,9 @@ gtk_accelerator_name_with_keycode (GdkDisplay      *display,
  * @accelerator_key: accelerator keyval
  * @accelerator_mods: accelerator modifier mask
  *
- * Converts an accelerator keyval and modifier mask
- * into a string parseable by gtk_accelerator_parse().
- * For example, if you pass in #GDK_KEY_q and #GDK_CONTROL_MASK,
- * this function returns "&lt;Control&gt;q".
+ * Converts an accelerator keyval and modifier mask into a string
+ * parseable by gtk_accelerator_parse(). For example, if you pass in
+ * #GDK_KEY_q and #GDK_CONTROL_MASK, this function returns “<Control>q”.
  *
  * If you need to display accelerators in the user interface,
  * see gtk_accelerator_get_label().

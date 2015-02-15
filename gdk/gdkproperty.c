@@ -28,23 +28,23 @@
  * @Title: Properties and Atoms
  *
  * Each window under X can have any number of associated
- * <firstterm>properties</firstterm> attached to it.
+ * “properties” attached to it.
  * Properties are arbitrary chunks of data identified by
- * <firstterm>atom</firstterm>s. (An <firstterm>atom</firstterm>
+ * “atom”s. (An “atom”
  * is a numeric index into a string table on the X server. They are used
  * to transfer strings efficiently between clients without
  * having to transfer the entire string.) A property
  * has an associated type, which is also identified
  * using an atom.
  *
- * A property has an associated <firstterm>format</firstterm>,
+ * A property has an associated “format”,
  * an integer describing how many bits are in each unit
  * of data inside the property. It must be 8, 16, or 32.
  * When data is transferred between the server and client,
  * if they are of different endianesses it will be byteswapped
  * as necessary according to the format of the property.
  * Note that on the client side, properties of format 32
- * will be stored with one unit per <emphasis>long</emphasis>,
+ * will be stored with one unit per long,
  * even if a long integer has more than 32 bits on the platform.
  * (This decision was apparently made for Xlib to maintain
  * compatibility with programs that assumed longs were 32
@@ -160,7 +160,8 @@ ensure_atom_tables (void)
 }
 
 static GdkAtom
-intern_atom_internal (const gchar *atom_name, gboolean allocate)
+intern_atom_internal (const gchar *atom_name,
+                      gboolean     allocate)
 {
   gpointer result;
   gchar *name;
@@ -172,8 +173,8 @@ intern_atom_internal (const gchar *atom_name, gboolean allocate)
   
   result = GINT_TO_POINTER (atoms_to_names->len);
   name = allocate ? g_strdup (atom_name) : (gchar *)atom_name;
-  g_hash_table_insert(names_to_atoms, name, result);
-  g_ptr_array_add(atoms_to_names, name);
+  g_hash_table_insert (names_to_atoms, name, result);
+  g_ptr_array_add (atoms_to_names, name);
   
   return result;  
 }
@@ -182,7 +183,7 @@ intern_atom_internal (const gchar *atom_name, gboolean allocate)
  * gdk_atom_intern:
  * @atom_name: a string.
  * @only_if_exists: if %TRUE, GDK is allowed to not create a new atom, but
- *   just return %GDK_NONE if the requested atom doesn't already
+ *   just return %GDK_NONE if the requested atom doesn’t already
  *   exists. Currently, the flag is ignored, since checking the
  *   existance of an atom is as expensive as creating it.
  *
@@ -208,7 +209,7 @@ gdk_atom_intern (const gchar *atom_name,
  * Note that this function is identical to gdk_atom_intern() except
  * that if a new #GdkAtom is created the string itself is used rather
  * than a copy. This saves memory, but can only be used if the string
- * will <emphasis>always</emphasis> exist. It can be used with statically
+ * will always exist. It can be used with statically
  * allocated strings in the main program, but not with statically
  * allocated memory in dynamically loaded modules, if you expect to
  * ever unload the module again (e.g. do not use this function in

@@ -115,6 +115,7 @@ test_path (void)
   gtk_widget_path_iter_clear_classes (path, 1);
   g_assert (!gtk_widget_path_iter_has_class (path, 1, "class1"));
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_widget_path_iter_add_region (path, 1, "tab", 0);
   gtk_widget_path_iter_add_region (path, 1, "title", GTK_REGION_EVEN | GTK_REGION_FIRST);
 
@@ -130,6 +131,8 @@ test_path (void)
   g_assert (gtk_widget_path_iter_has_region (path2, 1, "title", &flags) &&
             flags == (GTK_REGION_EVEN | GTK_REGION_FIRST));
   g_assert (!gtk_widget_path_iter_has_region (path2, 1, "extension", NULL));
+G_GNUC_END_IGNORE_DEPRECATIONS
+
   gtk_widget_path_free (path2);
 
   gtk_widget_path_free (path);
@@ -159,6 +162,7 @@ test_match (void)
   gtk_widget_path_append_type (path, GTK_TYPE_BUTTON);
   gtk_widget_path_iter_set_name (path, 0, "mywindow");
   gtk_widget_path_iter_add_class (path, 2, "button");
+  gtk_widget_path_iter_set_state (path, 0, GTK_STATE_FLAG_ACTIVE);
   gtk_style_context_set_path (context, path);
   gtk_widget_path_free (path);
 
@@ -169,7 +173,6 @@ test_match (void)
   data = "* { color: #fff }";
   gtk_css_provider_load_from_data (provider, data, -1, &error);
   g_assert_no_error (error);
-  gtk_style_context_invalidate (context);
   gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
   g_assert (gdk_rgba_equal (&color, &expected));
 
@@ -177,7 +180,6 @@ test_match (void)
          "GtkButton { color: #fff }";
   gtk_css_provider_load_from_data (provider, data, -1, &error);
   g_assert_no_error (error);
-  gtk_style_context_invalidate (context);
   gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
   g_assert (gdk_rgba_equal (&color, &expected));
 
@@ -186,7 +188,6 @@ test_match (void)
          "GtkWindow > GtkButton { color: #000 }";
   gtk_css_provider_load_from_data (provider, data, -1, &error);
   g_assert_no_error (error);
-  gtk_style_context_invalidate (context);
   gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
   g_assert (gdk_rgba_equal (&color, &expected));
 
@@ -194,7 +195,6 @@ test_match (void)
          ".button { color: #fff }";
   gtk_css_provider_load_from_data (provider, data, -1, &error);
   g_assert_no_error (error);
-  gtk_style_context_invalidate (context);
   gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
   g_assert (gdk_rgba_equal (&color, &expected));
 
@@ -203,7 +203,6 @@ test_match (void)
          ".button { color: #fff }";
   gtk_css_provider_load_from_data (provider, data, -1, &error);
   g_assert_no_error (error);
-  gtk_style_context_invalidate (context);
   gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
   g_assert (gdk_rgba_equal (&color, &expected));
 
@@ -212,7 +211,6 @@ test_match (void)
          "GtkWindow GtkButton { color: #fff }";
   gtk_css_provider_load_from_data (provider, data, -1, &error);
   g_assert_no_error (error);
-  gtk_style_context_invalidate (context);
   gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
   g_assert (gdk_rgba_equal (&color, &expected));
 
@@ -221,7 +219,6 @@ test_match (void)
          "GtkWindow .button { color: #fff }";
   gtk_css_provider_load_from_data (provider, data, -1, &error);
   g_assert_no_error (error);
-  gtk_style_context_invalidate (context);
   gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
   g_assert (gdk_rgba_equal (&color, &expected));
 
@@ -230,7 +227,6 @@ test_match (void)
          "#mywindow .button { color: #fff }";
   gtk_css_provider_load_from_data (provider, data, -1, &error);
   g_assert_no_error (error);
-  gtk_style_context_invalidate (context);
   gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
   g_assert (gdk_rgba_equal (&color, &expected));
 
@@ -239,7 +235,6 @@ test_match (void)
          "GtkWindow#mywindow .button { color: #fff }";
   gtk_css_provider_load_from_data (provider, data, -1, &error);
   g_assert_no_error (error);
-  gtk_style_context_invalidate (context);
   gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
   g_assert (gdk_rgba_equal (&color, &expected));
 
@@ -248,66 +243,17 @@ test_match (void)
          "GObject .button { color: #fff }";
   gtk_css_provider_load_from_data (provider, data, -1, &error);
   g_assert_no_error (error);
-  gtk_style_context_invalidate (context);
   gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
   g_assert (gdk_rgba_equal (&color, &expected));
 
-  g_object_unref (provider);
-  g_object_unref (context);
-}
-
-static void
-test_style_property (void)
-{
-  GtkStyleContext *context;
-  GtkWidgetPath *path;
-  GtkCssProvider *provider;
-  GError *error;
-  const gchar *data;
-  gint x;
-  GdkRGBA color;
-  GdkRGBA expected;
-
-  error = NULL;
-  provider = gtk_css_provider_new ();
-
-  context = gtk_style_context_new ();
-
-  path = gtk_widget_path_new ();
-  gtk_widget_path_append_type (path, GTK_TYPE_WINDOW);
-  gtk_widget_path_append_type (path, GTK_TYPE_BOX);
-  gtk_widget_path_append_type (path, GTK_TYPE_BUTTON);
-  gtk_style_context_set_path (context, path);
-  gtk_widget_path_free (path);
-  gtk_style_context_set_state (context, GTK_STATE_FLAG_PRELIGHT);
-
-  /* Since we set the prelight state on the context, we expect
-   * only the third selector to match, even though the second one
-   * has higher specificity, and the fourth one comes later.
-   *
-   * In particular, we want to verify that widget style properties and
-   * CSS properties follow the same matching rules, ie we expect
-   * color to be #003 and child-displacement-x to be 3.
-   */
-  data = "GtkButton:insensitive { color: #001; -GtkButton-child-displacement-x: 1 }\n"
-         "GtkBox GtkButton:selected { color: #002; -GtkButton-child-displacement-x: 2 }\n"
-         "GtkButton:prelight { color: #003; -GtkButton-child-displacement-x: 3 }\n"
-         "GtkButton:focused { color: #004; -GtkButton-child-displacement-x: 4 }\n";
+  data = "* { color: #f00 }\n"
+         "GtkWindow:backdrop .button { color: #000 }\n"
+         "GtkWindow .button { color: #111 }\n"
+         "GtkWindow:active .button { color: #fff }";
   gtk_css_provider_load_from_data (provider, data, -1, &error);
   g_assert_no_error (error);
-  gtk_style_context_add_provider (context,
-                                  GTK_STYLE_PROVIDER (provider),
-                                  GTK_STYLE_PROVIDER_PRIORITY_USER);
-
-  gtk_style_context_invalidate (context);
-
-  gtk_style_context_get_color (context, GTK_STATE_FLAG_PRELIGHT, &color);
-  gdk_rgba_parse (&expected, "#003");
+  gtk_style_context_get_color (context, GTK_STATE_FLAG_NORMAL, &color);
   g_assert (gdk_rgba_equal (&color, &expected));
-
-  gtk_style_context_get_style (context, "child-displacement-x", &x, NULL);
-
-  g_assert_cmpint (x, ==, 3);
 
   g_object_unref (provider);
   g_object_unref (context);
@@ -352,7 +298,6 @@ main (int argc, char *argv[])
   g_test_add_func ("/style/parse/selectors", test_parse_selectors);
   g_test_add_func ("/style/path", test_path);
   g_test_add_func ("/style/match", test_match);
-  g_test_add_func ("/style/style-property", test_style_property);
   g_test_add_func ("/style/basic", test_basic_properties);
 
   return g_test_run ();

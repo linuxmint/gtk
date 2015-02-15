@@ -64,31 +64,27 @@
  * GtkMenuItem has direct functions to set the label and its mnemonic.
  * For more advanced label settings, you can fetch the child widget from the GtkBin.
  *
- * <example>
- * <title>Setting markup and accelerator on a MenuItem</title>
- * <programlisting><![CDATA[
+ * An example for setting markup and accelerator on a MenuItem:
+ * |[<!-- language="C" -->
  * GtkWidget *child = gtk_bin_get_child (GTK_BIN (menu_item));
  * gtk_label_set_markup (GTK_LABEL (child), "<i>new label</i> with <b>markup</b>");
  * gtk_accel_label_set_accel (GTK_ACCEL_LABEL (child), GDK_KEY_1, 0);
- * ]]></programlisting>
- * </example>
+ * ]|
  *
- * <refsect2 id="GtkMenuItem-BUILDER-UI">
- * <title>GtkMenuItem as GtkBuildable</title>
- * The GtkMenuItem implementation of the #GtkBuildable interface
- * supports adding a submenu by specifying "submenu" as the "type"
- * attribute of a &lt;child&gt; element.
- * <example>
- * <title>A UI definition fragment with submenus</title>
- * <programlisting><![CDATA[
+ * # GtkMenuItem as GtkBuildable
+ *
+ * The GtkMenuItem implementation of the #GtkBuildable interface supports
+ * adding a submenu by specifying “submenu” as the “type” attribute of
+ * a <child> element.
+ *
+ * An example of UI definition fragment with submenus:
+ * |[
  * <object class="GtkMenuItem">
  *   <child type="submenu">
  *     <object class="GtkMenu"/>
  *   </child>
  * </object>
- * ]]></programlisting>
- * </example>
- * </refsect2>
+ * ]|
  */
 
 
@@ -401,7 +397,7 @@ gtk_menu_item_class_init (GtkMenuItemClass *klass)
                                                          P_("Right Justified"),
                                                          P_("Sets whether the menu item appears justified at the right side of a menu bar"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE | G_PARAM_DEPRECATED));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY|G_PARAM_DEPRECATED));
 
   /**
    * GtkMenuItem:submenu:
@@ -465,7 +461,7 @@ gtk_menu_item_class_init (GtkMenuItemClass *klass)
                                                             "the next character should be used for the "
                                                             "mnemonic accelerator key"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_override_property (gobject_class, PROP_ACTIVATABLE_RELATED_ACTION, "related-action");
   g_object_class_override_property (gobject_class, PROP_ACTIVATABLE_USE_ACTION_APPEARANCE, "use-action-appearance");
@@ -654,6 +650,7 @@ gtk_menu_item_do_set_right_justified (GtkMenuItem *menu_item,
     {
       priv->right_justify = right_justified;
       gtk_widget_queue_resize (GTK_WIDGET (menu_item));
+      g_object_notify (G_OBJECT (menu_item), "right-justified");
     }
 }
 
@@ -907,11 +904,8 @@ gtk_menu_item_get_preferred_width (GtkWidget *widget,
                          &accel_width);
   priv->accelerator_width = accel_width;
 
-  if (minimum_size)
-    *minimum_size = min_width;
-
-  if (natural_size)
-    *natural_size = nat_width;
+  *minimum_size = min_width;
+  *natural_size = nat_width;
 }
 
 static void
@@ -1020,11 +1014,8 @@ gtk_menu_item_real_get_height (GtkWidget *widget,
                          &accel_width);
   priv->accelerator_width = accel_width;
 
-  if (minimum_size)
-    *minimum_size = min_height;
-
-  if (natural_size)
-    *natural_size = nat_height;
+  *minimum_size = min_height;
+  *natural_size = nat_height;
 }
 
 static void
@@ -1136,12 +1127,12 @@ activatable_update_label (GtkMenuItem *menu_item, GtkAction *action)
  * @menu: (allow-none): a #GtkMenu or %NULL
  * 
  * Determines whether @menu is empty. A menu is considered empty if it
- * the only visible children are tearoff menu items or "filler" menu 
+ * the only visible children are tearoff menu items or “filler” menu 
  * items which were inserted to mark the menu as empty.
  * 
  * This function is used by #GtkAction.
  *
- * Return value: whether @menu is empty.
+ * Returns: whether @menu is empty.
  **/
 static gboolean
 gtk_menu_is_empty (GtkWidget *menu)
@@ -1321,9 +1312,9 @@ gtk_menu_item_set_use_action_appearance (GtkMenuItem *menu_item,
 /**
  * gtk_menu_item_set_submenu:
  * @menu_item: a #GtkMenuItem
- * @submenu: (allow-none): the submenu, or %NULL
+ * @submenu: (allow-none) (type Gtk.Menu): the submenu, or %NULL
  *
- * Sets or replaces the menu item's submenu, or removes it when a %NULL
+ * Sets or replaces the menu item’s submenu, or removes it when a %NULL
  * submenu is passed.
  */
 void
@@ -1362,7 +1353,7 @@ gtk_menu_item_set_submenu (GtkMenuItem *menu_item,
  * Gets the submenu underneath this menu item, if any.
  * See gtk_menu_item_set_submenu().
  *
- * Return value: (transfer none): submenu for this menu item, or %NULL if none
+ * Returns: (transfer none): submenu for this menu item, or %NULL if none
  */
 GtkWidget *
 gtk_menu_item_get_submenu (GtkMenuItem *menu_item)
@@ -1384,6 +1375,12 @@ _gtk_menu_item_set_placement (GtkMenuItem         *menu_item,
   menu_item->priv->submenu_placement = placement;
 }
 
+/**
+ * gtk_menu_item_select:
+ * @menu_item: the menu item
+ *
+ * Emits the #GtkMenuItem::select signal on the given item.
+ */
 void
 gtk_menu_item_select (GtkMenuItem *menu_item)
 {
@@ -1396,8 +1393,7 @@ gtk_menu_item_select (GtkMenuItem *menu_item)
  * gtk_menu_item_deselect:
  * @menu_item: the menu item
  *
- * Emits the #GtkMenuItem::deselect signal on the given item. Behaves
- * exactly like #gtk_item_deselect.
+ * Emits the #GtkMenuItem::deselect signal on the given item.
  */
 void
 gtk_menu_item_deselect (GtkMenuItem *menu_item)
@@ -1678,6 +1674,9 @@ gtk_menu_item_draw (GtkWidget *widget,
       GtkTextDirection direction;
       gdouble angle;
 
+      gtk_style_context_save (context);
+      gtk_style_context_add_class (context, GTK_STYLE_CLASS_ARROW);
+
       direction = gtk_widget_get_direction (widget);
       get_arrow_size (widget, child, &arrow_size, NULL);
 
@@ -1695,6 +1694,8 @@ gtk_menu_item_draw (GtkWidget *widget,
       arrow_y = y + (h - arrow_size) / 2;
 
       gtk_render_arrow (context, cr, angle, arrow_x, arrow_y, arrow_size);
+
+      gtk_style_context_restore (context);
     }
   else if (!child)
     {
@@ -1729,13 +1730,6 @@ gtk_menu_item_draw (GtkWidget *widget,
   return FALSE;
 }
 
-/**
- * gtk_menu_item_select:
- * @menu_item: the menu item
- *
- * Emits the #GtkMenuItem::select signal on the given item. Behaves
- * exactly like #gtk_item_select.
- */
 static void
 gtk_real_menu_item_select (GtkMenuItem *menu_item)
 {
@@ -2019,6 +2013,7 @@ _gtk_menu_item_popup_submenu (GtkWidget *widget,
           priv->timer = gdk_threads_add_timeout (popup_delay,
                                                  gtk_menu_item_popup_timeout,
                                                  menu_item);
+          g_source_set_name_by_id (priv->timer, "[gtk+] gtk_menu_item_popup_timeout");
 
           if (event &&
               event->type != GDK_BUTTON_PRESS &&
@@ -2243,7 +2238,7 @@ gtk_menu_item_position_menu (GtkMenu  *menu,
  *   far right if added to a menu bar
  *
  * Sets whether the menu item appears justified at the right
- * side of a menu bar. This was traditionally done for "Help"
+ * side of a menu bar. This was traditionally done for “Help”
  * menu items, but is now considered a bad idea. (If the widget
  * layout is reversed for a right-to-left language like Hebrew
  * or Arabic, right-justified-menu-items appear at the left.)
@@ -2267,7 +2262,7 @@ gtk_menu_item_set_right_justified (GtkMenuItem *menu_item,
  * Gets whether the menu item appears justified at the right
  * side of the menu bar.
  *
- * Return value: %TRUE if the menu item will appear at the
+ * Returns: %TRUE if the menu item will appear at the
  *   far right if added to a menu bar.
  *
  * Deprecated: 3.2: See gtk_menu_item_set_right_justified()
@@ -2402,10 +2397,10 @@ _gtk_menu_item_refresh_accel_path (GtkMenuItem   *menu_item,
  * gtk_menu_item_set_accel_path:
  * @menu_item:  a valid #GtkMenuItem
  * @accel_path: (allow-none): accelerator path, corresponding to this menu
- *     item's functionality, or %NULL to unset the current path.
+ *     item’s functionality, or %NULL to unset the current path.
  *
  * Set the accelerator path on @menu_item, through which runtime
- * changes of the menu item's accelerator caused by the user can be
+ * changes of the menu item’s accelerator caused by the user can be
  * identified and saved to persistent storage (see gtk_accel_map_save()
  * on this). To set up a default accelerator for this menu item, call
  * gtk_accel_map_add_entry() with the same @accel_path. See also
@@ -2467,7 +2462,7 @@ gtk_menu_item_set_accel_path (GtkMenuItem *menu_item,
  * See gtk_menu_item_set_accel_path() for details.
  *
  * Returns: the accelerator path corresponding to this menu
- *     item's functionality, or %NULL if not set
+ *     item’s functionality, or %NULL if not set
  *
  * Since: 2.14
  */
@@ -2515,8 +2510,9 @@ gtk_menu_item_ensure_label (GtkMenuItem *menu_item)
 
   if (!gtk_bin_get_child (GTK_BIN (menu_item)))
     {
-      accel_label = g_object_new (GTK_TYPE_ACCEL_LABEL, NULL);
-      gtk_misc_set_alignment (GTK_MISC (accel_label), 0.0, 0.5);
+      accel_label = g_object_new (GTK_TYPE_ACCEL_LABEL, "xalign", 0.0, NULL);
+      gtk_widget_set_halign (accel_label, GTK_ALIGN_FILL);
+      gtk_widget_set_valign (accel_label, GTK_ALIGN_CENTER);
 
       gtk_container_add (GTK_CONTAINER (menu_item), accel_label);
       gtk_accel_label_set_accel_widget (GTK_ACCEL_LABEL (accel_label),
@@ -2583,10 +2579,10 @@ gtk_menu_item_set_use_underline (GtkMenuItem *menu_item,
   gtk_menu_item_ensure_label (menu_item);
 
   child = gtk_bin_get_child (GTK_BIN (menu_item));
-  if (GTK_IS_LABEL (child))
+  if (GTK_IS_LABEL (child) &&
+      gtk_label_get_use_underline (GTK_LABEL (child)) != setting)
     {
       gtk_label_set_use_underline (GTK_LABEL (child), setting);
-
       g_object_notify (G_OBJECT (menu_item), "use-underline");
     }
 }
@@ -2598,7 +2594,7 @@ gtk_menu_item_set_use_underline (GtkMenuItem *menu_item,
  * Checks if an underline in the text indicates the next character
  * should be used for the mnemonic accelerator key.
  *
- * Return value: %TRUE if an embedded underline in the label
+ * Returns: %TRUE if an embedded underline in the label
  *     indicates the mnemonic accelerator key.
  *
  * Since: 2.16

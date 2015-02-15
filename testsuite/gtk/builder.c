@@ -131,6 +131,20 @@ test_parser (void)
                              GTK_BUILDER_ERROR_DUPLICATE_ID));
   g_error_free (error);
 
+  error = NULL;
+  gtk_builder_add_from_string (builder, "<interface><object class=\"GtkButton\" id=\"a\"><property name=\"deafbeef\"></property></object></interface>", -1, &error);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_PROPERTY));
+  g_error_free (error);
+  
+  error = NULL;
+  gtk_builder_add_from_string (builder, "<interface><object class=\"GtkButton\" id=\"a\"><signal name=\"deafbeef\" handler=\"gtk_true\"/></object></interface>", -1, &error);
+  g_assert (g_error_matches (error,
+                             GTK_BUILDER_ERROR,
+                             GTK_BUILDER_ERROR_INVALID_SIGNAL));
+  g_error_free (error);
+
   g_object_unref (builder);
 }
 
@@ -993,6 +1007,7 @@ test_children (void)
   const gchar buffer2[] =
     "<interface>"
     "  <object class=\"GtkDialog\" id=\"dialog1\">"
+    "    <property name=\"use_header_bar\">1</property>"
     "    <child internal-child=\"vbox\">"
     "      <object class=\"GtkVBox\" id=\"dialog1-vbox\">"
     "        <property name=\"border-width\">10</property>"
@@ -1028,7 +1043,7 @@ test_children (void)
   g_assert (dialog != NULL);
   g_assert (GTK_IS_DIALOG (dialog));
   children = gtk_container_get_children (GTK_CONTAINER (dialog));
-  g_assert (g_list_length (children) == 1);
+  g_assert_cmpint (g_list_length (children), ==, 2);
   g_list_free (children);
   
   vbox = gtk_builder_get_object (builder, "dialog1-vbox");
@@ -1041,7 +1056,9 @@ test_children (void)
   g_assert (strcmp (gtk_buildable_get_name (GTK_BUILDABLE (content_area)), "dialog1-vbox") == 0);
 
   action_area = gtk_builder_get_object (builder, "dialog1-action_area");
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   dialog_action_area = gtk_dialog_get_action_area (GTK_DIALOG (dialog));
+G_GNUC_END_IGNORE_DEPRECATIONS
   g_assert (action_area != NULL);
   g_assert (GTK_IS_BUTTON_BOX (action_area));
   g_assert (gtk_orientable_get_orientation (GTK_ORIENTABLE (action_area)) == GTK_ORIENTATION_HORIZONTAL);
@@ -1769,6 +1786,16 @@ test_value_from_string (void)
   g_assert (gtk_builder_value_from_string_type (builder, G_TYPE_UINT, "2345", &value, &error));
   g_assert (G_VALUE_HOLDS_UINT (&value));
   g_assert (g_value_get_uint (&value) == 2345);
+  g_value_unset (&value);
+
+  g_assert (gtk_builder_value_from_string_type (builder, G_TYPE_INT64, "-2345", &value, &error));
+  g_assert (G_VALUE_HOLDS_INT64 (&value));
+  g_assert (g_value_get_int64 (&value) == -2345);
+  g_value_unset (&value);
+
+  g_assert (gtk_builder_value_from_string_type (builder, G_TYPE_UINT64, "2345", &value, &error));
+  g_assert (G_VALUE_HOLDS_UINT64 (&value));
+  g_assert (g_value_get_uint64 (&value) == 2345);
   g_value_unset (&value);
 
   g_assert (gtk_builder_value_from_string_type (builder, G_TYPE_FLOAT, "1.454", &value, &error));
@@ -2728,6 +2755,234 @@ test_expose_object (void)
   g_object_unref (image);
 }
 
+static void
+test_no_ids (void)
+{
+  GtkBuilder *builder;
+  GError *error = NULL;
+  GObject *obj;
+  const gchar buffer[] =
+    "<interface>"
+    "  <object class=\"GtkInfoBar\">"
+    "    <child internal-child=\"content_area\">"
+    "      <object class=\"GtkHBox\">"
+    "        <child>"
+    "          <object class=\"GtkLabel\">"
+    "            <property name=\"label\" translatable=\"yes\">Message</property>"
+    "          </object>"
+    "          <packing>"
+    "            <property name='expand'>False</property>"
+    "          </packing>"
+    "        </child>"
+    "      </object>"
+    "    </child>"
+    "    <child internal-child=\"action_area\">"
+    "      <object class=\"GtkVButtonBox\">"
+    "        <child>"
+    "          <object class=\"GtkButton\" id=\"button_ok\">"
+    "            <property name=\"label\">gtk-ok</property>"
+    "            <property name=\"use-stock\">yes</property>"
+    "          </object>"
+    "        </child>"
+    "      </object>"
+    "    </child>"
+    "    <action-widgets>"
+    "      <action-widget response=\"1\">button_ok</action-widget>"
+    "    </action-widgets>"
+    "  </object>"
+    "</interface>";
+
+  builder = gtk_builder_new ();
+  gtk_builder_add_from_string (builder, buffer, -1, &error);
+  g_assert (error == NULL);
+
+  obj = gtk_builder_get_object (builder, "button_ok");
+  g_assert (GTK_IS_BUTTON (obj));
+
+  g_object_unref (builder);
+}
+
+static void
+test_property_bindings (void)
+{
+  const gchar *buffer =
+    "<interface>"
+    "  <object class=\"GtkWindow\" id=\"window\">"
+    "    <child>"
+    "      <object class=\"GtkVBox\" id=\"vbox\">"
+    "        <property name=\"visible\">True</property>"
+    "        <property name=\"orientation\">vertical</property>"
+    "        <child>"
+    "          <object class=\"GtkCheckButton\" id=\"checkbutton\">"
+    "            <property name=\"active\">false</property>"
+    "          </object>"
+    "        </child>"
+    "        <child>"
+    "          <object class=\"GtkButton\" id=\"button\">"
+    "            <property name=\"sensitive\" bind-source=\"checkbutton\" bind-property=\"active\" bind-flags=\"sync-create\">false</property>"
+    "          </object>"
+    "        </child>"
+    "        <child>"
+    "          <object class=\"GtkButton\" id=\"button2\">"
+    "            <property name=\"sensitive\" bind-source=\"checkbutton\" bind-property=\"active\" />"
+    "          </object>"
+    "        </child>"
+    "      </object>"
+    "    </child>"
+    "  </object>"
+    "</interface>";
+
+  GtkBuilder *builder;
+  GObject *checkbutton, *button, *button2, *window;
+  
+  builder = builder_new_from_string (buffer, -1, NULL);
+  
+  checkbutton = gtk_builder_get_object (builder, "checkbutton");
+  g_assert (GTK_IS_CHECK_BUTTON (checkbutton));
+  g_assert (!gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (checkbutton)));
+
+  button = gtk_builder_get_object (builder, "button");
+  g_assert (GTK_IS_BUTTON (button));
+  g_assert (!gtk_widget_get_sensitive (GTK_WIDGET (button)));
+
+  button2 = gtk_builder_get_object (builder, "button2");
+  g_assert (GTK_IS_BUTTON (button2));
+  g_assert (gtk_widget_get_sensitive (GTK_WIDGET (button2)));
+  
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbutton), TRUE);
+  g_assert (gtk_widget_get_sensitive (GTK_WIDGET (button)));
+  g_assert (gtk_widget_get_sensitive (GTK_WIDGET (button2)));
+  
+  window = gtk_builder_get_object (builder, "window");
+  gtk_widget_destroy (GTK_WIDGET (window));
+  g_object_unref (builder);
+}
+
+#define MY_GTK_GRID_TEMPLATE "\
+<interface>\n\
+ <template class=\"MyGtkGrid\" parent=\"GtkGrid\">\n\
+   <property name=\"visible\">True</property>\n\
+    <child>\n\
+     <object class=\"GtkLabel\" id=\"label\">\n\
+       <property name=\"visible\">True</property>\n\
+     </object>\n\
+  </child>\n\
+ </template>\n\
+</interface>\n"
+
+#define MY_TYPE_GTK_GRID             (my_gtk_grid_get_type ())
+#define MY_IS_GTK_GRID(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), MY_TYPE_GTK_GRID))
+
+typedef struct
+{
+  GtkGridClass parent_class;
+} MyGtkGridClass;
+
+typedef struct
+{
+  GtkLabel *label;
+} MyGtkGridPrivate;
+
+typedef struct
+{
+  GtkGrid parent_instance;
+  GtkLabel *label;
+  MyGtkGridPrivate *priv;
+} MyGtkGrid;
+
+G_DEFINE_TYPE_WITH_PRIVATE (MyGtkGrid, my_gtk_grid, GTK_TYPE_GRID);
+
+static void
+my_gtk_grid_init (MyGtkGrid *grid)
+{
+  grid->priv = my_gtk_grid_get_instance_private (grid);
+  gtk_widget_init_template (GTK_WIDGET (grid));
+}
+
+static void
+my_gtk_grid_class_init (MyGtkGridClass *klass)
+{
+  GBytes *template = g_bytes_new_static (MY_GTK_GRID_TEMPLATE, strlen (MY_GTK_GRID_TEMPLATE));
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+
+  gtk_widget_class_set_template (widget_class, template);
+  gtk_widget_class_bind_template_child (widget_class, MyGtkGrid, label);
+  gtk_widget_class_bind_template_child_private (widget_class, MyGtkGrid, label);
+}
+
+static void
+test_template ()
+{
+  MyGtkGrid *my_gtk_grid;
+
+  /* make sure the type we are trying to register does not exist */
+  g_assert (!g_type_from_name ("MyGtkGrid"));
+
+  /* create the template object */
+  my_gtk_grid = g_object_new (MY_TYPE_GTK_GRID, NULL);
+
+  /* Check everything is fine */
+  g_assert (g_type_from_name ("MyGtkGrid"));
+  g_assert (MY_IS_GTK_GRID (my_gtk_grid));
+  g_assert (my_gtk_grid->label == my_gtk_grid->priv->label);
+  g_assert (GTK_IS_LABEL (my_gtk_grid->label));
+  g_assert (GTK_IS_LABEL (my_gtk_grid->priv->label));
+}
+
+void
+on_cellrenderertoggle1_toggled (GtkCellRendererToggle *cell)
+{
+}
+
+static void
+test_anaconda_signal (void)
+{
+  GtkBuilder *builder;
+  const gchar buffer[] = 
+    "<?xml version='1.0' encoding='UTF-8'?>"
+    "<!-- Generated with glade 3.18.3 -->"
+    "<interface>"
+    "  <requires lib='gtk+' version='3.12'/>"
+    "  <object class='GtkListStore' id='liststore1'>"
+    "    <columns>"
+    "      <!-- column-name use -->"
+    "      <column type='gboolean'/>"
+    "    </columns>"
+    "  </object>"
+    "  <object class='GtkWindow' id='window1'>"
+    "    <property name='can_focus'>False</property>"
+    "    <child>"
+    "      <object class='GtkTreeView' id='treeview1'>"
+    "        <property name='visible'>True</property>"
+    "        <property name='can_focus'>True</property>"
+    "        <property name='model'>liststore1</property>"
+    "        <child internal-child='selection'>"
+    "          <object class='GtkTreeSelection' id='treeview-selection1'/>"
+    "        </child>"
+    "        <child>"
+    "          <object class='GtkTreeViewColumn' id='treeviewcolumn1'>"
+    "            <property name='title' translatable='yes'>column</property>"
+    "            <child>"
+    "              <object class='GtkCellRendererToggle' id='cellrenderertoggle1'>"
+    "                <signal name='toggled' handler='on_cellrenderertoggle1_toggled' swapped='no'/>"
+    "              </object>"
+    "              <attributes>"
+    "                <attribute name='active'>0</attribute>"
+    "              </attributes>"
+    "            </child>"
+    "          </object>"
+    "        </child>"
+    "      </object>"
+    "    </child>"
+    "  </object>"
+    "</interface>";
+
+  builder = builder_new_from_string (buffer, -1, NULL);
+  gtk_builder_connect_signals (builder, NULL);
+
+  g_object_unref (builder);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -2777,6 +3032,10 @@ main (int argc, char **argv)
   g_test_add_func ("/Builder/GMenu", test_gmenu);
   g_test_add_func ("/Builder/LevelBar", test_level_bar);
   g_test_add_func ("/Builder/Expose Object", test_expose_object);
+  g_test_add_func ("/Builder/Template", test_template);
+  g_test_add_func ("/Builder/No IDs", test_no_ids);
+  g_test_add_func ("/Builder/Property Bindings", test_property_bindings);
+  g_test_add_func ("/Builder/anaconda-signal", test_anaconda_signal);
 
   return g_test_run();
 }

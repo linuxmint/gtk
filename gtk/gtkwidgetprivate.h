@@ -27,6 +27,7 @@
 
 #include "gtkcsstypesprivate.h"
 #include "gtkwidget.h"
+#include "gtkeventcontroller.h"
 #include "gtkactionmuxer.h"
 
 G_BEGIN_DECLS
@@ -132,6 +133,9 @@ void              _gtk_widget_buildable_finish_accelerator (GtkWidget *widget,
 GtkStyle *        _gtk_widget_get_style                    (GtkWidget *widget);
 void              _gtk_widget_set_style                    (GtkWidget *widget,
                                                             GtkStyle  *style);
+gboolean          _gtk_widget_supports_clip                (GtkWidget *widget);
+void              _gtk_widget_set_simple_clip              (GtkWidget *widget,
+                                                            GtkAllocation *content_clip);
 
 typedef gboolean (*GtkCapturedEventHandler) (GtkWidget *widget, GdkEvent *event);
 
@@ -148,6 +152,16 @@ void              _gtk_widget_style_context_invalidated    (GtkWidget    *widget
 
 void              _gtk_widget_update_parent_muxer          (GtkWidget    *widget);
 GtkActionMuxer *  _gtk_widget_get_action_muxer             (GtkWidget    *widget);
+gchar **          _gtk_widget_list_action_prefixes         (GtkWidget    *widget);
+GActionGroup *    _gtk_widget_get_action_group             (GtkWidget    *widget,
+                                                            const gchar  *prefix);
+
+void              _gtk_widget_add_controller               (GtkWidget           *widget,
+                                                            GtkEventController  *controller);
+void              _gtk_widget_remove_controller            (GtkWidget           *widget,
+                                                            GtkEventController  *controller);
+GList *           _gtk_widget_list_controllers             (GtkWidget           *widget,
+                                                            GtkPropagationPhase  phase);
 
 G_END_DECLS
 

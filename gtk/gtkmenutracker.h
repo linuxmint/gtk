@@ -12,9 +12,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  *
  * Author: Ryan Lortie <desrt@desrt.ca>
  */
@@ -37,12 +35,15 @@ typedef void         (* GtkMenuTrackerRemoveFunc)                       (gint   
 GtkMenuTracker *        gtk_menu_tracker_new                            (GtkActionObservable      *observer,
                                                                          GMenuModel               *model,
                                                                          gboolean                  with_separators,
+                                                                         gboolean                  merge_sections,
                                                                          const gchar              *action_namespace,
                                                                          GtkMenuTrackerInsertFunc  insert_func,
                                                                          GtkMenuTrackerRemoveFunc  remove_func,
                                                                          gpointer                  user_data);
 
-GtkMenuTracker *        gtk_menu_tracker_new_for_item_submenu           (GtkMenuTrackerItem       *item,
+GtkMenuTracker *        gtk_menu_tracker_new_for_item_link              (GtkMenuTrackerItem       *item,
+                                                                         const gchar              *link_name,
+                                                                         gboolean                  merge_sections,
                                                                          GtkMenuTrackerInsertFunc  insert_func,
                                                                          GtkMenuTrackerRemoveFunc  remove_func,
                                                                          gpointer                  user_data);

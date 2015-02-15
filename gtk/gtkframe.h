@@ -55,11 +55,21 @@ struct _GtkFrame
   GtkFramePrivate *priv;
 };
 
+/**
+ * GtkFrameClass:
+ * @parent_class: The parent class.
+ * @compute_child_allocation:
+ */
 struct _GtkFrameClass
 {
   GtkBinClass parent_class;
 
-  void (*compute_child_allocation) (GtkFrame *frame, GtkAllocation *allocation);
+  /*< public >*/
+
+  void (*compute_child_allocation) (GtkFrame *frame,
+                                    GtkAllocation *allocation);
+
+  /*< private >*/
 
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);

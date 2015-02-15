@@ -8,7 +8,7 @@
 <link rel="up" href="MenusAndCombos.html" title="Menus, Combo Box, Toolbar">
 <link rel="prev" href="GtkToolButton.html" title="GtkToolButton">
 <link rel="next" href="GtkToggleToolButton.html" title="GtkToggleToolButton">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -132,16 +132,22 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GtkMenuToolButton.html#GtkMenuToolButton-struct" title="struct GtkMenuToolButton">GtkMenuToolButton</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkMenuToolButton.html#GtkMenuToolButtonClass" title="struct GtkMenuToolButtonClass">GtkMenuToolButtonClass</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="GtkMenuToolButton.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBin.html" title="GtkBin">GtkBin</a>
@@ -169,16 +175,12 @@ button pops up a dropdown menu.</p>
 <p>Use <a class="link" href="GtkMenuToolButton.html#gtk-menu-tool-button-new" title="gtk_menu_tool_button_new ()"><code class="function">gtk_menu_tool_button_new()</code></a> to create a new
 <a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolButton"><span class="type">GtkMenuToolButton</span></a>.</p>
 <div class="refsect2">
-<a name="GtkMenuToolButton-BUILDER-UI"></a><h3>GtkMenuToolButton as GtkBuildable</h3>
-<p>
-The GtkMenuToolButton implementation of the GtkBuildable interface
-supports adding a menu by specifying "menu" as the "type"
-attribute of a &lt;child&gt; element.
-
-</p>
-<div class="example">
-<a name="id-1.3.13.17.10.4.2.1"></a><p class="title"><b>Example 52. A UI definition fragment with menus</b></p>
-<div class="example-contents">
+<a name="id-1.3.13.17.10.4"></a><h3>GtkMenuToolButton as GtkBuildable</h3>
+<p>The GtkMenuToolButton implementation of the GtkBuildable interface
+supports adding a menu by specifying “menu” as the “type” attribute
+of a &lt;child&gt; element.</p>
+<p>An example for a UI definition fragment with menus:</p>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -197,9 +199,7 @@ attribute of a &lt;child&gt; element.
   </table>
 </div>
 
-</div>
-<p><br class="example-break">
-</p>
+<p></p>
 </div>
 </div>
 <div class="refsect1">
@@ -208,7 +208,7 @@ attribute of a &lt;child&gt; element.
 <a name="gtk-menu-tool-button-new"></a><h3>gtk_menu_tool_button_new ()</h3>
 <pre class="programlisting"><a class="link" href="GtkToolItem.html" title="GtkToolItem"><span class="returnvalue">GtkToolItem</span></a> *
 gtk_menu_tool_button_new (<em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *icon_widget</code></em>,
-                          <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>);</pre>
+                          <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolButton"><span class="type">GtkMenuToolButton</span></a> using <em class="parameter"><code>icon_widget</code></em>
  as icon and
 <em class="parameter"><code>label</code></em>
@@ -224,13 +224,13 @@ gtk_menu_tool_button_new (<em class="parameter"><code><a class="link" href="GtkW
 <tbody>
 <tr>
 <td class="parameter_name"><p>icon_widget</p></td>
-<td class="parameter_description"><p> a widget that will be used as icon widget, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> a widget that will be used as icon widget, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>label</p></td>
-<td class="parameter_description"><p> a string that will be used as label, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> a string that will be used as label, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -246,7 +246,7 @@ gtk_menu_tool_button_new (<em class="parameter"><code><a class="link" href="GtkW
 <div class="refsect2">
 <a name="gtk-menu-tool-button-new-from-stock"></a><h3>gtk_menu_tool_button_new_from_stock ()</h3>
 <pre class="programlisting"><a class="link" href="GtkToolItem.html" title="GtkToolItem"><span class="returnvalue">GtkToolItem</span></a> *
-gtk_menu_tool_button_new_from_stock (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stock_id</code></em>);</pre>
+gtk_menu_tool_button_new_from_stock (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *stock_id</code></em>);</pre>
 <div class="warning">
 <p><code class="literal">gtk_menu_tool_button_new_from_stock</code> has been deprecated since version 3.10 and should not be used in newly-written code.</p>
 <p>Use <a class="link" href="GtkMenuToolButton.html#gtk-menu-tool-button-new" title="gtk_menu_tool_button_new ()"><code class="function">gtk_menu_tool_button_new()</code></a> instead.</p>
@@ -345,7 +345,7 @@ with <a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolButton"><sp
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_menu_tool_button_set_arrow_tooltip_text
                                (<em class="parameter"><code><a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolButton"><span class="type">GtkMenuToolButton</span></a> *button</code></em>,
-                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);</pre>
+                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);</pre>
 <p>Sets the tooltip text to be used as tooltip for the arrow button which
 pops up the menu.  See <a class="link" href="GtkToolItem.html#gtk-tool-item-set-tooltip-text" title="gtk_tool_item_set_tooltip_text ()"><code class="function">gtk_tool_item_set_tooltip_text()</code></a> for setting a tooltip
 on the whole <a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolButton"><span class="type">GtkMenuToolButton</span></a>.</p>
@@ -365,7 +365,7 @@ on the whole <a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolBut
 </tr>
 <tr>
 <td class="parameter_name"><p>text</p></td>
-<td class="parameter_description"><p>text to be used as tooltip text for button's arrow button</p></td>
+<td class="parameter_description"><p>text to be used as tooltip text for button’s arrow button</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -379,7 +379,7 @@ on the whole <a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolBut
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_menu_tool_button_set_arrow_tooltip_markup
                                (<em class="parameter"><code><a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolButton"><span class="type">GtkMenuToolButton</span></a> *button</code></em>,
-                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *markup</code></em>);</pre>
+                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *markup</code></em>);</pre>
 <p>Sets the tooltip markup text to be used as tooltip for the arrow button
 which pops up the menu.  See <a class="link" href="GtkToolItem.html#gtk-tool-item-set-tooltip-text" title="gtk_tool_item_set_tooltip_text ()"><code class="function">gtk_tool_item_set_tooltip_text()</code></a> for setting
 a tooltip on the whole <a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolButton"><span class="type">GtkMenuToolButton</span></a>.</p>
@@ -399,7 +399,7 @@ a tooltip on the whole <a class="link" href="GtkMenuToolButton.html" title="GtkM
 </tr>
 <tr>
 <td class="parameter_name"><p>markup</p></td>
-<td class="parameter_description"><p>markup text to be used as tooltip text for button's arrow button</p></td>
+<td class="parameter_description"><p>markup text to be used as tooltip text for button’s arrow button</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -413,6 +413,39 @@ a tooltip on the whole <a class="link" href="GtkMenuToolButton.html" title="GtkM
 <div class="refsect2">
 <a name="GtkMenuToolButton-struct"></a><h3>struct GtkMenuToolButton</h3>
 <pre class="programlisting">struct GtkMenuToolButton;</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GtkMenuToolButtonClass"></a><h3>struct GtkMenuToolButtonClass</h3>
+<pre class="programlisting">struct GtkMenuToolButtonClass {
+  GtkToolButtonClass parent_class;
+
+
+  void (*show_menu) (GtkMenuToolButton *button);
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.13.17.12.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><a class="link" href="GtkToolButton.html#GtkToolButtonClass" title="struct GtkToolButtonClass"><span class="type">GtkToolButtonClass</span></a> <em class="structfield"><code><a name="GtkMenuToolButtonClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GtkMenuToolButtonClass.show-menu"></a>show_menu</code></em> ()</p></td>
+<td class="struct_member_description"><p>Signal emitted before the menu is shown.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -430,7 +463,7 @@ a tooltip on the whole <a class="link" href="GtkMenuToolButton.html" title="GtkM
 <a name="GtkMenuToolButton-show-menu"></a><h3>The <code class="literal">“show-menu”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkMenuToolButton.html" title="GtkMenuToolButton"><span class="type">GtkMenuToolButton</span></a> *button,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>           user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>           user_data)</pre>
 <p>The ::show-menu signal is emitted before the menu is shown.</p>
 <p>It can be used to populate the menu on demand, using
 <a class="link" href="GtkMenuToolButton.html#gtk-menu-tool-button-set-menu" title="gtk_menu_tool_button_set_menu ()"><code class="function">gtk_menu_tool_button_set_menu()</code></a>.</p>
@@ -469,6 +502,6 @@ since the arrow is made insensitive if the menu is not set.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

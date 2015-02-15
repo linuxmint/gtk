@@ -25,6 +25,7 @@
     <xi:include href="resources.sgml" />
     <xi:include href="xml/question_index.sgml" />
     <xi:include href="drawing-model.xml" />
+    <xi:include href="input-handling.xml" />
   </part>
 
 
@@ -56,14 +57,14 @@
 
     <chapter id="WindowWidgets">
       <title>Windows</title>
+      <xi:include href="xml/gtkwindow.xml" />
       <xi:include href="xml/gtkdialog.xml" />
       <xi:include href="xml/gtkmessagedialog.xml" />
       <xi:include href="xml/gtkaboutdialog.xml" />
       <xi:include href="xml/gtkassistant.xml" />
-      <xi:include href="xml/gtkwindow.xml" />
-      <xi:include href="xml/gtkwindowgroup.xml" />
       <xi:include href="xml/gtkinvisible.xml" />
       <xi:include href="xml/gtkoffscreenwindow.xml" />
+      <xi:include href="xml/gtkwindowgroup.xml" />
     </chapter>
 
     <chapter id="LayoutContainers">
@@ -72,11 +73,12 @@
       <xi:include href="xml/gtkgrid.xml" />
       <xi:include href="xml/gtkrevealer.xml" />
       <xi:include href="xml/gtklistbox.xml" />
+      <xi:include href="xml/gtkflowbox.xml" />
       <xi:include href="xml/gtkstack.xml" />
       <xi:include href="xml/gtkstackswitcher.xml" />
+      <xi:include href="xml/gtkactionbar.xml" />
       <xi:include href="xml/gtkheaderbar.xml" />
       <xi:include href="xml/gtkoverlay.xml" />
-      <xi:include href="xml/gtkalignment.xml" />
       <xi:include href="xml/gtkbbox.xml" />
       <xi:include href="xml/gtkpaned.xml" />
       <xi:include href="xml/gtklayout.xml" />
@@ -97,7 +99,6 @@
       <xi:include href="xml/gtklevelbar.xml" />
       <xi:include href="xml/gtkstatusbar.xml" />
       <xi:include href="xml/gtkaccellabel.xml" />
-      <xi:include href="xml/gtkstatusicon.xml" />
     </chapter>
 
     <chapter id="ButtonWidgets">
@@ -115,7 +116,7 @@
     </chapter>
 
     <chapter id="NumericEntry">
-      <title>Numeric/Text Data Entry</title>
+      <title>Numeric and Text Data Entry</title>
       <xi:include href="xml/gtkentry.xml" />
       <xi:include href="xml/gtkentrybuffer.xml" />
       <xi:include href="xml/gtkentrycompletion.xml" />
@@ -188,10 +189,11 @@
       <xi:include href="xml/gtkmenutoolbutton.xml" />
       <xi:include href="xml/gtktoggletoolbutton.xml" />
       <xi:include href="xml/gtkradiotoolbutton.xml" />
+      <xi:include href="xml/gtkpopover.xml" />
     </chapter>
 
     <chapter id="SelectorWidgets">
-      <title>Selectors (Color/File/Font)</title>
+      <title>Selector Widgets and Dialogs</title>
       <xi:include href="xml/gtkcolorchooser.xml" />
       <xi:include href="xml/gtkcolorbutton.xml" />
       <xi:include href="xml/gtkcolorchooserwidget.xml" />
@@ -237,7 +239,6 @@
     <chapter id="MiscObjects">
       <title>Miscellaneous</title>
       <xi:include href="xml/gtkadjustment.xml" />
-      <xi:include href="xml/gtkarrow.xml" />
       <xi:include href="xml/gtkcalendar.xml" />
       <xi:include href="xml/gtkdrawingarea.xml" />
       <xi:include href="xml/gtkeventbox.xml" />
@@ -256,7 +257,6 @@
       <xi:include href="xml/gtkcontainer.xml" />
       <xi:include href="xml/gtkbin.xml" />
       <xi:include href="xml/gtkmenushell.xml" />
-      <xi:include href="xml/gtkmisc.xml" />
       <xi:include href="xml/gtkrange.xml" />
       <xi:include href="xml/gtkimcontext.xml" />
     </chapter>
@@ -283,6 +283,20 @@
       <xi:include href="xml/gtkappchooserbutton.xml" />
       <xi:include href="xml/gtkappchooserdialog.xml" />
       <xi:include href="xml/gtkappchooserwidget.xml" />
+    </chapter>
+
+    <chapter id="Gestures">
+      <title>Gestures</title>
+      <xi:include href="xml/gtkeventcontroller.xml" />
+      <xi:include href="xml/gtkgesture.xml" />
+      <xi:include href="xml/gtkgesturesingle.xml" />
+      <xi:include href="xml/gtkgesturedrag.xml" />
+      <xi:include href="xml/gtkgesturelongpress.xml" />
+      <xi:include href="xml/gtkgesturemultipress.xml" />
+      <xi:include href="xml/gtkgesturepan.xml" />
+      <xi:include href="xml/gtkgestureswipe.xml" />
+      <xi:include href="xml/gtkgesturerotate.xml" />
+      <xi:include href="xml/gtkgesturezoom.xml" />
     </chapter>
 
     <chapter id="DeprecatedObjects">
@@ -318,7 +332,14 @@
       <xi:include href="xml/gtkrecentaction.xml" />
       <xi:include href="xml/gtkactivatable.xml" />
       <xi:include href="xml/gtkimagemenuitem.xml" />
+      <xi:include href="xml/gtkmisc.xml" />
       <xi:include href="xml/gtkstock.xml" />
+      <xi:include href="xml/gtkiconfactory.xml" />
+      <xi:include href="xml/gtknumerableicon.xml" />
+      <xi:include href="xml/gtkarrow.xml" />
+      <xi:include href="xml/gtkstatusicon.xml" />
+      <xi:include href="xml/gtkthemingengine.xml" />
+      <xi:include href="xml/gtkalignment.xml" />
     </chapter>
 
   </part>
@@ -345,11 +366,8 @@
     <xi:include href="xml/gtkcssprovider.xml" />
     <xi:include href="xml/gtkstyleprovider.xml" />
     <xi:include href="xml/gtkstyleproperties.xml" />
-    <xi:include href="xml/gtkthemingengine.xml" />
     <xi:include href="xml/gtkwidgetpath.xml" />
     <xi:include href="xml/gtkicontheme.xml" />
-    <xi:include href="xml/gtkiconfactory.xml" />
-    <xi:include href="xml/gtknumerableicon.xml" />
   </part>
 
   <part id="migrating">
@@ -375,8 +393,12 @@
 
   <part>
     <title>GTK+ Tools</title>
+    <xi:include href="gtk3-demo.xml" />
+    <xi:include href="gtk3-widget-factory.xml" />
+    <xi:include href="gtk3-icon-browser.xml" />
     <xi:include href="gtk-query-immodules-3.0.xml" />
     <xi:include href="gtk-update-icon-cache.xml" />
+    <xi:include href="gtk-encode-symbolic-svg.xml" />
     <xi:include href="gtk-launch.xml" />
     <xi:include href="broadwayd.xml" />
   </part>
@@ -426,6 +448,14 @@
   <index id="api-index-3-10" role="3.10">
     <title>Index of new symbols in 3.10</title>
     <xi:include href="xml/api-index-3.10.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-3-12" role="3.12">
+    <title>Index of new symbols in 3.12</title>
+    <xi:include href="xml/api-index-3.12.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-3-14" role="3.14">
+    <title>Index of new symbols in 3.14</title>
+    <xi:include href="xml/api-index-3.14.xml"><xi:fallback /></xi:include>
   </index>
 
   <xi:include href="xml/annotation-glossary.xml"><xi:fallback /></xi:include>

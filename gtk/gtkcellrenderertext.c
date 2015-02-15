@@ -277,7 +277,7 @@ gtk_cell_renderer_text_class_init (GtkCellRendererTextClass *class)
                                                          P_("Single Paragraph Mode"),
                                                          P_("Whether to keep all text in a single paragraph"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   
   g_object_class_install_property (object_class,
@@ -295,6 +295,7 @@ gtk_cell_renderer_text_class_init (GtkCellRendererTextClass *class)
    *
    * Deprecated: 3.4: Use #GtkCellRendererText:background-rgba instead.
    */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   g_object_class_install_property (object_class,
                                    PROP_BACKGROUND_GDK,
                                    g_param_spec_boxed ("background-gdk",
@@ -302,6 +303,7 @@ gtk_cell_renderer_text_class_init (GtkCellRendererTextClass *class)
                                                        P_("Background color as a GdkColor"),
                                                        GDK_TYPE_COLOR,
                                                        GTK_PARAM_READWRITE | G_PARAM_DEPRECATED));
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   /**
    * GtkCellRendererText:background-rgba:
@@ -332,6 +334,7 @@ gtk_cell_renderer_text_class_init (GtkCellRendererTextClass *class)
    *
    * Deprecated: 3.4: Use #GtkCellRendererText:foreground-rgba instead.
    */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   g_object_class_install_property (object_class,
                                    PROP_FOREGROUND_GDK,
                                    g_param_spec_boxed ("foreground-gdk",
@@ -339,6 +342,7 @@ gtk_cell_renderer_text_class_init (GtkCellRendererTextClass *class)
                                                        P_("Foreground color as a GdkColor"),
                                                        GDK_TYPE_COLOR,
                                                        GTK_PARAM_READWRITE | G_PARAM_DEPRECATED));
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   /**
    * GtkCellRendererText:foreground-rgba:
@@ -515,7 +519,7 @@ gtk_cell_renderer_text_class_init (GtkCellRendererTextClass *class)
 							 "to display the entire string"),
 						      PANGO_TYPE_ELLIPSIZE_MODE,
 						      PANGO_ELLIPSIZE_NONE,
-						      GTK_PARAM_READWRITE));
+						      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkCellRendererText:width-chars:
@@ -534,7 +538,7 @@ gtk_cell_renderer_text_class_init (GtkCellRendererTextClass *class)
                                                      -1,
                                                      G_MAXINT,
                                                      -1,
-                                                     GTK_PARAM_READWRITE));
+                                                     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
 
   /**
@@ -559,7 +563,7 @@ gtk_cell_renderer_text_class_init (GtkCellRendererTextClass *class)
                                                      -1,
                                                      G_MAXINT,
                                                      -1,
-                                                     GTK_PARAM_READWRITE));
+                                                     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   /**
    * GtkCellRendererText:wrap-mode:
@@ -579,7 +583,7 @@ gtk_cell_renderer_text_class_init (GtkCellRendererTextClass *class)
 							 "to display the entire string"),
 						      PANGO_TYPE_WRAP_MODE,
 						      PANGO_WRAP_CHAR,
-						      GTK_PARAM_READWRITE));
+						      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkCellRendererText:wrap-width:
@@ -598,7 +602,7 @@ gtk_cell_renderer_text_class_init (GtkCellRendererTextClass *class)
 						     -1,
 						     G_MAXINT,
 						     -1,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkCellRendererText:alignment:
@@ -618,7 +622,7 @@ gtk_cell_renderer_text_class_init (GtkCellRendererTextClass *class)
 						      P_("How to align the lines"),
 						      PANGO_TYPE_ALIGNMENT,
 						      PANGO_ALIGN_LEFT,
-						      GTK_PARAM_READWRITE));
+						      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkCellRendererText:placeholder-text:
@@ -1226,7 +1230,11 @@ gtk_cell_renderer_text_set_property (GObject      *object,
       break;
 
     case PROP_SINGLE_PARAGRAPH_MODE:
-      priv->single_paragraph = g_value_get_boolean (value);
+      if (priv->single_paragraph != g_value_get_boolean (value))
+        {
+          priv->single_paragraph = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
       
     case PROP_BACKGROUND:
@@ -1449,23 +1457,43 @@ gtk_cell_renderer_text_set_property (GObject      *object,
       break;
       
     case PROP_WRAP_MODE:
-      priv->wrap_mode = g_value_get_enum (value);
+      if (priv->wrap_mode != g_value_get_enum (value))
+        {
+          priv->wrap_mode = g_value_get_enum (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
       
     case PROP_WRAP_WIDTH:
-      priv->wrap_width = g_value_get_int (value);
+      if (priv->wrap_width != g_value_get_int (value))
+        {
+          priv->wrap_width = g_value_get_int (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
             
     case PROP_WIDTH_CHARS:
-      priv->width_chars = g_value_get_int (value);
+      if (priv->width_chars != g_value_get_int (value))
+        {
+          priv->width_chars  = g_value_get_int (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;  
 
     case PROP_MAX_WIDTH_CHARS:
-      priv->max_width_chars = g_value_get_int (value);
+      if (priv->max_width_chars != g_value_get_int (value))
+        {
+          priv->max_width_chars  = g_value_get_int (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;  
 
     case PROP_ALIGN:
-      priv->align = g_value_get_enum (value);
+      if (priv->align != g_value_get_enum (value))
+        {
+          priv->align = g_value_get_enum (value);
+          g_object_notify (object, "alignment");
+        }
       priv->align_set = TRUE;
       g_object_notify (object, "align-set");
       break;
@@ -1549,11 +1577,11 @@ gtk_cell_renderer_text_set_property (GObject      *object,
  * object properties. Object properties can be
  * set globally (with g_object_set()). Also, with #GtkTreeViewColumn,
  * you can bind a property to a value in a #GtkTreeModel. For example,
- * you can bind the "text" property on the cell renderer to a string
+ * you can bind the “text” property on the cell renderer to a string
  * value in the model, thus rendering a different string in each row
  * of the #GtkTreeView
  * 
- * Return value: the new cell renderer
+ * Returns: the new cell renderer
  **/
 GtkCellRenderer *
 gtk_cell_renderer_text_new (void)
@@ -1977,6 +2005,7 @@ gtk_cell_renderer_text_popup_unmap (GtkMenu *menu,
 
   priv->entry_menu_popdown_timeout = gdk_threads_add_timeout (500, popdown_timeout,
                                                     data);
+  g_source_set_name_by_id (priv->entry_menu_popdown_timeout, "[gtk+] popdown_timeout");
 }
 
 static void
@@ -2085,8 +2114,8 @@ gtk_cell_renderer_text_start_editing (GtkCellRenderer      *cell,
  * @renderer: A #GtkCellRendererText
  * @number_of_rows: Number of rows of text each cell renderer is allocated, or -1
  * 
- * Sets the height of a renderer to explicitly be determined by the "font" and
- * "y_pad" property set on it.  Further changes in these properties do not
+ * Sets the height of a renderer to explicitly be determined by the “font” and
+ * “y_pad” property set on it.  Further changes in these properties do not
  * affect the height, so they must be accompanied by a subsequent call to this
  * function.  Using this function is unflexible, and should really only be used
  * if calculating the size of a cell is too slow (ie, a massive number of cells

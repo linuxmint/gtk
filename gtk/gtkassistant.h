@@ -64,7 +64,7 @@ G_BEGIN_DECLS
  * %GTK_ASSISTANT_PAGE_CONFIRM, %GTK_ASSISTANT_PAGE_SUMMARY or
  * %GTK_ASSISTANT_PAGE_PROGRESS to be correct.
  *
- * The Cancel button will only be shown if the page isn't "committed".
+ * The Cancel button will only be shown if the page isn’t “committed”.
  * See gtk_assistant_commit() for details.
  */
 typedef enum
@@ -89,14 +89,26 @@ struct _GtkAssistant
   GtkAssistantPrivate *priv;
 };
 
+/**
+ * GtkAssistantClass:
+ * @parent_class: The parent class.
+ * @prepare: Signal emitted when a new page is set as the assistant’s current page, before making the new page visible.
+ * @apply: Signal emitted when the apply button is clicked.
+ * @close: Signal emitted either when the close button or last page apply button is clicked.
+ * @cancel: Signal emitted when the cancel button is clicked.
+ */
 struct _GtkAssistantClass
 {
   GtkWindowClass parent_class;
+
+  /*< public >*/
 
   void (* prepare) (GtkAssistant *assistant, GtkWidget *page);
   void (* apply)   (GtkAssistant *assistant);
   void (* close)   (GtkAssistant *assistant);
   void (* cancel)  (GtkAssistant *assistant);
+
+  /*< private >*/
 
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);
@@ -112,9 +124,9 @@ struct _GtkAssistantClass
  * @data: (closure): user data.
  *
  * A function used by gtk_assistant_set_forward_page_func() to know which
- * is the next page given a current one. It's called both for computing the
- * next page when the user presses the "forward" button and for handling
- * the behavior of the "last" button.
+ * is the next page given a current one. It’s called both for computing the
+ * next page when the user presses the “forward” button and for handling
+ * the behavior of the “last” button.
  *
  * Returns: The next page number.
  */

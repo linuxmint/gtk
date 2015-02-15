@@ -31,8 +31,6 @@
 
 #include <gtk/gtk.h>
 
-#include "prop-editor.h"
-
 static gchar *backend = "gtk+";
 static gboolean rtl = FALSE;
 static GOptionEntry entries[] = {
@@ -43,21 +41,6 @@ static GOptionEntry entries[] = {
 
 static gchar *gtk_src_dir = NULL;
 
-
-static void
-win_style_set_cb (GtkWidget *win)
-{
-  GtkWidget *content_area, *action_area;
-
-  content_area = gtk_dialog_get_content_area (GTK_DIALOG (win));
-  action_area = gtk_dialog_get_action_area (GTK_DIALOG (win));
-
-  gtk_container_set_border_width (GTK_CONTAINER (content_area), 12);
-  gtk_box_set_spacing (GTK_BOX (content_area), 24);
-  gtk_container_set_border_width (GTK_CONTAINER (action_area), 0);
-  gtk_box_set_spacing (GTK_BOX (action_area), 6);
-}
-
 static gboolean
 delete_event_cb (GtkWidget *editor,
 		 gint       response,
@@ -66,28 +49,6 @@ delete_event_cb (GtkWidget *editor,
   gtk_widget_hide (editor);
 
   return TRUE;
-}
-
-
-static void
-properties_button_clicked_cb (GtkWidget *button,
-			      GObject   *entry)
-{
-  GtkWidget *editor;
-
-  editor = g_object_get_data (entry, "properties-dialog");
-
-  if (editor == NULL)
-    {
-      editor = create_prop_editor (G_OBJECT (entry), G_TYPE_INVALID);
-      gtk_container_set_border_width (GTK_CONTAINER (editor), 12);
-      gtk_window_set_transient_for (GTK_WINDOW (editor),
-				    GTK_WINDOW (gtk_widget_get_toplevel (button)));
-      g_signal_connect (editor, "delete-event", G_CALLBACK (delete_event_cb), NULL);
-      g_object_set_data (entry, "properties-dialog", editor);
-    }
-
-  gtk_window_present (GTK_WINDOW (editor));
 }
 
 
@@ -262,7 +223,7 @@ int
 main (int   argc,
       char *argv[])
 {
-  GtkWidget *win, *vbox, *frame, *alignment, *group_box;
+  GtkWidget *win, *vbox, *frame, *group_box;
   GtkWidget *hbox, *label, *chooser, *button;
   GtkSizeGroup *label_group;
   GOptionContext *context;
@@ -286,10 +247,10 @@ main (int   argc,
 
   win = gtk_dialog_new_with_buttons ("TestFileChooserButton", NULL, 0,
 				     "_Quit", GTK_RESPONSE_CLOSE, NULL);
-  g_signal_connect (win, "style-set", G_CALLBACK (win_style_set_cb), NULL);
   g_signal_connect (win, "response", G_CALLBACK (gtk_main_quit), NULL);
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 18);
+  g_object_set (vbox, "margin", 6, NULL);
   gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (win))), vbox);
 
   frame = gtk_frame_new ("<b>GtkFileChooserButton</b>");
@@ -297,14 +258,14 @@ main (int   argc,
   gtk_label_set_use_markup (GTK_LABEL (gtk_frame_get_label_widget (GTK_FRAME (frame))), TRUE);
   gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
 
-  alignment = gtk_alignment_new (0.0, 0.0, 1.0, 1.0);
-  gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 6, 0, 12, 0);
-  gtk_container_add (GTK_CONTAINER (frame), alignment);
+  gtk_widget_set_halign (frame, GTK_ALIGN_FILL);
+  gtk_widget_set_valign (frame, GTK_ALIGN_FILL);
+  g_object_set (frame, "margin-top", 6, "margin-start", 12, NULL);
   
   label_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
   
   group_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
-  gtk_container_add (GTK_CONTAINER (alignment), group_box);
+  gtk_container_add (GTK_CONTAINER (frame), group_box);
 
   /* OPEN */
   hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
@@ -312,7 +273,9 @@ main (int   argc,
 
   label = gtk_label_new_with_mnemonic ("_Open:");
   gtk_size_group_add_widget (GTK_SIZE_GROUP (label_group), label);
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+G_GNUC_END_IGNORE_DEPRECATIONS
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
   chooser = gtk_file_chooser_button_new ("Select A File - testfilechooserbutton",
@@ -327,10 +290,6 @@ main (int   argc,
   g_signal_connect (chooser, "update-preview", G_CALLBACK (chooser_update_preview_cb), NULL);
   gtk_box_pack_start (GTK_BOX (hbox), chooser, TRUE, TRUE, 0);
 
-  button = gtk_button_new_with_label ("Properties");
-  g_signal_connect (button, "clicked", G_CALLBACK (properties_button_clicked_cb), chooser);
-  gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-
   button = gtk_button_new_with_label ("Tests");
   g_signal_connect (button, "clicked", G_CALLBACK (tests_button_clicked_cb), chooser);
   gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
@@ -341,7 +300,9 @@ main (int   argc,
 
   label = gtk_label_new_with_mnemonic ("Select _Folder:");
   gtk_size_group_add_widget (GTK_SIZE_GROUP (label_group), label);
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+G_GNUC_END_IGNORE_DEPRECATIONS
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
   chooser = gtk_file_chooser_button_new ("Select A Folder - testfilechooserbutton",
@@ -356,10 +317,6 @@ main (int   argc,
   g_signal_connect (chooser, "file-activated", G_CALLBACK (chooser_file_activated_cb), NULL);
   g_signal_connect (chooser, "update-preview", G_CALLBACK (chooser_update_preview_cb), NULL);
   gtk_box_pack_start (GTK_BOX (hbox), chooser, TRUE, TRUE, 0);
-
-  button = gtk_button_new_with_label ("Properties");
-  g_signal_connect (button, "clicked", G_CALLBACK (properties_button_clicked_cb), chooser);
-  gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
 
   button = gtk_button_new_with_label ("Tests");
   g_signal_connect (button, "clicked", G_CALLBACK (tests_button_clicked_cb), chooser);

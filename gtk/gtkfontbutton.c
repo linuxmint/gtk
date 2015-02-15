@@ -272,10 +272,15 @@ gtk_font_button_set_show_preview_entry (GtkFontButton *font_button,
 {
   GtkFontButtonPrivate *priv = font_button->priv;
 
-  if (priv->font_dialog)
-    gtk_font_chooser_set_show_preview_entry (GTK_FONT_CHOOSER (priv->font_dialog), show);
-  else
-    priv->show_preview_entry = show != FALSE;
+  show = show != FALSE;
+
+  if (priv->show_preview_entry != show)
+    {
+      priv->show_preview_entry = show;
+      if (priv->font_dialog)
+        gtk_font_chooser_set_show_preview_entry (GTK_FONT_CHOOSER (priv->font_dialog), show);
+      g_object_notify (G_OBJECT (font_button), "show-preview-entry");
+    }
 }
 
 static PangoFontFamily *
@@ -436,8 +441,7 @@ gtk_font_button_class_init (GtkFontButtonClass *klass)
                                                         P_("Title"),
                                                         P_("The title of the font chooser dialog"),
                                                         _("Pick a Font"),
-                                                        (GTK_PARAM_READABLE |
-                                                         GTK_PARAM_WRITABLE)));
+                                                        GTK_PARAM_READWRITE));
 
   /**
    * GtkFontButton:font-name:
@@ -452,8 +456,7 @@ gtk_font_button_class_init (GtkFontButtonClass *klass)
                                                         P_("Font name"),
                                                         P_("The name of the selected font"),
                                                         P_("Sans 12"),
-                                                        (GTK_PARAM_READABLE |
-                                                         GTK_PARAM_WRITABLE)));
+                                                        GTK_PARAM_READWRITE));
 
   /**
    * GtkFontButton:use-font:
@@ -469,7 +472,7 @@ gtk_font_button_class_init (GtkFontButtonClass *klass)
                                                          P_("Use font in label"),
                                                          P_("Whether the label is drawn in the selected font"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkFontButton:use-size:
@@ -485,7 +488,7 @@ gtk_font_button_class_init (GtkFontButtonClass *klass)
                                                          P_("Use size in label"),
                                                          P_("Whether the label is drawn with the selected font size"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkFontButton:show-style:
@@ -502,7 +505,7 @@ gtk_font_button_class_init (GtkFontButtonClass *klass)
                                                          P_("Show style"),
                                                          P_("Whether the selected font style is shown in the label"),
                                                          TRUE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   /**
    * GtkFontButton:show-size:
    * 
@@ -518,7 +521,7 @@ gtk_font_button_class_init (GtkFontButtonClass *klass)
                                                          P_("Show size"),
                                                          P_("Whether selected font size is shown in the label"),
                                                          TRUE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkFontButton::font-set:
@@ -528,7 +531,7 @@ gtk_font_button_class_init (GtkFontButtonClass *klass)
    * When handling this signal, use gtk_font_button_get_font_name() 
    * to find out which font was just selected.
    *
-   * Note that this signal is only emitted when the <emphasis>user</emphasis>
+   * Note that this signal is only emitted when the user
    * changes the font. If you need to react to programmatic font changes
    * as well, use the notify::font-name signal.
    *
@@ -544,7 +547,7 @@ gtk_font_button_class_init (GtkFontButtonClass *klass)
 
   /* Bind class to template
    */
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/libgtk/gtkfontbutton.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/libgtk/ui/gtkfontbutton.ui");
   gtk_widget_class_bind_template_child_private (widget_class, GtkFontButton, font_label);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFontButton, size_label);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFontButton, font_size_box);
@@ -854,7 +857,7 @@ gtk_font_button_set_use_size (GtkFontButton *font_button,
  * 
  * Returns whether the name of the font style will be shown in the label.
  * 
- * Return value: whether the font style will be shown in the label.
+ * Returns: whether the font style will be shown in the label.
  *
  * Since: 2.4
  **/
@@ -899,7 +902,7 @@ gtk_font_button_set_show_style (GtkFontButton *font_button,
  * 
  * Returns whether the font size will be shown in the label.
  * 
- * Return value: whether the font size will be shown in the label.
+ * Returns: whether the font size will be shown in the label.
  *
  * Since: 2.4
  **/
@@ -951,7 +954,7 @@ gtk_font_button_set_show_size (GtkFontButton *font_button,
  * Retrieves the name of the currently selected font. This name includes
  * style and size information as well. If you want to render something
  * with the font, use this string with pango_font_description_from_string() .
- * If you're interested in peeking certain values (family name,
+ * If you’re interested in peeking certain values (family name,
  * style, size, weight) just query these properties from the
  * #PangoFontDescription object.
  *
@@ -1046,6 +1049,9 @@ gtk_font_button_clicked (GtkButton *button)
 
       g_signal_connect (font_dialog, "destroy",
                         G_CALLBACK (dialog_destroy), font_button);
+
+      g_signal_connect (font_dialog, "delete-event",
+                        G_CALLBACK (gtk_widget_hide_on_delete), NULL);
     }
   
   if (!gtk_widget_get_visible (font_button->priv->font_dialog))
@@ -1139,20 +1145,23 @@ static void
 gtk_font_button_update_font_info (GtkFontButton *font_button)
 {
   GtkFontButtonPrivate *priv = font_button->priv;
+  const gchar *fam_name;
+  const gchar *face_name;
   gchar *family_style;
 
-  g_assert (priv->font_desc != NULL);
+  if (priv->font_family)
+    fam_name = pango_font_family_get_name (priv->font_family);
+  else
+    fam_name = _("None");
+  if (priv->font_face)
+    face_name = pango_font_face_get_face_name (priv->font_face);
+  else
+    face_name = "";
 
   if (priv->show_style)
-    {
-      PangoFontDescription *desc = pango_font_description_copy_static (priv->font_desc);
-
-      pango_font_description_unset_fields (desc, PANGO_FONT_MASK_SIZE);
-      family_style = pango_font_description_to_string (desc);
-      pango_font_description_free (desc);
-    }
+    family_style = g_strconcat (fam_name, " ", face_name, NULL);
   else
-    family_style = g_strdup (pango_font_description_get_family (priv->font_desc));
+    family_style = g_strdup (fam_name);
 
   gtk_label_set_text (GTK_LABEL (font_button->priv->font_label), family_style);
   g_free (family_style);
@@ -1160,7 +1169,7 @@ gtk_font_button_update_font_info (GtkFontButton *font_button)
   if (font_button->priv->show_size) 
     {
       /* mirror Pango, which doesn't translate this either */
-      gchar *size = g_strdup_printf ("%g%s",
+      gchar *size = g_strdup_printf ("%2.4g%s",
                                      pango_font_description_get_size (priv->font_desc) / (double)PANGO_SCALE,
                                      pango_font_description_get_size_is_absolute (priv->font_desc) ? "px" : "");
       

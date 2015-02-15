@@ -39,7 +39,7 @@
  *
  *   2. The caller populates the model by hand, with files not necessarily in the same folder.  This happens
  *      if you use _gtk_file_system_model_new() and then _gtk_file_system_model_add_and_query_file().  This is
- *      the special kind of usage for "search" and "recent-files", where the file chooser gives the model the
+ *      the special kind of usage for “search” and “recent-files”, where the file chooser gives the model the
  *      files to be displayed.
  *
  * Internal data structure
@@ -70,7 +70,7 @@
  * Each FileModelNode has a node->visible field, which indicates whether the node is visible in the GtkTreeView.
  * A node may be invisible if, for example, it corresponds to a hidden file and the file chooser is not showing
  * hidden files.  Also, a file filter may be explicitly set onto the model, for example, to only show files that
- * match "*.jpg".  In this case, node->filtered_out says whether the node failed the filter.  The ultimate
+ * match “*.jpg”.  In this case, node->filtered_out says whether the node failed the filter.  The ultimate
  * decision on whether a node is visible or not in the treeview is distilled into the node->visible field.
  * The reason for having a separate node->filtered_out field is so that the file chooser can query whether
  * a (filtered-out) folder should be made sensitive in the GUI.
@@ -82,12 +82,12 @@
  * the treeview to array indexes in our array of files.  And thus we introduce a bit of terminology:
  *
  *   index - An index in the model->files array.  All variables/fields that represent indexes are either called
- *   "index" or "i_*", or simply "i" for things like loop counters.
+ *   “index” or “i_*”, or simply “i” for things like loop counters.
  *
  *   row - An index in the GtkTreeView, i.e. the index of a row within the outward-facing API of the
  *   GtkFileSystemModel.  However, note that our rows are 1-based, not 0-based, for the reason explained in the
- *   following paragraph.  Variables/fields that represent visible rows are called "row", or "r_*", or simply
- *   "r".
+ *   following paragraph.  Variables/fields that represent visible rows are called “row”, or “r_*”, or simply
+ *   “r”.
  *
  * Each FileModelNode has a node->row field which is the number of visible rows in the treeview, *before and
  * including* that node.  This means that node->row is 1-based, instead of 0-based --- this makes some code
@@ -95,11 +95,11 @@
  * turn the 0-based treepath into a 1-based row for our purposes.  If a node is not visible, it will have the
  * same row number as its closest preceding visible node.
  *
- * We try to compute the node->row fields lazily.  A node is said to be "valid" if its node->row is accurate.
+ * We try to compute the node->row fields lazily.  A node is said to be “valid” if its node->row is accurate.
  * For this, the model keeps a model->n_nodes_valid field which is the count of valid nodes starting from the
  * beginning of the model->files array.  When a node changes its information, or when a node gets deleted, that
  * node and the following ones get invalidated by simply setting model->n_nodes_valid to the array index of the
- * node.  If the model happens to need a node's row number and that node is in the model->files array after
+ * node.  If the model happens to need a node’s row number and that node is in the model->files array after
  * model->n_nodes_valid, then the nodes get re-validated up to the sought node.  See node_validate_rows() for
  * this logic.
  *
@@ -244,7 +244,7 @@ static void remove_file (GtkFileSystemModel *model,
  *
  * If you want to validate up to an index or up to a row, specify the index or
  * the row you want and specify G_MAXUINT for the other argument.  Pass
- * G_MAXUINT for both arguments for "validate everything".
+ * G_MAXUINT for both arguments for “validate everything”.
  */
 static void
 node_validate_rows (GtkFileSystemModel *model, guint up_to_index, guint up_to_row)
@@ -1151,6 +1151,7 @@ gtk_file_system_model_got_files (GObject *object, GAsyncResult *res, gpointer da
                                                                  thaw_func,
                                                                  model,
                                                                  NULL);
+          g_source_set_name_by_id (model->dir_thaw_source, "[gtk+] thaw_func");
         }
 
       for (walk = files; walk; walk = walk->next)
@@ -1227,6 +1228,8 @@ gtk_file_system_model_query_done (GObject *     object,
 
   id = node_get_for_file (model, file);
   gtk_file_system_model_sort_node (model, id);
+
+  g_object_unref (info);
 
   gdk_threads_leave ();
 }
@@ -1391,7 +1394,7 @@ _gtk_file_system_model_new_valist (GtkFileSystemModelGetValue get_func,
  * to the list using _gtk_file_system_model_add_and_query_file()
  * or _gtk_file_system_model_update_file().
  *
- * Return value: the newly created #GtkFileSystemModel
+ * Returns: the newly created #GtkFileSystemModel
  **/
 GtkFileSystemModel *
 _gtk_file_system_model_new (GtkFileSystemModelGetValue get_func,
@@ -1428,7 +1431,7 @@ _gtk_file_system_model_new (GtkFileSystemModelGetValue get_func,
  * it will also monitor the drectory and update the model's
  * contents to reflect changes, if the @directory supports monitoring.
  * 
- * Return value: the newly created #GtkFileSystemModel
+ * Returns: the newly created #GtkFileSystemModel
  **/
 GtkFileSystemModel *
 _gtk_file_system_model_new_for_directory (GFile *                    dir,
@@ -1645,13 +1648,13 @@ _gtk_file_system_model_iter_is_filtered_out (GtkFileSystemModel *model,
  * @model: a #GtkFileSystemModel
  * @iter: a #GtkTreeIter pointing to a row of @model
  * 
- * Gets the #GFileInfo structure for a particular row
+ * Gets the #GFileInfo-struct for a particular row
  * of @model.
  * 
- * Return value: a #GFileInfo structure. This structure
+ * Returns: a #GFileInfo-struct. This value
  *   is owned by @model and must not be modified or freed.
  *   If you want to keep the information for later use,
- *   you must take a reference, since the structure may be
+ *   you must take a reference, since the #GFileInfo-struct may be
  *   freed on later changes to the file system.  If you have
  *   called _gtk_file_system_model_add_editable() and the @iter
  *   corresponds to the row that this function returned, the
@@ -1678,7 +1681,7 @@ _gtk_file_system_model_get_info (GtkFileSystemModel *model,
  * 
  * Gets the file for a particular row in @model. 
  *
- * Return value: the file. This object is owned by @model and
+ * Returns: the file. This object is owned by @model and
  *   or freed. If you want to save the path for later use,
  *   you must take a ref, since the object may be freed
  *   on later changes to the file system.
@@ -1994,7 +1997,7 @@ _gtk_file_system_model_set_filter (GtkFileSystemModel      *model,
  * @model: a #GtkFileSystemModel
  * @iter: Location to return the iter corresponding to the editable row
  * 
- * Adds an "empty" row at the beginning of the model.  This does not refer to
+ * Adds an “empty” row at the beginning of the model.  This does not refer to
  * any file, but is a temporary placeholder for a file name that the user will
  * type when a corresponding cell is made editable.  When your code is done
  * using this temporary row, call _gtk_file_system_model_remove_editable().
@@ -2013,7 +2016,7 @@ _gtk_file_system_model_add_editable (GtkFileSystemModel *model, GtkTreeIter *ite
  * _gtk_file_system_model_remove_editable:
  * @model: a #GtkFileSystemModel
  * 
- * Removes the "empty" row at the beginning of the model that was
+ * Removes the “empty” row at the beginning of the model that was
  * created with _gtk_file_system_model_add_editable().  You should call
  * this function when your code is finished editing this temporary row.
  **/

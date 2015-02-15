@@ -22,6 +22,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/mman.h>
 
 #include <glib.h>
 #include "gdkwayland.h"
@@ -40,27 +41,26 @@
  * @Title: Wayland Interaction
  *
  * The functions in this section are specific to the GDK Wayland backend.
- * To use them, you need to include the <literal>&lt;gdk/gdkwayland.h&gt;</literal>
- * header and use the Wayland-specific pkg-config files to build your
- * application (either <literal>gdk-wayland-3.0</literal> or
- * <literal>gtk+-wayland-3.0</literal>).
+ * To use them, you need to include the `<gdk/gdkwayland.h>` header and use
+ * the Wayland-specific pkg-config files to build your application (either
+ * `gdk-wayland-3.0` or `gtk+-wayland-3.0`).
  *
  * To make your code compile with other GDK backends, guard backend-specific
  * calls by an ifdef as follows. Since GDK may be built with multiple
  * backends, you should also check for the backend that is in use (e.g. by
  * using the GDK_IS_WAYLAND_DISPLAY() macro).
- * |[
+ * |[<!-- language="C" -->
  * #ifdef GDK_WINDOWING_WAYLAND
  *   if (GDK_IS_WAYLAND_DISPLAY (display))
  *     {
- *       /&ast; make Wayland-specific calls here &ast;/
+ *       // make Wayland-specific calls here
  *     }
  *   else
  * #endif
  * #ifdef GDK_WINDOWING_X11
  *   if (GDK_IS_X11_DISPLAY (display))
  *     {
- *       /&ast; make X11-specific calls here &ast;/
+ *       // make X11-specific calls here
  *     }
  *   else
  * #endif
@@ -123,27 +123,20 @@ gdk_input_init (GdkDisplay *display)
 }
 
 static void
-init_sync_callback(void *data, struct wl_callback *callback, uint32_t serial)
+xdg_shell_ping (void             *data,
+                struct xdg_shell *xdg_shell,
+                uint32_t          serial)
 {
-  GdkWaylandDisplay *display = data;
+  GdkWaylandDisplay *wayland_display = data;
 
-  display->init_ref_count--;
-  wl_callback_destroy(callback);
+  _gdk_wayland_display_update_serial (wayland_display, serial);
+
+  xdg_shell_pong (xdg_shell, serial);
 }
 
-static const struct wl_callback_listener init_sync_listener = {
-	init_sync_callback
+static const struct xdg_shell_listener xdg_shell_listener = {
+  xdg_shell_ping,
 };
-
-static void
-wait_for_roundtrip(GdkWaylandDisplay *display)
-{
-  struct wl_callback *callback;
-
-  display->init_ref_count++;
-  callback = wl_display_sync(display->wl_display);
-  wl_callback_add_listener(callback, &init_sync_listener, display);
-}
 
 static void
 gdk_registry_handle_global(void *data, struct wl_registry *registry, uint32_t id,
@@ -164,34 +157,30 @@ gdk_registry_handle_global(void *data, struct wl_registry *registry, uint32_t id
 
     /* SHM interface is prerequisite */
     _gdk_wayland_display_load_cursor_theme(display_wayland);
-  } else if (strcmp(interface, "wl_shell") == 0) {
-    display_wayland->shell =
-	wl_registry_bind(display_wayland->wl_registry, id, &wl_shell_interface, 1);
+  } else if (strcmp(interface, "xdg_shell") == 0) {
+    display_wayland->xdg_shell =
+      wl_registry_bind(display_wayland->wl_registry, id, &xdg_shell_interface, 1);
+    xdg_shell_use_unstable_version(display_wayland->xdg_shell, XDG_SHELL_VERSION_CURRENT);
+    xdg_shell_add_listener(display_wayland->xdg_shell, &xdg_shell_listener, display_wayland);
   } else if (strcmp(interface, "gtk_shell") == 0) {
     display_wayland->gtk_shell =
       wl_registry_bind(display_wayland->wl_registry, id, &gtk_shell_interface, 1);
     _gdk_wayland_screen_set_has_gtk_shell (display_wayland->screen);
-    /* We need another roundtrip to receive the shell capabilities */
-    wait_for_roundtrip(display_wayland);
   } else if (strcmp(interface, "wl_output") == 0) {
     output =
       wl_registry_bind(display_wayland->wl_registry, id, &wl_output_interface, MIN (version, 2));
     _gdk_wayland_screen_add_output(display_wayland->screen, id, output, MIN (version, 2));
-    /* We need another roundtrip to receive the modes and geometry
-     * events for the output, which gives us the physical properties
-     * and available modes on the output. */
-    wait_for_roundtrip(display_wayland);
   } else if (strcmp(interface, "wl_seat") == 0) {
-    seat = wl_registry_bind(display_wayland->wl_registry, id, &wl_seat_interface, 1);
+    seat = wl_registry_bind(display_wayland->wl_registry, id, &wl_seat_interface, 4);
     _gdk_wayland_device_manager_add_seat (gdk_display->device_manager, id, seat);
-    /* We need another roundtrip to receive the wl_seat capabilities
-     * event which informs us of available input devices on this
-     * seat. */
-    wait_for_roundtrip(display_wayland);
   } else if (strcmp(interface, "wl_data_device_manager") == 0) {
       display_wayland->data_device_manager =
         wl_registry_bind(display_wayland->wl_registry, id,
 					&wl_data_device_manager_interface, 1);
+  } else if (strcmp (interface, "wl_subcompositor") == 0) {
+    display_wayland->subcompositor =
+      wl_registry_bind (display_wayland->wl_registry, id,
+                        &wl_subcompositor_interface, 1);
   }
 }
 
@@ -227,6 +216,13 @@ _gdk_wayland_display_open (const gchar *display_name)
   GdkDisplay *display;
   GdkWaylandDisplay *display_wayland;
 
+  /* If this variable is unset then wayland initialisation will surely
+   * fail, logging a fatal error in the process.  Save ourselves from
+   * that.
+   */
+  if (g_getenv ("XDG_RUNTIME_DIR") == NULL)
+    return NULL;
+
   wl_log_set_handler_client(log_handler);
 
   wl_display = wl_display_connect(display_name);
@@ -234,28 +230,23 @@ _gdk_wayland_display_open (const gchar *display_name)
     return NULL;
 
   display = g_object_new (GDK_TYPE_WAYLAND_DISPLAY, NULL);
-  display_wayland = GDK_WAYLAND_DISPLAY (display);
-
-  display_wayland->wl_display = wl_display;
-
-  display_wayland->screen = _gdk_wayland_screen_new (display);
-
   display->device_manager = _gdk_wayland_device_manager_new (display);
 
-  /* Set up listener so we'll catch all events. */
+  display_wayland = GDK_WAYLAND_DISPLAY (display);
+  display_wayland->wl_display = wl_display;
+  display_wayland->screen = _gdk_wayland_screen_new (display);
+  display_wayland->event_source = _gdk_wayland_display_event_source_new (display);
+  _gdk_wayland_display_init_cursors (display_wayland);
+
   display_wayland->wl_registry = wl_display_get_registry(display_wayland->wl_display);
   wl_registry_add_listener(display_wayland->wl_registry, &registry_listener, display_wayland);
 
-  /* We use init_ref_count to track whether some part of our
-   * initialization still needs a roundtrip to complete. */
-  wait_for_roundtrip(display_wayland);
-  while (display_wayland->init_ref_count > 0)
-    wl_display_roundtrip(display_wayland->wl_display);
-
-  display_wayland->event_source =
-    _gdk_wayland_display_event_source_new (display);
+  /* Wait until the dust has settled during init... */
+  wl_display_roundtrip (display_wayland->wl_display);
 
   gdk_input_init (display);
+
+  display_wayland->selection = gdk_wayland_selection_new ();
 
   g_signal_emit_by_name (display, "opened");
 
@@ -277,6 +268,12 @@ gdk_wayland_display_dispose (GObject *object)
       g_source_destroy (display_wayland->event_source);
       g_source_unref (display_wayland->event_source);
       display_wayland->event_source = NULL;
+    }
+
+  if (display_wayland->selection)
+    {
+      gdk_wayland_selection_free (display_wayland->selection);
+      display_wayland->selection = NULL;
     }
 
   G_OBJECT_CLASS (gdk_wayland_display_parent_class)->dispose (object);
@@ -387,7 +384,7 @@ gdk_wayland_display_store_clipboard (GdkDisplay    *display,
 static gboolean
 gdk_wayland_display_supports_shapes (GdkDisplay *display)
 {
-  return TRUE;
+  return FALSE;
 }
 
 static gboolean
@@ -399,7 +396,7 @@ gdk_wayland_display_supports_input_shapes (GdkDisplay *display)
 static gboolean
 gdk_wayland_display_supports_composite (GdkDisplay *display)
 {
-  return TRUE;
+  return FALSE;
 }
 
 static GList *
@@ -428,74 +425,10 @@ gdk_wayland_display_get_next_serial (GdkDisplay *display)
   return ++serial;
 }
 
-/**
- * gdk_wayland_display_broadcast_startup_message:
- * @display: a #GdkDisplay
- * @message_type: startup notification message type ("new", "change",
- * or "remove")
- * @...: a list of key/value pairs (as strings), terminated by a
- * %NULL key. (A %NULL value for a key will cause that key to be
- * skipped in the output.)
- *
- * Sends a startup notification message of type @message_type to
- * @display. 
- *
- * This is a convenience function for use by code that implements the
- * freedesktop startup notification specification. Applications should
- * not normally need to call it directly. See the <ulink
- * url="http://standards.freedesktop.org/startup-notification-spec/startup-notification-latest.txt">Startup
- * Notification Protocol specification</ulink> for
- * definitions of the message types and keys that can be used.
- *
- * Since: 2.12
- **/
-void
-gdk_wayland_display_broadcast_startup_message (GdkDisplay *display,
-					       const char *message_type,
-					       ...)
-{
-  GString *message;
-  va_list ap;
-  const char *key, *value, *p;
-
-  message = g_string_new (message_type);
-  g_string_append_c (message, ':');
-
-  va_start (ap, message_type);
-  while ((key = va_arg (ap, const char *)))
-    {
-      value = va_arg (ap, const char *);
-      if (!value)
-	continue;
-
-      g_string_append_printf (message, " %s=\"", key);
-      for (p = value; *p; p++)
-	{
-	  switch (*p)
-	    {
-	    case ' ':
-	    case '"':
-	    case '\\':
-	      g_string_append_c (message, '\\');
-	      break;
-	    }
-
-	  g_string_append_c (message, *p);
-	}
-      g_string_append_c (message, '\"');
-    }
-  va_end (ap);
-
-  g_string_free (message, TRUE);
-}
-
 static void
 gdk_wayland_display_notify_startup_complete (GdkDisplay  *display,
 					     const gchar *startup_id)
 {
-  gdk_wayland_display_broadcast_startup_message (display, "remove",
-						 "ID", startup_id,
-						 NULL);
 }
 
 static void
@@ -511,7 +444,7 @@ gdk_wayland_display_event_data_free (GdkDisplay *display,
 {
 }
 
-GdkKeymap *
+static GdkKeymap *
 _gdk_wayland_display_get_keymap (GdkDisplay *display)
 {
   GdkDeviceManager *device_manager;
@@ -525,7 +458,7 @@ _gdk_wayland_display_get_keymap (GdkDisplay *display)
   for (l = list; l; l = l->next)
     {
       GdkDevice *device;
-      device = list->data;
+      device = l->data;
 
       if (gdk_device_get_source (device) != GDK_SOURCE_KEYBOARD)
 	continue;
@@ -545,7 +478,8 @@ _gdk_wayland_display_get_keymap (GdkDisplay *display)
   if (core_keyboard)
     return _gdk_wayland_device_get_keymap (core_keyboard);
 
-  tmp_keymap = _gdk_wayland_keymap_new ();
+  if (!tmp_keymap)
+    tmp_keymap = _gdk_wayland_keymap_new ();
 
   return tmp_keymap;
 }
@@ -728,21 +662,196 @@ gdk_wayland_display_get_wl_compositor (GdkDisplay *display)
 }
 
 /**
- * gdk_wayland_display_get_wl_shell
+ * gdk_wayland_display_get_xdg_shell
  * @display: (type GdkWaylandDisplay): a #GdkDisplay
  *
  * Returns the Wayland global singleton shell of a #GdkDisplay
  *
- * Returns: (transfer none): a Wayland wl_shell
+ * Returns: (transfer none): a Wayland xdg_shell
  *
  * Since: 3.8
  */
-struct wl_shell *
-gdk_wayland_display_get_wl_shell (GdkDisplay *display)
+struct xdg_shell *
+gdk_wayland_display_get_xdg_shell (GdkDisplay *display)
 {
   GdkWaylandDisplay *wayland_display = GDK_WAYLAND_DISPLAY(display);
 
   g_return_val_if_fail (GDK_IS_WAYLAND_DISPLAY(display), NULL);
 
-  return wayland_display->shell;
+  return wayland_display->xdg_shell;
+}
+
+static const cairo_user_data_key_t gdk_wayland_cairo_key;
+
+typedef struct _GdkWaylandCairoSurfaceData {
+  gpointer buf;
+  size_t buf_length;
+  struct wl_shm_pool *pool;
+  struct wl_buffer *buffer;
+  GdkWaylandDisplay *display;
+  uint32_t scale;
+  gboolean busy;
+} GdkWaylandCairoSurfaceData;
+
+static void
+buffer_release_callback (void             *_data,
+                         struct wl_buffer *wl_buffer)
+{
+  cairo_surface_t *surface = _data;
+  GdkWaylandCairoSurfaceData *data = cairo_surface_get_user_data (surface, &gdk_wayland_cairo_key);
+
+  data->busy = FALSE;
+  cairo_surface_destroy (surface);
+}
+
+static const struct wl_buffer_listener buffer_listener = {
+  buffer_release_callback
+};
+
+static struct wl_shm_pool *
+create_shm_pool (struct wl_shm  *shm,
+                 int             width,
+                 int             height,
+                 size_t         *buf_length,
+                 void          **data_out)
+{
+  char filename[] = "/tmp/wayland-shm-XXXXXX";
+  struct wl_shm_pool *pool;
+  int fd, size, stride;
+  void *data;
+
+  fd = mkstemp (filename);
+  if (fd < 0)
+    {
+      g_critical (G_STRLOC ": Unable to create temporary file (%s): %s",
+                  filename, g_strerror (errno));
+      return NULL;
+    }
+
+  stride = width * 4;
+  size = stride * height;
+  if (ftruncate (fd, size) < 0)
+    {
+      g_critical (G_STRLOC ": Truncating temporary file failed: %s",
+                  g_strerror (errno));
+      close (fd);
+      return NULL;
+    }
+
+  data = mmap (NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  unlink (filename);
+
+  if (data == MAP_FAILED)
+    {
+      g_critical (G_STRLOC ": mmap'ping temporary file failed: %s",
+                  g_strerror (errno));
+      close (fd);
+      return NULL;
+    }
+
+  pool = wl_shm_create_pool(shm, fd, size);
+
+  close (fd);
+
+  *data_out = data;
+  *buf_length = size;
+
+  return pool;
+}
+
+static void
+gdk_wayland_cairo_surface_destroy (void *p)
+{
+  GdkWaylandCairoSurfaceData *data = p;
+
+  if (data->buffer)
+    wl_buffer_destroy (data->buffer);
+
+  if (data->pool)
+    wl_shm_pool_destroy (data->pool);
+
+  munmap (data->buf, data->buf_length);
+  g_free (data);
+}
+
+cairo_surface_t *
+_gdk_wayland_display_create_shm_surface (GdkWaylandDisplay *display,
+                                         int                width,
+                                         int                height,
+                                         guint              scale)
+{
+  GdkWaylandCairoSurfaceData *data;
+  cairo_surface_t *surface = NULL;
+  cairo_status_t status;
+  int stride;
+
+  data = g_new (GdkWaylandCairoSurfaceData, 1);
+  data->display = display;
+  data->buffer = NULL;
+  data->scale = scale;
+  data->busy = FALSE;
+
+  stride = width * 4;
+
+  data->pool = create_shm_pool (display->shm,
+                                width*scale, height*scale,
+                                &data->buf_length,
+                                &data->buf);
+
+  surface = cairo_image_surface_create_for_data (data->buf,
+                                                 CAIRO_FORMAT_ARGB32,
+                                                 width*scale,
+                                                 height*scale,
+                                                 stride*scale);
+
+  data->buffer = wl_shm_pool_create_buffer (data->pool, 0,
+                                            width*scale, height*scale,
+                                            stride*scale, WL_SHM_FORMAT_ARGB8888);
+  wl_buffer_add_listener (data->buffer, &buffer_listener, surface);
+
+  cairo_surface_set_user_data (surface, &gdk_wayland_cairo_key,
+                               data, gdk_wayland_cairo_surface_destroy);
+
+#ifdef HAVE_CAIRO_SURFACE_SET_DEVICE_SCALE
+  cairo_surface_set_device_scale (surface, scale, scale);
+#endif
+
+  status = cairo_surface_status (surface);
+  if (status != CAIRO_STATUS_SUCCESS)
+    {
+      g_critical (G_STRLOC ": Unable to create Cairo image surface: %s",
+                  cairo_status_to_string (status));
+    }
+
+  return surface;
+}
+
+struct wl_buffer *
+_gdk_wayland_shm_surface_get_wl_buffer (cairo_surface_t *surface)
+{
+  GdkWaylandCairoSurfaceData *data = cairo_surface_get_user_data (surface, &gdk_wayland_cairo_key);
+  return data->buffer;
+}
+
+void
+_gdk_wayland_shm_surface_set_busy (cairo_surface_t *surface)
+{
+  GdkWaylandCairoSurfaceData *data = cairo_surface_get_user_data (surface, &gdk_wayland_cairo_key);
+  data->busy = TRUE;
+  cairo_surface_reference (surface);
+}
+
+gboolean
+_gdk_wayland_shm_surface_get_busy (cairo_surface_t *surface)
+{
+  GdkWaylandCairoSurfaceData *data = cairo_surface_get_user_data (surface, &gdk_wayland_cairo_key);
+  return data->busy;
+}
+
+GdkWaylandSelection *
+gdk_wayland_display_get_selection (GdkDisplay *display)
+{
+  GdkWaylandDisplay *wayland_display = GDK_WAYLAND_DISPLAY (display);
+
+  return wayland_display->selection;
 }

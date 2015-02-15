@@ -35,11 +35,11 @@
  * Usually users dont have to interact with the #GtkCellArea directly
  * unless they are implementing a cell-layouting widget themselves.
  *
- * <refsect2 id="cell-area-geometry-management">
- * <title>Requesting area sizes</title>
- * <para>
- * As outlined in <link linkend="geometry-management">GtkWidget's
- * geometry management section</link>, GTK+ uses a height-for-width
+ * # Requesting area sizes
+ *
+ * As outlined in
+ * [GtkWidget’s geometry management section][geometry-management],
+ * GTK+ uses a height-for-width
  * geometry management system to compute the sizes of widgets and user
  * interfaces. #GtkCellArea uses the same semantics to calculate the
  * size of an area for an arbitrary number of #GtkTreeModel rows.
@@ -52,9 +52,9 @@
  * width and wrap the areas around, requesting height for more cell
  * areas when allocated less width.
  *
- * It's also important for areas to maintain some cell
+ * It’s also important for areas to maintain some cell
  * alignments with areas rendered for adjacent rows (cells can
- * appear "columnized" inside an area even when the size of
+ * appear “columnized” inside an area even when the size of
  * cells are different in each row). For this reason the #GtkCellArea
  * uses a #GtkCellAreaContext object to store the alignments
  * and sizes along the way (as well as the overall largest minimum
@@ -66,15 +66,14 @@
  * The owning cell-layouting widget can create as many contexts as
  * it wishes to calculate sizes of rows which should receive the
  * same size in at least one orientation (horizontally or vertically),
- * However, it's important that the same #GtkCellAreaContext which
+ * However, it’s important that the same #GtkCellAreaContext which
  * was used to request the sizes for a given #GtkTreeModel row be
  * used when rendering or processing events for that row.
  *
  * In order to request the width of all the rows at the root level
  * of a #GtkTreeModel one would do the following:
- * <example>
- *   <title>Requesting the width of a handful of GtkTreeModel rows</title>
- *   <programlisting>
+ *
+ * |[<!-- language="C" -->
  * GtkTreeIter iter;
  * gint        minimum_width;
  * gint        natural_width;
@@ -88,9 +87,9 @@
  *     valid = gtk_tree_model_iter_next (model, &iter);
  *   }
  * gtk_cell_area_context_get_preferred_width (context, &minimum_width, &natural_width);
- *   </programlisting>
- * </example>
- * Note that in this example it's not important to observe the
+ * ]|
+ *
+ * Note that in this example it’s not important to observe the
  * returned minimum and natural width of the area for each row
  * unless the cell-layouting object is actually interested in the
  * widths of individual rows. The overall width is however stored
@@ -108,9 +107,8 @@
  *
  * A simple example where rows are rendered from top to bottom and
  * take up the full width of the layouting widget would look like:
- * <example>
- *   <title>A typical get_preferred_width() implementation</title>
- *   <programlisting>
+ *
+ * |[<!-- language="C" -->
  * static void
  * foo_get_preferred_width (GtkWidget       *widget,
  *                          gint            *minimum_size,
@@ -123,8 +121,8 @@
  *
  *   gtk_cell_area_context_get_preferred_width (priv->context, minimum_size, natural_size);
  * }
- *   </programlisting>
- * </example>
+ * ]|
+ *
  * In the above example the Foo widget has to make sure that some
  * row sizes have been calculated (the amount of rows that Foo judged
  * was appropriate to request space for in a single timeout iteration)
@@ -134,15 +132,14 @@
  * Requesting the height for width (or width for height) of an area is
  * a similar task except in this case the #GtkCellAreaContext does not
  * store the data (actually, it does not know how much space the layouting
- * widget plans to allocate it for every row. It's up to the layouting
+ * widget plans to allocate it for every row. It’s up to the layouting
  * widget to render each row of data with the appropriate height and
  * width which was requested by the #GtkCellArea).
  *
  * In order to request the height for width of all the rows at the
  * root level of a #GtkTreeModel one would do the following:
- * <example>
- *   <title>Requesting the height for width of a handful of GtkTreeModel rows</title>
- *   <programlisting>
+ *
+ * |[<!-- language="C" -->
  * GtkTreeIter iter;
  * gint        minimum_height;
  * gint        natural_height;
@@ -164,8 +161,8 @@
  *
  *     valid = gtk_tree_model_iter_next (model, &iter);
  *   }
- *   </programlisting>
- * </example>
+ * ]|
+ *
  * Note that in the above example we would need to cache the heights
  * returned for each row so that we would know what sizes to render the
  * areas for each row. However we would only want to really cache the
@@ -175,7 +172,7 @@
  * In some cases the layouting widget is requested the height for an
  * arbitrary for_width, this is a special case for layouting widgets
  * who need to request size for tens of thousands  of rows. For this
- * case it's only important that the layouting widget calculate
+ * case it’s only important that the layouting widget calculate
  * one reasonably sized chunk of rows and return that height
  * synchronously. The reasoning here is that any layouting widget is
  * at least capable of synchronously calculating enough height to fill
@@ -186,20 +183,17 @@
  * from a scrolled window it simply continues to drive the scrollbar
  * values while more and more height is required for the row heights
  * that are calculated in the background.
- * </para>
- * </refsect2>
- * <refsect2 id="cell-area-rendering">
- * <title>Rendering Areas</title>
- * <para>
+ *
+ * # Rendering Areas
+ *
  * Once area sizes have been aquired at least for the rows in the
  * visible area of the layouting widget they can be rendered at
  * #GtkWidgetClass.draw() time.
  *
  * A crude example of how to render all the rows at the root level
  * runs as follows:
- * <example>
- *   <title>Requesting the width of a handful of GtkTreeModel rows</title>
- *   <programlisting>
+ *
+ * |[<!-- language="C" -->
  * GtkAllocation allocation;
  * GdkRectangle  cell_area = { 0, };
  * GtkTreeIter   iter;
@@ -222,19 +216,17 @@
  *
  *     valid = gtk_tree_model_iter_next (model, &iter);
  *   }
- *   </programlisting>
- * </example>
+ * ]|
+ *
  * Note that the cached height in this example really depends on how
  * the layouting widget works. The layouting widget might decide to
  * give every row its minimum or natural height or, if the model content
  * is expected to fit inside the layouting widget without scrolling, it
  * would make sense to calculate the allocation for each row at
  * #GtkWidget::size-allocate time using gtk_distribute_natural_allocation().
- * </para>
- * </refsect2>
- * <refsect2 id="cell-area-events-and-focus">
- * <title>Handling Events and Driving Keyboard Focus</title>
- * <para>
+ *
+ * # Handling Events and Driving Keyboard Focus
+ *
  * Passing events to the area is as simple as handling events on any
  * normal widget and then passing them to the gtk_cell_area_event()
  * API as they come in. Usually #GtkCellArea is only interested in
@@ -248,7 +240,7 @@
  *
  * The #GtkCellArea drives keyboard focus from cell to cell in a way
  * similar to #GtkWidget. For layouting widgets that support giving
- * focus to cells it's important to remember to pass %GTK_CELL_RENDERER_FOCUSED
+ * focus to cells it’s important to remember to pass %GTK_CELL_RENDERER_FOCUSED
  * to the area functions for the row that has focus and to tell the
  * area to paint the focus at render time.
  *
@@ -262,9 +254,8 @@
  *
  * A basic example of how the #GtkWidgetClass.focus() virtual method
  * should be implemented:
- * <example>
- *   <title>Implementing keyboard focus navigation</title>
- *   <programlisting>
+ *
+ * |[<!-- language="C" -->
  * static gboolean
  * foo_focus (GtkWidget       *widget,
  *            GtkDirectionType direction)
@@ -320,23 +311,21 @@
  *     }
  *     return have_focus;
  * }
- *   </programlisting>
- * </example>
+ * ]|
+ *
  * Note that the layouting widget is responsible for matching the
  * GtkDirectionType values to the way it lays out its cells.
- * </para>
- * </refsect2>
- * <refsect2 id="cell-properties">
- * <title>Cell Properties</title>
- * <para>
- * The #GtkCellArea introduces <emphasis>cell properties</emphasis>
- * for #GtkCellRenderers in very much the same way that #GtkContainer
- * introduces <link linkend="child-properties">child properties</link>
+ *
+ * # Cell Properties
+ *
+ * The #GtkCellArea introduces cell properties for #GtkCellRenderers
+ * in very much the same way that #GtkContainer introduces
+ * [child properties][child-properties]
  * for #GtkWidgets. This provides some general interfaces for defining
  * the relationship cell areas have with their cells. For instance in a
- * #GtkCellAreaBox a cell might "expand" and receive extra space when
+ * #GtkCellAreaBox a cell might “expand” and receive extra space when
  * the area is allocated more than its full natural request, or a cell
- * might be configured to "align" with adjacent rows which were requested
+ * might be configured to “align” with adjacent rows which were requested
  * and rendered with the same #GtkCellAreaContext.
  *
  * Use gtk_cell_area_class_install_cell_property() to install cell
@@ -348,8 +337,6 @@
  * gtk_cell_area_cell_set() or gtk_cell_area_cell_set_valist(). To obtain
  * the value of a cell property, use gtk_cell_area_cell_get_property(),
  * gtk_cell_area_cell_get() or gtk_cell_area_cell_get_valist().
- * </para>
- * </refsect2>
  */
 
 #include "config.h"
@@ -1142,20 +1129,9 @@ render_cell (GtkCellRenderer        *renderer,
         (renderer == focus_cell ||
          gtk_cell_area_is_focus_sibling (data->area, focus_cell, renderer)))))
     {
-      gint focus_line_width;
       GdkRectangle cell_focus;
 
       gtk_cell_renderer_get_aligned_area (renderer, data->widget, flags, &inner_area, &cell_focus);
-
-      gtk_widget_style_get (data->widget,
-                            "focus-line-width", &focus_line_width,
-                            NULL);
-
-      /* The focus rectangle is located around the aligned area of the cell */
-      cell_focus.x -= focus_line_width;
-      cell_focus.y -= focus_line_width;
-      cell_focus.width += 2 * focus_line_width;
-      cell_focus.height += 2 * focus_line_width;
 
       if (data->first_focus)
         {
@@ -1714,7 +1690,7 @@ get_has_renderer (GtkCellRenderer  *renderer,
  *
  * Checks if @area contains @renderer.
  *
- * Return value: %TRUE if @renderer is in the @area.
+ * Returns: %TRUE if @renderer is in the @area.
  *
  * Since: 3.0
  */
@@ -1799,7 +1775,7 @@ gtk_cell_area_foreach_alloc (GtkCellArea          *area,
  *
  * Delegates event handling to a #GtkCellArea.
  *
- * Return value: %TRUE if the event was handled by @area.
+ * Returns: %TRUE if the event was handled by @area.
  *
  * Since: 3.0
  */
@@ -1835,12 +1811,12 @@ gtk_cell_area_event (GtkCellArea          *area,
  * @context: the #GtkCellAreaContext for this row of data.
  * @widget: the #GtkWidget that @area is rendering to
  * @cr: the #cairo_t to render with
- * @background_area: the @widget relative coordinates for @area's background
+ * @background_area: the @widget relative coordinates for @area’s background
  * @cell_area: the @widget relative coordinates for @area
  * @flags: the #GtkCellRendererState for @area in this row.
  * @paint_focus: whether @area should paint focus on focused cells for focused rows or not.
  *
- * Renders @area's cells according to @area's layout onto @widget at
+ * Renders @area’s cells according to @area’s layout onto @widget at
  * the given coordinates.
  *
  * Since: 3.0
@@ -1954,7 +1930,7 @@ get_cell_by_position (GtkCellRenderer     *renderer,
  * Gets the #GtkCellRenderer at @x and @y coordinates inside @area and optionally
  * returns the full cell allocation for it inside @cell_area.
  *
- * Return value: (transfer none): the #GtkCellRenderer at @x and @y.
+ * Returns: (transfer none): the #GtkCellRenderer at @x and @y.
  *
  * Since: 3.0
  */
@@ -1999,7 +1975,7 @@ gtk_cell_area_get_cell_at_position (GtkCellArea          *area,
  * one should render and handle events with the same #GtkCellAreaContext
  * which was used to request the size of those rows of data).
  *
- * Return value: (transfer full): a newly created #GtkCellAreaContext which can be used with @area.
+ * Returns: (transfer full): a newly created #GtkCellAreaContext which can be used with @area.
  *
  * Since: 3.0
  */
@@ -2028,7 +2004,7 @@ gtk_cell_area_create_context (GtkCellArea *area)
  * was already used to request all the row widths that are
  * to be displayed.
  *
- * Return value: (transfer full): a newly created #GtkCellAreaContext copy of @context.
+ * Returns: (transfer full): a newly created #GtkCellAreaContext copy of @context.
  *
  * Since: 3.0
  */
@@ -2049,7 +2025,7 @@ gtk_cell_area_copy_context (GtkCellArea        *area,
  * Gets whether the area prefers a height-for-width layout
  * or a width-for-height layout.
  *
- * Return value: The #GtkSizeRequestMode preferred by @area.
+ * Returns: The #GtkSizeRequestMode preferred by @area.
  *
  * Since: 3.0
  */
@@ -2070,10 +2046,10 @@ gtk_cell_area_get_request_mode (GtkCellArea *area)
  * @minimum_width: (out) (allow-none): location to store the minimum width, or %NULL
  * @natural_width: (out) (allow-none): location to store the natural width, or %NULL
  *
- * Retrieves a cell area's initial minimum and natural width.
+ * Retrieves a cell area’s initial minimum and natural width.
  *
  * @area will store some geometrical information in @context along the way;
- * when requesting sizes over an arbitrary number of rows, it's not important
+ * when requesting sizes over an arbitrary number of rows, it’s not important
  * to check the @minimum_width and @natural_width of this call but rather to
  * consult gtk_cell_area_context_get_preferred_width() after a series of
  * requests.
@@ -2103,11 +2079,11 @@ gtk_cell_area_get_preferred_width (GtkCellArea        *area,
  * @minimum_height: (out) (allow-none): location to store the minimum height, or %NULL
  * @natural_height: (out) (allow-none): location to store the natural height, or %NULL
  *
- * Retrieves a cell area's minimum and natural height if it would be given
+ * Retrieves a cell area’s minimum and natural height if it would be given
  * the specified @width.
  *
  * @area stores some geometrical information in @context along the way
- * while calling gtk_cell_area_get_preferred_width(). It's important to
+ * while calling gtk_cell_area_get_preferred_width(). It’s important to
  * perform a series of gtk_cell_area_get_preferred_width() requests with
  * @context first and then call gtk_cell_area_get_preferred_height_for_width()
  * on each cell area individually to get the height for width of each
@@ -2146,10 +2122,10 @@ gtk_cell_area_get_preferred_height_for_width (GtkCellArea        *area,
  * @minimum_height: (out) (allow-none): location to store the minimum height, or %NULL
  * @natural_height: (out) (allow-none): location to store the natural height, or %NULL
  *
- * Retrieves a cell area's initial minimum and natural height.
+ * Retrieves a cell area’s initial minimum and natural height.
  *
  * @area will store some geometrical information in @context along the way;
- * when requesting sizes over an arbitrary number of rows, it's not important
+ * when requesting sizes over an arbitrary number of rows, it’s not important
  * to check the @minimum_height and @natural_height of this call but rather to
  * consult gtk_cell_area_context_get_preferred_height() after a series of
  * requests.
@@ -2179,11 +2155,11 @@ gtk_cell_area_get_preferred_height (GtkCellArea        *area,
  * @minimum_width: (out) (allow-none): location to store the minimum width, or %NULL
  * @natural_width: (out) (allow-none): location to store the natural width, or %NULL
  *
- * Retrieves a cell area's minimum and natural width if it would be given
+ * Retrieves a cell area’s minimum and natural width if it would be given
  * the specified @height.
  *
  * @area stores some geometrical information in @context along the way
- * while calling gtk_cell_area_get_preferred_height(). It's important to
+ * while calling gtk_cell_area_get_preferred_height(). It’s important to
  * perform a series of gtk_cell_area_get_preferred_height() requests with
  * @context first and then call gtk_cell_area_get_preferred_width_for_height()
  * on each cell area individually to get the height for width of each
@@ -2332,6 +2308,46 @@ gtk_cell_area_attribute_disconnect (GtkCellArea        *area,
 }
 
 /**
+ * gtk_cell_area_attribute_get_column:
+ * @area: a #GtkCellArea
+ * @renderer: a #GtkCellRenderer
+ * @attribute: an attribute on the renderer
+ *
+ * Returns the model column that an attribute has been mapped to,
+ * or -1 if the attribute is not mapped.
+ *
+ * Returns: the model column, or -1
+ *
+ * Since: 3.14
+ */
+gint
+gtk_cell_area_attribute_get_column (GtkCellArea     *area,
+                                    GtkCellRenderer *renderer,
+                                    const gchar     *attribute)
+{
+  GtkCellAreaPrivate *priv;
+  CellInfo           *info;
+  CellAttribute      *cell_attribute;
+  GSList             *node;
+
+  priv = area->priv;
+  info = g_hash_table_lookup (priv->cell_info, renderer);
+
+  if (info)
+    {
+      node = g_slist_find_custom (info->attributes, attribute,
+                                  (GCompareFunc)cell_attribute_find);
+      if (node)
+        {
+          cell_attribute = node->data;
+          return cell_attribute->column;
+        }
+    }
+
+  return -1;
+}
+
+/**
  * gtk_cell_area_apply_attributes:
  * @area: a #GtkCellArea
  * @tree_model: the #GtkTreeModel to pull values from
@@ -2370,7 +2386,7 @@ gtk_cell_area_apply_attributes (GtkCellArea  *area,
  * used to interact with renderers from #GtkCellArea
  * subclasses.
  *
- * Return value: The current #GtkTreePath string for the current
+ * Returns: The current #GtkTreePath string for the current
  * attributes applied to @area. This string belongs to the area and
  * should not be freed.
  *
@@ -2436,7 +2452,7 @@ gtk_cell_area_class_install_cell_property (GtkCellAreaClass   *aclass,
  *
  * Finds a cell property of a cell area class by name.
  *
- * Return value: (transfer none): the #GParamSpec of the child property
+ * Returns: (transfer none): the #GParamSpec of the child property
  *   or %NULL if @aclass has no child property with that name.
  *
  * Since: 3.0
@@ -2461,7 +2477,7 @@ gtk_cell_area_class_find_cell_property (GtkCellAreaClass   *aclass,
  *
  * Returns all cell properties of a cell area class.
  *
- * Return value: (array length=n_properties) (transfer container): a newly
+ * Returns: (array length=n_properties) (transfer container): a newly
  *     allocated %NULL-terminated array of #GParamSpec*.  The array
  *     must be freed with g_free().
  *
@@ -2865,7 +2881,7 @@ gtk_cell_area_cell_get_property (GtkCellArea        *area,
  * Returns whether the area can do anything when activated,
  * after applying new attributes to @area.
  *
- * Return value: whether @area can do anything when activated.
+ * Returns: whether @area can do anything when activated.
  *
  * Since: 3.0
  */
@@ -2882,7 +2898,7 @@ gtk_cell_area_is_activatable (GtkCellArea *area)
  * @area: a #GtkCellArea
  * @direction: the #GtkDirectionType
  *
- * This should be called by the @area's owning layout widget
+ * This should be called by the @area’s owning layout widget
  * when focus is to be passed to @area, or moved within @area
  * for a given @direction and row data.
  *
@@ -2890,7 +2906,7 @@ gtk_cell_area_is_activatable (GtkCellArea *area)
  * method to receive and navigate focus in its own way particular
  * to how it lays out cells.
  *
- * Return value: %TRUE if focus remains inside @area as a result of this call.
+ * Returns: %TRUE if focus remains inside @area as a result of this call.
  *
  * Since: 3.0
  */
@@ -2908,7 +2924,7 @@ gtk_cell_area_focus (GtkCellArea      *area,
  * @area: a #GtkCellArea
  * @context: the #GtkCellAreaContext in context with the current row data
  * @widget: the #GtkWidget that @area is rendering on
- * @cell_area: the size and location of @area relative to @widget's allocation
+ * @cell_area: the size and location of @area relative to @widget’s allocation
  * @flags: the #GtkCellRendererState flags for @area for this row of data.
  * @edit_only: if %TRUE then only cell renderers that are %GTK_CELL_RENDERER_MODE_EDITABLE
  *             will be activated.
@@ -2917,7 +2933,7 @@ gtk_cell_area_focus (GtkCellArea      *area,
  * cell, however some subclasses which embed widgets in the area
  * can also activate a widget if it currently has the focus.
  *
- * Return value: Whether @area was successfully activated.
+ * Returns: Whether @area was successfully activated.
  *
  * Since: 3.0
  */
@@ -2987,7 +3003,7 @@ gtk_cell_area_set_focus_cell (GtkCellArea     *area,
  *
  * Retrieves the currently focused cell for @area
  *
- * Return value: (transfer none): the currently focused cell in @area.
+ * Returns: (transfer none): the currently focused cell in @area.
  *
  * Since: 3.0
  */
@@ -3012,9 +3028,9 @@ gtk_cell_area_get_focus_cell (GtkCellArea *area)
  * gtk_cell_area_add_focus_sibling:
  * @area: a #GtkCellArea
  * @renderer: the #GtkCellRenderer expected to have focus
- * @sibling: the #GtkCellRenderer to add to @renderer's focus area
+ * @sibling: the #GtkCellRenderer to add to @renderer’s focus area
  *
- * Adds @sibling to @renderer's focusable area, focus will be drawn
+ * Adds @sibling to @renderer’s focusable area, focus will be drawn
  * around @renderer and all of its siblings if @renderer can
  * focus for a given row.
  *
@@ -3061,9 +3077,9 @@ gtk_cell_area_add_focus_sibling (GtkCellArea     *area,
  * gtk_cell_area_remove_focus_sibling:
  * @area: a #GtkCellArea
  * @renderer: the #GtkCellRenderer expected to have focus
- * @sibling: the #GtkCellRenderer to remove from @renderer's focus area
+ * @sibling: the #GtkCellRenderer to remove from @renderer’s focus area
  *
- * Removes @sibling from @renderer's focus sibling list
+ * Removes @sibling from @renderer’s focus sibling list
  * (see gtk_cell_area_add_focus_sibling()).
  *
  * Since: 3.0
@@ -3098,12 +3114,12 @@ gtk_cell_area_remove_focus_sibling (GtkCellArea     *area,
  * gtk_cell_area_is_focus_sibling:
  * @area: a #GtkCellArea
  * @renderer: the #GtkCellRenderer expected to have focus
- * @sibling: the #GtkCellRenderer to check against @renderer's sibling list
+ * @sibling: the #GtkCellRenderer to check against @renderer’s sibling list
  *
- * Returns whether @sibling is one of @renderer's focus siblings
+ * Returns whether @sibling is one of @renderer’s focus siblings
  * (see gtk_cell_area_add_focus_sibling()).
  *
- * Return value: %TRUE if @sibling is a focus sibling of @renderer
+ * Returns: %TRUE if @sibling is a focus sibling of @renderer
  *
  * Since: 3.0
  */
@@ -3141,7 +3157,7 @@ gtk_cell_area_is_focus_sibling (GtkCellArea     *area,
  *
  * Gets the focus sibling cell renderers for @renderer.
  *
- * Return value: (element-type GtkCellRenderer) (transfer none): A #GList of #GtkCellRenderers.
+ * Returns: (element-type GtkCellRenderer) (transfer none): A #GList of #GtkCellRenderers.
  *       The returned list is internal and should not be freed.
  *
  * Since: 3.0
@@ -3173,7 +3189,7 @@ gtk_cell_area_get_focus_siblings (GtkCellArea     *area,
  * then chose to activate the focus cell for which the event
  * cell may have been a sibling.
  *
- * Return value: (transfer none): the #GtkCellRenderer for which @renderer
+ * Returns: (transfer none): the #GtkCellRenderer for which @renderer
  *    is a sibling, or %NULL.
  *
  * Since: 3.0
@@ -3317,7 +3333,7 @@ gtk_cell_area_set_edit_widget (GtkCellArea     *area,
  * Gets the #GtkCellRenderer in @area that is currently
  * being edited.
  *
- * Return value: (transfer none): The currently edited #GtkCellRenderer
+ * Returns: (transfer none): The currently edited #GtkCellRenderer
  *
  * Since: 3.0
  */
@@ -3340,7 +3356,7 @@ gtk_cell_area_get_edited_cell (GtkCellArea *area)
  * Gets the #GtkCellEditable widget currently used
  * to edit the currently edited cell.
  *
- * Return value: (transfer none): The currently active #GtkCellEditable widget
+ * Returns: (transfer none): The currently active #GtkCellEditable widget
  *
  * Since: 3.0
  */
@@ -3371,7 +3387,7 @@ gtk_cell_area_get_edit_widget (GtkCellArea *area)
  * for keyboard events for free in its own GtkCellArea->activate()
  * implementation.
  *
- * Return value: whether cell activation was successful
+ * Returns: whether cell activation was successful
  *
  * Since: 3.0
  */
@@ -3518,7 +3534,7 @@ gtk_cell_area_stop_editing (GtkCellArea *area,
  * gtk_cell_area_inner_cell_area:
  * @area: a #GtkCellArea
  * @widget: the #GtkWidget that @area is rendering onto
- * @cell_area: the @widget relative coordinates where one of @area's cells
+ * @cell_area: the @widget relative coordinates where one of @area’s cells
  *             is to be placed
  * @inner_area: (out): the return location for the inner cell area
  *
@@ -3534,21 +3550,25 @@ gtk_cell_area_inner_cell_area (GtkCellArea        *area,
                                const GdkRectangle *cell_area,
                                GdkRectangle       *inner_area)
 {
-  gint focus_line_width;
+  GtkBorder border;
+  GtkStyleContext *context;
+  GtkStateFlags state;
 
   g_return_if_fail (GTK_IS_CELL_AREA (area));
   g_return_if_fail (GTK_IS_WIDGET (widget));
   g_return_if_fail (cell_area != NULL);
   g_return_if_fail (inner_area != NULL);
 
-  gtk_widget_style_get (widget, "focus-line-width", &focus_line_width, NULL);
+  context = gtk_widget_get_style_context (widget);
+  state = gtk_widget_get_state_flags (widget);
+  gtk_style_context_get_padding (context, state, &border);
 
   *inner_area = *cell_area;
 
-  inner_area->x      += focus_line_width;
-  inner_area->width  -= focus_line_width * 2;
-  inner_area->y      += focus_line_width;
-  inner_area->height -= focus_line_width * 2;
+  inner_area->x += border.left;
+  inner_area->width -= border.left + border.right;
+  inner_area->y += border.top;
+  inner_area->height -= border.top + border.bottom;
 }
 
 /**
@@ -3563,7 +3583,7 @@ gtk_cell_area_inner_cell_area (GtkCellArea        *area,
  * @natural_size: (out) (allow-none): location to store the natural size, or %NULL
  *
  * This is a convenience function for #GtkCellArea implementations
- * to request size for cell renderers. It's important to use this
+ * to request size for cell renderers. It’s important to use this
  * function to request size and then use gtk_cell_area_inner_cell_area()
  * at render and event time since this function will add padding
  * around the cell for focus painting.
@@ -3579,7 +3599,9 @@ gtk_cell_area_request_renderer (GtkCellArea        *area,
                                 gint               *minimum_size,
                                 gint               *natural_size)
 {
-  gint focus_line_width;
+  GtkBorder border;
+  GtkStyleContext *context;
+  GtkStateFlags state;
 
   g_return_if_fail (GTK_IS_CELL_AREA (area));
   g_return_if_fail (GTK_IS_CELL_RENDERER (renderer));
@@ -3587,9 +3609,9 @@ gtk_cell_area_request_renderer (GtkCellArea        *area,
   g_return_if_fail (minimum_size != NULL);
   g_return_if_fail (natural_size != NULL);
 
-  gtk_widget_style_get (widget, "focus-line-width", &focus_line_width, NULL);
-
-  focus_line_width *= 2;
+  context = gtk_widget_get_style_context (widget);
+  state = gtk_widget_get_state_flags (widget);
+  gtk_style_context_get_padding (context, state, &border);
 
   if (orientation == GTK_ORIENTATION_HORIZONTAL)
     {
@@ -3597,11 +3619,14 @@ gtk_cell_area_request_renderer (GtkCellArea        *area,
           gtk_cell_renderer_get_preferred_width (renderer, widget, minimum_size, natural_size);
       else
         {
-          for_size = MAX (0, for_size - focus_line_width);
+          for_size = MAX (0, for_size - border.left - border.right);
 
           gtk_cell_renderer_get_preferred_width_for_height (renderer, widget, for_size,
                                                             minimum_size, natural_size);
         }
+
+      *minimum_size += border.left + border.right;
+      *natural_size += border.left + border.right;
     }
   else /* GTK_ORIENTATION_VERTICAL */
     {
@@ -3609,15 +3634,15 @@ gtk_cell_area_request_renderer (GtkCellArea        *area,
         gtk_cell_renderer_get_preferred_height (renderer, widget, minimum_size, natural_size);
       else
         {
-          for_size = MAX (0, for_size - focus_line_width);
+          for_size = MAX (0, for_size - border.top - border.bottom);
 
           gtk_cell_renderer_get_preferred_height_for_width (renderer, widget, for_size,
                                                             minimum_size, natural_size);
         }
-    }
 
-  *minimum_size += focus_line_width;
-  *natural_size += focus_line_width;
+      *minimum_size += border.top + border.bottom;
+      *natural_size += border.top + border.bottom;
+    }
 }
 
 void

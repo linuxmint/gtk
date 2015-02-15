@@ -8,7 +8,7 @@
 <link rel="up" href="reference.html" title="API Reference">
 <link rel="prev" href="GdkScreen.html" title="GdkScreen">
 <link rel="next" href="GdkDevice.html" title="GdkDevice">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -60,7 +60,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+<a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GdkDeviceManager.html#gdk-device-manager-list-devices" title="gdk_device_manager_list_devices ()">gdk_device_manager_list_devices</a> <span class="c_punctuation">()</span>
@@ -135,7 +135,7 @@
 </div>
 <div class="refsect1">
 <a name="GdkDeviceManager.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
     <span class="lineart">╰──</span> GdkDeviceManager
 </pre>
 </div>
@@ -171,8 +171,8 @@ for more information.</p>
 Unless <a class="link" href="GdkDeviceManager.html#gdk-disable-multidevice" title="gdk_disable_multidevice ()"><code class="function">gdk_disable_multidevice()</code></a> is called, the XInput 2
 <a class="link" href="GdkDeviceManager.html" title="GdkDeviceManager"><span class="type">GdkDeviceManager</span></a> implementation will be used as the input source.
 Otherwise either the core or XInput 1 implementations will be used.</p>
-<p>For simple applications that don't have any special interest in
-input devices, the so-called <em class="firstterm">client pointer</em>
+<p>For simple applications that don’t have any special interest in
+input devices, the so-called “client pointer”
 provides a reasonable approximation to a simple setup with a single
 pointer and keyboard. The device that has been set as the client
 pointer can be accessed via <a class="link" href="GdkDeviceManager.html#gdk-device-manager-get-client-pointer" title="gdk_device_manager_get_client_pointer ()"><code class="function">gdk_device_manager_get_client_pointer()</code></a>.</p>
@@ -186,29 +186,52 @@ pointer device. Associations between devices may be inspected through
 <a class="link" href="GdkDevice.html#gdk-device-get-associated-device" title="gdk_device_get_associated_device ()"><code class="function">gdk_device_get_associated_device()</code></a>.</p>
 <p>There may be several virtual devices, and several physical devices could
 be controlling each of these virtual devices. Physical devices may also
-be "floating", which means they are not attached to any virtual device.</p>
-<div class="example">
-<a name="id-1.2.6.9.10"></a><p class="title"><b>Example 3. Master and slave devices</b></p>
-<div class="example-contents"><pre class="screen">
-carlos<em class="parameter"><code>sacarino</code></em>:~$ xinput list
-⎡ Virtual core pointer                          id=2    [master pointer  (3)]
-⎜   ↳ Virtual core XTEST pointer                id=4    [slave  pointer  (2)]
-⎜   ↳ Wacom ISDv4 E6 Pen stylus                 id=10   [slave  pointer  (2)]
-⎜   ↳ Wacom ISDv4 E6 Finger touch               id=11   [slave  pointer  (2)]
-⎜   ↳ SynPS/2 Synaptics TouchPad                id=13   [slave  pointer  (2)]
-⎜   ↳ TPPS/2 IBM TrackPoint                     id=14   [slave  pointer  (2)]
-⎜   ↳ Wacom ISDv4 E6 Pen eraser                 id=16   [slave  pointer  (2)]
-⎣ Virtual core keyboard                         id=3    [master keyboard (2)]
-    ↳ Virtual core XTEST keyboard               id=5    [slave  keyboard (3)]
-    ↳ Power Button                              id=6    [slave  keyboard (3)]
-    ↳ Video Bus                                 id=7    [slave  keyboard (3)]
-    ↳ Sleep Button                              id=8    [slave  keyboard (3)]
-    ↳ Integrated Camera                         id=9    [slave  keyboard (3)]
-    ↳ AT Translated Set 2 keyboard              id=12   [slave  keyboard (3)]
-    ↳ ThinkPad Extra Buttons                    id=15   [slave  keyboard (3)]
-</pre></div>
+be “floating”, which means they are not attached to any virtual device.</p>
+<div class="refsect2">
+<a name="id-1.2.6.9.10"></a><h3>Master and slave devices</h3>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="normal">carlos@sacarino</span><span class="symbol">:~</span><span class="normal">$ xinput list</span>
+<span class="normal">⎡ Virtual core </span><span class="usertype">pointer</span><span class="normal">                          id</span><span class="symbol">=</span><span class="number">2</span><span class="normal">    </span><span class="symbol">[</span><span class="usertype">master</span><span class="normal"> </span><span class="function">pointer</span><span class="normal">  </span><span class="symbol">(</span><span class="number">3</span><span class="symbol">)]</span>
+<span class="normal">⎜   ↳ Virtual core XTEST </span><span class="usertype">pointer</span><span class="normal">                id</span><span class="symbol">=</span><span class="number">4</span><span class="normal">    </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">pointer</span><span class="normal">  </span><span class="symbol">(</span><span class="number">2</span><span class="symbol">)]</span>
+<span class="normal">⎜   ↳ Wacom ISDv4 E6 Pen </span><span class="usertype">stylus</span><span class="normal">                 id</span><span class="symbol">=</span><span class="number">10</span><span class="normal">   </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">pointer</span><span class="normal">  </span><span class="symbol">(</span><span class="number">2</span><span class="symbol">)]</span>
+<span class="normal">⎜   ↳ Wacom ISDv4 E6 Finger </span><span class="usertype">touch</span><span class="normal">               id</span><span class="symbol">=</span><span class="number">11</span><span class="normal">   </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">pointer</span><span class="normal">  </span><span class="symbol">(</span><span class="number">2</span><span class="symbol">)]</span>
+<span class="normal">⎜   ↳ SynPS</span><span class="symbol">/</span><span class="number">2</span><span class="normal"> Synaptics </span><span class="usertype">TouchPad</span><span class="normal">                id</span><span class="symbol">=</span><span class="number">13</span><span class="normal">   </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">pointer</span><span class="normal">  </span><span class="symbol">(</span><span class="number">2</span><span class="symbol">)]</span>
+<span class="normal">⎜   ↳ TPPS</span><span class="symbol">/</span><span class="number">2</span><span class="normal"> IBM </span><span class="usertype">TrackPoint</span><span class="normal">                     id</span><span class="symbol">=</span><span class="number">14</span><span class="normal">   </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">pointer</span><span class="normal">  </span><span class="symbol">(</span><span class="number">2</span><span class="symbol">)]</span>
+<span class="normal">⎜   ↳ Wacom ISDv4 E6 Pen </span><span class="usertype">eraser</span><span class="normal">                 id</span><span class="symbol">=</span><span class="number">16</span><span class="normal">   </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">pointer</span><span class="normal">  </span><span class="symbol">(</span><span class="number">2</span><span class="symbol">)]</span>
+<span class="normal">⎣ Virtual core </span><span class="usertype">keyboard</span><span class="normal">                         id</span><span class="symbol">=</span><span class="number">3</span><span class="normal">    </span><span class="symbol">[</span><span class="usertype">master</span><span class="normal"> </span><span class="function">keyboard</span><span class="normal"> </span><span class="symbol">(</span><span class="number">2</span><span class="symbol">)]</span>
+<span class="normal">    ↳ Virtual core XTEST </span><span class="usertype">keyboard</span><span class="normal">               id</span><span class="symbol">=</span><span class="number">5</span><span class="normal">    </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">keyboard</span><span class="normal"> </span><span class="symbol">(</span><span class="number">3</span><span class="symbol">)]</span>
+<span class="normal">    ↳ Power </span><span class="usertype">Button</span><span class="normal">                              id</span><span class="symbol">=</span><span class="number">6</span><span class="normal">    </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">keyboard</span><span class="normal"> </span><span class="symbol">(</span><span class="number">3</span><span class="symbol">)]</span>
+<span class="normal">    ↳ Video </span><span class="usertype">Bus</span><span class="normal">                                 id</span><span class="symbol">=</span><span class="number">7</span><span class="normal">    </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">keyboard</span><span class="normal"> </span><span class="symbol">(</span><span class="number">3</span><span class="symbol">)]</span>
+<span class="normal">    ↳ Sleep </span><span class="usertype">Button</span><span class="normal">                              id</span><span class="symbol">=</span><span class="number">8</span><span class="normal">    </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">keyboard</span><span class="normal"> </span><span class="symbol">(</span><span class="number">3</span><span class="symbol">)]</span>
+<span class="normal">    ↳ Integrated </span><span class="usertype">Camera</span><span class="normal">                         id</span><span class="symbol">=</span><span class="number">9</span><span class="normal">    </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">keyboard</span><span class="normal"> </span><span class="symbol">(</span><span class="number">3</span><span class="symbol">)]</span>
+<span class="normal">    ↳ AT Translated Set </span><span class="number">2</span><span class="normal"> </span><span class="usertype">keyboard</span><span class="normal">              id</span><span class="symbol">=</span><span class="number">12</span><span class="normal">   </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">keyboard</span><span class="normal"> </span><span class="symbol">(</span><span class="number">3</span><span class="symbol">)]</span>
+<span class="normal">    ↳ ThinkPad Extra </span><span class="usertype">Buttons</span><span class="normal">                    id</span><span class="symbol">=</span><span class="number">15</span><span class="normal">   </span><span class="symbol">[</span><span class="usertype">slave</span><span class="normal">  </span><span class="function">keyboard</span><span class="normal"> </span><span class="symbol">(</span><span class="number">3</span><span class="symbol">)]</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-<br class="example-break"><p>By default, GDK will automatically listen for events coming from all
+
+<p></p>
+<p>By default, GDK will automatically listen for events coming from all
 master devices, setting the <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a> for all events coming from input
 devices. Events containing device information are <a class="link" href="gdk3-Events.html#GDK-MOTION-NOTIFY:CAPS"><span class="type">GDK_MOTION_NOTIFY</span></a>,
 <a class="link" href="gdk3-Events.html#GDK-BUTTON-PRESS:CAPS"><span class="type">GDK_BUTTON_PRESS</span></a>, <a class="link" href="gdk3-Events.html#GDK-2BUTTON-PRESS:CAPS"><span class="type">GDK_2BUTTON_PRESS</span></a>, <a class="link" href="gdk3-Events.html#GDK-3BUTTON-PRESS:CAPS"><span class="type">GDK_3BUTTON_PRESS</span></a>,
@@ -219,6 +242,15 @@ devices. Events containing device information are <a class="link" href="gdk3-Eve
 and <a class="link" href="gdk3-Events.html#GDK-GRAB-BROKEN:CAPS"><span class="type">GDK_GRAB_BROKEN</span></a>. When dealing with an event on a master device,
 it is possible to get the source (slave) device that the event originated
 from via <a class="link" href="gdk3-Events.html#gdk-event-get-source-device" title="gdk_event_get_source_device ()"><code class="function">gdk_event_get_source_device()</code></a>.</p>
+<p>On a standard session, all physical devices are connected by default to
+the "Virtual Core Pointer/Keyboard" master devices, hence routing all events
+through these. This behavior is only modified by device grabs, where the
+slave device is temporarily detached for as long as the grab is held, and
+more permanently by user modifications to the device hierarchy.</p>
+<p>On certain application specific setups, it may make sense
+to detach a physical device from its master pointer, and mapping it to
+an specific window. This can be achieved by the combination of
+<a class="link" href="GdkDevice.html#gdk-device-grab" title="gdk_device_grab ()"><code class="function">gdk_device_grab()</code></a> and <a class="link" href="GdkDevice.html#gdk-device-set-mode" title="gdk_device_set_mode ()"><code class="function">gdk_device_set_mode()</code></a>.</p>
 <p>In order to listen for events coming from devices
 other than a virtual device, <a class="link" href="gdk3-Windows.html#gdk-window-set-device-events" title="gdk_window_set_device_events ()"><code class="function">gdk_window_set_device_events()</code></a> must be
 called. Generally, this function can be used to modify the event mask
@@ -231,9 +263,10 @@ devices will change axes in order to always represent the physical
 device that is routing events through it. Whenever the physical device
 changes, the <a class="link" href="GdkDevice.html#GdkDevice--n-axes" title="The “n-axes” property"><span class="type">“n-axes”</span></a> property will be notified, and
 <a class="link" href="GdkDevice.html#gdk-device-list-axes" title="gdk_device_list_axes ()"><code class="function">gdk_device_list_axes()</code></a> will return the new device axes.</p>
-<p>Devices may also have associated <em class="firstterm">keys</em> or
+<p>Devices may also have associated “keys” or
 macro buttons. Such keys can be globally set to map into normal X
 keyboard events. The mapping is set using <a class="link" href="GdkDevice.html#gdk-device-set-key" title="gdk_device_set_key ()"><code class="function">gdk_device_set_key()</code></a>.</p>
+</div>
 </div>
 <div class="refsect1">
 <a name="GdkDeviceManager.functions_details"></a><h2>Functions</h2>
@@ -244,10 +277,10 @@ gdk_disable_multidevice (<em class="parameter"><code><span class="type">void</sp
 <p>Disables multidevice support in GDK. This call must happen prior
 to <a class="link" href="GdkDisplay.html#gdk-display-open" title="gdk_display_open ()"><code class="function">gdk_display_open()</code></a>, <a href="http://developer.gnome.org/gtk2/gtk3-General.html#gtk-init"><code class="function">gtk_init()</code></a>, <a href="http://developer.gnome.org/gtk2/gtk3-General.html#gtk-init-with-args"><code class="function">gtk_init_with_args()</code></a> or
 <a href="http://developer.gnome.org/gtk2/gtk3-General.html#gtk-init-check"><code class="function">gtk_init_check()</code></a> in order to take effect.</p>
-<p>Most common GTK+ applications won't ever need to call this. Only
+<p>Most common GTK+ applications won’t ever need to call this. Only
 applications that do mixed GDK/Xlib calls could want to disable
 multidevice support if such Xlib code deals with input devices in
-any way and doesn't observe the presence of XInput 2.</p>
+any way and doesn’t observe the presence of XInput 2.</p>
 <p class="since">Since 3.0</p>
 </div>
 <hr>
@@ -274,18 +307,18 @@ gdk_device_manager_get_display (<em class="parameter"><code><a class="link" href
 </div>
 <div class="refsect3">
 <a name="id-1.2.6.10.3.6"></a><h4>Returns</h4>
-<p> the <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> to which <em class="parameter"><code>device_manager</code></em>
-is
-associated to, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>. This memory is owned by GDK and
-must not be freed or unreferenced. </p>
-<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
+<p> the <a class="link" href="GdkDisplay.html" title="GdkDisplay"><span class="type">GdkDisplay</span></a> to which
+<em class="parameter"><code>device_manager</code></em>
+is associated to, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>. This memory is
+owned by GDK and must not be freed or unreferenced. </p>
+<p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 <p class="since">Since 3.0</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gdk-device-manager-list-devices"></a><h3>gdk_device_manager_list_devices ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *
 gdk_device_manager_list_devices (<em class="parameter"><code><a class="link" href="GdkDeviceManager.html" title="GdkDeviceManager"><span class="type">GdkDeviceManager</span></a> *device_manager</code></em>,
                                  <em class="parameter"><code><a class="link" href="GdkDevice.html#GdkDeviceType" title="enum GdkDeviceType"><span class="type">GdkDeviceType</span></a> type</code></em>);</pre>
 <p>Returns the list of devices of type <em class="parameter"><code>type</code></em>
@@ -317,8 +350,8 @@ gdk_device_manager_list_devices (<em class="parameter"><code><a class="link" hre
 <div class="refsect3">
 <a name="id-1.2.6.10.4.6"></a><h4>Returns</h4>
 <p> a list of
-<a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a>s. The returned list must be
-freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#g-list-free"><code class="function">g_list_free()</code></a>. The list elements are owned by
+<a href="GdkDevice.html"><span class="type">GdkDevices</span></a>. The returned list must be
+freed with <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#g-list-free"><code class="function">g_list_free()</code></a>. The list elements are owned by
 GTK+ and must not be freed or unreffed. </p>
 <p><span class="annotation">[<acronym title="Free data container after the code is done."><span class="acronym">transfer container</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gdk.Device]</span></p>
 </div>
@@ -332,8 +365,8 @@ gdk_device_manager_get_client_pointer (<em class="parameter"><code><a class="lin
 <p>Returns the client pointer, that is, the master pointer that acts as the core pointer
 for this application. In X11, window managers may change this depending on the interaction
 pattern under the presence of several pointers.</p>
-<p>You should use this function seldomly, only in code that isn't triggered by a <a class="link" href="gdk3-Event-Structures.html#GdkEvent" title="union GdkEvent"><span class="type">GdkEvent</span></a>
-and there aren't other means to get a meaningful <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a> to operate on.</p>
+<p>You should use this function seldomly, only in code that isn’t triggered by a <a class="link" href="gdk3-Event-Structures.html#GdkEvent" title="union GdkEvent"><span class="type">GdkEvent</span></a>
+and there aren’t other means to get a meaningful <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a> to operate on.</p>
 <div class="refsect3">
 <a name="id-1.2.6.10.5.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -381,7 +414,7 @@ owned by GDK and must not be freed or unreferenced. </p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GdkDeviceManager.html" title="GdkDeviceManager"><span class="type">GdkDeviceManager</span></a> *device_manager,
                <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a>        *device,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
 <p>The ::device-added signal is emitted either when a new master
 pointer is created, or when a slave (Hardware) input device
 is plugged in.</p>
@@ -420,14 +453,14 @@ is plugged in.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GdkDeviceManager.html" title="GdkDeviceManager"><span class="type">GdkDeviceManager</span></a> *device_manager,
                <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a>        *device,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
 <p>The ::device-changed signal is emitted whenever a device
 has changed in the hierarchy, either slave devices being
 disconnected from their master device or connected to
 another one, or master devices being added or removed
 a slave device.</p>
 <p>If a slave device is detached from all master devices
-(<a class="link" href="GdkDevice.html#gdk-device-get-associated-device" title="gdk_device_get_associated_device ()"><code class="function">gdk_device_get_associated_device()</code></a> returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>), its
+(<a class="link" href="GdkDevice.html#gdk-device-get-associated-device" title="gdk_device_get_associated_device ()"><code class="function">gdk_device_get_associated_device()</code></a> returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>), its
 <a class="link" href="GdkDevice.html#GdkDeviceType" title="enum GdkDeviceType"><span class="type">GdkDeviceType</span></a> will change to <a class="link" href="GdkDevice.html#GDK-DEVICE-TYPE-FLOATING:CAPS"><code class="literal">GDK_DEVICE_TYPE_FLOATING</code></a>,
 if it's attached, it will change to <a class="link" href="GdkDevice.html#GDK-DEVICE-TYPE-SLAVE:CAPS"><code class="literal">GDK_DEVICE_TYPE_SLAVE</code></a>.</p>
 <div class="refsect3">
@@ -465,7 +498,7 @@ if it's attached, it will change to <a class="link" href="GdkDevice.html#GDK-DEV
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GdkDeviceManager.html" title="GdkDeviceManager"><span class="type">GdkDeviceManager</span></a> *device_manager,
                <a class="link" href="GdkDevice.html" title="GdkDevice"><span class="type">GdkDevice</span></a>        *device,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
 <p>The ::device-removed signal is emitted either when a master
 pointer is removed, or when a slave (Hardware) input device
 is unplugged.</p>
@@ -506,6 +539,6 @@ is unplugged.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

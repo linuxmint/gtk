@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#undef GTK_DISABLE_DEPRECATED
+
 #include <string.h>
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
@@ -221,12 +223,18 @@ test_css_file (GFile *file)
 static void
 add_test_for_file (GFile *file)
 {
-  g_test_add_vtable (g_file_get_path (file),
+  char *path;
+
+  path = g_file_get_path (file);
+
+  g_test_add_vtable (path,
                      0,
                      g_object_ref (file),
                      NULL,
                      (GTestFixtureFunc) test_css_file,
                      (GTestFixtureFunc) g_object_unref);
+
+  g_free (path);
 }
 
 static int

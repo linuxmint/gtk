@@ -22,6 +22,7 @@
 #include "gtkwidget.h"
 #include "gtkwidgetpath.h"
 #include "gtkstylecontextprivate.h"
+#include "gtktypebuiltins.h"
 
 /**
  * SECTION:gtkwidgetpath
@@ -40,9 +41,10 @@
  * updated on widget hierarchy changes.
  *
  * The widget path generation is generally simple:
- * <example>
- * <title>Defining a button within a window</title>
- * <programlisting>
+ *
+ * ## Defining a button within a window
+ *
+ * |[<!-- language="C" -->
  * {
  *   GtkWidgetPath *path;
  *
@@ -50,16 +52,15 @@
  *   gtk_widget_path_append_type (path, GTK_TYPE_WINDOW);
  *   gtk_widget_path_append_type (path, GTK_TYPE_BUTTON);
  * }
- * </programlisting>
- * </example>
+ * ]|
  *
  * Although more complex information, such as widget names, or
  * different classes (property that may be used by other widget
  * types) and intermediate regions may be included:
  *
- * <example>
- * <title>Defining the first tab widget in a notebook</title>
- * <programlisting>
+ * ## Defining the first tab widget in a notebook
+ *
+ * |[<!-- language="C" -->
  * {
  *   GtkWidgetPath *path;
  *   guint pos;
@@ -72,8 +73,7 @@
  *   pos = gtk_widget_path_append_type (path, GTK_TYPE_LABEL);
  *   gtk_widget_path_iter_set_name (path, pos, "first tab label");
  * }
- * </programlisting>
- * </example>
+ * ]|
  *
  * All this information will be used to match the style information
  * that applies to the described widget.
@@ -89,6 +89,7 @@ struct GtkPathElement
 {
   GType type;
   GQuark name;
+  GtkStateFlags state;
   guint sibling_index;
   GHashTable *regions;
   GArray *classes;
@@ -131,6 +132,7 @@ gtk_path_element_copy (GtkPathElement       *dest,
 
   dest->type = src->type;
   dest->name = src->name;
+  dest->state = src->state;
   if (src->siblings)
     dest->siblings = gtk_widget_path_ref (src->siblings);
   dest->sibling_index = src->sibling_index;
@@ -327,6 +329,22 @@ gtk_widget_path_to_string (const GtkWidgetPath *path)
           g_string_append_c (string, ')');
         }
 
+      if (elem->state)
+        {
+          GFlagsClass *fclass;
+          gint i;
+
+          fclass = g_type_class_ref (GTK_TYPE_STATE_FLAGS);
+          for (i = 0; i < fclass->n_values; i++)
+            {
+              if (elem->state & fclass->values[i].value)
+                {
+                  g_string_append_c (string, ':');
+                  g_string_append (string, fclass->values[i].value_nick);
+                }
+            }
+          g_type_class_unref (fclass);
+        }
 
       if (elem->siblings)
         g_string_append_printf (string, "[%d/%d]",
@@ -574,6 +592,80 @@ gtk_widget_path_iter_set_object_type (GtkWidgetPath *path,
 }
 
 /**
+ * gtk_widget_path_iter_get_state:
+ * @path: a #GtkWidgetPath
+ * @pos: position to get the state for, -1 for the path head
+ *
+ * Returns the state flags corresponding to the widget found at
+ * the position @pos in the widget hierarchy defined by
+ * @path
+ *
+ * Returns: The state flags
+ *
+ * Since: 3.14
+ **/
+GtkStateFlags
+gtk_widget_path_iter_get_state (const GtkWidgetPath *path,
+                                gint                 pos)
+{
+  GtkPathElement *elem;
+
+  g_return_val_if_fail (path != NULL, 0);
+  g_return_val_if_fail (path->elems->len != 0, 0);
+
+  if (pos < 0 || pos >= path->elems->len)
+    pos = path->elems->len - 1;
+
+  elem = &g_array_index (path->elems, GtkPathElement, pos);
+  return elem->state;
+}
+
+/**
+ * gtk_widget_path_iter_set_state:
+ * @path: a #GtkWidgetPath
+ * @pos: position to modify, -1 for the path head
+ * @state: state flags
+ *
+ * Sets the widget name for the widget found at position @pos
+ * in the widget hierarchy defined by @path.
+ *
+ * If you want to update just a single state flag, you need to do
+ * this manually, as this function updates all state flags.
+ *
+ * ## Setting a flag
+ *
+ * |[<!-- language="C" -->
+ * gtk_widget_path_iter_set_state (path, pos, gtk_widget_path_iter_get_state (path, pos) | flag);
+ * ]|
+ *
+ * ## Unsetting a flag
+ *
+ * |[<!-- language="C" -->
+ * gtk_widget_path_iter_set_state (path, pos, gtk_widget_path_iter_get_state (path, pos) & ~flag);
+ * ]|
+ *
+ *
+ * Since: 3.14
+ **/
+void
+gtk_widget_path_iter_set_state (GtkWidgetPath *path,
+                                gint           pos,
+                                GtkStateFlags  state)
+{
+  GtkPathElement *elem;
+
+  g_return_if_fail (path != NULL);
+  g_return_if_fail (path->elems->len != 0);
+
+  if (pos < 0 || pos >= path->elems->len)
+    pos = path->elems->len - 1;
+
+  elem = &g_array_index (path->elems, GtkPathElement, pos);
+
+  elem->state = state;
+}
+
+/**
  * gtk_widget_path_iter_get_name:
  * @path: a #GtkWidgetPath
  * @pos: position to get the widget name for, -1 for the path head
@@ -637,7 +729,7 @@ gtk_widget_path_iter_set_name (GtkWidgetPath *path,
  * @qname: widget name as a #GQuark
  *
  * See gtk_widget_path_iter_has_name(). This is a version
- * that operates on #GQuark<!-- -->s.
+ * that operates on #GQuarks.
  *
  * Returns: %TRUE if the widget at @pos has this name
  *
@@ -891,7 +983,7 @@ gtk_widget_path_iter_list_classes (const GtkWidgetPath *path,
  * @qname: class name as a #GQuark
  *
  * See gtk_widget_path_iter_has_class(). This is a version that operates
- * with GQuark<!-- -->s.
+ * with GQuarks.
  *
  * Returns: %TRUE if the widget at @pos has the class defined.
  *
@@ -978,10 +1070,12 @@ gtk_widget_path_iter_has_class (const GtkWidgetPath *path,
  * the hierarchy defined in @path. See
  * gtk_style_context_add_region().
  *
- * <note><para>Region names must only contain lowercase letters
- * and '-', starting always with a lowercase letter.</para></note>
+ * Region names must only contain lowercase letters
+ * and “-”, starting always with a lowercase letter.
  *
  * Since: 3.0
+ *
+ * Deprecated: 3.14: The use of regions is deprecated.
  **/
 void
 gtk_widget_path_iter_add_region (GtkWidgetPath  *path,
@@ -1021,6 +1115,8 @@ gtk_widget_path_iter_add_region (GtkWidgetPath  *path,
  * the hierarchy defined in @path.
  *
  * Since: 3.0
+ *
+ * Deprecated: 3.14: The use of regions is deprecated.
  **/
 void
 gtk_widget_path_iter_remove_region (GtkWidgetPath *path,
@@ -1057,6 +1153,8 @@ gtk_widget_path_iter_remove_region (GtkWidgetPath *path,
  * hierarchy defined in @path.
  *
  * Since: 3.0
+ *
+ * Deprecated: 3.14: The use of regions is deprecated.
  **/
 void
 gtk_widget_path_iter_clear_regions (GtkWidgetPath *path,
@@ -1090,6 +1188,8 @@ gtk_widget_path_iter_clear_regions (GtkWidgetPath *path,
  *          free the list itself.
  *
  * Since: 3.0
+ *
+ * Deprecated: 3.14: The use of regions is deprecated.
  **/
 GSList *
 gtk_widget_path_iter_list_regions (const GtkWidgetPath *path,
@@ -1132,11 +1232,13 @@ gtk_widget_path_iter_list_regions (const GtkWidgetPath *path,
  * @flags: (out): return location for the region flags
  *
  * See gtk_widget_path_iter_has_region(). This is a version that operates
- * with GQuark<!-- -->s.
+ * with GQuarks.
  *
  * Returns: %TRUE if the widget at @pos has the region defined.
  *
  * Since: 3.0
+ *
+ * Deprecated: 3.14: The use of regions is deprecated.
  **/
 gboolean
 gtk_widget_path_iter_has_qregion (const GtkWidgetPath *path,
@@ -1183,6 +1285,8 @@ gtk_widget_path_iter_has_qregion (const GtkWidgetPath *path,
  * Returns: %TRUE if the class @name is defined for the widget at @pos
  *
  * Since: 3.0
+ *
+ * Deprecated: 3.14: The use of regions is deprecated.
  **/
 gboolean
 gtk_widget_path_iter_has_region (const GtkWidgetPath *path,
@@ -1204,7 +1308,9 @@ gtk_widget_path_iter_has_region (const GtkWidgetPath *path,
   if (qname == 0)
     return FALSE;
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   return gtk_widget_path_iter_has_qregion (path, pos, qname, flags);
+G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 /**

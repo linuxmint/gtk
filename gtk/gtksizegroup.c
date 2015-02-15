@@ -38,7 +38,7 @@
  * #GtkSizeGroup provides a mechanism for grouping a number of widgets
  * together so they all request the same amount of space.  This is
  * typically useful when you want a column of widgets to have the same
- * size, but you can't use a #GtkGrid widget.
+ * size, but you can’t use a #GtkGrid widget.
  *
  * In detail, the size requested for each widget in a #GtkSizeGroup is
  * the maximum of the sizes that would have been requested for each
@@ -82,19 +82,16 @@
  * by way of #GtkLabel:width-chars for instance. Widgets with static sizes as well
  * as widgets that grow (such as ellipsizing text) need no such considerations.
  *
- * <refsect2 id="GtkSizeGroup-BUILDER-UI">
- * <title>GtkSizeGroup as GtkBuildable</title>
- * <para>
- * Size groups can be specified in a UI definition by placing an
- * &lt;object&gt; element with <literal>class="GtkSizeGroup"</literal>
- * somewhere in the UI definition. The widgets that belong to the
- * size group are specified by a &lt;widgets&gt; element that may
- * contain multiple &lt;widget&gt; elements, one for each member
- * of the size group. The name attribute gives the id of the widget.
+ * # GtkSizeGroup as GtkBuildable
  *
- * <example>
- * <title>A UI definition fragment with GtkSizeGroup</title>
- * <programlisting><![CDATA[
+ * Size groups can be specified in a UI definition by placing an <object>
+ * element with `class="GtkSizeGroup"` somewhere in the UI definition. The
+ * widgets that belong to the size group are specified by a <widgets> element
+ * that may contain multiple <widget> elements, one for each member of the
+ * size group. The ”name” attribute gives the id of the widget.
+ *
+ * An example of a UI definition fragment with GtkSizeGroup:
+ * |[
  * <object class="GtkSizeGroup">
  *   <property name="mode">GTK_SIZE_GROUP_HORIZONTAL</property>
  *   <widgets>
@@ -102,10 +99,7 @@
  *     <widget name="radio2"/>
  *   </widgets>
  * </object>
- * ]]></programlisting>
- * </example>
- * </para>
- * </refsect2>
+ * ]|
  */
 
 
@@ -324,13 +318,14 @@ gtk_size_group_class_init (GtkSizeGroupClass *klass)
   gobject_class->get_property = gtk_size_group_get_property;
   
   g_object_class_install_property (gobject_class,
-				   PROP_MODE,
-				   g_param_spec_enum ("mode",
-						      P_("Mode"),
-						      P_("The directions in which the size group affects the requested sizes"
-							" of its component widgets"),
-						      GTK_TYPE_SIZE_GROUP_MODE,
-						      GTK_SIZE_GROUP_HORIZONTAL,						      GTK_PARAM_READWRITE));
+                                   PROP_MODE,
+                                   g_param_spec_enum ("mode",
+                                                      P_("Mode"),
+                                                      P_("The directions in which the size group affects the requested sizes"
+                                                         " of its component widgets"),
+                                                      GTK_TYPE_SIZE_GROUP_MODE,
+                                                      GTK_SIZE_GROUP_HORIZONTAL,
+                                                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkSizeGroup:ignore-hidden:
@@ -341,13 +336,13 @@ gtk_size_group_class_init (GtkSizeGroupClass *klass)
    * Since: 2.8
    */
   g_object_class_install_property (gobject_class,
-				   PROP_IGNORE_HIDDEN,
-				   g_param_spec_boolean ("ignore-hidden",
-							 P_("Ignore hidden"),
-							 P_("If TRUE, unmapped widgets are ignored "
-							    "when determining the size of the group"),
-							 FALSE,
-							 GTK_PARAM_READWRITE));
+                                   PROP_IGNORE_HIDDEN,
+                                   g_param_spec_boolean ("ignore-hidden",
+                                                         P_("Ignore hidden"),
+                                                         P_("If TRUE, unmapped widgets are ignored "
+                                                            "when determining the size of the group"),
+                                                         FALSE,
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 }
 
 static void
@@ -421,7 +416,7 @@ gtk_size_group_get_property (GObject      *object,
  * 
  * Create a new #GtkSizeGroup.
  
- * Return value: a newly created #GtkSizeGroup
+ * Returns: a newly created #GtkSizeGroup
  **/
 GtkSizeGroup *
 gtk_size_group_new (GtkSizeGroupMode mode)
@@ -474,7 +469,7 @@ gtk_size_group_set_mode (GtkSizeGroup     *size_group,
  * 
  * Gets the current mode of the size group. See gtk_size_group_set_mode().
  * 
- * Return value: the current mode of the size group.
+ * Returns: the current mode of the size group.
  **/
 GtkSizeGroupMode
 gtk_size_group_get_mode (GtkSizeGroup *size_group)
@@ -623,7 +618,7 @@ gtk_size_group_remove_widget (GtkSizeGroup *size_group,
  * 
  * Returns the list of widgets associated with @size_group.
  *
- * Return value:  (element-type GtkWidget) (transfer none): a #GSList of
+ * Returns:  (element-type GtkWidget) (transfer none): a #GSList of
  *   widgets. The list is owned by GTK+ and should not be modified.
  *
  * Since: 2.10

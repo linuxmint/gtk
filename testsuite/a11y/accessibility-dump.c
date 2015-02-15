@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include <locale.h>
 #include <string.h>
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
@@ -426,40 +427,34 @@ dump_atk_value (AtkValue *atk_value,
                 guint     depth,
                 GString  *string)
 {
-  GValue value = G_VALUE_INIT;
-  GValue svalue = G_VALUE_INIT;
+  AtkRange *range;
+  gdouble value;
+  gchar *text;
+
+  value = 0.0;
+  text = NULL;
+
+  atk_value_get_value_and_text (atk_value, &value, &text);
+  range = atk_value_get_range (atk_value);
 
   g_string_append_printf (string, "%*s<AtkValue>\n", depth, "");
 
-  g_value_init (&value, G_TYPE_DOUBLE);
-  g_value_init (&svalue, G_TYPE_STRING);
+  if (range)
+    {
+      g_string_append_printf (string, "%*sminimum value: %f\n", depth, "", atk_range_get_lower_limit (range));
 
-  atk_value_get_minimum_value (atk_value, &value);
-  if (g_value_transform (&value, &svalue))
-    g_string_append_printf (string, "%*sminimum value: %s\n", depth, "", g_value_get_string (&svalue));
+      g_string_append_printf (string, "%*smaximum value: %f\n", depth, "", atk_range_get_upper_limit (range));
+
+      atk_range_free (range);
+    }
+
+  if (text)
+    {
+      g_string_append_printf (string, "%*scurrent value: %f %s\n", depth, "", value, text); 
+      g_free (text);
+    }
   else
-    g_string_append_printf (string, "%*sminimum value: <%s>\n", depth, "", G_VALUE_TYPE_NAME (&value));
-
-  g_value_reset (&value);
-  g_value_reset (&svalue);
-
-  atk_value_get_maximum_value (atk_value, &value);
-  if (g_value_transform (&value, &svalue))
-    g_string_append_printf (string, "%*smaximum value: %s\n", depth, "", g_value_get_string (&svalue));
-  else
-    g_string_append_printf (string, "%*smaximum value: <%s>\n", depth, "", G_VALUE_TYPE_NAME (&value));
-
-  g_value_reset (&value);
-  g_value_reset (&svalue);
-
-  atk_value_get_current_value (atk_value, &value);
-  if (g_value_transform (&value, &svalue))
-    g_string_append_printf (string, "%*scurrent value: %s\n", depth, "", g_value_get_string (&svalue));
-  else
-    g_string_append_printf (string, "%*scurrent value: %s\n", depth, "", G_VALUE_TYPE_NAME (&value));
-
-  g_value_reset (&value);
-  g_value_reset (&svalue);
+    g_string_append_printf (string, "%*scurrent value: %f\n", depth, "", value);
 
   /* Don't dump minimum increment; it changes too much in response to
    * theme changes.
@@ -468,30 +463,58 @@ dump_atk_value (AtkValue *atk_value,
 }
 
 static void
+dump_atk_hyperlink (AtkHyperlink *link,
+                    guint         depth,
+                    GString      *string)
+{
+  gint i;
+
+  g_string_append_printf (string, "%*s<AtkHyperlink>\n", depth, "");
+  g_string_append_printf (string, "%*sstart index: %d\n", depth, "", atk_hyperlink_get_start_index (link));
+  g_string_append_printf (string, "%*send index: %d\n", depth, "", atk_hyperlink_get_end_index (link));
+  g_string_append_printf (string, "%*sanchors:", depth, "");
+
+  for (i = 0; i < atk_hyperlink_get_n_anchors (link); i++)
+    {
+      gchar *uri;
+
+      uri = atk_hyperlink_get_uri (link, i);
+      g_string_append_printf (string, " %s", uri);
+      g_free (uri);
+    }
+
+  g_string_append_c (string, '\n');
+}
+
+static void
 dump_atk_hyperlink_impl (AtkHyperlinkImpl *impl,
                          guint             depth,
                          GString          *string)
 {
-  AtkHyperlink *atk_link;
-  gint i;
+  AtkHyperlink *link;
 
   g_string_append_printf (string, "%*s<AtkHyperlinkImpl>\n", depth, "");
 
-  atk_link = atk_hyperlink_impl_get_hyperlink (impl);
+  link = atk_hyperlink_impl_get_hyperlink (impl);
+  dump_atk_hyperlink (link, depth + DEPTH_INCREMENT, string);
+  g_object_unref (link);
+}
 
-  g_string_append_printf (string, "%*sanchors:", depth, "");
+static void
+dump_atk_hypertext (AtkHypertext *hypertext,
+                    guint         depth,
+                    GString      *string)
+{
+  gint i;
+  AtkHyperlink *link;
 
-  for (i = 0; i < atk_hyperlink_get_n_anchors (atk_link); i++)
+  g_string_append_printf (string, "%*s<AtkHypertext>\n", depth, "");
+
+  for (i = 0; i < atk_hypertext_get_n_links (hypertext); i++)
     {
-      gchar *uri;
-
-      uri = atk_hyperlink_get_uri (atk_link, i);
-      g_string_append_printf (string, " %s", uri);
-      g_free (uri);
+      link = atk_hypertext_get_link (hypertext, i);
+      dump_atk_hyperlink (link, depth + DEPTH_INCREMENT, string);
     }
-  g_string_append_c (string, '\n');
-
-  g_object_unref (atk_link);
 }
 
 static void
@@ -582,6 +605,7 @@ dump_atk_table (AtkTable *table,
       g_string_append_printf (string, "%*s", depth + DEPTH_INCREMENT, "");
       for (j = 0; j < atk_table_get_n_columns (table); j++)
         {
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
           int id = atk_table_get_index_at (table, i, j);
 
           obj = atk_object_ref_accessible_child (ATK_OBJECT (table), id);
@@ -592,6 +616,7 @@ dump_atk_table (AtkTable *table,
                                   atk_table_get_row_at_index (table, id) == i ? "✓" : "⚠",
                                   atk_table_get_column_at_index (table, id) == j ? "✓" : "⚠",
                                   get_name (obj));
+G_GNUC_END_IGNORE_DEPRECATIONS
         }
       g_string_append (string, "\n");
     }
@@ -640,6 +665,9 @@ dump_accessible (AtkObject     *accessible,
 
   if (ATK_IS_HYPERLINK_IMPL (accessible))
     dump_atk_hyperlink_impl (ATK_HYPERLINK_IMPL (accessible), depth, string);
+
+  if (ATK_IS_HYPERTEXT (accessible))
+    dump_atk_hypertext (ATK_HYPERTEXT (accessible), depth, string);
 
   if (ATK_IS_STREAMABLE_CONTENT (accessible))
     dump_atk_streamable_content (ATK_STREAMABLE_CONTENT (accessible), depth, string);
@@ -843,7 +871,25 @@ parse_command_line (int *argc, char ***argv)
 
   gtk_test_init (argc, argv);
 
+  /* gtk_test_init does not call setlocale(), so do it ourselves,
+   * since running in the C locale breaks some our fancy
+   * utf8 output.
+   */
+  setlocale (LC_ALL, "en_US.utf8");
+
   return TRUE;
+}
+
+static void
+fix_settings (void)
+{
+  /* Some settings can affect the output of the accessibility tests,
+   * so we take some steps to isolate us from the ambient environment.
+   */
+
+  g_object_set (gtk_settings_get_default (),
+                "gtk-dialogs-use-header", TRUE,
+                NULL);
 }
 
 int
@@ -851,6 +897,8 @@ main (int argc, char **argv)
 {
   if (!parse_command_line (&argc, &argv))
     return 1;
+
+  fix_settings ();
 
   if (argc < 2)
     {

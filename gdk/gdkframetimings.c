@@ -25,11 +25,11 @@
  * @Title: Frame timings
  *
  * A #GdkFrameTimings object holds timing information for a single frame
- * of the application's displays. To retrieve #GdkFrameTimings objects,
+ * of the application’s displays. To retrieve #GdkFrameTimings objects,
  * use gdk_frame_clock_get_timings() or gdk_frame_clock_get_current_timings().
  * The information in #GdkFrameTimings is useful for precise synchronization
  * of video with the event or audio streams, and for measuring
- * quality metrics for the application's display, such as latency and jitter.
+ * quality metrics for the application’s display, such as latency and jitter.
  */
 
 G_DEFINE_BOXED_TYPE (GdkFrameTimings, gdk_frame_timings,
@@ -115,7 +115,7 @@ gdk_frame_timings_get_frame_counter (GdkFrameTimings *timings)
  * accessor functions for #GdkFrameTimings can return 0 to
  * indicate an unavailable value for two reasons: either because
  * the information is not yet available, or because it isn't
- * available at all. Once gdk_frame_timings_complete() returns
+ * available at all. Once gdk_frame_timings_get_complete() returns
  * %TRUE for a frame, you can be certain that no further values
  * will become available and be stored in the #GdkFrameTimings.
  *
@@ -203,7 +203,7 @@ gdk_frame_timings_get_predicted_presentation_time (GdkFrameTimings *timings)
  *
  * Gets the natural interval between presentation times for
  * the display that this frame was displayed on. Frame presentation
- * usually happens during the "vertical blanking interval".
+ * usually happens during the “vertical blanking interval”.
  *
  * Returns: the refresh interval of the display, in microseconds,
  *  or 0 if the refresh interval is not available.

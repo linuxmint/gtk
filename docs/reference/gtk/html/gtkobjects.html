@@ -6,9 +6,9 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
 <link rel="up" href="index.html" title="GTK+ 3 Reference Manual">
-<link rel="prev" href="chap-drawing-model.html" title="The GTK+ Drawing Model">
+<link rel="prev" href="chap-input-handling.html" title="The GTK+ Input Handling Model">
 <link rel="next" href="ch02.html" title="Object Hierarchy">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -16,7 +16,7 @@
 <td width="100%" align="left" class="shortcuts"></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><img src="up-insensitive.png" width="16" height="16" border="0"></td>
-<td><a accesskey="p" href="chap-drawing-model.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="chap-input-handling.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="ch02.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="part">
@@ -52,6 +52,9 @@
 <dt><span class="chapter"><a href="WindowWidgets.html">Windows</a></span></dt>
 <dd><dl>
 <dt>
+<span class="refentrytitle"><a href="GtkWindow.html">GtkWindow</a></span><span class="refpurpose"> — Toplevel which can contain other widgets</span>
+</dt>
+<dt>
 <span class="refentrytitle"><a href="GtkDialog.html">GtkDialog</a></span><span class="refpurpose"> — Create popup windows</span>
 </dt>
 <dt>
@@ -64,16 +67,13 @@
 <span class="refentrytitle"><a href="GtkAssistant.html">GtkAssistant</a></span><span class="refpurpose"> — A widget used to guide users through multi-step operations</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GtkWindow.html">GtkWindow</a></span><span class="refpurpose"> — Toplevel which can contain other widgets</span>
-</dt>
-<dt>
-<span class="refentrytitle"><a href="GtkWindowGroup.html">GtkWindowGroup</a></span><span class="refpurpose"> — Limit the effect of grabs</span>
-</dt>
-<dt>
 <span class="refentrytitle"><a href="GtkInvisible.html">GtkInvisible</a></span><span class="refpurpose"> — A widget which is not displayed</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GtkOffscreenWindow.html">GtkOffscreenWindow</a></span><span class="refpurpose"> — A toplevel to manage offscreen rendering of child widgets</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkWindowGroup.html">GtkWindowGroup</a></span><span class="refpurpose"> — Limit the effect of grabs</span>
 </dt>
 </dl></dd>
 <dt><span class="chapter"><a href="LayoutContainers.html">Layout Containers</a></span></dt>
@@ -91,19 +91,22 @@
 <span class="refentrytitle"><a href="GtkListBox.html">GtkListBox</a></span><span class="refpurpose"> — A list container</span>
 </dt>
 <dt>
+<span class="refentrytitle"><a href="GtkFlowBox.html">GtkFlowBox</a></span><span class="refpurpose"> — A container that allows reflowing its children</span>
+</dt>
+<dt>
 <span class="refentrytitle"><a href="GtkStack.html">GtkStack</a></span><span class="refpurpose"> — A stacking container</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GtkStackSwitcher.html">GtkStackSwitcher</a></span><span class="refpurpose"> — A controller for GtkStack</span>
 </dt>
 <dt>
+<span class="refentrytitle"><a href="GtkActionBar.html">GtkActionBar</a></span><span class="refpurpose"> — A full width bar for presenting contextual actions</span>
+</dt>
+<dt>
 <span class="refentrytitle"><a href="GtkHeaderBar.html">GtkHeaderBar</a></span><span class="refpurpose"> — A box with a centered child</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GtkOverlay.html">GtkOverlay</a></span><span class="refpurpose"> — A container which overlays widgets on top of each other</span>
-</dt>
-<dt>
-<span class="refentrytitle"><a href="GtkAlignment.html">GtkAlignment</a></span><span class="refpurpose"> — A widget which controls the alignment and size of its child</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GtkButtonBox.html">GtkButtonBox</a></span><span class="refpurpose"> — A container for arranging buttons</span>
@@ -158,9 +161,6 @@ widgets at fixed coordinates</span>
 <dt>
 <span class="refentrytitle"><a href="GtkAccelLabel.html">GtkAccelLabel</a></span><span class="refpurpose"> — A label which displays an accelerator key on the right of the text</span>
 </dt>
-<dt>
-<span class="refentrytitle"><a href="GtkStatusIcon.html">GtkStatusIcon</a></span><span class="refpurpose"> — Display an icon in the system tray</span>
-</dt>
 </dl></dd>
 <dt><span class="chapter"><a href="ButtonWidgets.html">Buttons and Toggles</a></span></dt>
 <dd><dl>
@@ -180,10 +180,10 @@ widgets at fixed coordinates</span>
 <span class="refentrytitle"><a href="GtkLinkButton.html">GtkLinkButton</a></span><span class="refpurpose"> — Create buttons bound to a URL</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GtkMenuButton.html">GtkMenuButton</a></span><span class="refpurpose"> — A widget that shows a menu when clicked on</span>
+<span class="refentrytitle"><a href="GtkMenuButton.html">GtkMenuButton</a></span><span class="refpurpose"> — A widget that shows a popup when clicked on</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GtkSwitch.html">GtkSwitch</a></span><span class="refpurpose"> — A "light switch" style toggle</span>
+<span class="refentrytitle"><a href="GtkSwitch.html">GtkSwitch</a></span><span class="refpurpose"> — A “light switch” style toggle</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GtkScaleButton.html">GtkScaleButton</a></span><span class="refpurpose"> — A button which pops up a scale</span>
@@ -195,7 +195,7 @@ widgets at fixed coordinates</span>
 <span class="refentrytitle"><a href="GtkLockButton.html">GtkLockButton</a></span><span class="refpurpose"> — A widget to unlock or lock privileged operations</span>
 </dt>
 </dl></dd>
-<dt><span class="chapter"><a href="NumericEntry.html">Numeric/Text Data Entry</a></span></dt>
+<dt><span class="chapter"><a href="NumericEntry.html">Numeric and Text Data Entry</a></span></dt>
 <dd><dl>
 <dt>
 <span class="refentrytitle"><a href="GtkEntry.html">GtkEntry</a></span><span class="refpurpose"> — A single line text entry field</span>
@@ -390,8 +390,11 @@ widgets at fixed coordinates</span>
 <dt>
 <span class="refentrytitle"><a href="GtkRadioToolButton.html">GtkRadioToolButton</a></span><span class="refpurpose"> — A toolbar item that contains a radio button</span>
 </dt>
+<dt>
+<span class="refentrytitle"><a href="GtkPopover.html">GtkPopover</a></span><span class="refpurpose"> — Context dependent bubbles</span>
+</dt>
 </dl></dd>
-<dt><span class="chapter"><a href="SelectorWidgets.html">Selectors (Color/File/Font)</a></span></dt>
+<dt><span class="chapter"><a href="SelectorWidgets.html">Selector Widgets and Dialogs</a></span></dt>
 <dd><dl>
 <dt>
 <span class="refentrytitle"><a href="GtkColorChooser.html">GtkColorChooser</a></span><span class="refpurpose"> — Interface implemented by widgets for choosing colors</span>
@@ -412,10 +415,10 @@ widgets at fixed coordinates</span>
 <span class="refentrytitle"><a href="GtkFileChooserButton.html">GtkFileChooserButton</a></span><span class="refpurpose"> — A button to launch a file selection dialog</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GtkFileChooserDialog.html">GtkFileChooserDialog</a></span><span class="refpurpose"> — A file chooser dialog, suitable for "File/Open" or "File/Save" commands</span>
+<span class="refentrytitle"><a href="GtkFileChooserDialog.html">GtkFileChooserDialog</a></span><span class="refpurpose"> — A file chooser dialog, suitable for “File/Open” or “File/Save” commands</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GtkFileChooserWidget.html">GtkFileChooserWidget</a></span><span class="refpurpose"> — File chooser widget that can be embedded in other widgets</span>
+<span class="refentrytitle"><a href="GtkFileChooserWidget.html">GtkFileChooserWidget</a></span><span class="refpurpose"> — A file chooser widget</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GtkFileFilter.html">GtkFileFilter</a></span><span class="refpurpose"> — A filter for selecting a file subset</span>
@@ -493,9 +496,6 @@ widgets at fixed coordinates</span>
 <span class="refentrytitle"><a href="GtkAdjustment.html">GtkAdjustment</a></span><span class="refpurpose"> — A representation of an adjustable bounded value</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GtkArrow.html">GtkArrow</a></span><span class="refpurpose"> — Displays an arrow</span>
-</dt>
-<dt>
 <span class="refentrytitle"><a href="GtkCalendar.html">GtkCalendar</a></span><span class="refpurpose"> — Displays a calendar and allows the user to select a date</span>
 </dt>
 <dt>
@@ -542,9 +542,6 @@ widgets at fixed coordinates</span>
 <span class="refentrytitle"><a href="GtkMenuShell.html">GtkMenuShell</a></span><span class="refpurpose"> — A base class for menu objects</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GtkMisc.html">GtkMisc</a></span><span class="refpurpose"> — Base class for widgets with alignments and padding</span>
-</dt>
-<dt>
 <span class="refentrytitle"><a href="GtkRange.html">GtkRange</a></span><span class="refpurpose"> — Base class for widgets which visualize an adjustment</span>
 </dt>
 <dt>
@@ -554,10 +551,10 @@ widgets at fixed coordinates</span>
 <dt><span class="chapter"><a href="PlugSocket.html">Cross-process Embedding</a></span></dt>
 <dd><dl>
 <dt>
-<span class="refentrytitle"><a href="gtk3-GtkPlug.html">GtkPlug</a></span><span class="refpurpose"> — Toplevel for embedding into other processes</span>
+<span class="refentrytitle"><a href="GtkPlug.html">GtkPlug</a></span><span class="refpurpose"> — Toplevel for embedding into other processes</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gtk3-GtkSocket.html">GtkSocket</a></span><span class="refpurpose"> — Container for widgets from other processes</span>
+<span class="refentrytitle"><a href="GtkSocket.html">GtkSocket</a></span><span class="refpurpose"> — Container for widgets from other processes</span>
 </dt>
 </dl></dd>
 <dt><span class="chapter"><a href="RecentDocuments.html">Recently Used Documents</a></span></dt>
@@ -597,6 +594,39 @@ widgets at fixed coordinates</span>
 <span class="refentrytitle"><a href="GtkAppChooserWidget.html">GtkAppChooserWidget</a></span><span class="refpurpose"> — Application chooser widget that can be embedded in other widgets</span>
 </dt>
 </dl></dd>
+<dt><span class="chapter"><a href="Gestures.html">Gestures</a></span></dt>
+<dd><dl>
+<dt>
+<span class="refentrytitle"><a href="GtkEventController.html">GtkEventController</a></span><span class="refpurpose"> — Self-contained handler of series of events</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkGesture.html">GtkGesture</a></span><span class="refpurpose"> — Base class for gestures</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkGestureSingle.html">GtkGestureSingle</a></span><span class="refpurpose"> — Base class for mouse/single-touch gestures</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkGestureDrag.html">GtkGestureDrag</a></span><span class="refpurpose"> — Drag gesture</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkGestureLongPress.html">GtkGestureLongPress</a></span><span class="refpurpose"> — "Press and Hold" gesture</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkGestureMultiPress.html">GtkGestureMultiPress</a></span><span class="refpurpose"> — Multipress gesture</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkGesturePan.html">GtkGesturePan</a></span><span class="refpurpose"> — Pan gesture</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkGestureSwipe.html">GtkGestureSwipe</a></span><span class="refpurpose"> — Swipe gesture</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkGestureRotate.html">GtkGestureRotate</a></span><span class="refpurpose"> — Rotate gesture</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkGestureZoom.html">GtkGestureZoom</a></span><span class="refpurpose"> — Zoom gesture</span>
+</dt>
+</dl></dd>
 <dt><span class="chapter"><a href="DeprecatedObjects.html">Deprecated</a></span></dt>
 <dd><dl>
 <dt>
@@ -628,7 +658,7 @@ widgets at fixed coordinates</span>
 <span class="refentrytitle"><a href="GtkColorSelectionDialog.html">GtkColorSelectionDialog</a></span><span class="refpurpose"> — Deprecated dialog box for selecting a color</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GtkHSV.html">GtkHSV</a></span><span class="refpurpose"> — A 'color wheel' widget</span>
+<span class="refentrytitle"><a href="GtkHSV.html">GtkHSV</a></span><span class="refpurpose"> — A “color wheel” widget</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GtkFontSelection.html">GtkFontSelection</a></span><span class="refpurpose"> — Deprecated widget for selecting fonts</span>
@@ -694,7 +724,28 @@ widgets at fixed coordinates</span>
 <span class="refentrytitle"><a href="GtkImageMenuItem.html">GtkImageMenuItem</a></span><span class="refpurpose"> — A menu item with an icon</span>
 </dt>
 <dt>
+<span class="refentrytitle"><a href="GtkMisc.html">GtkMisc</a></span><span class="refpurpose"> — Base class for widgets with alignments and padding</span>
+</dt>
+<dt>
 <span class="refentrytitle"><a href="gtk3-Stock-Items.html">Stock Items</a></span><span class="refpurpose"> — Prebuilt common menu/toolbar items and corresponding icons</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gtk3-Themeable-Stock-Images.html">Themeable Stock Images</a></span><span class="refpurpose"> — Manipulating stock icons</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkNumerableIcon.html">GtkNumerableIcon</a></span><span class="refpurpose"> — A GIcon that allows numbered emblems</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkArrow.html">GtkArrow</a></span><span class="refpurpose"> — Displays an arrow</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkStatusIcon.html">GtkStatusIcon</a></span><span class="refpurpose"> — Display an icon in the system tray</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkThemingEngine.html">GtkThemingEngine</a></span><span class="refpurpose"> — Theming renderers</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GtkAlignment.html">GtkAlignment</a></span><span class="refpurpose"> — A widget which controls the alignment and size of its child</span>
 </dt>
 </dl></dd>
 </dl>
@@ -702,6 +753,6 @@ widgets at fixed coordinates</span>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

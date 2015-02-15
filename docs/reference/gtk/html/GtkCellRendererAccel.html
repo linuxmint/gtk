@@ -8,7 +8,7 @@
 <link rel="up" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
 <link rel="prev" href="GtkCellEditable.html" title="GtkCellEditable">
 <link rel="next" href="GtkCellRendererCombo.html" title="GtkCellRendererCombo">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -61,7 +61,7 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
 <td class="property_name"><a class="link" href="GtkCellRendererAccel.html#GtkCellRendererAccel--accel-key" title="The “accel-key” property">accel-key</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -76,7 +76,7 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
 <td class="property_name"><a class="link" href="GtkCellRendererAccel.html#GtkCellRendererAccel--keycode" title="The “keycode” property">keycode</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -126,8 +126,8 @@
 </div>
 <div class="refsect1">
 <a name="GtkCellRendererAccel.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkCellRenderer.html" title="GtkCellRenderer">GtkCellRenderer</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkCellRendererText.html" title="GtkCellRendererText">GtkCellRendererText</a>
                 <span class="lineart">╰──</span> GtkCellRendererAccel
@@ -140,10 +140,9 @@
 </div>
 <div class="refsect1">
 <a name="GtkCellRendererAccel.description"></a><h2>Description</h2>
-<p><a class="link" href="GtkCellRendererAccel.html" title="GtkCellRendererAccel"><span class="type">GtkCellRendererAccel</span></a> displays a keyboard accelerator (i.e. a
-key combination like <span class="keycap"><strong>Control</strong></span>+<span class="keycap"><strong>a</strong></span>.
-If the cell renderer is editable, the accelerator can be changed by
-simply typing the new combination.</p>
+<p><a class="link" href="GtkCellRendererAccel.html" title="GtkCellRendererAccel"><span class="type">GtkCellRendererAccel</span></a> displays a keyboard accelerator (i.e. a key
+combination like <code class="literal">Control + a</code>). If the cell renderer is editable,
+the accelerator can be changed by simply typing the new combination.</p>
 <p>The <a class="link" href="GtkCellRendererAccel.html" title="GtkCellRendererAccel"><span class="type">GtkCellRendererAccel</span></a> cell renderer was added in GTK+ 2.10.</p>
 </div>
 <div class="refsect1">
@@ -170,8 +169,12 @@ gtk_cell_renderer_accel_new (<em class="parameter"><code><span class="type">void
 <hr>
 <div class="refsect2">
 <a name="GtkCellRendererAccelMode"></a><h3>enum GtkCellRendererAccelMode</h3>
+<p>Determines if the edited accelerators are GTK+ accelerators. If
+they are, consumed modifiers are suppressed, only accelerators
+accepted by GTK+ are allowed, and the accelerators are rendered
+in the same way as they are in menus.</p>
 <div class="refsect3">
-<a name="id-1.3.12.19.11.3.3"></a><h4>Members</h4>
+<a name="id-1.3.12.19.11.3.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
@@ -181,13 +184,17 @@ gtk_cell_renderer_accel_new (<em class="parameter"><code><span class="type">void
 <tbody>
 <tr>
 <td class="enum_member_name"><p><a name="GTK-CELL-RENDERER-ACCEL-MODE-GTK:CAPS"></a>GTK_CELL_RENDERER_ACCEL_MODE_GTK</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>GTK+ accelerators mode</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GTK-CELL-RENDERER-ACCEL-MODE-OTHER:CAPS"></a>GTK_CELL_RENDERER_ACCEL_MODE_OTHER</p></td>
-<td> </td>
-<td> </td>
+<td class="enum_member_description">
+<p>Other accelerator mode</p>
+</td>
+<td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
@@ -198,7 +205,7 @@ gtk_cell_renderer_accel_new (<em class="parameter"><code><span class="type">void
 <a name="GtkCellRendererAccel.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GtkCellRendererAccel--accel-key"></a><h3>The <code class="literal">“accel-key”</code> property</h3>
-<pre class="programlisting">  “accel-key”                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
+<pre class="programlisting">  “accel-key”                <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
 <p>The keyval of the accelerator.</p>
 <p>Flags: Read / Write</p>
 <p>Allowed values: &lt;= G_MAXINT</p>
@@ -228,7 +235,7 @@ in the same way as they are in menus.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkCellRendererAccel--keycode"></a><h3>The <code class="literal">“keycode”</code> property</h3>
-<pre class="programlisting">  “keycode”                  <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
+<pre class="programlisting">  “keycode”                  <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
 <p>The hardware keycode of the accelerator. Note that the hardware keycode is
 only relevant if the key does not have a keyval. Normally, the keyboard
 configuration should assign keyvals to all keys.</p>
@@ -244,8 +251,8 @@ configuration should assign keyvals to all keys.</p>
 <a name="GtkCellRendererAccel-accel-cleared"></a><h3>The <code class="literal">“accel-cleared”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkCellRendererAccel.html" title="GtkCellRendererAccel"><span class="type">GtkCellRendererAccel</span></a> *accel,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                *path_string,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>              user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                *path_string,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>              user_data)</pre>
 <p>Gets emitted when the user has removed the accelerator.</p>
 <div class="refsect3">
 <a name="id-1.3.12.19.13.2.5"></a><h4>Parameters</h4>
@@ -282,11 +289,11 @@ user_function (<a class="link" href="GtkCellRendererAccel.html" title="GtkCellRe
 <a name="GtkCellRendererAccel-accel-edited"></a><h3>The <code class="literal">“accel-edited”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkCellRendererAccel.html" title="GtkCellRendererAccel"><span class="type">GtkCellRendererAccel</span></a> *accel,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                *path_string,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 accel_key,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                *path_string,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 accel_key,
                <a href="http://developer.gnome.org/gdk2/gdk3-Windows.html#GdkModifierType"><span class="type">GdkModifierType</span></a>       accel_mods,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 hardware_keycode,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>              user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 hardware_keycode,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>              user_data)</pre>
 <p>Gets emitted when the user has selected a new accelerator.</p>
 <div class="refsect3">
 <a name="id-1.3.12.19.13.3.5"></a><h4>Parameters</h4>
@@ -337,6 +344,6 @@ user_function (<a class="link" href="GtkCellRendererAccel.html" title="GtkCellRe
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

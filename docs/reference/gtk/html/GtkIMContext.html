@@ -8,7 +8,7 @@
 <link rel="up" href="AbstractObjects.html" title="Abstract Base Classes">
 <link rel="prev" href="GtkRange.html" title="GtkRange">
 <link rel="next" href="PlugSocket.html" title="Cross-process Embedding">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -60,7 +60,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkIMContext.html#gtk-im-context-filter-keypress" title="gtk_im_context_filter_keypress ()">gtk_im_context_filter_keypress</a> <span class="c_punctuation">()</span>
@@ -116,7 +116,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkIMContext.html#gtk-im-context-get-surrounding" title="gtk_im_context_get_surrounding ()">gtk_im_context_get_surrounding</a> <span class="c_punctuation">()</span>
@@ -124,7 +124,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkIMContext.html#gtk-im-context-delete-surrounding" title="gtk_im_context_delete_surrounding ()">gtk_im_context_delete_surrounding</a> <span class="c_punctuation">()</span>
@@ -170,7 +170,7 @@
 <td class="signal_flags">Run Last</td>
 </tr>
 <tr>
-<td class="signal_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a></td>
+<td class="signal_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a></td>
 <td class="signal_name"><a class="link" href="GtkIMContext.html#GtkIMContext-delete-surrounding" title="The “delete-surrounding” signal">delete-surrounding</a></td>
 <td class="signal_flags">Run Last</td>
 </tr>
@@ -190,7 +190,7 @@
 <td class="signal_flags">Run Last</td>
 </tr>
 <tr>
-<td class="signal_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a></td>
+<td class="signal_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a></td>
 <td class="signal_name"><a class="link" href="GtkIMContext.html#GtkIMContext-retrieve-surrounding" title="The “retrieve-surrounding” signal">retrieve-surrounding</a></td>
 <td class="signal_flags">Run Last</td>
 </tr>
@@ -222,7 +222,7 @@
 </div>
 <div class="refsect1">
 <a name="GtkIMContext.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
     <span class="lineart">╰──</span> GtkIMContext
         <span class="lineart">├──</span> <a class="link" href="GtkIMContextSimple.html" title="GtkIMContextSimple">GtkIMContextSimple</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkIMMulticontext.html" title="GtkIMMulticontext">GtkIMMulticontext</a>
@@ -241,7 +241,8 @@ is used by GTK+ text input widgets like <a class="link" href="GtkEntry.html" tit
 Unicode character strings.</p>
 <p>The default input method can be set programmatically via the 
 <a class="link" href="GtkSettings.html#GtkSettings--gtk-im-module" title="The “gtk-im-module” property"><span class="type">“gtk-im-module”</span></a> GtkSettings property. Alternatively, you may set 
-the GTK_IM_MODULE environment variable as documented in <a class="link" href="gtk-running.html" title="Running GTK+ Applications"><span class="type">gtk-running</span></a>.</p>
+the GTK_IM_MODULE environment variable as documented in
+<a class="link" href="gtk-running.html" title="Running GTK+ Applications">Running GTK+ Applications</a>.</p>
 <p>The <a class="link" href="GtkEntry.html" title="GtkEntry"><span class="type">GtkEntry</span></a> <a class="link" href="GtkEntry.html#GtkEntry--im-module" title="The “im-module” property"><span class="type">“im-module”</span></a> and <a class="link" href="GtkTextView.html" title="GtkTextView"><span class="type">GtkTextView</span></a> <a class="link" href="GtkTextView.html#GtkTextView--im-module" title="The “im-module” property"><span class="type">“im-module”</span></a> 
 properties may also be used to set input methods for specific widget 
 instances. For instance, a certain entry widget might be expected to contain 
@@ -252,7 +253,7 @@ output the composed result. This is called preediting, and an input method
 may provide feedback about this process by displaying the intermediate
 composition states as preedit text. For instance, the default GTK+ input
 method implements the input of arbitrary Unicode code points by holding down
-the Control and Shift keys and then typing "U" followed by the hexadecimal
+the Control and Shift keys and then typing “U” followed by the hexadecimal
 digits of the code point.  When releasing the Control and Shift keys,
 preediting ends and the character is inserted as text. Ctrl+Shift+u20AC for
 example results in the € sign.</p>
@@ -265,15 +266,16 @@ these four functions:</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">void</span><span class="normal"> </span><span class="function">im_module_init</span><span class="symbol">(&lt;</span><span class="usertype">GTKDOCLINK</span><span class="normal"> HREF</span><span class="symbol">=</span><span class="string">"GTypeModule"</span><span class="symbol">&gt;</span><span class="usertype">GTypeModule&lt;/GTKDOCLINK&gt;</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">module</span><span class="symbol">);</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="type">void</span><span class="normal"> </span><span class="function">im_module_init</span><span class="symbol">(</span><span class="normal">#</span><span class="usertype">GTypeModule</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">module</span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<p>This function should register the <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the <a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> subclass which
-implements the input method by means of <a href="http://library.gnome.org/devel/gobject/unstable/GTypeModule.html#g-type-module-register-type"><code class="function">g_type_module_register_type()</code></a>. Note
-that <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#g-type-register-static"><code class="function">g_type_register_static()</code></a> cannot be used as the type needs to be
+<p>
+This function should register the <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the <a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> subclass which
+implements the input method by means of <a href="https://developer.gnome.org/gobject/unstable/GTypeModule.html#g-type-module-register-type"><code class="function">g_type_module_register_type()</code></a>. Note
+that <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#g-type-register-static"><code class="function">g_type_register_static()</code></a> cannot be used as the type needs to be
 registered dynamically.</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
@@ -286,7 +288,8 @@ registered dynamically.</p>
   </table>
 </div>
 
-<p>Here goes any cleanup code your input method might require on module unload.</p>
+<p>
+Here goes any cleanup code your input method might require on module unload.</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -296,17 +299,18 @@ registered dynamically.</p>
 3
 4
 5</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="type">void</span><span class="normal"> </span><span class="function">im_module_list</span><span class="symbol">(</span><span class="keyword">const</span><span class="normal"> </span><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"GtkIMContext.html#GtkIMContextInfo"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"struct GtkIMContextInfo"</span><span class="symbol">&gt;</span><span class="usertype">GtkIMContextInfo&lt;/a&gt;</span><span class="normal"> </span><span class="symbol">***</span><span class="normal">contexts</span><span class="symbol">,</span><span class="normal"> </span><span class="type">int</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">n_contexts</span><span class="symbol">)</span>
+        <td class="listing_code"><pre class="programlisting"><span class="type">void</span><span class="normal"> </span><span class="function">im_module_list</span><span class="symbol">(</span><span class="keyword">const</span><span class="normal"> #</span><span class="usertype">GtkIMContextInfo</span><span class="normal"> </span><span class="symbol">***</span><span class="normal">contexts</span><span class="symbol">,</span><span class="normal"> </span><span class="type">int</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">n_contexts</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="symbol">*</span><span class="normal">contexts </span><span class="symbol">=</span><span class="normal"> info_list</span><span class="symbol">;</span>
-<span class="normal">  </span><span class="symbol">*</span><span class="normal">n_contexts </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#G-N-ELEMENTS:CAPS">G_N_ELEMENTS</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">info_list</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="symbol">*</span><span class="normal">n_contexts </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#G-N-ELEMENTS:CAPS">G_N_ELEMENTS</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">info_list</span><span class="symbol">);</span>
 <span class="cbracket">}</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<p>This function returns the list of input methods provided by the module. The
+<p>
+This function returns the list of input methods provided by the module. The
 example implementation above shows a common solution and simply returns a
 pointer to statically defined array of <a class="link" href="GtkIMContext.html#GtkIMContextInfo" title="struct GtkIMContextInfo"><span class="type">GtkIMContextInfo</span></a> items for each
 provided input method.</p>
@@ -315,18 +319,19 @@ provided input method.</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="symbol">&lt;</span><span class="usertype">a</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"link"</span><span class="normal"> href</span><span class="symbol">=</span><span class="string">"GtkIMContext.html"</span><span class="normal"> title</span><span class="symbol">=</span><span class="string">"GtkIMContext"</span><span class="symbol">&gt;</span><span class="usertype">GtkIMContext&lt;/a&gt; * im_module_create(const &lt;GTKDOCLINK HREF="gchar"&gt;gchar&lt;/GTKDOCLINK&gt;</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">context_id</span><span class="symbol">);</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="preproc">#GtkIMContext</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> </span><span class="function">im_module_create</span><span class="symbol">(</span><span class="keyword">const</span><span class="normal"> #</span><span class="usertype">gchar</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">context_id</span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<p>This function should return a pointer to a newly created instance of the
+<p>
+This function should return a pointer to a newly created instance of the
 <a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> subclass identified by <em class="parameter"><code>context_id</code></em>
 . The context ID is the same
 as specified in the <a class="link" href="GtkIMContext.html#GtkIMContextInfo" title="struct GtkIMContextInfo"><span class="type">GtkIMContextInfo</span></a> array returned by <code class="function">im_module_list()</code>.</p>
 <p>After a new loadable input method module has been installed on the system,
-the configuration file <code class="filename">gtk.immodules</code> needs to be
+the configuration file <code class="literal">gtk.immodules</code> needs to be
 regenerated by <a class="link" href="gtk-query-immodules-3.0.html" title="gtk-query-immodules-3.0">gtk-query-immodules-3.0</a>,
 in order for the new input method to become available to GTK+ applications.</p>
 </div>
@@ -342,7 +347,7 @@ gtk_im_context_set_client_window (<em class="parameter"><code><a class="link" hr
 used in order to correctly position status windows, and may
 also be used for purposes internal to the input method.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.2.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.10.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -357,9 +362,9 @@ also be used for purposes internal to the input method.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>window</p></td>
-<td class="parameter_description"><p>  the client window. This may be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to indicate
+<td class="parameter_description"><p>  the client window. This may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to indicate
 that the previous client window no longer exists. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -370,15 +375,15 @@ that the previous client window no longer exists. </p></td>
 <a name="gtk-im-context-get-preedit-string"></a><h3>gtk_im_context_get_preedit_string ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_im_context_get_preedit_string (<em class="parameter"><code><a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> *context</code></em>,
-                                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **str</code></em>,
+                                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **str</code></em>,
                                    <em class="parameter"><code><a href="/home/mclasen/gnome/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"><span class="type">PangoAttrList</span></a> **attrs</code></em>,
-                                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *cursor_pos</code></em>);</pre>
+                                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *cursor_pos</code></em>);</pre>
 <p>Retrieve the current preedit string for the input context,
 and a list of attributes to apply to the string.
 This string should be displayed inserted at the insertion
 point.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.3.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.10.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -394,7 +399,7 @@ point.</p>
 <tr>
 <td class="parameter_name"><p>str</p></td>
 <td class="parameter_description"><p> location to store the retrieved
-string. The string retrieved must be freed with <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>. </p></td>
+string. The string retrieved must be freed with <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -417,14 +422,14 @@ within the preedit string. </p></td>
 <hr>
 <div class="refsect2">
 <a name="gtk-im-context-filter-keypress"></a><h3>gtk_im_context_filter_keypress ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_im_context_filter_keypress (<em class="parameter"><code><a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> *context</code></em>,
                                 <em class="parameter"><code><a href="http://developer.gnome.org/gdk2/gdk3-Event-Structures.html#GdkEventKey"><span class="type">GdkEventKey</span></a> *event</code></em>);</pre>
 <p>Allow an input method to internally handle key press and release 
-events. If this function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, then no further processing
+events. If this function returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, then no further processing
 should be done for this key event.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.4.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.10.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -446,8 +451,8 @@ should be done for this key event.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.4.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the input method handled the key event.</p>
+<a name="id-1.3.19.7.10.4.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the input method handled the key event.</p>
 <p></p>
 </div>
 </div>
@@ -461,7 +466,7 @@ input context corresponds has gained focus. The input method
 may, for example, change the displayed feedback to reflect
 this change.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.5.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.10.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -486,7 +491,7 @@ input context corresponds has lost focus. The input method
 may, for example, change the displayed feedback or reset the contexts
 state to reflect this change.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.6.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.10.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -510,7 +515,7 @@ gtk_im_context_reset (<em class="parameter"><code><a class="link" href="GtkIMCon
 position has been made. This will typically cause the input
 method to clear the preedit state.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.7.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.10.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -535,7 +540,7 @@ gtk_im_context_set_cursor_location (<em class="parameter"><code><a class="link" 
 position has been made. The location is relative to the client
 window.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.8.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.10.8.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -562,14 +567,14 @@ window.</p>
 <a name="gtk-im-context-set-use-preedit"></a><h3>gtk_im_context_set_use_preedit ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_im_context_set_use_preedit (<em class="parameter"><code><a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> *context</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> use_preedit</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> use_preedit</code></em>);</pre>
 <p>Sets whether the IM context should use the preedit string
 to display feedback. If <em class="parameter"><code>use_preedit</code></em>
  is FALSE (default
 is TRUE), then the IM context may use some other method to display
 feedback, such as displaying it in a child of the root window.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.9.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.10.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -596,15 +601,15 @@ feedback, such as displaying it in a child of the root window.</p>
 <a name="gtk-im-context-set-surrounding"></a><h3>gtk_im_context_set_surrounding ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_im_context_set_surrounding (<em class="parameter"><code><a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> *context</code></em>,
-                                <em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> len</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> cursor_index</code></em>);</pre>
+                                <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> len</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> cursor_index</code></em>);</pre>
 <p>Sets surrounding context around the insertion point and preedit
 string. This function is expected to be called in response to the
 GtkIMContext::retrieve_surrounding signal, and will likely have no
 effect if called at other times.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.10.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.10.10.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -645,10 +650,10 @@ is nul-terminated</p></td>
 <hr>
 <div class="refsect2">
 <a name="gtk-im-context-get-surrounding"></a><h3>gtk_im_context_get_surrounding ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_im_context_get_surrounding (<em class="parameter"><code><a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> *context</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **text</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *cursor_index</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **text</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *cursor_index</code></em>);</pre>
 <p>Retrieves context around the insertion point. Input methods
 typically want context in order to constrain input text based on
 existing text; this is important for languages such as Thai where
@@ -661,7 +666,7 @@ is available, up to an entire paragraph, by calling
 for a widget to respond to the ::retrieve_surrounding signal, so input
 methods must be prepared to function without context.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.11.6"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.10.11.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -678,8 +683,8 @@ methods must be prepared to function without context.</p>
 <td class="parameter_name"><p>text</p></td>
 <td class="parameter_description"><p> location to store a UTF-8 encoded
 string of text holding context around the insertion point.
-If the function returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, then you must free the result
-stored in this location with <a href="http://library.gnome.org/devel/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>. </p></td>
+If the function returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, then you must free the result
+stored in this location with <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -693,8 +698,8 @@ cursor within <em class="parameter"><code>text</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.11.7"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if surrounding text was provided; in this case
+<a name="id-1.3.19.7.10.11.7"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if surrounding text was provided; in this case
 you must free the result stored in *text.</p>
 <p></p>
 </div>
@@ -702,10 +707,10 @@ you must free the result stored in *text.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-im-context-delete-surrounding"></a><h3>gtk_im_context_delete_surrounding ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_im_context_delete_surrounding (<em class="parameter"><code><a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> *context</code></em>,
-                                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> offset</code></em>,
-                                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_chars</code></em>);</pre>
+                                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> offset</code></em>,
+                                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_chars</code></em>);</pre>
 <p>Asks the widget that the input context is attached to to delete
 characters around the cursor position by emitting the
 GtkIMContext::delete_surrounding signal. Note that <em class="parameter"><code>offset</code></em>
@@ -723,7 +728,7 @@ have deleted all the characters that were requested to be deleted.</p>
 subsitutions in the existing text in response to new input. It is
 not useful for applications.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.12.7"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.10.12.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -751,8 +756,8 @@ a negative value means start before the cursor.</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.19.8.10.12.8"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the signal was handled.</p>
+<a name="id-1.3.19.7.10.12.8"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the signal was handled.</p>
 <p></p>
 </div>
 </div>
@@ -803,7 +808,7 @@ a negative value means start before the cursor.</p></td>
 };
 </pre>
 <div class="refsect3">
-<a name="id-1.3.19.8.11.3.4"></a><h4>Members</h4>
+<a name="id-1.3.19.7.11.3.4"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
@@ -866,11 +871,11 @@ this method to provide feedback.</p></td>
 <td class="struct_member_description"><p>Called via <a class="link" href="GtkIMContext.html#gtk-im-context-filter-keypress" title="gtk_im_context_filter_keypress ()"><code class="function">gtk_im_context_filter_keypress()</code></a> on every
 key press or release event. Every non-trivial input method needs to
 override this in order to implement the mapping from key events to text.
-A return value of <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> indicates to the caller that the event was
+A return value of <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> indicates to the caller that the event was
 consumed by the input method. In that case, the <a class="link" href="GtkIMContext.html#GtkIMContext-commit" title="The “commit” signal"><span class="type">“commit”</span></a>
 signal should be emitted upon completion of a key sequence to pass the
-resulting text back to the input widget. Alternatively, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> may be
-returned to indicate that the event wasn't handled by the input method.
+resulting text back to the input widget. Alternatively, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> may be
+returned to indicate that the event wasn’t handled by the input method.
 If a builtin mapping exists for the key, it is used to produce a
 character.</p></td>
 <td class="struct_member_annotations"> </td>
@@ -913,7 +918,7 @@ other means if turned off.</p></td>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GtkIMContextClass.set-surrounding"></a>set_surrounding</code></em> ()</p></td>
 <td class="struct_member_description"><p>Called via <a class="link" href="GtkIMContext.html#gtk-im-context-set-surrounding" title="gtk_im_context_set_surrounding ()"><code class="function">gtk_im_context_set_surrounding()</code></a> in response
 to signal <a class="link" href="GtkIMContext.html#GtkIMContext-retrieve-surrounding" title="The “retrieve-surrounding” signal"><span class="type">“retrieve-surrounding”</span></a> to update the input
-method's idea of the context around the cursor. It is not necessary to
+method’s idea of the context around the cursor. It is not necessary to
 override this method even with input methods which implement
 context-dependent behavior. The base implementation is sufficient for
 <a class="link" href="GtkIMContext.html#gtk-im-context-get-surrounding" title="gtk_im_context_get_surrounding ()"><code class="function">gtk_im_context_get_surrounding()</code></a> to work.</p></td>
@@ -947,7 +952,7 @@ by the subsequent invocation of <em class="parameter"><code>get_surrounding</cod
 </pre>
 <p>Bookkeeping information about a loadable input method.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.11.4.5"></a><h4>Members</h4>
+<a name="id-1.3.19.7.11.4.5"></a><h4>Members</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
@@ -956,29 +961,29 @@ by the subsequent invocation of <em class="parameter"><code>get_surrounding</cod
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkIMContextInfo.context-id"></a>context_id</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkIMContextInfo.context-id"></a>context_id</code></em>;</p></td>
 <td class="struct_member_description"><p>The unique identification string of the input method.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkIMContextInfo.context-name"></a>context_name</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkIMContextInfo.context-name"></a>context_name</code></em>;</p></td>
 <td class="struct_member_description"><p>The human-readable name of the input method.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkIMContextInfo.domain"></a>domain</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkIMContextInfo.domain"></a>domain</code></em>;</p></td>
 <td class="struct_member_description"><p>Translation domain to be used with <code class="function">dgettext()</code></p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkIMContextInfo.domain-dirname"></a>domain_dirname</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkIMContextInfo.domain-dirname"></a>domain_dirname</code></em>;</p></td>
 <td class="struct_member_description"><p>Name of locale directory for use with <code class="function">bindtextdomain()</code></p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkIMContextInfo.default-locales"></a>default_locales</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="GtkIMContextInfo.default-locales"></a>default_locales</code></em>;</p></td>
 <td class="struct_member_description"><p>A colon-separated list of locales where this input method
-should be the default. The asterisk "*" sets the default for all locales.</p></td>
+should be the default. The asterisk “*” sets the default for all locales.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
@@ -1009,13 +1014,13 @@ should be the default. The asterisk "*" sets the default for all locales.</p></t
 <a name="GtkIMContext-commit"></a><h3>The <code class="literal">“commit”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> *context,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>        *str,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>        *str,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
 <p>The ::commit signal is emitted when a complete input sequence
 has been entered by the user. This can be a single character
 immediately after a key press or the final result of preediting.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.13.2.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.13.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1046,15 +1051,15 @@ immediately after a key press or the final result of preediting.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkIMContext-delete-surrounding"></a><h3>The <code class="literal">“delete-surrounding”</code> signal</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 user_function (<a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> *context,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>          offset,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>          n_chars,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>          offset,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>          n_chars,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
 <p>The ::delete-surrounding signal is emitted when the input method
 needs to delete all or part of the context surrounding the cursor.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.13.3.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.13.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1088,8 +1093,8 @@ the cursor.</p></td>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.19.8.13.3.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the signal was handled.</p>
+<a name="id-1.3.19.7.13.3.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the signal was handled.</p>
 <p></p>
 </div>
 <p>Flags: Run Last</p>
@@ -1099,13 +1104,13 @@ the cursor.</p></td>
 <a name="GtkIMContext-preedit-changed"></a><h3>The <code class="literal">“preedit-changed”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> *context,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
 <p>The ::preedit-changed signal is emitted whenever the preedit sequence
 currently being entered has changed.  It is also emitted at the end of
 a preedit sequence, in which case
 <a class="link" href="GtkIMContext.html#gtk-im-context-get-preedit-string" title="gtk_im_context_get_preedit_string ()"><code class="function">gtk_im_context_get_preedit_string()</code></a> returns the empty string.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.13.4.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.13.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1133,11 +1138,11 @@ a preedit sequence, in which case
 <a name="GtkIMContext-preedit-end"></a><h3>The <code class="literal">“preedit-end”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> *context,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
 <p>The ::preedit-end signal is emitted when a preediting sequence
 has been completed or canceled.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.13.5.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.13.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1165,11 +1170,11 @@ has been completed or canceled.</p>
 <a name="GtkIMContext-preedit-start"></a><h3>The <code class="literal">“preedit-start”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> *context,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
 <p>The ::preedit-start signal is emitted when a new preediting sequence
 starts.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.13.6.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.13.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1195,15 +1200,15 @@ starts.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkIMContext-retrieve-surrounding"></a><h3>The <code class="literal">“retrieve-surrounding”</code> signal</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 user_function (<a class="link" href="GtkIMContext.html" title="GtkIMContext"><span class="type">GtkIMContext</span></a> *context,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>      user_data)</pre>
 <p>The ::retrieve-surrounding signal is emitted when the input method
 requires the context surrounding the cursor.  The callback should set
 the input method surrounding context by calling the
 <a class="link" href="GtkIMContext.html#gtk-im-context-set-surrounding" title="gtk_im_context_set_surrounding ()"><code class="function">gtk_im_context_set_surrounding()</code></a> method.</p>
 <div class="refsect3">
-<a name="id-1.3.19.8.13.7.5"></a><h4>Parameters</h4>
+<a name="id-1.3.19.7.13.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1225,8 +1230,8 @@ the input method surrounding context by calling the
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.19.8.13.7.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the signal was handled.</p>
+<a name="id-1.3.19.7.13.7.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the signal was handled.</p>
 <p></p>
 </div>
 <p>Flags: Run Last</p>
@@ -1235,6 +1240,6 @@ the input method surrounding context by calling the
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

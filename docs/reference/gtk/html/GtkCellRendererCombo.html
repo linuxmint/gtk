@@ -8,7 +8,7 @@
 <link rel="up" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
 <link rel="prev" href="GtkCellRendererAccel.html" title="GtkCellRendererAccel">
 <link rel="next" href="GtkCellRendererPixbuf.html" title="GtkCellRendererPixbuf">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -61,7 +61,7 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkCellRendererCombo.html#GtkCellRendererCombo--has-entry" title="The “has-entry” property">has-entry</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -72,7 +72,7 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GtkCellRendererCombo.html#GtkCellRendererCombo--text-column" title="The “text-column” property">text-column</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -109,8 +109,8 @@
 </div>
 <div class="refsect1">
 <a name="GtkCellRendererCombo.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkCellRenderer.html" title="GtkCellRenderer">GtkCellRenderer</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkCellRendererText.html" title="GtkCellRendererText">GtkCellRendererText</a>
                 <span class="lineart">╰──</span> GtkCellRendererCombo
@@ -142,9 +142,9 @@ can be set in a handler for the <a class="link" href="GtkCellRenderer.html#GtkCe
 gtk_cell_renderer_combo_new (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkCellRendererCombo.html" title="GtkCellRendererCombo"><span class="type">GtkCellRendererCombo</span></a>. 
 Adjust how text is drawn using object properties. 
-Object properties can be set globally (with <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-set"><code class="function">g_object_set()</code></a>). 
+Object properties can be set globally (with <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-set"><code class="function">g_object_set()</code></a>). 
 Also, with <a class="link" href="GtkTreeViewColumn.html" title="GtkTreeViewColumn"><span class="type">GtkTreeViewColumn</span></a>, you can bind a property to a value 
-in a <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a>. For example, you can bind the "text" property 
+in a <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a>. For example, you can bind the “text” property 
 on the cell renderer to a string value in the model, thus rendering 
 a different string in each row of the <a class="link" href="GtkTreeView.html" title="GtkTreeView"><span class="type">GtkTreeView</span></a>.</p>
 <div class="refsect3">
@@ -166,8 +166,8 @@ a different string in each row of the <a class="link" href="GtkTreeView.html" ti
 <a name="GtkCellRendererCombo.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GtkCellRendererCombo--has-entry"></a><h3>The <code class="literal">“has-entry”</code> property</h3>
-<pre class="programlisting">  “has-entry”                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
-<p>If <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the cell renderer will include an entry and allow to enter
+<pre class="programlisting">  “has-entry”                <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>If <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the cell renderer will include an entry and allow to enter
 
 values other than the ones in the popup list.</p>
 <p>Flags: Read / Write</p>
@@ -187,13 +187,13 @@ Use the text_column property to specify the column holding the values.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkCellRendererCombo--text-column"></a><h3>The <code class="literal">“text-column”</code> property</h3>
-<pre class="programlisting">  “text-column”              <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “text-column”              <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>Specifies the model column which holds the possible values for the
 
 combo box. </p>
 <p>Note that this refers to the model specified in the model property,
 
-<span class="emphasis"><em>not</em></span> the model backing the tree view to which
+not the model backing the tree view to which
 
 this cell renderer is attached.</p>
 <p><a class="link" href="GtkCellRendererCombo.html" title="GtkCellRendererCombo"><span class="type">GtkCellRendererCombo</span></a> automatically adds a text cell renderer for
@@ -211,9 +211,9 @@ this column to its combo box.</p>
 <a name="GtkCellRendererCombo-changed"></a><h3>The <code class="literal">“changed”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkCellRendererCombo.html" title="GtkCellRendererCombo"><span class="type">GtkCellRendererCombo</span></a> *combo,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                *path_string,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                *path_string,
                <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>          *new_iter,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>              user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>              user_data)</pre>
 <p>This signal is emitted each time after the user selected an item in
 the combo box, either by using the mouse or the arrow keys.  Contrary
 to GtkComboBox, GtkCellRendererCombo::changed is not emitted for
@@ -266,6 +266,6 @@ until the combo cell renderer emits the edited or editing_canceled signal.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

@@ -62,16 +62,12 @@ main (int argc, char *argv[])
 {
   GtkIconTheme *icon_theme;
   GtkIconInfo *icon_info;
-  GdkRectangle embedded_rect;
-  GdkPoint *attach_points;
-  int n_attach_points;
-  const gchar *display_name;
   char *context;
   char *themename;
   GList *list;
   int size = 48;
   int scale = 1;
-  int i;
+  GtkIconLookupFlags flags;
   
   gtk_init (&argc, &argv);
 
@@ -80,6 +76,13 @@ main (int argc, char *argv[])
       usage ();
       return 1;
     }
+
+  flags = GTK_ICON_LOOKUP_USE_BUILTIN;
+
+  if (g_getenv ("RTL"))
+    flags |= GTK_ICON_LOOKUP_DIR_RTL;
+  else
+    flags |= GTK_ICON_LOOKUP_DIR_LTR;
 
   themename = argv[2];
   
@@ -107,8 +110,7 @@ main (int argc, char *argv[])
 	scale = atoi (argv[5]);
 
       error = NULL;
-      pixbuf = gtk_icon_theme_load_icon_for_scale (icon_theme, argv[3], size, scale,
-                                                   GTK_ICON_LOOKUP_USE_BUILTIN, &error);
+      pixbuf = gtk_icon_theme_load_icon_for_scale (icon_theme, argv[3], size, scale, flags, &error);
       if (!pixbuf)
         {
           g_print ("%s\n", error->message);
@@ -151,8 +153,7 @@ main (int argc, char *argv[])
                         G_CALLBACK (gtk_main_quit), window);
       gtk_widget_show_all (window);
 
-      info = gtk_icon_theme_lookup_icon_for_scale (icon_theme, argv[3], size, scale,
-                                                   GTK_ICON_LOOKUP_USE_BUILTIN);
+      info = gtk_icon_theme_lookup_icon_for_scale (icon_theme, argv[3], size, scale, flags);
 
       if (info == NULL)
 	{
@@ -206,9 +207,11 @@ main (int argc, char *argv[])
       if (argc >= 6)
 	scale = atoi (argv[5]);
 
-      icon_info = gtk_icon_theme_lookup_icon_for_scale (icon_theme, argv[3], size, scale, GTK_ICON_LOOKUP_USE_BUILTIN);
+      icon_info = gtk_icon_theme_lookup_icon_for_scale (icon_theme, argv[3], size, scale, flags);
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       g_print ("icon for %s at %dx%d@%dx is %s\n", argv[3], size, size, scale,
 	       icon_info ? (gtk_icon_info_get_builtin_pixbuf (icon_info) ? "<builtin>" : gtk_icon_info_get_filename (icon_info)) : "<none>");
+G_GNUC_END_IGNORE_DEPRECATIONS
 
       if (icon_info)
 	{
@@ -223,29 +226,6 @@ main (int argc, char *argv[])
               g_object_unref (pixbuf);
             }
 
-	  if (gtk_icon_info_get_embedded_rect (icon_info, &embedded_rect))
-	    {
-	      g_print ("Embedded rect: %d,%d %dx%d\n",
-		       embedded_rect.x, embedded_rect.y,
-		       embedded_rect.width, embedded_rect.height);
-	    }
-	  
-	  if (gtk_icon_info_get_attach_points (icon_info, &attach_points, &n_attach_points))
-	    {
-	      g_print ("Attach Points: ");
-	      for (i = 0; i < n_attach_points; i++)
-		g_print ("%d, %d; ",
-			 attach_points[i].x,
-			 attach_points[i].y);
-	      g_free (attach_points);
-	      g_print ("\n");
-	    }
-	  
-	  display_name = gtk_icon_info_get_display_name (icon_info);
-	  
-	  if (display_name)
-	    g_print ("Display name: %s\n", display_name);
-	  
 	  g_object_unref (icon_info);
 	}
     }

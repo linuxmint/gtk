@@ -27,7 +27,7 @@
 #include "deprecated/gtkstock.h"
 #include "gtkbox.h"
 #include "gtkintl.h"
-#include "gtktoolbar.h"
+#include "gtktoolbarprivate.h"
 #include "deprecated/gtkactivatable.h"
 #include "gtkactionable.h"
 #include "gtkprivate.h"
@@ -42,7 +42,7 @@
  * @See_also: #GtkToolbar, #GtkMenuToolButton, #GtkToggleToolButton,
  *   #GtkRadioToolButton, #GtkSeparatorToolItem
  *
- * #GtkToolButton<!-- -->s are #GtkToolItems containing buttons.
+ * #GtkToolButtons are #GtkToolItems containing buttons.
  *
  * Use gtk_tool_button_new() to create a new #GtkToolButton.
  *
@@ -246,7 +246,7 @@ gtk_tool_button_class_init (GtkToolButtonClass *klass)
 							 P_("Use underline"),
 							 P_("If set, an underline in the label property indicates that the next character should be used for the mnemonic accelerator key in the overflow menu"),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   g_object_class_install_property (object_class,
 				   PROP_LABEL_WIDGET,
 				   g_param_spec_object ("label-widget",
@@ -308,7 +308,7 @@ gtk_tool_button_class_init (GtkToolButtonClass *klass)
 							     0,
 							     G_MAXINT,
 							     3,
-							     GTK_PARAM_READWRITE));
+							     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
 /**
  * GtkToolButton::clicked:
@@ -421,7 +421,7 @@ gtk_tool_button_construct_contents (GtkToolItem *tool_item)
       need_label = TRUE;
     }
   
-  if (style == GTK_TOOLBAR_ICONS && button->priv->icon_widget == NULL &&
+  if (style != GTK_TOOLBAR_TEXT && button->priv->icon_widget == NULL &&
       button->priv->stock_id == NULL && button->priv->icon_name == NULL)
     {
       need_label = TRUE;
@@ -488,21 +488,33 @@ gtk_tool_button_construct_contents (GtkToolItem *tool_item)
           text_orientation = gtk_tool_item_get_text_orientation (GTK_TOOL_ITEM (button));
           if (text_orientation == GTK_ORIENTATION_HORIZONTAL)
 	    {
+              gfloat align;
+
               gtk_label_set_angle (GTK_LABEL (label), 0);
-              gtk_misc_set_alignment (GTK_MISC (label),
-                                      gtk_tool_item_get_text_alignment (GTK_TOOL_ITEM (button)),
-                                      0.5);
+              align = gtk_tool_item_get_text_alignment (GTK_TOOL_ITEM (button));
+              if (align < 0.4)
+                gtk_widget_set_halign (label, GTK_ALIGN_START);
+              else if (align > 0.6)
+                gtk_widget_set_halign (label, GTK_ALIGN_END);
+              else
+                gtk_widget_set_halign (label, GTK_ALIGN_CENTER);
             }
           else
             {
+              gfloat align;
+
               gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_NONE);
 	      if (gtk_widget_get_direction (GTK_WIDGET (tool_item)) == GTK_TEXT_DIR_RTL)
 	        gtk_label_set_angle (GTK_LABEL (label), -90);
 	      else
 	        gtk_label_set_angle (GTK_LABEL (label), 90);
-              gtk_misc_set_alignment (GTK_MISC (label),
-                                      0.5,
-                                      1 - gtk_tool_item_get_text_alignment (GTK_TOOL_ITEM (button)));
+              align = gtk_tool_item_get_text_alignment (GTK_TOOL_ITEM (button));
+              if (align < 0.4)
+                gtk_widget_set_valign (label, GTK_ALIGN_END);
+              else if (align > 0.6)
+                gtk_widget_set_valign (label, GTK_ALIGN_START);
+              else
+                gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
             }
         }
     }
@@ -543,17 +555,33 @@ gtk_tool_button_construct_contents (GtkToolItem *tool_item)
 	  gtk_widget_show (icon);
 	}
 
-      if (GTK_IS_MISC (icon) && text_orientation == GTK_ORIENTATION_HORIZONTAL)
-	gtk_misc_set_alignment (GTK_MISC (icon),
-				1.0 - gtk_tool_item_get_text_alignment (GTK_TOOL_ITEM (button)),
-				0.5);
-      else if (GTK_IS_MISC (icon))
-	gtk_misc_set_alignment (GTK_MISC (icon),
-				0.5,
-				gtk_tool_item_get_text_alignment (GTK_TOOL_ITEM (button)));
-
       if (icon)
 	{
+          if (text_orientation == GTK_ORIENTATION_HORIZONTAL)
+            {
+              gfloat align;
+
+              align = gtk_tool_item_get_text_alignment (GTK_TOOL_ITEM (button));
+              if (align > 0.6) 
+                gtk_widget_set_halign (icon, GTK_ALIGN_START);
+              else if (align < 0.4)
+                gtk_widget_set_halign (icon, GTK_ALIGN_END);
+              else
+                gtk_widget_set_halign (icon, GTK_ALIGN_CENTER);
+            }
+          else
+            {
+              gfloat align;
+
+              align = gtk_tool_item_get_text_alignment (GTK_TOOL_ITEM (button));
+              if (align > 0.6) 
+                gtk_widget_set_valign (icon, GTK_ALIGN_END);
+              else if (align < 0.4)
+                gtk_widget_set_valign (icon, GTK_ALIGN_START);
+              else
+               gtk_widget_set_valign (icon, GTK_ALIGN_CENTER);
+            }
+
 	  size_group = gtk_tool_item_get_text_size_group (GTK_TOOL_ITEM (button));
 	  if (size_group != NULL)
 	    gtk_size_group_add_widget (size_group, icon);
@@ -1081,7 +1109,7 @@ gtk_tool_button_sync_action_properties (GtkActivatable *activatable,
  *
  * It is an error if @stock_id is not a name of a stock item.
  * 
- * Return value: A new #GtkToolButton
+ * Returns: A new #GtkToolButton
  * 
  * Since: 2.4
  *
@@ -1109,7 +1137,7 @@ gtk_tool_button_new_from_stock (const gchar *stock_id)
  * Creates a new %GtkToolButton using @icon_widget as contents and @label as
  * label.
  *
- * Return value: A new #GtkToolButton
+ * Returns: A new #GtkToolButton
  * 
  * Since: 2.4
  **/
@@ -1134,10 +1162,10 @@ gtk_tool_button_new (GtkWidget	 *icon_widget,
  * @button: a #GtkToolButton
  * @label: (allow-none): a string that will be used as label, or %NULL.
  *
- * Sets @label as the label used for the tool button. The "label" property
- * only has an effect if not overridden by a non-%NULL "label_widget" property.
- * If both the "label_widget" and "label" properties are %NULL, the label
- * is determined by the "stock_id" property. If the "stock_id" property is also
+ * Sets @label as the label used for the tool button. The “label” property
+ * only has an effect if not overridden by a non-%NULL “label_widget” property.
+ * If both the “label_widget” and “label” properties are %NULL, the label
+ * is determined by the “stock_id” property. If the “stock_id” property is also
  * %NULL, @button will not have a label.
  * 
  * Since: 2.4
@@ -1175,10 +1203,10 @@ gtk_tool_button_set_label (GtkToolButton *button,
  * @button: a #GtkToolButton
  * 
  * Returns the label used by the tool button, or %NULL if the tool button
- * doesn't have a label. or uses a the label from a stock item. The returned
+ * doesn’t have a label. or uses a the label from a stock item. The returned
  * string is owned by GTK+, and must not be modified or freed.
  * 
- * Return value: The label, or %NULL
+ * Returns: The label, or %NULL
  * 
  * Since: 2.4
  **/
@@ -1193,13 +1221,13 @@ gtk_tool_button_get_label (GtkToolButton *button)
 /**
  * gtk_tool_button_set_use_underline:
  * @button: a #GtkToolButton
- * @use_underline: whether the button label has the form "_Open"
+ * @use_underline: whether the button label has the form “_Open”
  *
  * If set, an underline in the label property indicates that the next character
  * should be used for the mnemonic accelerator key in the overflow menu. For
- * example, if the label property is "_Open" and @use_underline is %TRUE,
- * the label on the tool button will be "Open" and the item on the overflow
- * menu will have an underlined 'O'.
+ * example, if the label property is “_Open” and @use_underline is %TRUE,
+ * the label on the tool button will be “Open” and the item on the overflow
+ * menu will have an underlined “O”.
  * 
  * Labels shown on tool buttons never have mnemonics on them; this property
  * only affects the menu item on the overflow menu.
@@ -1230,7 +1258,7 @@ gtk_tool_button_set_use_underline (GtkToolButton *button,
  * Returns whether underscores in the label property are used as mnemonics
  * on menu items on the overflow menu. See gtk_tool_button_set_use_underline().
  * 
- * Return value: %TRUE if underscores in the label property are used as
+ * Returns: %TRUE if underscores in the label property are used as
  * mnemonics on menu items on the overflow menu.
  * 
  * Since: 2.4
@@ -1250,7 +1278,7 @@ gtk_tool_button_get_use_underline (GtkToolButton *button)
  *
  * Sets the name of the stock item. See gtk_tool_button_new_from_stock().
  * The stock_id property only has an effect if not
- * overridden by non-%NULL "label" and "icon_widget" properties.
+ * overridden by non-%NULL “label” and “icon_widget” properties.
  * 
  * Since: 2.4
  *
@@ -1281,7 +1309,7 @@ gtk_tool_button_set_stock_id (GtkToolButton *button,
  * Returns the name of the stock item. See gtk_tool_button_set_stock_id().
  * The returned string is owned by GTK+ and must not be freed or modifed.
  * 
- * Return value: the name of the stock item for @button.
+ * Returns: the name of the stock item for @button.
  * 
  * Since: 2.4
  *
@@ -1302,8 +1330,8 @@ gtk_tool_button_get_stock_id (GtkToolButton *button)
  *
  * Sets the icon for the tool button from a named themed icon.
  * See the docs for #GtkIconTheme for more details.
- * The "icon_name" property only has an effect if not
- * overridden by non-%NULL "label", "icon_widget" and "stock_id"
+ * The “icon_name” property only has an effect if not
+ * overridden by non-%NULL “label”, “icon_widget” and “stock_id”
  * properties.
  * 
  * Since: 2.8
@@ -1352,8 +1380,8 @@ gtk_tool_button_get_icon_name (GtkToolButton *button)
  * @icon_widget: (allow-none): the widget used as icon, or %NULL
  *
  * Sets @icon as the widget used as icon on @button. If @icon_widget is
- * %NULL the icon is determined by the "stock_id" property. If the
- * "stock_id" property is also %NULL, @button will not have an icon.
+ * %NULL the icon is determined by the “stock_id” property. If the
+ * “stock_id” property is also %NULL, @button will not have an icon.
  * 
  * Since: 2.4
  **/
@@ -1394,10 +1422,10 @@ gtk_tool_button_set_icon_widget (GtkToolButton *button,
  * @label_widget: (allow-none): the widget used as label, or %NULL
  *
  * Sets @label_widget as the widget that will be used as the label
- * for @button. If @label_widget is %NULL the "label" property is used
- * as label. If "label" is also %NULL, the label in the stock item
- * determined by the "stock_id" property is used as label. If
- * "stock_id" is also %NULL, @button does not have a label.
+ * for @button. If @label_widget is %NULL the “label” property is used
+ * as label. If “label” is also %NULL, the label in the stock item
+ * determined by the “stock_id” property is used as label. If
+ * “stock_id” is also %NULL, @button does not have a label.
  * 
  * Since: 2.4
  **/
@@ -1439,7 +1467,7 @@ gtk_tool_button_set_label_widget (GtkToolButton *button,
  * Returns the widget used as label on @button.
  * See gtk_tool_button_set_label_widget().
  *
- * Return value: (transfer none): The widget used as label
+ * Returns: (transfer none): The widget used as label
  *     on @button, or %NULL.
  *
  * Since: 2.4
@@ -1459,7 +1487,7 @@ gtk_tool_button_get_label_widget (GtkToolButton *button)
  * Return the widget used as icon widget on @button.
  * See gtk_tool_button_set_icon_widget().
  *
- * Return value: (transfer none): The widget used as icon
+ * Returns: (transfer none): The widget used as icon
  *     on @button, or %NULL.
  *
  * Since: 2.4

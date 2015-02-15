@@ -45,7 +45,7 @@
  * @Title: GtkToolItemGroup
  *
  * A #GtkToolItemGroup is used together with #GtkToolPalette to add
- * #GtkToolItem<!-- -->s to a palette like container with different
+ * #GtkToolItems to a palette like container with different
  * categories and drag and drop support.
  *
  * Since: 2.20
@@ -282,7 +282,7 @@ gtk_tool_item_group_header_draw_cb (GtkWidget *widget,
   state = gtk_widget_get_state_flags (widget);
 
   if (!priv->collapsed)
-    state |= GTK_STATE_FLAG_ACTIVE;
+    state |= GTK_STATE_FLAG_CHECKED;
 
   gtk_style_context_save (context);
   gtk_style_context_set_state (context, state);
@@ -372,7 +372,9 @@ gtk_tool_item_group_header_adjust_style (GtkToolItemGroup *group)
         break;
     }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), dy, 0, dx, 0);
+G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 static void
@@ -392,7 +394,9 @@ gtk_tool_item_group_init (GtkToolItemGroup *group)
   priv->label_widget = gtk_label_new (NULL);
   gtk_widget_set_halign (priv->label_widget, GTK_ALIGN_START);
   gtk_widget_set_valign (priv->label_widget, GTK_ALIGN_CENTER);
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   alignment = gtk_alignment_new (0.5, 0.5, 1.0, 1.0);
+G_GNUC_END_IGNORE_DEPRECATIONS
   gtk_container_add (GTK_CONTAINER (alignment), priv->label_widget);
   gtk_widget_show_all (alignment);
 
@@ -1607,38 +1611,34 @@ gtk_tool_item_group_class_init (GtkToolItemGroupClass *cls)
                                                          P_("Collapsed"),
                                                          P_("Whether the group has been collapsed and items are hidden"),
                                                          DEFAULT_COLLAPSED,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (oclass, PROP_ELLIPSIZE,
                                    g_param_spec_enum ("ellipsize",
                                                       P_("ellipsize"),
                                                       P_("Ellipsize for item group headers"),
                                                       PANGO_TYPE_ELLIPSIZE_MODE, DEFAULT_ELLIPSIZE,
-                                                      GTK_PARAM_READWRITE));
+                                                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (oclass, PROP_RELIEF,
                                    g_param_spec_enum ("header-relief",
                                                       P_("Header Relief"),
                                                       P_("Relief of the group header button"),
                                                       GTK_TYPE_RELIEF_STYLE, GTK_RELIEF_NORMAL,
-                                                      GTK_PARAM_READWRITE));
+                                                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   gtk_widget_class_install_style_property (wclass,
                                            g_param_spec_int ("expander-size",
                                                              P_("Expander Size"),
                                                              P_("Size of the expander arrow"),
-                                                             0,
-                                                             G_MAXINT,
-                                                             DEFAULT_EXPANDER_SIZE,
+                                                             0, G_MAXINT, DEFAULT_EXPANDER_SIZE,
                                                              GTK_PARAM_READABLE));
 
   gtk_widget_class_install_style_property (wclass,
                                            g_param_spec_int ("header-spacing",
                                                              P_("Header Spacing"),
                                                              P_("Spacing between expander arrow and caption"),
-                                                             0,
-                                                             G_MAXINT,
-                                                             DEFAULT_HEADER_SPACING,
+                                                             0, G_MAXINT, DEFAULT_HEADER_SPACING,
                                                              GTK_PARAM_READABLE));
 
   gtk_container_class_install_child_property (cclass, CHILD_PROP_HOMOGENEOUS,
@@ -1796,7 +1796,11 @@ gtk_tool_item_group_set_header_relief (GtkToolItemGroup *group,
 {
   g_return_if_fail (GTK_IS_TOOL_ITEM_GROUP (group));
 
-  gtk_button_set_relief (GTK_BUTTON (group->priv->header), style);
+  if (gtk_button_get_relief (GTK_BUTTON (group->priv->header)) != style)
+    {
+      gtk_button_set_relief (GTK_BUTTON (group->priv->header), style);
+      g_object_notify (G_OBJECT (group), "header-relief");
+    }
 }
 
 static gint64
@@ -2300,72 +2304,6 @@ _gtk_tool_item_group_item_size_request (GtkToolItemGroup *group,
 
   if (requested_rows)
     *requested_rows = rows;
-}
-
-void
-_gtk_tool_item_group_paint (GtkToolItemGroup *group,
-                            cairo_t          *cr)
-{
-  GtkAllocation allocation;
-  GtkWidget *widget = GTK_WIDGET (group);
-  GtkToolItemGroupPrivate* priv = group->priv;
-
-  gtk_widget_get_allocation (widget, &allocation);
-
-  gdk_cairo_set_source_window (cr, gtk_widget_get_window (widget),
-                               allocation.x,
-                               allocation.y);
-
-  if (priv->animation_timeout)
-    {
-      GtkAllocation header_allocation;
-      GtkOrientation orientation = gtk_tool_item_group_get_orientation (GTK_TOOL_SHELL (group));
-      cairo_pattern_t *mask;
-      gdouble v0, v1;
-
-      if (GTK_ORIENTATION_VERTICAL == orientation)
-        v1 = allocation.height;
-      else
-        v1 = allocation.width;
-
-      v0 = v1 - 256;
-
-      gtk_widget_get_allocation (priv->header, &header_allocation);
-      if (!gtk_widget_get_visible (priv->header))
-        v0 = MAX (v0, 0);
-      else if (GTK_ORIENTATION_VERTICAL == orientation)
-        v0 = MAX (v0, header_allocation.height);
-      else
-        v0 = MAX (v0, header_allocation.width);
-
-      v1 = MIN (v0 + 256, v1);
-
-      if (GTK_ORIENTATION_VERTICAL == orientation)
-        {
-          v0 += allocation.y;
-          v1 += allocation.y;
-
-          mask = cairo_pattern_create_linear (0.0, v0, 0.0, v1);
-        }
-      else
-        {
-          v0 += allocation.x;
-          v1 += allocation.x;
-
-          mask = cairo_pattern_create_linear (v0, 0.0, v1, 0.0);
-        }
-
-      cairo_pattern_add_color_stop_rgba (mask, 0.00, 0.0, 0.0, 0.0, 1.00);
-      cairo_pattern_add_color_stop_rgba (mask, 0.25, 0.0, 0.0, 0.0, 0.25);
-      cairo_pattern_add_color_stop_rgba (mask, 0.50, 0.0, 0.0, 0.0, 0.10);
-      cairo_pattern_add_color_stop_rgba (mask, 0.75, 0.0, 0.0, 0.0, 0.01);
-      cairo_pattern_add_color_stop_rgba (mask, 1.00, 0.0, 0.0, 0.0, 0.00);
-
-      cairo_mask (cr, mask);
-      cairo_pattern_destroy (mask);
-    }
-  else
-    cairo_paint (cr);
 }
 
 gint

@@ -41,37 +41,34 @@
  * application that can edit multiple documents, one group holding global
  * actions (e.g. quit, about, new), and one group per document holding
  * actions that act on that document (eg. save, cut/copy/paste, etc). Each
- * window's menus would be constructed from a combination of two action
+ * window’s menus would be constructed from a combination of two action
  * groups.
  *
- * <para id="Action-Accel">
+ * ## Accelerators ## {#Action-Accel}
+ *
  * Accelerators are handled by the GTK+ accelerator map. All actions are
  * assigned an accelerator path (which normally has the form
- * <literal>&lt;Actions&gt;/group-name/action-name</literal>)
- * and a shortcut is associated with this accelerator path. All menuitems
- * and toolitems take on this accelerator path. The GTK+ accelerator map
- * code makes sure that the correct shortcut is displayed next to the menu
- * item.
- * </para>
+ * `<Actions>/group-name/action-name`) and a shortcut is associated with
+ * this accelerator path. All menuitems and toolitems take on this accelerator
+ * path. The GTK+ accelerator map code makes sure that the correct shortcut
+ * is displayed next to the menu item.
  *
- * <refsect2 id="GtkActionGroup-BUILDER-UI">
- * <title>GtkActionGroup as GtkBuildable</title>
- * <para>
+ * # GtkActionGroup as GtkBuildable # {#GtkActionGroup-BUILDER-UI}
+ *
  * The #GtkActionGroup implementation of the #GtkBuildable interface accepts
- * #GtkAction objects as &lt;child&gt; elements in UI definitions.
+ * #GtkAction objects as <child> elements in UI definitions.
  *
  * Note that it is probably more common to define actions and action groups
  * in the code, since they are directly related to what the code can do.
  *
  * The GtkActionGroup implementation of the GtkBuildable interface supports
- * a custom &lt;accelerator&gt; element, which has attributes named key and
- * modifiers and allows to specify accelerators. This is similar to the
- * &lt;accelerator&gt; element of #GtkWidget, the main difference is that
- * it doesn't allow you to specify a signal.
- * </para>
- * <example>
- * <title>A #GtkDialog UI definition fragment.</title>
- * <programlisting><![CDATA[
+ * a custom <accelerator> element, which has attributes named “key“ and
+ * “modifiers“ and allows to specify accelerators. This is similar to the
+ * <accelerator> element of #GtkWidget, the main difference is that
+ * it doesn’t allow you to specify a signal.
+ *
+ * ## A #GtkDialog UI definition fragment. ##
+ * |[
  * <object class="GtkActionGroup" id="actiongroup">
  *   <child>
  *       <object class="GtkAction" id="About">
@@ -82,9 +79,8 @@
  *       <accelerator key="F1" modifiers="GDK_CONTROL_MASK | GDK_SHIFT_MASK"/>
  *   </child>
  * </object>
- * ]]></programlisting>
- * </example>
- * </refsect2>
+ * ]|
+ *
  */
 
 #include "config.h"
@@ -526,7 +522,7 @@ gtk_action_group_buildable_custom_tag_end (GtkBuildable *buildable,
  * @name: the name of the action group.
  *
  * Creates a new #GtkActionGroup object. The name of the action group
- * is used when associating <link linkend="Action-Accel">keybindings</link> 
+ * is used when associating [keybindings][Action-Accel] 
  * with the actions.
  *
  * Returns: the new #GtkActionGroup
@@ -676,7 +672,7 @@ gtk_action_group_get_name (GtkActionGroup *action_group)
  * they are sensitive (see gtk_action_get_sensitive()) and their group
  * is sensitive.
  * 
- * Return value: %TRUE if the group is sensitive.
+ * Returns: %TRUE if the group is sensitive.
  *
  * Since: 2.4
  *
@@ -745,7 +741,7 @@ gtk_action_group_set_sensitive (GtkActionGroup *action_group,
  * they are visible (see gtk_action_get_visible()) and their group
  * is visible.
  * 
- * Return value: %TRUE if the group is visible.
+ * Returns: %TRUE if the group is visible.
  * 
  * Since: 2.4
  *
@@ -921,7 +917,7 @@ check_unique_action (GtkActionGroup *action_group,
  * if a user tries to modify the accelerator of a menuitem associated with
  * the action. Therefore you must either set the accel path yourself with
  * gtk_action_set_accel_path(), or use 
- * <literal>gtk_action_group_add_action_with_accel (..., NULL)</literal>.
+ * `gtk_action_group_add_action_with_accel (..., NULL)`.
  *
  * Since: 2.4
  *
@@ -967,8 +963,7 @@ gtk_action_group_add_action (GtkActionGroup *action_group,
  * If @accelerator is %NULL, attempts to use the accelerator associated 
  * with the stock_id of the action. 
  *
- * Accel paths are set to
- * <literal>&lt;Actions&gt;/<replaceable>group-name</replaceable>/<replaceable>action-name</replaceable></literal>.
+ * Accel paths are set to `<Actions>/group-name/action-name`.
  *
  * Since: 2.4
  *
@@ -1111,9 +1106,8 @@ gtk_action_group_list_actions (GtkActionGroup *action_group)
  * This is a convenience function to create a number of actions and add them 
  * to the action group.
  *
- * The "activate" signals of the actions are connected to the callbacks and 
- * their accel paths are set to 
- * <literal>&lt;Actions&gt;/<replaceable>group-name</replaceable>/<replaceable>action-name</replaceable></literal>.  
+ * The “activate” signals of the actions are connected to the callbacks
+ * and their accel paths are set to `<Actions>/group-name/action-name`.  
  * 
  * Since: 2.4
  *
@@ -1160,7 +1154,7 @@ shared_data_unref (gpointer data)
  * @entries: (array length=n_entries): an array of action descriptions
  * @n_entries: the number of entries
  * @user_data: data to pass to the action callbacks
- * @destroy: destroy notification callback for @user_data
+ * @destroy: (nullable): destroy notification callback for @user_data
  *
  * This variant of gtk_action_group_add_actions() adds a #GDestroyNotify
  * callback for @user_data. 
@@ -1246,9 +1240,8 @@ gtk_action_group_add_actions_full (GtkActionGroup       *action_group,
  * This is a convenience function to create a number of toggle actions and add them 
  * to the action group.
  *
- * The "activate" signals of the actions are connected to the callbacks and 
- * their accel paths are set to 
- * <literal>&lt;Actions&gt;/<replaceable>group-name</replaceable>/<replaceable>action-name</replaceable></literal>.  
+ * The “activate” signals of the actions are connected to the callbacks
+ * and their accel paths are set to `<Actions>/group-name/action-name`.  
  * 
  * Since: 2.4
  *
@@ -1272,7 +1265,7 @@ gtk_action_group_add_toggle_actions (GtkActionGroup             *action_group,
  * @entries: (array length=n_entries): an array of toggle action descriptions
  * @n_entries: the number of entries
  * @user_data: data to pass to the action callbacks
- * @destroy: destroy notification callback for @user_data
+ * @destroy: (nullable): destroy notification callback for @user_data
  *
  * This variant of gtk_action_group_add_toggle_actions() adds a 
  * #GDestroyNotify callback for @user_data. 
@@ -1366,9 +1359,9 @@ gtk_action_group_add_toggle_actions_full (GtkActionGroup             *action_gro
  * This is a convenience routine to create a group of radio actions and
  * add them to the action group. 
  *
- * The "changed" signal of the first radio action is connected to the 
+ * The “changed” signal of the first radio action is connected to the 
  * @on_change callback and the accel paths of the actions are set to 
- * <literal>&lt;Actions&gt;/<replaceable>group-name</replaceable>/<replaceable>action-name</replaceable></literal>.  
+ * `<Actions>/group-name/action-name`.  
  * 
  * Since: 2.4
  *
@@ -1484,9 +1477,9 @@ gtk_action_group_add_radio_actions_full (GtkActionGroup            *action_group
  *   destroyed and when the translation function is changed again
  *
  * Sets a function to be used for translating the @label and @tooltip of 
- * #GtkActionEntry<!-- -->s added by gtk_action_group_add_actions().
+ * #GtkActionEntrys added by gtk_action_group_add_actions().
  *
- * If you're using gettext(), it is enough to set the translation domain
+ * If you’re using gettext(), it is enough to set the translation domain
  * with gtk_action_group_set_translation_domain().
  *
  * Since: 2.4 
@@ -1531,10 +1524,10 @@ dgettext_swapped (const gchar *msgid,
  * calls, or %NULL to use the domain set with textdomain()
  * 
  * Sets the translation domain and uses g_dgettext() for translating the 
- * @label and @tooltip of #GtkActionEntry<!-- -->s added by 
+ * @label and @tooltip of #GtkActionEntrys added by 
  * gtk_action_group_add_actions().
  *
- * If you're not using gettext() for localization, see 
+ * If you’re not using gettext() for localization, see 
  * gtk_action_group_set_translate_func().
  *
  * Since: 2.4

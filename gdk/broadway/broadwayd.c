@@ -124,27 +124,7 @@ send_reply (BroadwayClient *client,
     }
 }
 
-static cairo_region_t *
-region_from_rects (BroadwayRect *rects, int n_rects)
-{
-  cairo_region_t *region;
-  cairo_rectangle_int_t *cairo_rects;
-  int i;
-  
-  cairo_rects = g_new (cairo_rectangle_int_t, n_rects);
-  for (i = 0; i < n_rects; i++)
-    {
-      cairo_rects[i].x = rects[i].x;
-      cairo_rects[i].y = rects[i].y;
-      cairo_rects[i].width = rects[i].width;
-      cairo_rects[i].height = rects[i].height;
-    }
-  region = cairo_region_create_rectangles (cairo_rects, n_rects);
-  g_free (cairo_rects);
-  return region;
-}
-
-void
+static void
 add_client_serial_mapping (BroadwayClient *client,
 			   guint32 client_serial,
 			   guint32 daemon_serial)
@@ -174,7 +154,7 @@ add_client_serial_mapping (BroadwayClient *client,
 
 /* Returns the latest seen client serial at the time we sent
    a daemon request to the browser with a specific daemon serial */
-guint32
+static guint32
 get_client_serial (BroadwayClient *client, guint32 daemon_serial)
 {
   BroadwaySerialMapping *map;
@@ -217,7 +197,6 @@ client_handle_request (BroadwayClient *client,
   BroadwayReplyQueryMouse reply_query_mouse;
   BroadwayReplyGrabPointer reply_grab_pointer;
   BroadwayReplyUngrabPointer reply_ungrab_pointer;
-  cairo_region_t *area;
   cairo_surface_t *surface;
   guint32 before_serial, now_serial;
 
@@ -274,16 +253,6 @@ client_handle_request (BroadwayClient *client,
 						request->set_transient_for.id,
 						request->set_transient_for.parent);
       break;
-    case BROADWAY_REQUEST_TRANSLATE:
-      area = region_from_rects (request->translate.rects,
-				request->translate.n_rects);
-      broadway_server_window_translate (server,
-					request->translate.id,
-					area,
-					request->translate.dx,
-					request->translate.dy);
-      cairo_region_destroy (area);
-      break;
     case BROADWAY_REQUEST_UPDATE:
       surface = broadway_server_open_surface (server,
 					      request->update.id,
@@ -324,6 +293,12 @@ client_handle_request (BroadwayClient *client,
 					request->ungrab_pointer.time_);
       send_reply (client, request, (BroadwayReply *)&reply_ungrab_pointer, sizeof (reply_ungrab_pointer),
 		  BROADWAY_REPLY_UNGRAB_POINTER);
+      break;
+    case BROADWAY_REQUEST_FOCUS_WINDOW:
+      broadway_server_focus_window (server, request->focus_window.id);
+      break;
+    case BROADWAY_REQUEST_SET_SHOW_KEYBOARD:
+      broadway_server_set_show_keyboard (server, request->set_show_keyboard.show_keyboard);
       break;
     default:
       g_warning ("Unknown request of type %d\n", request->base.type);
@@ -442,12 +417,16 @@ main (int argc, char *argv[])
   GSocketService *listener;
   char *path, *basename;
   char *http_address = NULL;
+  char *unixsocket_address = NULL;
   int http_port = 0;
   char *display;
   int port = 0;
   const GOptionEntry entries[] = {
     { "port", 'p', 0, G_OPTION_ARG_INT, &http_port, "Httpd port", "PORT" },
     { "address", 'a', 0, G_OPTION_ARG_STRING, &http_address, "Ip address to bind to ", "ADDRESS" },
+#ifdef G_OS_UNIX
+    { "unixsocket", 'u', 0, G_OPTION_ARG_STRING, &unixsocket_address, "Unix domain socket address", "ADDRESS" },
+#endif
     { NULL }
   };
 
@@ -511,7 +490,11 @@ main (int argc, char *argv[])
   if (http_port == 0)
     http_port = 8080 + port;
 
-  server = broadway_server_new (http_address, http_port, &error);
+  if (unixsocket_address != NULL)
+    server = broadway_server_on_unix_socket_new (unixsocket_address, &error);
+  else
+    server = broadway_server_new (http_address, http_port, &error);
+
   if (server == NULL)
     {
       g_printerr ("%s\n", error->message);
@@ -556,6 +539,8 @@ get_event_size (int type)
       return sizeof (BroadwayInputButtonMsg);
     case BROADWAY_EVENT_SCROLL:
       return sizeof (BroadwayInputScrollMsg);
+    case BROADWAY_EVENT_TOUCH:
+      return sizeof (BroadwayInputTouchMsg);
     case BROADWAY_EVENT_KEY_PRESS:
     case BROADWAY_EVENT_KEY_RELEASE:
       return  sizeof (BroadwayInputKeyMsg);
@@ -568,6 +553,8 @@ get_event_size (int type)
       return sizeof (BroadwayInputDeleteNotify);
     case BROADWAY_EVENT_SCREEN_SIZE_CHANGED:
       return sizeof (BroadwayInputScreenResizeNotify);
+    case BROADWAY_EVENT_FOCUS:
+      return sizeof (BroadwayInputFocusMsg);
     default:
       g_assert_not_reached ();
     }

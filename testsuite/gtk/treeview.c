@@ -26,6 +26,8 @@ test_bug_546005 (void)
   GtkListStore *list_store;
   GtkWidget *view;
 
+  g_test_bug ("546005");
+
   /* Tests provided by Bjorn Lindqvist, Paul Pogonyshev */
   view = gtk_tree_view_new ();
 
@@ -65,6 +67,8 @@ test_bug_546005 (void)
   gtk_tree_view_set_cursor (GTK_TREE_VIEW (view), path,
                             NULL, FALSE);
   gtk_tree_path_free (path);
+
+  gtk_widget_destroy (view);
 }
 
 static void
@@ -73,6 +77,8 @@ test_bug_539377 (void)
   GtkWidget *view;
   GtkTreePath *path;
   GtkListStore *list_store;
+
+  g_test_bug ("539377");
 
   /* Test provided by Bjorn Lindqvist */
 
@@ -92,6 +98,8 @@ test_bug_539377 (void)
                                            NULL, NULL, NULL) == FALSE);
   g_assert (gtk_tree_view_get_dest_row_at_pos (GTK_TREE_VIEW (view), 10, 10,
                                                &path, NULL) == FALSE);
+
+  gtk_widget_destroy (view);
 }
 
 static void
@@ -146,6 +154,8 @@ test_select_collapsed_row (void)
   g_return_if_fail (gtk_tree_selection_count_selected_rows (selection) == 1);
 
   gtk_tree_path_free (path);
+
+  gtk_widget_destroy (view);
 }
 
 static gboolean
@@ -216,9 +226,9 @@ test_row_separator_height (void)
                         NULL);
 
   if (wide_separators)
-    height = separator_height + 2 * focus_pad;
+    height = separator_height;
   else
-    height = 2 + 2 * focus_pad;
+    height = 2;
 
   g_assert_cmpint (rect.height, ==, height);
   g_assert_cmpint (cell_rect.height, ==, height);
@@ -226,11 +236,65 @@ test_row_separator_height (void)
   gtk_widget_destroy (tree_view);
 }
 
+static void
+test_selection_count (void)
+{
+  GtkTreePath *path;
+  GtkListStore *list_store;
+  GtkTreeSelection *selection;
+  GtkWidget *view;
+
+  g_test_bug ("702957");
+
+  list_store = gtk_list_store_new (1, G_TYPE_STRING);
+  view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
+
+  gtk_list_store_insert_with_values (list_store, NULL, 0, 0, "One", -1);
+  gtk_list_store_insert_with_values (list_store, NULL, 1, 0, "Two", -1);
+  gtk_list_store_insert_with_values (list_store, NULL, 2, 0, "Tree", -1);
+
+  selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (view));
+  gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
+
+  g_assert_cmpint (gtk_tree_selection_count_selected_rows (selection), ==, 0);
+
+  path = gtk_tree_path_new_from_indices (0, -1);
+  gtk_tree_selection_select_path (selection, path);
+  gtk_tree_path_free (path);
+
+  g_assert_cmpint (gtk_tree_selection_count_selected_rows (selection), ==, 1);
+
+  path = gtk_tree_path_new_from_indices (2, -1);
+  gtk_tree_selection_select_path (selection, path);
+  gtk_tree_path_free (path);
+
+  g_assert_cmpint (gtk_tree_selection_count_selected_rows (selection), ==, 2);
+
+  path = gtk_tree_path_new_from_indices (2, -1);
+  gtk_tree_selection_select_path (selection, path);
+  gtk_tree_path_free (path);
+
+  g_assert_cmpint (gtk_tree_selection_count_selected_rows (selection), ==, 2);
+
+  path = gtk_tree_path_new_from_indices (1, -1);
+  gtk_tree_selection_select_path (selection, path);
+  gtk_tree_path_free (path);
+
+  g_assert_cmpint (gtk_tree_selection_count_selected_rows (selection), ==, 3);
+
+  gtk_tree_selection_unselect_all (selection);
+
+  g_assert_cmpint (gtk_tree_selection_count_selected_rows (selection), ==, 0);
+
+  gtk_widget_destroy (view);
+}
+
 int
 main (int    argc,
       char **argv)
 {
   gtk_test_init (&argc, &argv, NULL);
+  g_test_bug_base ("http://bugzilla.gnome.org/");
 
   g_test_add_func ("/TreeView/cursor/bug-546005", test_bug_546005);
   g_test_add_func ("/TreeView/cursor/bug-539377", test_bug_539377);
@@ -240,6 +304,7 @@ main (int    argc,
    * and https://bugzilla.gnome.org/show_bug.cgi?id=702371
   g_test_add_func ("/TreeView/sizing/row-separator-height",
                    test_row_separator_height);*/
+  g_test_add_func ("/TreeView/selection/count", test_selection_count);
 
   return g_test_run ();
 }

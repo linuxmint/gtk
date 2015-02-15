@@ -104,7 +104,7 @@ gtk_font_chooser_default_init (GtkFontChooserInterface *iface)
                           P_("Show preview text entry"),
                           P_("Whether the preview text entry is shown or not"),
                           TRUE,
-                          GTK_PARAM_READWRITE));
+                          GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkFontChooser::font-activated:
@@ -136,7 +136,7 @@ gtk_font_chooser_default_init (GtkFontChooserInterface *iface)
  *
  * If the selected font is not installed, returns %NULL.
  *
- * Return value: (transfer none): A #PangoFontFamily representing the
+ * Returns: (transfer none): A #PangoFontFamily representing the
  *     selected font family, or %NULL. The returned object is owned by @fontchooser
  *     and must not be modified or freed.
  *
@@ -159,7 +159,7 @@ gtk_font_chooser_get_font_family (GtkFontChooser *fontchooser)
  *
  * If the selected font is not installed, returns %NULL.
  *
- * Return value: (transfer none): A #PangoFontFace representing the
+ * Returns: (transfer none): A #PangoFontFace representing the
  *     selected font group details, or %NULL. The returned object is owned by
  *     @fontchooser and must not be modified or freed.
  *
@@ -179,7 +179,7 @@ gtk_font_chooser_get_font_face (GtkFontChooser *fontchooser)
  *
  * The selected font size.
  *
- * Return value: A n integer representing the selected font size,
+ * Returns: A n integer representing the selected font size,
  *     or -1 if no font size is selected.
  *
  * Since: 3.2
@@ -201,13 +201,13 @@ gtk_font_chooser_get_font_size (GtkFontChooser *fontchooser)
  * Note that this can be a different string than what you set with
  * gtk_font_chooser_set_font(), as the font chooser widget may
  * normalize font names and thus return a string with a different
- * structure. For example, "Helvetica Italic Bold 12" could be
- * normalized to "Helvetica Bold Italic 12".
+ * structure. For example, “Helvetica Italic Bold 12” could be
+ * normalized to “Helvetica Bold Italic 12”.
  *
  * Use pango_font_description_equal() if you want to compare two
  * font descriptions.
  *
- * Return value: (transfer full) (allow-none): A string with the name
+ * Returns: (transfer full) (allow-none): A string with the name
  *     of the current font, or %NULL if  no font is selected. You must
  *     free this string with g_free().
  *
@@ -229,7 +229,7 @@ gtk_font_chooser_get_font (GtkFontChooser *fontchooser)
 /**
  * gtk_font_chooser_set_font:
  * @fontchooser: a #GtkFontChooser
- * @fontname: a font name like "Helvetica 12" or "Times Bold 18"
+ * @fontname: a font name like “Helvetica 12” or “Times Bold 18”
  *
  * Sets the currently-selected font.
  *
@@ -254,13 +254,13 @@ gtk_font_chooser_set_font (GtkFontChooser *fontchooser,
  * Note that this can be a different string than what you set with
  * gtk_font_chooser_set_font(), as the font chooser widget may
  * normalize font names and thus return a string with a different
- * structure. For example, "Helvetica Italic Bold 12" could be
- * normalized to "Helvetica Bold Italic 12".
+ * structure. For example, “Helvetica Italic Bold 12” could be
+ * normalized to “Helvetica Bold Italic 12”.
  *
  * Use pango_font_description_equal() if you want to compare two
  * font descriptions.
  *
- * Return value: (transfer full) (allow-none): A #PangoFontDescription for the
+ * Returns: (transfer full) (allow-none): A #PangoFontDescription for the
  *     current font, or %NULL if  no font is selected.
  *
  * Since: 3.2
@@ -302,7 +302,7 @@ gtk_font_chooser_set_font_desc (GtkFontChooser             *fontchooser,
  *
  * Gets the text displayed in the preview area.
  *
- * Return value: (transfer full): the text displayed in the
+ * Returns: (transfer full): the text displayed in the
  *     preview area
  *
  * Since: 3.2
@@ -345,7 +345,7 @@ gtk_font_chooser_set_preview_text (GtkFontChooser *fontchooser,
  *
  * Returns whether the preview entry is shown or not.
  *
- * Return value: %TRUE if the preview entry is shown
+ * Returns: %TRUE if the preview entry is shown
  *     or %FALSE if it is hidden.
  *
  * Since: 3.2

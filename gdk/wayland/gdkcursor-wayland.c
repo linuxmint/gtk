@@ -50,13 +50,12 @@ struct _GdkWaylandCursor
 {
   GdkCursor cursor;
   gchar *name;
-  guint serial;
 
   struct
   {
     int hotspot_x, hotspot_y;
     int width, height, scale;
-    struct wl_buffer *buffer;
+    cairo_surface_t *cairo_surface;
   } surface;
 
   struct wl_cursor *wl_cursor;
@@ -67,70 +66,20 @@ struct _GdkWaylandCursorClass
   GdkCursorClass cursor_class;
 };
 
+GType _gdk_wayland_cursor_get_type (void);
+
 G_DEFINE_TYPE (GdkWaylandCursor, _gdk_wayland_cursor, GDK_TYPE_CURSOR)
 
-static guint theme_serial = 0;
-
-struct cursor_cache_key
+void
+_gdk_wayland_display_init_cursors (GdkWaylandDisplay *display)
 {
-  GdkCursorType type;
-  const char *name;
-};
-
-static void
-add_to_cache (GdkWaylandDisplay *display, GdkWaylandCursor *cursor)
-{
-  display->cursor_cache = g_slist_prepend (display->cursor_cache, cursor);
-
-  g_object_ref (cursor);
+  display->cursor_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, g_object_unref);
 }
 
-static gint
-cache_compare_func (gconstpointer listelem,
-                    gconstpointer target)
-{
-  GdkWaylandCursor *cursor = (GdkWaylandCursor *) listelem;
-  struct cursor_cache_key* key = (struct cursor_cache_key *) target;
-
-  if (cursor->cursor.type != key->type)
-    return 1; /* No match */
-
-  /* Elements marked as pixmap must be named cursors
-   * (since we don't store normal pixmap cursors
-   */
-  if (key->type == GDK_CURSOR_IS_PIXMAP)
-    return strcmp (key->name, cursor->name);
-
-  return 0; /* Match */
-}
-
-static GdkWaylandCursor*
-find_in_cache (GdkWaylandDisplay *display,
-               GdkCursorType      type,
-               const char        *name)
-{
-  GSList* res;
-  struct cursor_cache_key key;
-
-  key.type = type;
-  key.name = name;
-
-  res = g_slist_find_custom (display->cursor_cache, &key, cache_compare_func);
-
-  if (res)
-    return (GdkWaylandCursor *) res->data;
-
-  return NULL;
-}
-
-/* Called by gdk_wayland_display_finalize to flush any cached cursors
- * for a dead display.
- */
 void
 _gdk_wayland_display_finalize_cursors (GdkWaylandDisplay *display)
 {
-  g_slist_foreach (display->cursor_cache, (GFunc) g_object_unref, NULL);
-  g_slist_free (display->cursor_cache);
+  g_hash_table_destroy (display->cursor_cache);
 }
 
 static gboolean
@@ -159,7 +108,14 @@ void
 _gdk_wayland_display_update_cursors (GdkWaylandDisplay      *display,
                                      struct wl_cursor_theme *theme)
 {
-  g_slist_foreach (display->cursor_cache, (GFunc) set_cursor_from_theme, theme);
+  GHashTableIter iter;
+  const char *name;
+  GdkWaylandCursor *cursor;
+
+  g_hash_table_iter_init (&iter, display->cursor_cache);
+
+  while (g_hash_table_iter_next (&iter, (gpointer *) &name, (gpointer *) &cursor))
+    set_cursor_from_theme (cursor, theme);
 }
 
 static void
@@ -168,8 +124,8 @@ gdk_wayland_cursor_finalize (GObject *object)
   GdkWaylandCursor *cursor = GDK_WAYLAND_CURSOR (object);
 
   g_free (cursor->name);
-  if (cursor->surface.buffer)
-    wl_buffer_destroy (cursor->surface.buffer);
+  if (cursor->surface.cairo_surface)
+    cairo_surface_destroy (cursor->surface.cairo_surface);
 
   G_OBJECT_CLASS (_gdk_wayland_cursor_parent_class)->finalize (object);
 }
@@ -225,7 +181,12 @@ _gdk_wayland_cursor_get_buffer (GdkCursor *cursor,
       *h = wayland_cursor->surface.height / wayland_cursor->surface.scale;
       *scale = wayland_cursor->surface.scale;
 
-      return wayland_cursor->surface.buffer;
+      cairo_surface_reference (wayland_cursor->surface.cairo_surface);
+
+      if (wayland_cursor->surface.cairo_surface)
+        return _gdk_wayland_shm_surface_get_wl_buffer (wayland_cursor->surface.cairo_surface);
+      else
+        return NULL;
     }
 }
 
@@ -302,21 +263,15 @@ _gdk_wayland_display_get_cursor_for_name (GdkDisplay  *display,
 
   g_return_val_if_fail (GDK_IS_DISPLAY (display), NULL);
 
-  private = find_in_cache (wayland_display, GDK_CURSOR_IS_PIXMAP, name);
+  private = g_hash_table_lookup (wayland_display->cursor_cache, name);
   if (private)
-    {
-      /* Cache had it, add a ref for this user */
-      g_object_ref (private);
-
-      return (GdkCursor*) private;
-    }
+    return GDK_CURSOR (g_object_ref (private));
 
   private = g_object_new (GDK_TYPE_WAYLAND_CURSOR,
                           "cursor-type", GDK_CURSOR_IS_PIXMAP,
                           "display", display,
                           NULL);
   private->name = g_strdup (name);
-  private->serial = theme_serial;
   private->surface.scale = 1;
 
   /* Blank cursor case */
@@ -326,8 +281,8 @@ _gdk_wayland_display_get_cursor_for_name (GdkDisplay  *display,
   if (!set_cursor_from_theme (private, wayland_display->cursor_theme))
     return GDK_CURSOR (private);
 
-  add_to_cache (wayland_display, private);
-
+  /* Insert into cache. */
+  g_hash_table_insert (wayland_display->cursor_cache, private->name, g_object_ref (private));
   return GDK_CURSOR (private);
 }
 
@@ -339,11 +294,6 @@ _gdk_wayland_display_get_cursor_for_surface (GdkDisplay *display,
 {
   GdkWaylandCursor *cursor;
   GdkWaylandDisplay *wayland_display = GDK_WAYLAND_DISPLAY (display);
-  int stride;
-  size_t size;
-  gpointer data;
-  struct wl_shm_pool *pool;
-  cairo_surface_t *buffer_surface;
   cairo_t *cr;
 
   cursor = g_object_new (GDK_TYPE_WAYLAND_CURSOR,
@@ -351,7 +301,6 @@ _gdk_wayland_display_get_cursor_for_surface (GdkDisplay *display,
 			 "display", wayland_display,
 			 NULL);
   cursor->name = NULL;
-  cursor->serial = theme_serial;
   cursor->surface.hotspot_x = x;
   cursor->surface.hotspot_y = y;
 
@@ -375,36 +324,17 @@ _gdk_wayland_display_get_cursor_for_surface (GdkDisplay *display,
       cursor->surface.height = 1;
     }
 
-  pool = _create_shm_pool (wayland_display->shm,
-                           cursor->surface.width,
-                           cursor->surface.height,
-                           &size,
-                           &data);
-
+  cursor->surface.cairo_surface = _gdk_wayland_display_create_shm_surface (wayland_display,
+                                                                           cursor->surface.width,
+                                                                           cursor->surface.height,
+                                                                           cursor->surface.scale);
   if (surface)
     {
-      buffer_surface = cairo_image_surface_create_for_data (data,
-							    CAIRO_FORMAT_ARGB32,
-							    cursor->surface.width,
-							    cursor->surface.height,
-							    cursor->surface.width * 4);
-      cr = cairo_create (buffer_surface);
+      cr = cairo_create (cursor->surface.cairo_surface);
       cairo_set_source_surface (cr, surface, 0, 0);
       cairo_paint (cr);
       cairo_destroy (cr);
-      cairo_surface_destroy (buffer_surface);
     }
-  else
-    memset (data, 0, 4);
-
-  stride = cursor->surface.width * 4;
-  cursor->surface.buffer = wl_shm_pool_create_buffer (pool, 0,
-                                                     cursor->surface.width,
-                                                     cursor->surface.height,
-                                                     stride,
-                                                     WL_SHM_FORMAT_ARGB8888);
-
-  wl_shm_pool_destroy (pool);
 
   return GDK_CURSOR (cursor);
 }

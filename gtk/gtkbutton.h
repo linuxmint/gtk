@@ -55,17 +55,33 @@ struct _GtkButton
   GtkButtonPrivate *priv;
 };
 
+/**
+ * GtkButtonClass:
+ * @parent_class: The parent class.
+ * @pressed: Signal emitted when the button is pressed. Deprecated: 2.8.
+ * @released: Signal emitted when the button is released. Deprecated: 2.8.
+ * @clicked: Signal emitted when the button has been activated (pressed and released).
+ * @enter: Signal emitted when the pointer enters the button. Deprecated: 2.8.
+ * @leave: Signal emitted when the pointer leaves the button. Deprecated: 2.8.
+ * @activate: Signal that causes the button to animate press then
+ *    release. Applications should never connect to this signal, but use
+ *    the @clicked signal.
+ */
 struct _GtkButtonClass
 {
   GtkBinClass        parent_class;
-  
+
+  /*< public >*/
+
   void (* pressed)  (GtkButton *button);
   void (* released) (GtkButton *button);
   void (* clicked)  (GtkButton *button);
   void (* enter)    (GtkButton *button);
   void (* leave)    (GtkButton *button);
   void (* activate) (GtkButton *button);
-  
+
+  /*< private >*/
+
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);
   void (*_gtk_reserved2) (void);
@@ -100,7 +116,7 @@ void           gtk_button_leave             (GtkButton      *button);
 
 GDK_AVAILABLE_IN_ALL
 void                  gtk_button_set_relief         (GtkButton      *button,
-						     GtkReliefStyle  newstyle);
+						     GtkReliefStyle  relief);
 GDK_AVAILABLE_IN_ALL
 GtkReliefStyle        gtk_button_get_relief         (GtkButton      *button);
 GDK_AVAILABLE_IN_ALL
@@ -123,11 +139,11 @@ void                  gtk_button_set_focus_on_click (GtkButton      *button,
 						     gboolean        focus_on_click);
 GDK_AVAILABLE_IN_ALL
 gboolean              gtk_button_get_focus_on_click (GtkButton      *button);
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 void                  gtk_button_set_alignment      (GtkButton      *button,
 						     gfloat          xalign,
 						     gfloat          yalign);
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 void                  gtk_button_get_alignment      (GtkButton      *button,
 						     gfloat         *xalign,
 						     gfloat         *yalign);

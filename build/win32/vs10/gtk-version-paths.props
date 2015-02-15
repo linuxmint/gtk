@@ -3,15 +3,16 @@
   <PropertyGroup Label="UserMacros">
     <VSVer>10</VSVer>
     <GlibEtcInstallRoot>$(SolutionDir)\..\..\..\..\vs$(VSVer)\$(Platform)</GlibEtcInstallRoot>
-    <GlibEtcInstallRootFromBuildWin32>..\..\..\vs$(VSVer)\$(Platform)</GlibEtcInstallRootFromBuildWin32>
     <CopyDir>..\..\..\..\vs$(VSVer)\$(Platform)</CopyDir>
     <ApiVersion>3.0</ApiVersion>
+    <GtkVersion>3.14.5</GtkVersion>
     <GtkLibtoolCompatibleDllPrefix>lib</GtkLibtoolCompatibleDllPrefix>
     <GtkLibtoolCompatibleDllSuffix>-$(ApiVersion)-0</GtkLibtoolCompatibleDllSuffix>
     <GtkSeparateVSDllPrefix />
     <GtkSeparateVSDllSuffix>-3-vs$(VSVer)</GtkSeparateVSDllSuffix>
     <GtkDllPrefix>$(GtkSeparateVSDllPrefix)</GtkDllPrefix>
     <GtkDllSuffix>$(GtkSeparateVSDllSuffix)</GtkDllSuffix>
+    <PythonPath>c:\python27</PythonPath>
   </PropertyGroup>
   <PropertyGroup>
     <_PropertySheetDisplayName>gtkversionpathsprops</_PropertySheetDisplayName>
@@ -23,14 +24,14 @@
     <BuildMacro Include="GlibEtcInstallRoot">
       <Value>$(GlibEtcInstallRoot)</Value>
     </BuildMacro>
-    <BuildMacro Include="GlibEtcInstallRootFromBuildWin32">
-      <Value>$(GlibEtcInstallRootFromBuildWin32)</Value>
-    </BuildMacro>
     <BuildMacro Include="CopyDir">
       <Value>$(CopyDir)</Value>
     </BuildMacro>
     <BuildMacro Include="ApiVersion">
       <Value>$(ApiVersion)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GtkVersion">
+      <Value>$(GtkVersion)</Value>
     </BuildMacro>
     <BuildMacro Include="GtkLibtoolCompatibleDllPrefix">
       <Value>$(GtkLibtoolCompatibleDllPrefix)</Value>
@@ -49,6 +50,9 @@
     </BuildMacro>
     <BuildMacro Include="GtkDllSuffix">
       <Value>$(GtkDllSuffix)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PythonPath">
+      <Value>$(PythonPath)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

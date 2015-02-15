@@ -137,7 +137,7 @@ gtk_cell_renderer_toggle_class_init (GtkCellRendererToggleClass *class)
 							 P_("Toggle state"),
 							 P_("The toggle state of the button"),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
 		                   PROP_INCONSISTENT,
@@ -145,7 +145,7 @@ gtk_cell_renderer_toggle_class_init (GtkCellRendererToggleClass *class)
 					                 P_("Inconsistent state"),
 							 P_("The inconsistent state of the button"),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   g_object_class_install_property (object_class,
 				   PROP_ACTIVATABLE,
@@ -153,7 +153,7 @@ gtk_cell_renderer_toggle_class_init (GtkCellRendererToggleClass *class)
 							 P_("Activatable"),
 							 P_("The toggle button can be activated"),
 							 TRUE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
 				   PROP_RADIO,
@@ -161,7 +161,7 @@ gtk_cell_renderer_toggle_class_init (GtkCellRendererToggleClass *class)
 							 P_("Radio state"),
 							 P_("Draw the toggle button as a radio button"),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (object_class,
 				   PROP_INDICATOR_SIZE,
@@ -171,7 +171,7 @@ gtk_cell_renderer_toggle_class_init (GtkCellRendererToggleClass *class)
 						     0,
 						     G_MAXINT,
 						     TOGGLE_WIDTH,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   
   /**
@@ -181,6 +181,10 @@ gtk_cell_renderer_toggle_class_init (GtkCellRendererToggleClass *class)
    *        event location
    *
    * The ::toggled signal is emitted when the cell is toggled. 
+   *
+   * It is the responsibility of the application to update the model
+   * with the correct value to store at @path.  Often this is simply the
+   * opposite of the value currently stored at @path.
    **/
   toggle_cell_signals[TOGGLED] =
     g_signal_new (I_("toggled"),
@@ -240,19 +244,39 @@ gtk_cell_renderer_toggle_set_property (GObject      *object,
   switch (param_id)
     {
     case PROP_ACTIVE:
-      priv->active = g_value_get_boolean (value);
+      if (priv->active != g_value_get_boolean (value))
+        {
+          priv->active = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_INCONSISTENT:
-      priv->inconsistent = g_value_get_boolean (value);
+      if (priv->inconsistent != g_value_get_boolean (value))
+        {
+          priv->inconsistent = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_ACTIVATABLE:
-      priv->activatable = g_value_get_boolean (value);
+      if (priv->activatable != g_value_get_boolean (value))
+        {
+          priv->activatable = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_RADIO:
-      priv->radio = g_value_get_boolean (value);
+      if (priv->radio != g_value_get_boolean (value))
+        {
+          priv->radio = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case PROP_INDICATOR_SIZE:
-      priv->indicator_size = g_value_get_int (value);
+      if (priv->indicator_size != g_value_get_int (value))
+        {
+          priv->indicator_size = g_value_get_int (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -267,11 +291,11 @@ gtk_cell_renderer_toggle_set_property (GObject      *object,
  * parameters using object properties. Object properties can be set
  * globally (with g_object_set()). Also, with #GtkTreeViewColumn, you
  * can bind a property to a value in a #GtkTreeModel. For example, you
- * can bind the "active" property on the cell renderer to a boolean value
+ * can bind the “active” property on the cell renderer to a boolean value
  * in the model, thus causing the check button to reflect the state of
  * the model.
  *
- * Return value: the new cell renderer
+ * Returns: the new cell renderer
  **/
 GtkCellRenderer *
 gtk_cell_renderer_toggle_new (void)
@@ -362,12 +386,13 @@ gtk_cell_renderer_toggle_render (GtkCellRenderer      *cell,
   if (!priv->activatable)
     state |= GTK_STATE_FLAG_INSENSITIVE;
 
-  state &= ~(GTK_STATE_FLAG_INCONSISTENT | GTK_STATE_FLAG_ACTIVE);
+  state &= ~(GTK_STATE_FLAG_INCONSISTENT | GTK_STATE_FLAG_CHECKED);
 
   if (priv->inconsistent)
     state |= GTK_STATE_FLAG_INCONSISTENT;
-  else if (priv->active)
-    state |= GTK_STATE_FLAG_ACTIVE;
+  
+  if (priv->active)
+    state |= GTK_STATE_FLAG_CHECKED;
 
   cairo_save (cr);
 
@@ -452,9 +477,9 @@ gtk_cell_renderer_toggle_set_radio (GtkCellRendererToggle *toggle,
  * gtk_cell_renderer_toggle_get_radio:
  * @toggle: a #GtkCellRendererToggle
  *
- * Returns whether we're rendering radio toggles rather than checkboxes. 
+ * Returns whether we’re rendering radio toggles rather than checkboxes. 
  * 
- * Return value: %TRUE if we're rendering radio toggles rather than checkboxes
+ * Returns: %TRUE if we’re rendering radio toggles rather than checkboxes
  **/
 gboolean
 gtk_cell_renderer_toggle_get_radio (GtkCellRendererToggle *toggle)
@@ -471,7 +496,7 @@ gtk_cell_renderer_toggle_get_radio (GtkCellRendererToggle *toggle)
  * Returns whether the cell renderer is active. See
  * gtk_cell_renderer_toggle_set_active().
  *
- * Return value: %TRUE if the cell renderer is active.
+ * Returns: %TRUE if the cell renderer is active.
  **/
 gboolean
 gtk_cell_renderer_toggle_get_active (GtkCellRendererToggle *toggle)
@@ -504,7 +529,7 @@ gtk_cell_renderer_toggle_set_active (GtkCellRendererToggle *toggle,
  * Returns whether the cell renderer is activatable. See
  * gtk_cell_renderer_toggle_set_activatable().
  *
- * Return value: %TRUE if the cell renderer is activatable.
+ * Returns: %TRUE if the cell renderer is activatable.
  *
  * Since: 2.18
  **/

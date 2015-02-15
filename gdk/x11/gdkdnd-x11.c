@@ -1144,10 +1144,9 @@ xdnd_send_xevent (GdkX11DragContext *context_x11,
               temp_event->any.window = g_object_ref (window);
 
               if ((*xdnd_filters[i].func) (event_send, temp_event, NULL) == GDK_FILTER_TRANSLATE)
-                {
-                  gdk_event_put (temp_event);
-                  gdk_event_free (temp_event);
-                }
+                gdk_event_put (temp_event);
+
+              gdk_event_free (temp_event);
 
               return TRUE;
             }
@@ -1470,7 +1469,7 @@ xdnd_read_actions (GdkX11DragContext *context_x11)
 
 /* We have to make sure that the XdndActionList we keep internally
  * is up to date with the XdndActionList on the source window
- * because we get no notification, because Xdnd wasn't meant
+ * because we get no notification, because Xdnd wasn’t meant
  * to continually send actions. So we select on PropertyChangeMask
  * and add this filter.
  */
@@ -2052,7 +2051,7 @@ gdk_x11_drag_context_find_window (GdkDragContext  *context,
       /* There is some ugliness here. We actually need to pass
        * _three_ pieces of information to drag_motion - dest_window,
        * protocol, and the XID of the unproxied window. The first
-       * two are passed explicitely, the third implicitly through
+       * two are passed explicitly, the third implicitly through
        * protocol->dest_xid.
        */
       recipient = _gdk_x11_display_get_drag_protocol (display,

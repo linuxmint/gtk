@@ -32,7 +32,6 @@ gtk_css_matcher_widget_path_get_parent (GtkCssMatcher       *matcher,
 
   matcher->path.klass = child->path.klass;
   matcher->path.path = child->path.path;
-  matcher->path.state_flags = 0;
   matcher->path.index = child->path.index - 1;
   matcher->path.sibling_index = gtk_widget_path_iter_get_sibling_index (matcher->path.path, matcher->path.index);
 
@@ -48,7 +47,6 @@ gtk_css_matcher_widget_path_get_previous (GtkCssMatcher       *matcher,
 
   matcher->path.klass = next->path.klass;
   matcher->path.path = next->path.path;
-  matcher->path.state_flags = 0;
   matcher->path.index = next->path.index;
   matcher->path.sibling_index = next->path.sibling_index - 1;
 
@@ -58,7 +56,13 @@ gtk_css_matcher_widget_path_get_previous (GtkCssMatcher       *matcher,
 static GtkStateFlags
 gtk_css_matcher_widget_path_get_state (const GtkCssMatcher *matcher)
 {
-  return matcher->path.state_flags;
+  const GtkWidgetPath *siblings;
+  
+  siblings = gtk_widget_path_iter_get_siblings (matcher->path.path, matcher->path.index);
+  if (siblings && matcher->path.sibling_index != gtk_widget_path_iter_get_sibling_index (matcher->path.path, matcher->path.index))
+    return gtk_widget_path_iter_get_state (siblings, matcher->path.sibling_index);
+  else
+    return gtk_widget_path_iter_get_state (matcher->path.path, matcher->path.index);
 }
 
 static gboolean
@@ -106,7 +110,8 @@ gtk_css_matcher_widget_path_has_regions (const GtkCssMatcher *matcher)
   const GtkWidgetPath *siblings;
   GSList *regions;
   gboolean result;
-  
+
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   siblings = gtk_widget_path_iter_get_siblings (matcher->path.path, matcher->path.index);
   if (siblings && matcher->path.sibling_index != gtk_widget_path_iter_get_sibling_index (matcher->path.path, matcher->path.index))
     regions = gtk_widget_path_iter_list_regions (siblings, matcher->path.sibling_index);
@@ -116,6 +121,7 @@ gtk_css_matcher_widget_path_has_regions (const GtkCssMatcher *matcher)
   g_slist_free (regions);
 
   return result;
+G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 static gboolean
@@ -126,6 +132,7 @@ gtk_css_matcher_widget_path_has_region (const GtkCssMatcher *matcher,
   const GtkWidgetPath *siblings;
   GtkRegionFlags region_flags;
   
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   siblings = gtk_widget_path_iter_get_siblings (matcher->path.path, matcher->path.index);
   if (siblings && matcher->path.sibling_index != gtk_widget_path_iter_get_sibling_index (matcher->path.path, matcher->path.index))
     {
@@ -142,6 +149,7 @@ gtk_css_matcher_widget_path_has_region (const GtkCssMatcher *matcher,
     return FALSE;
 
   return TRUE;
+G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 static gboolean
@@ -188,15 +196,13 @@ static const GtkCssMatcherClass GTK_CSS_MATCHER_WIDGET_PATH = {
 
 gboolean
 _gtk_css_matcher_init (GtkCssMatcher       *matcher,
-                       const GtkWidgetPath *path,
-                       GtkStateFlags        state)
+                       const GtkWidgetPath *path)
 {
   if (gtk_widget_path_length (path) == 0)
     return FALSE;
 
   matcher->path.klass = &GTK_CSS_MATCHER_WIDGET_PATH;
   matcher->path.path = path;
-  matcher->path.state_flags = state;
   matcher->path.index = gtk_widget_path_length (path) - 1;
   matcher->path.sibling_index = gtk_widget_path_iter_get_sibling_index (path, matcher->path.index);
 
@@ -230,7 +236,8 @@ gtk_css_matcher_any_get_state (const GtkCssMatcher *matcher)
 
   return GTK_STATE_FLAG_ACTIVE | GTK_STATE_FLAG_PRELIGHT | GTK_STATE_FLAG_SELECTED
     | GTK_STATE_FLAG_INSENSITIVE | GTK_STATE_FLAG_INCONSISTENT
-    | GTK_STATE_FLAG_FOCUSED | GTK_STATE_FLAG_BACKDROP;
+    | GTK_STATE_FLAG_FOCUSED | GTK_STATE_FLAG_BACKDROP | GTK_STATE_FLAG_LINK
+    | GTK_STATE_FLAG_VISITED;
 }
 
 static gboolean
@@ -326,7 +333,8 @@ gtk_css_matcher_superset_get_state (const GtkCssMatcher *matcher)
   else
     return GTK_STATE_FLAG_ACTIVE | GTK_STATE_FLAG_PRELIGHT | GTK_STATE_FLAG_SELECTED
       | GTK_STATE_FLAG_INSENSITIVE | GTK_STATE_FLAG_INCONSISTENT
-      | GTK_STATE_FLAG_FOCUSED | GTK_STATE_FLAG_BACKDROP;
+      | GTK_STATE_FLAG_FOCUSED | GTK_STATE_FLAG_BACKDROP | GTK_STATE_FLAG_LINK
+      | GTK_STATE_FLAG_VISITED;
 }
 
 static gboolean

@@ -476,8 +476,8 @@ _gdk_x11_screen_list_visuals (GdkScreen *screen)
  *
  * Looks up the #GdkVisual for a particular screen and X Visual ID.
  *
- * Returns: (transfer none): the #GdkVisual (owned by the screen
- *   object), or %NULL if the visual ID wasn't found.
+ * Returns: (transfer none) (type GdkX11Visual): the #GdkVisual (owned by the screen
+ *   object), or %NULL if the visual ID wasn’t found.
  *
  * Since: 2.2
  */
@@ -579,11 +579,11 @@ _gdk_visual_get_x11_colormap (GdkVisual *visual)
 
 /**
  * gdk_x11_visual_get_xvisual:
- * @visual: a #GdkVisual.
+ * @visual: (type GdkX11Visual): a #GdkVisual.
  *
  * Returns the X visual belonging to a #GdkVisual.
  *
- * Return value: (transfer none): an Xlib <type>Visual*</type>.
+ * Returns: (transfer none): an Xlib Visual*.
  **/
 Visual *
 gdk_x11_visual_get_xvisual (GdkVisual *visual)

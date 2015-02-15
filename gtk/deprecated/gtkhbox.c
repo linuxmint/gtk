@@ -50,10 +50,10 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
  * from #GtkBox. No further changes are needed, since the default
  * value of the #GtkOrientable:orientation property is
  * %GTK_ORIENTATION_HORIZONTAL.
- * If you don't need first-child or last-child styling, and want your code
+ * If you don’t need first-child or last-child styling, and want your code
  * to be future-proof, the recommendation is to switch to #GtkGrid instead
  * of nested boxes. For more information about migrating to #GtkGrid,
- * see <xref linkend="gtk-migrating-GtkGrid"/>
+ * see [Migrating from other containers to GtkGrid][gtk-migrating-GtkGrid].
  */
 
 
@@ -85,7 +85,7 @@ gtk_hbox_init (GtkHBox *hbox)
  * Deprecated: 3.2: You can use gtk_box_new() with %GTK_ORIENTATION_HORIZONTAL instead,
  *   which is a quick and easy change. But the recommendation is to switch to
  *   #GtkGrid, since #GtkBox is going to go away eventually.
- *   See <xref linkend="gtk-migrating-GtkGrid"/>.
+ *   See [Migrating from other containers to GtkGrid][gtk-migrating-GtkGrid].
  */
 GtkWidget *
 gtk_hbox_new (gboolean homogeneous,

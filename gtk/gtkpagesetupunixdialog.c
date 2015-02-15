@@ -43,6 +43,7 @@
 #include "gtkprintbackend.h"
 #include "gtkpapersize.h"
 #include "gtkprintutils.h"
+#include "gtkdialogprivate.h"
 
 /**
  * SECTION:gtkpagesetupunixdialog
@@ -50,10 +51,10 @@
  * @Title: GtkPageSetupUnixDialog
  *
  * #GtkPageSetupUnixDialog implements a page setup dialog for platforms
- * which don't provide a native page setup dialog, like Unix. It can
+ * which don’t provide a native page setup dialog, like Unix. It can
  * be used very much like any other GTK+ dialog, at the cost of
- * the portability offered by the <link
- * linkend="gtk-High-level-Printing-API">high-level printing API</link>
+ * the portability offered by the
+ * [high-level printing API][gtk3-High-level-Printing-API]
  *
  * Printing support was added in GTK+ 2.10.
  */
@@ -130,7 +131,7 @@ static gboolean paper_size_row_is_separator      (GtkTreeModel           *model,
 						  gpointer                data);
 
 
-static const gchar const common_paper_sizes[][16] = {
+static const gchar common_paper_sizes[][16] = {
   "na_letter",
   "na_legal",
   "iso_a4",
@@ -142,7 +143,7 @@ static const gchar const common_paper_sizes[][16] = {
   "iso_dl",
   "jpn_chou3",
   "na_ledger",
-  "iso_a3",
+  "iso_a3"
 };
 
 
@@ -160,7 +161,7 @@ gtk_page_setup_unix_dialog_class_init (GtkPageSetupUnixDialogClass *class)
   /* Bind class to template
    */
   gtk_widget_class_set_template_from_resource (widget_class,
-					       "/org/gtk/libgtk/gtkpagesetupunixdialog.ui");
+					       "/org/gtk/libgtk/ui/gtkpagesetupunixdialog.ui");
 
   gtk_widget_class_bind_template_child_private (widget_class, GtkPageSetupUnixDialog, printer_list);
   gtk_widget_class_bind_template_child_private (widget_class, GtkPageSetupUnixDialog, page_setup_list);
@@ -190,6 +191,19 @@ gtk_page_setup_unix_dialog_init (GtkPageSetupUnixDialog *dialog)
   priv->print_backends = NULL;
 
   gtk_widget_init_template (GTK_WIDGET (dialog));
+  gtk_dialog_set_use_header_bar_from_setting (GTK_DIALOG (dialog));
+  gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+                          _("_Cancel"), GTK_RESPONSE_CANCEL,
+                          _("_Apply"), GTK_RESPONSE_OK,
+                          NULL);
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
+
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+  gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
+                                           GTK_RESPONSE_OK,
+                                           GTK_RESPONSE_CANCEL,
+                                           -1);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   /* Do this in code, we want the translatable strings without the markup */
   gtk_list_store_append (priv->printer_list, &iter);
@@ -213,11 +227,6 @@ gtk_page_setup_unix_dialog_init (GtkPageSetupUnixDialog *dialog)
   /* Load data */
   _gtk_print_load_custom_papers (priv->custom_paper_list);
   load_print_backends (dialog);
-
-  gtk_dialog_set_alternative_button_order (GTK_DIALOG (dialog),
-                                           GTK_RESPONSE_OK,
-                                           GTK_RESPONSE_CANCEL,
-                                           -1);
 }
 
 static void
@@ -809,7 +818,7 @@ paper_size_changed (GtkComboBox            *combo_box,
                             unit);
       h = double_to_string (gtk_page_setup_get_paper_height (page_setup, unit),
                             unit);
-      str = g_strdup_printf ("%s x %s %s", w, h, unit_str);
+      str = g_strdup_printf ("%s × %s %s", w, h, unit_str);
       g_free (w);
       g_free (h);
 

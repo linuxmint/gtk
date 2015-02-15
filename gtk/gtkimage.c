@@ -50,14 +50,14 @@
  * The #GtkImage widget displays an image. Various kinds of object
  * can be displayed as an image; most typically, you would load a
  * #GdkPixbuf ("pixel buffer") from a file, and then display that.
- * There's a convenience function to do this, gtk_image_new_from_file(),
+ * There’s a convenience function to do this, gtk_image_new_from_file(),
  * used as follows:
- * <informalexample><programlisting>
+ * |[<!-- language="C" -->
  *   GtkWidget *image;
  *   image = gtk_image_new_from_file ("myfile.png");
- * </programlisting></informalexample>
- * If the file isn't loaded successfully, the image will contain a
- * "broken image" icon similar to that used in many web browsers.
+ * ]|
+ * If the file isn’t loaded successfully, the image will contain a
+ * “broken image” icon similar to that used in many web browsers.
  * If you want to handle errors in loading the file yourself,
  * for example by displaying an error message, then load the image with
  * gdk_pixbuf_new_from_file(), then create the #GtkImage with
@@ -70,27 +70,25 @@
  * align it (center, left, right) and add padding to it, using
  * #GtkMisc methods.
  *
- * #GtkImage is a "no window" widget (has no #GdkWindow of its own),
+ * #GtkImage is a “no window” widget (has no #GdkWindow of its own),
  * so by default does not receive events. If you want to receive events
  * on the image, such as button clicks, place the image inside a
  * #GtkEventBox, then connect to the event signals on the event box.
- * <example>
- * <title>Handling button press events on a
- * <structname>GtkImage</structname>.</title>
- * <programlisting>
+ *
+ * ## Handling button press events on a #GtkImage.
+ *
+ * |[<!-- language="C" -->
  *   static gboolean
  *   button_press_callback (GtkWidget      *event_box,
  *                          GdkEventButton *event,
  *                          gpointer        data)
  *   {
- *     g_print ("Event box clicked at coordinates &percnt;f,&percnt;f\n",
+ *     g_print ("Event box clicked at coordinates %f,%f\n",
  *              event->x, event->y);
  *
- *     /<!---->* Returning TRUE means we handled the event, so the signal
- *      * emission should be stopped (don't call any further
- *      * callbacks that may be connected). Return FALSE
- *      * to continue invoking callbacks.
- *      *<!---->/
+ *     // Returning TRUE means we handled the event, so the signal
+ *     // emission should be stopped (don’t call any further callbacks
+ *     // that may be connected). Return FALSE to continue invoking callbacks.
  *     return TRUE;
  *   }
  *
@@ -102,7 +100,7 @@
  *
  *     image = gtk_image_new_from_file ("myfile.png");
  *
- *     event_box = gtk_event_box_new (<!-- -->);
+ *     event_box = gtk_event_box_new ();
  *
  *     gtk_container_add (GTK_CONTAINER (event_box), image);
  *
@@ -113,8 +111,7 @@
  *
  *     return image;
  *   }
- * </programlisting>
- * </example>
+ * ]|
  *
  * When handling events on the event box, keep in mind that coordinates
  * in the image may be different from event box coordinates due to
@@ -125,7 +122,7 @@
  *
  * Sometimes an application will want to avoid depending on external data
  * files, such as image files. GTK+ comes with a program to avoid this,
- * called <application>gdk-pixbuf-csource</application>. This library
+ * called “gdk-pixbuf-csource”. This library
  * allows you to convert an image into a C variable declaration, which
  * can then be loaded into a #GdkPixbuf using
  * gdk_pixbuf_new_from_inline().
@@ -200,7 +197,9 @@ enum
   PROP_USE_FALLBACK
 };
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 G_DEFINE_TYPE_WITH_PRIVATE (GtkImage, gtk_image, GTK_TYPE_MISC)
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 gtk_image_class_init (GtkImageClass *class)
@@ -285,7 +284,7 @@ gtk_image_class_init (GtkImageClass *class)
                                                      P_("Symbolic size to use for stock icon, icon set or named icon"),
                                                      0, G_MAXINT,
                                                      DEFAULT_ICON_SIZE,
-                                                     GTK_PARAM_READWRITE));
+                                                     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   /**
    * GtkImage:pixel-size:
    *
@@ -302,7 +301,7 @@ gtk_image_class_init (GtkImageClass *class)
 						     P_("Pixel size to use for named icon"),
 						     -1, G_MAXINT,
 						     -1,
-						     GTK_PARAM_READWRITE));
+						     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   g_object_class_install_property (gobject_class,
                                    PROP_PIXBUF_ANIMATION,
@@ -385,7 +384,7 @@ gtk_image_class_init (GtkImageClass *class)
                                                          P_("Use Fallback"),
                                                          P_("Whether to use icon names fallback"),
                                                          FALSE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   gtk_widget_class_set_accessible_type (widget_class, GTK_TYPE_IMAGE_ACCESSIBLE);
 }
@@ -433,52 +432,47 @@ gtk_image_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_PIXBUF:
-      gtk_image_set_from_pixbuf (image,
-                                 g_value_get_object (value));
+      gtk_image_set_from_pixbuf (image, g_value_get_object (value));
       break;
     case PROP_SURFACE:
-      gtk_image_set_from_surface (image,
-				  g_value_get_boxed (value));
+      gtk_image_set_from_surface (image, g_value_get_boxed (value));
       break;
     case PROP_FILE:
       gtk_image_set_from_file (image, g_value_get_string (value));
       break;
     case PROP_STOCK:
       G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
-      gtk_image_set_from_stock (image, g_value_get_string (value),
-                                icon_size);
+      gtk_image_set_from_stock (image, g_value_get_string (value), icon_size);
       G_GNUC_END_IGNORE_DEPRECATIONS;
       break;
     case PROP_ICON_SET:
       G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
-      gtk_image_set_from_icon_set (image, g_value_get_boxed (value),
-                                   icon_size);
+      gtk_image_set_from_icon_set (image, g_value_get_boxed (value), icon_size);
       G_GNUC_END_IGNORE_DEPRECATIONS;
       break;
     case PROP_ICON_SIZE:
-      _gtk_icon_helper_set_icon_size (priv->icon_helper, g_value_get_int (value));
+      if (_gtk_icon_helper_set_icon_size (priv->icon_helper, g_value_get_int (value)))
+        g_object_notify_by_pspec (object, pspec);
       break;
     case PROP_PIXEL_SIZE:
       gtk_image_set_pixel_size (image, g_value_get_int (value));
       break;
     case PROP_PIXBUF_ANIMATION:
-      gtk_image_set_from_animation (image,
-                                    g_value_get_object (value));
+      gtk_image_set_from_animation (image, g_value_get_object (value));
       break;
     case PROP_ICON_NAME:
-      gtk_image_set_from_icon_name (image, g_value_get_string (value),
-				    icon_size);
+      gtk_image_set_from_icon_name (image, g_value_get_string (value), icon_size);
       break;
     case PROP_GICON:
-      gtk_image_set_from_gicon (image, g_value_get_object (value),
-				icon_size);
+      gtk_image_set_from_gicon (image, g_value_get_object (value), icon_size);
       break;
     case PROP_RESOURCE:
       gtk_image_set_from_resource (image, g_value_get_string (value));
       break;
 
     case PROP_USE_FALLBACK:
-      _gtk_icon_helper_set_use_fallback (priv->icon_helper, g_value_get_boolean (value));
+      if (_gtk_icon_helper_set_use_fallback (priv->icon_helper, g_value_get_boolean (value)))
+        g_object_notify_by_pspec (object, pspec);
       break;
 
     default:
@@ -551,8 +545,8 @@ gtk_image_get_property (GObject     *object,
  * @filename: (type filename): a filename
  * 
  * Creates a new #GtkImage displaying the file @filename. If the file
- * isn't found or can't be loaded, the resulting #GtkImage will
- * display a "broken image" icon. This function never returns %NULL,
+ * isn’t found or can’t be loaded, the resulting #GtkImage will
+ * display a “broken image” icon. This function never returns %NULL,
  * it always returns a valid #GtkImage widget.
  *
  * If the file contains an animation, the image will contain an
@@ -567,7 +561,7 @@ gtk_image_get_property (GObject     *object,
  * image is not defined, it will be whatever is appropriate for
  * displaying the file.
  * 
- * Return value: a new #GtkImage
+ * Returns: a new #GtkImage
  **/
 GtkWidget*
 gtk_image_new_from_file   (const gchar *filename)
@@ -586,8 +580,8 @@ gtk_image_new_from_file   (const gchar *filename)
  * @resource_path: a resource path
  *
  * Creates a new #GtkImage displaying the resource file @resource_path. If the file
- * isn't found or can't be loaded, the resulting #GtkImage will
- * display a "broken image" icon. This function never returns %NULL,
+ * isn’t found or can’t be loaded, the resulting #GtkImage will
+ * display a “broken image” icon. This function never returns %NULL,
  * it always returns a valid #GtkImage widget.
  *
  * If the file contains an animation, the image will contain an
@@ -602,7 +596,7 @@ gtk_image_new_from_file   (const gchar *filename)
  * image is not defined, it will be whatever is appropriate for
  * displaying the file.
  *
- * Return value: a new #GtkImage
+ * Returns: a new #GtkImage
  *
  * Since: 3.4
  **/
@@ -631,7 +625,7 @@ gtk_image_new_from_resource (const gchar *resource_path)
  * #GtkImage created will not react to state changes. Should you want that, 
  * you should use gtk_image_new_from_icon_name().
  * 
- * Return value: a new #GtkImage
+ * Returns: a new #GtkImage
  **/
 GtkWidget*
 gtk_image_new_from_pixbuf (GdkPixbuf *pixbuf)
@@ -654,7 +648,9 @@ gtk_image_new_from_pixbuf (GdkPixbuf *pixbuf)
  * surface; you still need to unref it if you own references.
  * #GtkImage will add its own reference rather than adopting yours.
  * 
- * Return value: a new #GtkImage
+ * Returns: a new #GtkImage
+ *
+ * Since: 3.10
  **/
 GtkWidget*
 gtk_image_new_from_surface (cairo_surface_t *surface)
@@ -676,11 +672,11 @@ gtk_image_new_from_surface (cairo_surface_t *surface)
  * Creates a #GtkImage displaying a stock icon. Sample stock icon
  * names are #GTK_STOCK_OPEN, #GTK_STOCK_QUIT. Sample stock sizes
  * are #GTK_ICON_SIZE_MENU, #GTK_ICON_SIZE_SMALL_TOOLBAR. If the stock
- * icon name isn't known, the image will be empty.
+ * icon name isn’t known, the image will be empty.
  * You can register your own stock icon names, see
  * gtk_icon_factory_add_default() and gtk_icon_factory_add().
  * 
- * Return value: a new #GtkImage displaying the stock icon
+ * Returns: a new #GtkImage displaying the stock icon
  *
  * Deprecated: 3.10: Use gtk_image_new_from_icon_name() instead.
  **/
@@ -706,7 +702,7 @@ gtk_image_new_from_stock (const gchar    *stock_id,
  *
  * Creates a #GtkImage displaying an icon set. Sample stock sizes are
  * #GTK_ICON_SIZE_MENU, #GTK_ICON_SIZE_SMALL_TOOLBAR. Instead of using
- * this function, usually it's better to create a #GtkIconFactory, put
+ * this function, usually it’s better to create a #GtkIconFactory, put
  * your icon sets in the icon factory, add the icon factory to the
  * list of default factories with gtk_icon_factory_add_default(), and
  * then use gtk_image_new_from_stock(). This will allow themes to
@@ -716,7 +712,7 @@ gtk_image_new_from_stock (const gchar    *stock_id,
  * icon set; you still need to unref it if you own references.
  * #GtkImage will add its own reference rather than adopting yours.
  * 
- * Return value: a new #GtkImage
+ * Returns: a new #GtkImage
  *
  * Deprecated: 3.10: Use gtk_image_new_from_icon_name() instead.
  **/
@@ -751,7 +747,7 @@ gtk_image_new_from_icon_set (GtkIconSet     *icon_set,
  * keep in mind that the animation will only be shown if the main loop
  * is not busy with something that has a higher priority.
  *
- * Return value: a new #GtkImage widget
+ * Returns: a new #GtkImage widget
  **/
 GtkWidget*
 gtk_image_new_from_animation (GdkPixbufAnimation *animation)
@@ -773,11 +769,11 @@ gtk_image_new_from_animation (GdkPixbufAnimation *animation)
  * @size: (type int): a stock icon size
  * 
  * Creates a #GtkImage displaying an icon from the current icon theme.
- * If the icon name isn't known, a "broken image" icon will be
+ * If the icon name isn’t known, a “broken image” icon will be
  * displayed instead.  If the current icon theme is changed, the icon
  * will be updated appropriately.
  * 
- * Return value: a new #GtkImage displaying the themed icon
+ * Returns: a new #GtkImage displaying the themed icon
  *
  * Since: 2.6
  **/
@@ -800,11 +796,11 @@ gtk_image_new_from_icon_name (const gchar    *icon_name,
  * @size: (type int): a stock icon size
  * 
  * Creates a #GtkImage displaying an icon from the current icon theme.
- * If the icon name isn't known, a "broken image" icon will be
+ * If the icon name isn’t known, a “broken image” icon will be
  * displayed instead.  If the current icon theme is changed, the icon
  * will be updated appropriately.
  * 
- * Return value: a new #GtkImage displaying the themed icon
+ * Returns: a new #GtkImage displaying the themed icon
  *
  * Since: 2.14
  **/
@@ -821,6 +817,96 @@ gtk_image_new_from_gicon (GIcon *icon,
   return GTK_WIDGET (image);
 }
 
+typedef struct {
+  GtkImage *image;
+  gint scale_factor;
+} LoaderData;
+
+static void
+on_loader_size_prepared (GdkPixbufLoader *loader,
+			 gint             width,
+			 gint             height,
+			 gpointer         user_data)
+{
+  LoaderData *loader_data = user_data;
+  gint scale_factor;
+  GdkPixbufFormat *format;
+
+  /* Let the regular icon helper code path handle non-scalable images */
+  format = gdk_pixbuf_loader_get_format (loader);
+  if (!gdk_pixbuf_format_is_scalable (format))
+    {
+      loader_data->scale_factor = 1;
+      return;
+    }
+
+  scale_factor = gtk_widget_get_scale_factor (GTK_WIDGET (loader_data->image));
+  gdk_pixbuf_loader_set_size (loader, width * scale_factor, height * scale_factor);
+  loader_data->scale_factor = scale_factor;
+}
+
+static GdkPixbufAnimation *
+load_scalable_with_loader (GtkImage    *image,
+			   const gchar *file_path,
+			   const gchar *resource_path,
+			   gint        *scale_factor_out)
+{
+  GdkPixbufLoader *loader;
+  GBytes *bytes;
+  char *contents;
+  gsize length;
+  gboolean res;
+  GdkPixbufAnimation *animation;
+  LoaderData loader_data;
+
+  animation = NULL;
+  bytes = NULL;
+
+  loader = gdk_pixbuf_loader_new ();
+  loader_data.image = image;
+
+  g_signal_connect (loader, "size-prepared", G_CALLBACK (on_loader_size_prepared), &loader_data);
+
+  if (resource_path != NULL)
+    {
+      bytes = g_resources_lookup_data (resource_path, G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+    }
+  else if (file_path != NULL)
+    {
+      res = g_file_get_contents (file_path, &contents, &length, NULL);
+      if (res)
+	bytes = g_bytes_new_take (contents, length);
+    }
+  else
+    {
+      g_assert_not_reached ();
+    }
+
+  if (!bytes)
+    goto out;
+
+  if (!gdk_pixbuf_loader_write_bytes (loader, bytes, NULL))
+    goto out;
+
+  if (!gdk_pixbuf_loader_close (loader, NULL))
+    goto out;
+
+  animation = gdk_pixbuf_loader_get_animation (loader);
+  if (animation != NULL)
+    {
+      g_object_ref (animation);
+      if (scale_factor_out != NULL)
+	*scale_factor_out = loader_data.scale_factor;
+    }
+
+ out:
+  gdk_pixbuf_loader_close (loader, NULL);
+  g_object_unref (loader);
+  g_bytes_unref (bytes);
+
+  return animation;
+}
+
 /**
  * gtk_image_set_from_file:
  * @image: a #GtkImage
@@ -834,6 +920,7 @@ gtk_image_set_from_file   (GtkImage    *image,
 {
   GtkImagePrivate *priv;
   GdkPixbufAnimation *anim;
+  gint scale_factor;
   
   g_return_if_fail (GTK_IS_IMAGE (image));
 
@@ -850,7 +937,7 @@ gtk_image_set_from_file   (GtkImage    *image,
       return;
     }
 
-  anim = gdk_pixbuf_animation_new_from_file (filename, NULL);
+  anim = load_scalable_with_loader (image, filename, NULL, &scale_factor);
 
   if (anim == NULL)
     {
@@ -872,6 +959,8 @@ gtk_image_set_from_file   (GtkImage    *image,
   else
     gtk_image_set_from_animation (image, anim);
 
+  _gtk_icon_helper_set_pixbuf_scale (priv->icon_helper, scale_factor);
+
   g_object_unref (anim);
 
   priv->filename = g_strdup (filename);
@@ -892,6 +981,7 @@ gtk_image_set_from_resource (GtkImage    *image,
 {
   GtkImagePrivate *priv;
   GdkPixbufAnimation *animation;
+  gint scale_factor;
 
   g_return_if_fail (GTK_IS_IMAGE (image));
 
@@ -907,7 +997,7 @@ gtk_image_set_from_resource (GtkImage    *image,
       return;
     }
 
-  animation = gdk_pixbuf_animation_new_from_resource (resource_path, NULL);
+  animation = load_scalable_with_loader (image, NULL, resource_path, &scale_factor);
 
   if (animation == NULL)
     {
@@ -924,6 +1014,8 @@ gtk_image_set_from_resource (GtkImage    *image,
     gtk_image_set_from_pixbuf (image, gdk_pixbuf_animation_get_static_image (animation));
   else
     gtk_image_set_from_animation (image, animation);
+
+  _gtk_icon_helper_set_pixbuf_scale (priv->icon_helper, scale_factor);
 
   g_object_notify (G_OBJECT (image), "resource");
 
@@ -1209,7 +1301,7 @@ gtk_image_set_from_surface (GtkImage       *image,
  * to store image data. If the #GtkImage has no image data,
  * the return value will be %GTK_IMAGE_EMPTY.
  * 
- * Return value: image representation being used
+ * Returns: image representation being used
  **/
 GtkImageType
 gtk_image_get_storage_type (GtkImage *image)
@@ -1229,7 +1321,7 @@ gtk_image_get_storage_type (GtkImage *image)
  * The caller of this function does not own a reference to the
  * returned pixbuf.
  * 
- * Return value: (transfer none): the displayed pixbuf, or %NULL if
+ * Returns: (transfer none): the displayed pixbuf, or %NULL if
  * the image is empty
  **/
 GdkPixbuf*
@@ -1316,7 +1408,7 @@ gtk_image_get_icon_set  (GtkImage        *image,
  * The caller of this function does not own a reference to the
  * returned animation.
  * 
- * Return value: (transfer none): the displayed animation, or %NULL if
+ * Returns: (transfer none): the displayed animation, or %NULL if
  * the image is empty
  **/
 GdkPixbufAnimation*
@@ -1404,7 +1496,7 @@ gtk_image_get_gicon (GtkImage     *image,
  * 
  * Creates a new empty #GtkImage widget.
  * 
- * Return value: a newly created #GtkImage widget. 
+ * Returns: a newly created #GtkImage widget. 
  **/
 GtkWidget*
 gtk_image_new (void)
@@ -1480,6 +1572,7 @@ animation_timeout (gpointer data)
 
       priv->animation_timeout =
         gdk_threads_add_timeout (delay, animation_timeout, image);
+      g_source_set_name_by_id (priv->animation_timeout, "[gtk+] animation_timeout");
 
       gtk_widget_queue_draw (widget);
     }
@@ -1500,9 +1593,11 @@ get_animation_frame (GtkImage *image)
         gdk_pixbuf_animation_get_iter (_gtk_icon_helper_peek_animation (priv->icon_helper), NULL);
 
       delay = gdk_pixbuf_animation_iter_get_delay_time (priv->animation_iter);
-      if (delay >= 0)
+      if (delay >= 0) {
         priv->animation_timeout =
           gdk_threads_add_timeout (delay, animation_timeout, image);
+        g_source_set_name_by_id (priv->animation_timeout, "[gtk+] animation_timeout");
+      }
     }
 
   /* don't advance the anim iter here, or we could get frame changes between two
@@ -1523,7 +1618,9 @@ gtk_image_get_preferred_size (GtkImage *image,
 
   context = gtk_widget_get_style_context (GTK_WIDGET (image));
   _gtk_icon_helper_get_size (priv->icon_helper, context, &width, &height);
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   _gtk_misc_get_padding_and_border (GTK_MISC (image), &border);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   width += border.left + border.right;
   height += border.top + border.bottom;
@@ -1562,7 +1659,6 @@ gtk_image_draw (GtkWidget *widget,
 {
   GtkImage *image;
   GtkImagePrivate *priv;
-  GtkMisc *misc;
   GtkStyleContext *context;
   gint x, y, width, height, baseline;
   gfloat xalign, yalign;
@@ -1571,7 +1667,6 @@ gtk_image_draw (GtkWidget *widget,
   g_return_val_if_fail (GTK_IS_IMAGE (widget), FALSE);
 
   image = GTK_IMAGE (widget);
-  misc = GTK_MISC (image);
   priv = image->priv;
 
   context = gtk_widget_get_style_context (widget);
@@ -1583,9 +1678,11 @@ gtk_image_draw (GtkWidget *widget,
                     0, 0,
                     gtk_widget_get_allocated_width (widget), gtk_widget_get_allocated_height (widget));
 
-  gtk_misc_get_alignment (misc, &xalign, &yalign);
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+  gtk_misc_get_alignment (GTK_MISC (image), &xalign, &yalign);
+  _gtk_misc_get_padding_and_border (GTK_MISC (image), &border);
+G_GNUC_END_IGNORE_DEPRECATIONS
   gtk_image_get_preferred_size (image, &width, &height);
-  _gtk_misc_get_padding_and_border (misc, &border);
 
   if (gtk_widget_get_direction (widget) != GTK_TEXT_DIR_LTR)
     xalign = 1.0 - xalign;
@@ -1802,21 +1899,12 @@ void
 gtk_image_set_pixel_size (GtkImage *image,
 			  gint      pixel_size)
 {
-  GtkImagePrivate *priv;
-  gint old_pixel_size;
-
   g_return_if_fail (GTK_IS_IMAGE (image));
 
-  priv = image->priv;
-  old_pixel_size = gtk_image_get_pixel_size (image);
-
-  if (pixel_size != old_pixel_size)
+  if (_gtk_icon_helper_set_pixel_size (image->priv->icon_helper, pixel_size)) 
     {
-      _gtk_icon_helper_set_pixel_size (priv->icon_helper, pixel_size);
-
       if (gtk_widget_get_visible (GTK_WIDGET (image)))
         gtk_widget_queue_resize (GTK_WIDGET (image));
-
       g_object_notify (G_OBJECT (image), "pixel-size");
     }
 }

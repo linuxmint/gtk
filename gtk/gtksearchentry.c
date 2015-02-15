@@ -40,9 +40,9 @@
  * #GtkSearchEntry is a subclass of #GtkEntry that has
  * been tailored for use as a search entry.
  *
- * It will show an inactive symbolic "find" icon when the
- * search entry is empty, and a symbolic "clear" icon when
- * there is text. Clicking on the "clear" icon will empty
+ * It will show an inactive symbolic “find” icon when the
+ * search entry is empty, and a symbolic “clear” icon when
+ * there is text. Clicking on the “clear” icon will empty
  * the search entry.
  *
  * Note that the search/clear icon is shown using a secondary
@@ -175,6 +175,7 @@ reset_timeout (GtkSearchEntry *entry)
   priv->delayed_changed_id = g_timeout_add (DELAYED_TIMEOUT_ID,
                                             gtk_search_entry_changed_timeout_cb,
                                             entry);
+  g_source_set_name_by_id (priv->delayed_changed_id, "[gtk+] gtk_search_entry_changed_timeout_cb");
 }
 
 static void
@@ -195,10 +196,7 @@ gtk_search_entry_changed (GtkEditable *editable)
     }
   else
     {
-      if (gtk_widget_get_direction (GTK_WIDGET (entry)) == GTK_TEXT_DIR_RTL)
-        icon_name = "edit-clear-rtl-symbolic";
-      else
-        icon_name = "edit-clear-symbolic";
+      icon_name = "edit-clear-symbolic";
       cleared = FALSE;
     }
 
@@ -246,7 +244,7 @@ gtk_search_entry_init (GtkSearchEntry *entry)
  * Creates a #GtkSearchEntry, with a find icon when the search field is
  * empty, and a clear icon when it isn't.
  *
- * Return value: a new #GtkSearchEntry
+ * Returns: a new #GtkSearchEntry
  *
  * Since: 3.6
  */

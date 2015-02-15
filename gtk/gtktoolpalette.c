@@ -43,17 +43,17 @@
  * @Short_description: A tool palette with categories
  * @Title: GtkToolPalette
  *
- * A #GtkToolPalette allows you to add #GtkToolItem<!-- -->s to a palette-like
+ * A #GtkToolPalette allows you to add #GtkToolItems to a palette-like
  * container with different categories and drag and drop support.
  *
  * A #GtkToolPalette is created with a call to gtk_tool_palette_new().
  *
- * #GtkToolItem<!-- -->s cannot be added directly to a #GtkToolPalette - 
+ * #GtkToolItems cannot be added directly to a #GtkToolPalette - 
  * instead they are added to a #GtkToolItemGroup which can than be added
  * to a #GtkToolPalette. To add a #GtkToolItemGroup to a #GtkToolPalette,
  * use gtk_container_add().
  *
- * |[
+ * |[<!-- language="C" -->
  * GtkWidget *palette, *group;
  * GtkToolItem *item;
  *
@@ -72,7 +72,7 @@
  * can be used to get the dragged item in the #GtkWidget::drag-data-received
  * signal handler of the drag target.
  *
- * |[
+ * |[<!-- language="C" -->
  * static void
  * passive_canvas_drag_data_received (GtkWidget        *widget,
  *                                    GdkDragContext   *context,
@@ -86,14 +86,14 @@
  *   GtkWidget *palette;
  *   GtkWidget *item;
  *
- *   /<!-- -->* Get the dragged item *<!-- -->/
+ *   // Get the dragged item
  *   palette = gtk_widget_get_ancestor (gtk_drag_get_source_widget (context),
  *                                      GTK_TYPE_TOOL_PALETTE);
  *   if (palette != NULL)
  *     item = gtk_tool_palette_get_drag_item (GTK_TOOL_PALETTE (palette),
  *                                            selection);
  *
- *   /<!-- -->* Do something with item *<!-- -->/
+ *   // Do something with item
  * }
  *
  * GtkWidget *target, palette;
@@ -246,35 +246,39 @@ gtk_tool_palette_set_property (GObject      *object,
   switch (prop_id)
     {
       case PROP_ICON_SIZE:
-        if ((guint) g_value_get_enum (value) != palette->priv->icon_size)
+        if (palette->priv->icon_size != g_value_get_enum (value))
           {
             palette->priv->icon_size = g_value_get_enum (value);
             gtk_tool_palette_reconfigured (palette);
+            g_object_notify_by_pspec (object, pspec);
           }
         break;
 
       case PROP_ICON_SIZE_SET:
-        if ((guint) g_value_get_enum (value) != palette->priv->icon_size)
+        if (palette->priv->icon_size_set != g_value_get_boolean (value))
           {
-            palette->priv->icon_size_set = g_value_get_enum (value);
+            palette->priv->icon_size_set = g_value_get_boolean (value);
             gtk_tool_palette_reconfigured (palette);
+            g_object_notify_by_pspec (object, pspec);
           }
         break;
 
       case PROP_ORIENTATION:
-        if ((guint) g_value_get_enum (value) != palette->priv->orientation)
+        if (palette->priv->orientation != g_value_get_enum (value))
           {
             palette->priv->orientation = g_value_get_enum (value);
             _gtk_orientable_set_style_classes (GTK_ORIENTABLE (palette));
             gtk_tool_palette_reconfigured (palette);
+            g_object_notify_by_pspec (object, pspec);
           }
         break;
 
       case PROP_TOOLBAR_STYLE:
-        if ((guint) g_value_get_enum (value) != palette->priv->style)
+        if (palette->priv->style != g_value_get_enum (value))
           {
             palette->priv->style = g_value_get_enum (value);
             gtk_tool_palette_reconfigured (palette);
+            g_object_notify_by_pspec (object, pspec);
           }
         break;
 
@@ -287,13 +291,21 @@ gtk_tool_palette_set_property (GObject      *object,
         break;
 
       case PROP_HSCROLL_POLICY:
-	palette->priv->hscroll_policy = g_value_get_enum (value);
-	gtk_widget_queue_resize (GTK_WIDGET (palette));
+        if (palette->priv->hscroll_policy != g_value_get_enum (value))
+          {
+	    palette->priv->hscroll_policy = g_value_get_enum (value);
+	    gtk_widget_queue_resize (GTK_WIDGET (palette));
+            g_object_notify_by_pspec (object, pspec);
+          }
 	break;
 
       case PROP_VSCROLL_POLICY:
-	palette->priv->vscroll_policy = g_value_get_enum (value);
-	gtk_widget_queue_resize (GTK_WIDGET (palette));
+        if (palette->priv->vscroll_policy != g_value_get_enum (value))
+          {
+	    palette->priv->vscroll_policy = g_value_get_enum (value);
+	    gtk_widget_queue_resize (GTK_WIDGET (palette));
+            g_object_notify_by_pspec (object, pspec);
+          }
 	break;
 
       default:
@@ -943,7 +955,7 @@ gtk_tool_palette_class_init (GtkToolPaletteClass *cls)
                                                       P_("Size of icons in this tool palette"),
                                                       GTK_TYPE_ICON_SIZE,
                                                       DEFAULT_ICON_SIZE,
-                                                      GTK_PARAM_READWRITE));
+                                                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkToolPalette:icon-size-set:
@@ -955,10 +967,10 @@ gtk_tool_palette_class_init (GtkToolPaletteClass *cls)
   g_object_class_install_property (oclass,
                                    PROP_ICON_SIZE_SET,
                                    g_param_spec_boolean ("icon-size-set",
-                                                      P_("Icon size set"),
-                                                      P_("Whether the icon-size property has been set"),
-                                                      FALSE,
-                                                      GTK_PARAM_READWRITE));
+                                                         P_("Icon size set"),
+                                                         P_("Whether the icon-size property has been set"),
+                                                         FALSE,
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   /**
    * GtkToolPalette:toolbar-style:
@@ -973,7 +985,7 @@ gtk_tool_palette_class_init (GtkToolPaletteClass *cls)
                                                       P_("Style of items in the tool palette"),
                                                       GTK_TYPE_TOOLBAR_STYLE,
                                                       DEFAULT_TOOLBAR_STYLE,
-                                                      GTK_PARAM_READWRITE));
+                                                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
 
   /**
@@ -1624,7 +1636,7 @@ gtk_tool_palette_set_drag_source (GtkToolPalette            *palette,
  *     on that widget
  * @targets: the #GtkToolPaletteDragTargets which the widget
  *     should support
- * @actions: the #GdkDragAction<!-- -->s which the widget should suppport
+ * @actions: the #GdkDragActions which the widget should suppport
  *
  * Sets @palette as drag source (see gtk_tool_palette_set_drag_source())
  * and sets @widget as a drag destination for drags from @palette.

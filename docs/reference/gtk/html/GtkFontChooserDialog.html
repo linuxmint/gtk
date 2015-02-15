@@ -5,10 +5,10 @@
 <title>GTK+ 3 Reference Manual: GtkFontChooserDialog</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
-<link rel="up" href="SelectorWidgets.html" title="Selectors (Color/File/Font)">
+<link rel="up" href="SelectorWidgets.html" title="Selector Widgets and Dialogs">
 <link rel="prev" href="GtkFontChooserWidget.html" title="GtkFontChooserWidget">
 <link rel="next" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -57,16 +57,22 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GtkFontChooserDialog.html#GtkFontChooserDialog-struct" title="struct GtkFontChooserDialog">GtkFontChooserDialog</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkFontChooserDialog.html#GtkFontChooserDialogClass" title="struct GtkFontChooserDialogClass">GtkFontChooserDialogClass</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="GtkFontChooserDialog.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBin.html" title="GtkBin">GtkBin</a>
@@ -91,10 +97,10 @@ GtkFontChooserDialog implements
 <p>The <a class="link" href="GtkFontChooserDialog.html" title="GtkFontChooserDialog"><span class="type">GtkFontChooserDialog</span></a> widget is a dialog for selecting a font.
 It implements the <a class="link" href="GtkFontChooser.html" title="GtkFontChooser"><span class="type">GtkFontChooser</span></a> interface.</p>
 <div class="refsect2">
-<a name="GtkFontChooserDialog-BUILDER-UI"></a><h3>GtkFontChooserDialog as GtkBuildable</h3>
-The GtkFontChooserDialog implementation of the GtkBuildable interface
-exposes the buttons with the names
-"select_button" and "cancel_button.
+<a name="id-1.3.14.14.8.3"></a><h3>GtkFontChooserDialog as GtkBuildable</h3>
+<p>The GtkFontChooserDialog implementation of the <a class="link" href="GtkBuildable.html" title="GtkBuildable"><span class="type">GtkBuildable</span></a>
+interface exposes the buttons with the names “select_button”
+and “cancel_button”.</p>
 </div>
 </div>
 <div class="refsect1">
@@ -102,7 +108,7 @@ exposes the buttons with the names
 <div class="refsect2">
 <a name="gtk-font-chooser-dialog-new"></a><h3>gtk_font_chooser_dialog_new ()</h3>
 <pre class="programlisting"><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="returnvalue">GtkWidget</span></a> *
-gtk_font_chooser_dialog_new (<em class="parameter"><code>const <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+gtk_font_chooser_dialog_new (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
                              <em class="parameter"><code><a class="link" href="GtkWindow.html" title="GtkWindow"><span class="type">GtkWindow</span></a> *parent</code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkFontChooserDialog.html" title="GtkFontChooserDialog"><span class="type">GtkFontChooserDialog</span></a>.</p>
 <div class="refsect3">
@@ -116,13 +122,13 @@ gtk_font_chooser_dialog_new (<em class="parameter"><code>const <a href="http://l
 <tbody>
 <tr>
 <td class="parameter_name"><p>title</p></td>
-<td class="parameter_description"><p> Title of the dialog, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> Title of the dialog, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>parent</p></td>
-<td class="parameter_description"><p> Transient parent of the dialog, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> Transient parent of the dialog, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -141,6 +147,29 @@ gtk_font_chooser_dialog_new (<em class="parameter"><code>const <a href="http://l
 <a name="GtkFontChooserDialog-struct"></a><h3>struct GtkFontChooserDialog</h3>
 <pre class="programlisting">struct GtkFontChooserDialog;</pre>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GtkFontChooserDialogClass"></a><h3>struct GtkFontChooserDialogClass</h3>
+<pre class="programlisting">struct GtkFontChooserDialogClass {
+  GtkDialogClass parent_class;
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.14.14.10.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody><tr>
+<td class="struct_member_name"><p><a class="link" href="GtkDialog.html#GtkDialogClass" title="struct GtkDialogClass"><span class="type">GtkDialogClass</span></a> <em class="structfield"><code><a name="GtkFontChooserDialogClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkFontChooserDialog.see-also"></a><h2>See Also</h2>
@@ -149,6 +178,6 @@ gtk_font_chooser_dialog_new (<em class="parameter"><code>const <a href="http://l
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

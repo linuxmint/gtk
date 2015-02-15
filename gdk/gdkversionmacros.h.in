@@ -12,9 +12,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
 #if !defined (__GDK_H_INSIDE__) && !defined (GDK_COMPILATION)
@@ -114,6 +112,25 @@
  */
 #define GDK_VERSION_3_10        (G_ENCODE_VERSION (3, 10))
 
+/**
+ * GDK_VERSION_3_12:
+ *
+ * A macro that evaluates to the 3.12 version of GDK, in a format
+ * that can be used by the C pre-processor.
+ *
+ * Since: 3.12
+ */
+#define GDK_VERSION_3_12        (G_ENCODE_VERSION (3, 12))
+
+/**
+ * GDK_VERSION_3_14:
+ *
+ * A macro that evaluates to the 3.14 version of GDK, in a format
+ * that can be used by the C pre-processor.
+ *
+ * Since: 3.14
+ */
+#define GDK_VERSION_3_14        (G_ENCODE_VERSION (3, 14))
 
 /* evaluates to the current stable version; for development cycles,
  * this means the next stable target
@@ -271,4 +288,33 @@
 # define GDK_AVAILABLE_IN_3_10                _GDK_EXTERN
 #endif
 
+#if GDK_VERSION_MIN_REQUIRED >= GDK_VERSION_3_12
+# define GDK_DEPRECATED_IN_3_12               GDK_DEPRECATED
+# define GDK_DEPRECATED_IN_3_12_FOR(f)        GDK_DEPRECATED_FOR(f)
+#else
+# define GDK_DEPRECATED_IN_3_12               _GDK_EXTERN
+# define GDK_DEPRECATED_IN_3_12_FOR(f)        _GDK_EXTERN
+#endif
+
+#if GDK_VERSION_MAX_ALLOWED < GDK_VERSION_3_12
+# define GDK_AVAILABLE_IN_3_12                GDK_UNAVAILABLE(3, 12)
+#else
+# define GDK_AVAILABLE_IN_3_12                _GDK_EXTERN
+#endif
+
+#if GDK_VERSION_MIN_REQUIRED >= GDK_VERSION_3_14
+# define GDK_DEPRECATED_IN_3_14               GDK_DEPRECATED
+# define GDK_DEPRECATED_IN_3_14_FOR(f)        GDK_DEPRECATED_FOR(f)
+#else
+# define GDK_DEPRECATED_IN_3_14               _GDK_EXTERN
+# define GDK_DEPRECATED_IN_3_14_FOR(f)        _GDK_EXTERN
+#endif
+
+#if GDK_VERSION_MAX_ALLOWED < GDK_VERSION_3_14
+# define GDK_AVAILABLE_IN_3_14                GDK_UNAVAILABLE(3, 14)
+#else
+# define GDK_AVAILABLE_IN_3_14                _GDK_EXTERN
+#endif
+
 #endif  /* __GDK_VERSION_MACROS_H__ */
+

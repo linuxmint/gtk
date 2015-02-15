@@ -8,7 +8,7 @@
 <link rel="up" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
 <link rel="prev" href="GtkListStore.html" title="GtkListStore">
 <link rel="next" href="MenusAndCombos.html" title="Menus, Combo Box, Toolbar">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -99,7 +99,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkTreeStore.html#gtk-tree-store-remove" title="gtk_tree_store_remove ()">gtk_tree_store_remove</a> <span class="c_punctuation">()</span>
@@ -163,7 +163,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkTreeStore.html#gtk-tree-store-is-ancestor" title="gtk_tree_store_is_ancestor ()">gtk_tree_store_is_ancestor</a> <span class="c_punctuation">()</span>
@@ -171,7 +171,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkTreeStore.html#gtk-tree-store-iter-depth" title="gtk_tree_store_iter_depth ()">gtk_tree_store_iter_depth</a> <span class="c_punctuation">()</span>
@@ -187,7 +187,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkTreeStore.html#gtk-tree-store-iter-is-valid" title="gtk_tree_store_iter_is_valid ()">gtk_tree_store_iter_is_valid</a> <span class="c_punctuation">()</span>
@@ -243,7 +243,7 @@
 </div>
 <div class="refsect1">
 <a name="GtkTreeStore.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
     <span class="lineart">╰──</span> GtkTreeStore
 </pre>
 </div>
@@ -264,17 +264,17 @@ GtkTreeStore implements
 widget.  It implements the <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> interface, and consequentialy,
 can use all of the methods available there.  It also implements the
 <a class="link" href="GtkTreeSortable.html" title="GtkTreeSortable"><span class="type">GtkTreeSortable</span></a> interface so it can be sorted by the view.  Finally,
-it also implements the tree</p>
-<a class="link" href="gtk3-GtkTreeView-drag-and-drop.html" title="GtkTreeView drag-and-drop">drag and drop</a><p>interfaces.</p>
+it also implements the tree
+<a class="link" href="gtk3-GtkTreeView-drag-and-drop.html" title="GtkTreeView drag-and-drop">drag and drop</a>
+interfaces.</p>
 <div class="refsect2">
-<a name="GtkTreeStore-BUILDER-UI"></a><h3>GtkTreeStore as GtkBuildable</h3>
-The GtkTreeStore implementation of the <a class="link" href="GtkBuildable.html" title="GtkBuildable"><span class="type">GtkBuildable</span></a> interface allows
-to specify the model columns with a &lt;columns&gt; element that may
-contain multiple &lt;column&gt; elements, each specifying one model
-column. The "type" attribute specifies the data type for the column.
-<div class="example">
-<a name="id-1.3.12.28.8.5.3"></a><p class="title"><b>Example 45. A UI Definition fragment for a tree store</b></p>
-<div class="example-contents">
+<a name="id-1.3.12.28.8.3"></a><h3>GtkTreeStore as GtkBuildable</h3>
+<p>The GtkTreeStore implementation of the <a class="link" href="GtkBuildable.html" title="GtkBuildable"><span class="type">GtkBuildable</span></a> interface allows
+to specify the model columns with a &lt;columns&gt; element that may contain
+multiple &lt;column&gt; elements, each specifying one model column. The “type”
+attribute specifies the data type for the column.</p>
+<p>An example of a UI Definition fragment for a tree store:</p>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -297,8 +297,7 @@ column. The "type" attribute specifies the data type for the column.
   </table>
 </div>
 
-</div>
-<br class="example-break">
+<p></p>
 </div>
 </div>
 <div class="refsect1">
@@ -306,17 +305,17 @@ column. The "type" attribute specifies the data type for the column.
 <div class="refsect2">
 <a name="gtk-tree-store-new"></a><h3>gtk_tree_store_new ()</h3>
 <pre class="programlisting"><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="returnvalue">GtkTreeStore</span></a> *
-gtk_tree_store_new (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_columns</code></em>,
+gtk_tree_store_new (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_columns</code></em>,
                     <em class="parameter"><code>...</code></em>);</pre>
 <p>Creates a new tree store as with <em class="parameter"><code>n_columns</code></em>
  columns each of the types passed
 in.  Note that only types derived from standard GObject fundamental types
 are supported.</p>
 <p>As an example, <code class="literal">gtk_tree_store_new (3, G_TYPE_INT, G_TYPE_STRING,
-GDK_TYPE_PIXBUF);</code> will create a new <a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> with three columns, of type</p>
-<span class="type">int</span>, <span class="type">string</span> and <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> respectively.
+GDK_TYPE_PIXBUF);</code> will create a new <a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> with three columns, of type
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>, <a href="https://developer.gnome.org/gobject/unstable/gobject-Standard-Parameter-and-Value-Types.html#gchararray"><span class="type">gchararray</span></a>, and <span class="type">GdkPixbuf</span> respectively.</p>
 <div class="refsect3">
-<a name="id-1.3.12.28.9.2.9"></a><h4>Parameters</h4>
+<a name="id-1.3.12.28.9.2.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -331,14 +330,14 @@ GDK_TYPE_PIXBUF);</code> will create a new <a class="link" href="GtkTreeStore.ht
 </tr>
 <tr>
 <td class="parameter_name"><p>...</p></td>
-<td class="parameter_description"><p>all <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> types for the columns, from first to last</p></td>
+<td class="parameter_description"><p>all <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> types for the columns, from first to last</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.12.28.9.2.10"></a><h4>Returns</h4>
+<a name="id-1.3.12.28.9.2.7"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a></p>
 <p></p>
 </div>
@@ -347,8 +346,8 @@ GDK_TYPE_PIXBUF);</code> will create a new <a class="link" href="GtkTreeStore.ht
 <div class="refsect2">
 <a name="gtk-tree-store-newv"></a><h3>gtk_tree_store_newv ()</h3>
 <pre class="programlisting"><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="returnvalue">GtkTreeStore</span></a> *
-gtk_tree_store_newv (<em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_columns</code></em>,
-                     <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> *types</code></em>);</pre>
+gtk_tree_store_newv (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_columns</code></em>,
+                     <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> *types</code></em>);</pre>
 <p>Non vararg creation function.  Used primarily by language bindings.</p>
 <div class="refsect3">
 <a name="id-1.3.12.28.9.3.5"></a><h4>Parameters</h4>
@@ -366,7 +365,7 @@ gtk_tree_store_newv (<em class="parameter"><code><a href="http://library.gnome.o
 </tr>
 <tr>
 <td class="parameter_name"><p>types</p></td>
-<td class="parameter_description"><p> an array of <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> types for the columns, from first to last. </p></td>
+<td class="parameter_description"><p> an array of <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> types for the columns, from first to last. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_columns]</span></td>
 </tr>
 </tbody>
@@ -374,8 +373,7 @@ gtk_tree_store_newv (<em class="parameter"><code><a href="http://library.gnome.o
 </div>
 <div class="refsect3">
 <a name="id-1.3.12.28.9.3.6"></a><h4>Returns</h4>
-<p> a new <a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a>
-Rename to: gtk_tree_store_new. </p>
+<p> a new <a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
@@ -384,9 +382,9 @@ Rename to: gtk_tree_store_new. </p>
 <a name="gtk-tree-store-set-column-types"></a><h3>gtk_tree_store_set_column_types ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_tree_store_set_column_types (<em class="parameter"><code><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> *tree_store</code></em>,
-                                 <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_columns</code></em>,
-                                 <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> *types</code></em>);</pre>
-<p>This function is meant primarily for <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObjects</span></a> that inherit from 
+                                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_columns</code></em>,
+                                 <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> *types</code></em>);</pre>
+<p>This function is meant primarily for <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObjects</span></a> that inherit from 
 <a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a>, and should only be used when constructing a new 
 <a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a>.  It will not function after a row has been added, 
 or a method on the <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> interface is called.</p>
@@ -411,7 +409,7 @@ or a method on the <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"
 </tr>
 <tr>
 <td class="parameter_name"><p>types</p></td>
-<td class="parameter_description"><p> An array of <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> types, one for each column. </p></td>
+<td class="parameter_description"><p> An array of <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#GType"><span class="type">GType</span></a> types, one for each column. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_columns]</span></td>
 </tr>
 </tbody>
@@ -424,8 +422,8 @@ or a method on the <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_tree_store_set_value (<em class="parameter"><code><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> *tree_store</code></em>,
                           <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> column</code></em>,
-                          <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
+                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> column</code></em>,
+                          <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Sets the data in the cell specified by <em class="parameter"><code>iter</code></em>
  and <em class="parameter"><code>column</code></em>
 .
@@ -477,10 +475,10 @@ gtk_tree_store_set (<em class="parameter"><code><a class="link" href="GtkTreeSto
 The variable argument list should contain integer column numbers,
 each column number followed by the value to be set.
 The list is terminated by a -1. For example, to set column 0 with type
-<a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#G-TYPE-STRING:CAPS"><code class="literal">G_TYPE_STRING</code></a> to "Foo", you would write
+<a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#G-TYPE-STRING:CAPS"><code class="literal">G_TYPE_STRING</code></a> to “Foo”, you would write
 <code class="literal">gtk_tree_store_set (store, iter, 0, "Foo", -1)</code>.</p>
-<p>The value will be referenced by the store if it is a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#G-TYPE-OBJECT:CAPS"><code class="literal">G_TYPE_OBJECT</code></a>, and it
-will be copied if it is a <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#G-TYPE-STRING:CAPS"><code class="literal">G_TYPE_STRING</code></a> or <a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#G-TYPE-BOXED:CAPS"><code class="literal">G_TYPE_BOXED</code></a>.</p>
+<p>The value will be referenced by the store if it is a <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#G-TYPE-OBJECT:CAPS"><code class="literal">G_TYPE_OBJECT</code></a>, and it
+will be copied if it is a <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#G-TYPE-STRING:CAPS"><code class="literal">G_TYPE_STRING</code></a> or <a href="https://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#G-TYPE-BOXED:CAPS"><code class="literal">G_TYPE_BOXED</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.12.28.9.6.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -516,7 +514,7 @@ will be copied if it is a <a href="http://library.gnome.org/devel/gobject/unstab
 gtk_tree_store_set_valist (<em class="parameter"><code><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> *tree_store</code></em>,
                            <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>,
                            <em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);</pre>
-<p>See <a class="link" href="GtkTreeStore.html#gtk-tree-store-set" title="gtk_tree_store_set ()"><code class="function">gtk_tree_store_set()</code></a>; this version takes a <span class="type">va_list</span> for
+<p>See <a class="link" href="GtkTreeStore.html#gtk-tree-store-set" title="gtk_tree_store_set ()"><code class="function">gtk_tree_store_set()</code></a>; this version takes a va_list for
 use by language bindings.</p>
 <div class="refsect3">
 <a name="id-1.3.12.28.9.7.5"></a><h4>Parameters</h4>
@@ -539,8 +537,7 @@ use by language bindings.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>var_args</p></td>
-<td class="parameter_description">
-<span class="type">va_list</span> of column/value pairs</td>
+<td class="parameter_description"><p>va_list of column/value pairs</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -553,9 +550,9 @@ use by language bindings.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_tree_store_set_valuesv (<em class="parameter"><code><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> *tree_store</code></em>,
                             <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *columns</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *values</code></em>,
-                            <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_values</code></em>);</pre>
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *columns</code></em>,
+                            <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *values</code></em>,
+                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_values</code></em>);</pre>
 <p>A variant of <a class="link" href="GtkTreeStore.html#gtk-tree-store-set-valist" title="gtk_tree_store_set_valist ()"><code class="function">gtk_tree_store_set_valist()</code></a> which takes
 the columns and values as two arrays, instead of varargs.  This
 function is mainly intended for language bindings or in case
@@ -604,7 +601,7 @@ arrays</p></td>
 <hr>
 <div class="refsect2">
 <a name="gtk-tree-store-remove"></a><h3>gtk_tree_store_remove ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_tree_store_remove (<em class="parameter"><code><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> *tree_store</code></em>,
                        <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);</pre>
 <p>Removes <em class="parameter"><code>iter</code></em>
@@ -637,8 +634,8 @@ last one.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.12.28.9.9.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>iter</code></em>
-is still valid, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if not.</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>iter</code></em>
+is still valid, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if not.</p>
 <p></p>
 </div>
 </div>
@@ -649,9 +646,9 @@ is still valid, <a href="http://library.gnome.org/devel/glib/unstable/glib-Stand
 gtk_tree_store_insert (<em class="parameter"><code><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> *tree_store</code></em>,
                        <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>,
                        <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *parent</code></em>,
-                       <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> position</code></em>);</pre>
+                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> position</code></em>);</pre>
 <p>Creates a new row at <em class="parameter"><code>position</code></em>
-.  If parent is non-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then the row will be
+.  If parent is non-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then the row will be
 made a child of <em class="parameter"><code>parent</code></em>
 .  Otherwise, the row will be created at the toplevel.
 If <em class="parameter"><code>position</code></em>
@@ -682,8 +679,8 @@ called.  To fill in values, you need to call <a class="link" href="GtkTreeStore.
 </tr>
 <tr>
 <td class="parameter_name"><p>parent</p></td>
-<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>position</p></td>
@@ -704,11 +701,11 @@ gtk_tree_store_insert_before (<em class="parameter"><code><a class="link" href="
                               <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *sibling</code></em>);</pre>
 <p>Inserts a new row before <em class="parameter"><code>sibling</code></em>
 .  If <em class="parameter"><code>sibling</code></em>
- is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then the row will
+ is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then the row will
 be appended to <em class="parameter"><code>parent</code></em>
- 's children.  If <em class="parameter"><code>parent</code></em>
+ ’s children.  If <em class="parameter"><code>parent</code></em>
  and <em class="parameter"><code>sibling</code></em>
- are <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then
+ are <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then
 the row will be appended to the toplevel.  If both <em class="parameter"><code>sibling</code></em>
  and <em class="parameter"><code>parent</code></em>
  are
@@ -743,13 +740,13 @@ this function is called.  To fill in values, you need to call
 </tr>
 <tr>
 <td class="parameter_name"><p>parent</p></td>
-<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>sibling</p></td>
-<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -765,11 +762,11 @@ gtk_tree_store_insert_after (<em class="parameter"><code><a class="link" href="G
                              <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *sibling</code></em>);</pre>
 <p>Inserts a new row after <em class="parameter"><code>sibling</code></em>
 .  If <em class="parameter"><code>sibling</code></em>
- is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then the row will be
+ is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then the row will be
 prepended to <em class="parameter"><code>parent</code></em>
- 's children.  If <em class="parameter"><code>parent</code></em>
+ ’s children.  If <em class="parameter"><code>parent</code></em>
  and <em class="parameter"><code>sibling</code></em>
- are <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then
+ are <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then
 the row will be prepended to the toplevel.  If both <em class="parameter"><code>sibling</code></em>
  and <em class="parameter"><code>parent</code></em>
  are
@@ -804,13 +801,13 @@ this function is called.  To fill in values, you need to call
 </tr>
 <tr>
 <td class="parameter_name"><p>parent</p></td>
-<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>sibling</p></td>
-<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -823,7 +820,7 @@ this function is called.  To fill in values, you need to call
 gtk_tree_store_insert_with_values (<em class="parameter"><code><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> *tree_store</code></em>,
                                    <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>,
                                    <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *parent</code></em>,
-                                   <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> position</code></em>,
+                                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> position</code></em>,
                                    <em class="parameter"><code>...</code></em>);</pre>
 <p>Creates a new row at <em class="parameter"><code>position</code></em>
 . <em class="parameter"><code>iter</code></em>
@@ -871,13 +868,13 @@ inserting rows in a sorted tree store.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>iter</p></td>
-<td class="parameter_description"><p> An unset <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> to set the new row, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> An unset <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> to set the new row, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>parent</p></td>
-<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>position</p></td>
@@ -901,10 +898,10 @@ inserting rows in a sorted tree store.</p>
 gtk_tree_store_insert_with_valuesv (<em class="parameter"><code><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> *tree_store</code></em>,
                                     <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>,
                                     <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *parent</code></em>,
-                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> position</code></em>,
-                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *columns</code></em>,
-                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *values</code></em>,
-                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_values</code></em>);</pre>
+                                    <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> position</code></em>,
+                                    <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *columns</code></em>,
+                                    <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *values</code></em>,
+                                    <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n_values</code></em>);</pre>
 <p>A variant of <a class="link" href="GtkTreeStore.html#gtk-tree-store-insert-with-values" title="gtk_tree_store_insert_with_values ()"><code class="function">gtk_tree_store_insert_with_values()</code></a> which takes
 the columns and values as two arrays, instead of varargs.  This
 function is mainly intended for language bindings.</p>
@@ -924,13 +921,13 @@ function is mainly intended for language bindings.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>iter</p></td>
-<td class="parameter_description"><p> An unset <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> to set the new row, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> An unset <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> to set the new row, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>parent</p></td>
-<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>position</p></td>
@@ -968,7 +965,7 @@ gtk_tree_store_prepend (<em class="parameter"><code><a class="link" href="GtkTre
                         <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *parent</code></em>);</pre>
 <p>Prepends a new row to <em class="parameter"><code>tree_store</code></em>
 .  If <em class="parameter"><code>parent</code></em>
- is non-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then it will prepend
+ is non-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then it will prepend
 the new row before the first child of <em class="parameter"><code>parent</code></em>
 , otherwise it will prepend a row
 to the top level.  <em class="parameter"><code>iter</code></em>
@@ -996,8 +993,8 @@ call <a class="link" href="GtkTreeStore.html#gtk-tree-store-set" title="gtk_tree
 </tr>
 <tr>
 <td class="parameter_name"><p>parent</p></td>
-<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1012,7 +1009,7 @@ gtk_tree_store_append (<em class="parameter"><code><a class="link" href="GtkTree
                        <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *parent</code></em>);</pre>
 <p>Appends a new row to <em class="parameter"><code>tree_store</code></em>
 .  If <em class="parameter"><code>parent</code></em>
- is non-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then it will append the
+ is non-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, then it will append the
 new row after the last child of <em class="parameter"><code>parent</code></em>
 , otherwise it will append a row to
 the top level.  <em class="parameter"><code>iter</code></em>
@@ -1040,8 +1037,8 @@ be empty after this function is called.  To fill in values, you need to call
 </tr>
 <tr>
 <td class="parameter_name"><p>parent</p></td>
-<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> A valid <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1050,11 +1047,11 @@ be empty after this function is called.  To fill in values, you need to call
 <hr>
 <div class="refsect2">
 <a name="gtk-tree-store-is-ancestor"></a><h3>gtk_tree_store_is_ancestor ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_tree_store_is_ancestor (<em class="parameter"><code><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> *tree_store</code></em>,
                             <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>,
                             <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *descendant</code></em>);</pre>
-<p>Returns <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>iter</code></em>
+<p>Returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>iter</code></em>
  is an ancestor of <em class="parameter"><code>descendant</code></em>
 .  That is, <em class="parameter"><code>iter</code></em>
  is the
@@ -1089,7 +1086,7 @@ parent (or grandparent or great-grandparent) of <em class="parameter"><code>desc
 </div>
 <div class="refsect3">
 <a name="id-1.3.12.28.9.17.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if <em class="parameter"><code>iter</code></em>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if <em class="parameter"><code>iter</code></em>
 is an ancestor of <em class="parameter"><code>descendant</code></em>
 </p>
 <p></p>
@@ -1098,7 +1095,7 @@ is an ancestor of <em class="parameter"><code>descendant</code></em>
 <hr>
 <div class="refsect2">
 <a name="gtk-tree-store-iter-depth"></a><h3>gtk_tree_store_iter_depth ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 gtk_tree_store_iter_depth (<em class="parameter"><code><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> *tree_store</code></em>,
                            <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);</pre>
 <p>Returns the depth of <em class="parameter"><code>iter</code></em>
@@ -1159,7 +1156,7 @@ gtk_tree_store_clear (<em class="parameter"><code><a class="link" href="GtkTreeS
 <hr>
 <div class="refsect2">
 <a name="gtk-tree-store-iter-is-valid"></a><h3>gtk_tree_store_iter_is_valid ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_tree_store_iter_is_valid (<em class="parameter"><code><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> *tree_store</code></em>,
                               <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);</pre>
 <p>WARNING: This function is slow. Only use it for debugging and/or testing
@@ -1189,7 +1186,7 @@ purposes.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.12.28.9.20.7"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the iter is valid, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the iter is invalid.</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the iter is valid, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if the iter is invalid.</p>
 <p></p>
 </div>
 <p class="since">Since 2.2</p>
@@ -1200,7 +1197,7 @@ purposes.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_tree_store_reorder (<em class="parameter"><code><a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a> *tree_store</code></em>,
                         <em class="parameter"><code><a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *parent</code></em>,
-                        <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *new_order</code></em>);</pre>
+                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *new_order</code></em>);</pre>
 <p>Reorders the children of <em class="parameter"><code>parent</code></em>
  in <em class="parameter"><code>tree_store</code></em>
  to follow the order
@@ -1218,13 +1215,13 @@ unsorted stores.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>tree_store</p></td>
-<td class="parameter_description"><p>A <a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a>.</p></td>
+<td class="parameter_description"><p>A <a class="link" href="GtkTreeStore.html" title="GtkTreeStore"><span class="type">GtkTreeStore</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>parent</p></td>
-<td class="parameter_description"><p>A <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> A <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>new_order</p></td>
@@ -1295,7 +1292,7 @@ gtk_tree_store_move_before (<em class="parameter"><code><a class="link" href="Gt
 <em class="parameter"><code>position</code></em>
  should be in the same level. Note that this function only
 works with unsorted stores. If <em class="parameter"><code>position</code></em>
- is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, <em class="parameter"><code>iter</code></em>
+ is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, <em class="parameter"><code>iter</code></em>
  will be
 moved to the end of the level.</p>
 <div class="refsect3">
@@ -1319,8 +1316,8 @@ moved to the end of the level.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>position</p></td>
-<td class="parameter_description"><p> A <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> A <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1342,7 +1339,7 @@ gtk_tree_store_move_after (<em class="parameter"><code><a class="link" href="Gtk
 <em class="parameter"><code>position</code></em>
  should be in the same level. Note that this function only
 works with unsorted stores. If <em class="parameter"><code>position</code></em>
- is <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, <em class="parameter"><code>iter</code></em>
+ is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, <em class="parameter"><code>iter</code></em>
  will be moved
 to the start of the level.</p>
 <div class="refsect3">
@@ -1367,7 +1364,7 @@ to the start of the level.</p>
 <tr>
 <td class="parameter_name"><p>position</p></td>
 <td class="parameter_description"><p> A <a class="link" href="GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -1389,6 +1386,6 @@ to the start of the level.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

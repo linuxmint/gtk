@@ -52,9 +52,7 @@
 #include "deprecated/gtktearoffmenuitem.h"
 
 /* GObjectClass */
-static GObject  *gtk_tree_menu_constructor                    (GType                  type,
-                                                               guint                  n_construct_properties,
-                                                               GObjectConstructParam *construct_properties);
+static void      gtk_tree_menu_constructed                    (GObject            *object);
 static void      gtk_tree_menu_dispose                        (GObject            *object);
 static void      gtk_tree_menu_finalize                       (GObject            *object);
 static void      gtk_tree_menu_set_property                   (GObject            *object,
@@ -227,7 +225,7 @@ _gtk_tree_menu_class_init (GtkTreeMenuClass *class)
 
   tree_menu_path_quark = g_quark_from_static_string ("gtk-tree-menu-path");
 
-  object_class->constructor  = gtk_tree_menu_constructor;
+  object_class->constructed  = gtk_tree_menu_constructed;
   object_class->dispose      = gtk_tree_menu_dispose;
   object_class->finalize     = gtk_tree_menu_finalize;
   object_class->set_property = gtk_tree_menu_set_property;
@@ -397,20 +395,13 @@ _gtk_tree_menu_class_init (GtkTreeMenuClass *class)
 /****************************************************************
  *                         GObjectClass                         *
  ****************************************************************/
-static GObject  *
-gtk_tree_menu_constructor (GType                  type,
-                           guint                  n_construct_properties,
-                           GObjectConstructParam *construct_properties)
+static void
+gtk_tree_menu_constructed (GObject *object)
 {
-  GObject            *object;
-  GtkTreeMenu        *menu;
-  GtkTreeMenuPrivate *priv;
+  GtkTreeMenu *menu = GTK_TREE_MENU (object);
+  GtkTreeMenuPrivate *priv = menu->priv;
 
-  object = G_OBJECT_CLASS (_gtk_tree_menu_parent_class)->constructor
-    (type, n_construct_properties, construct_properties);
-
-  menu = GTK_TREE_MENU (object);
-  priv = menu->priv;
+  G_OBJECT_CLASS (_gtk_tree_menu_parent_class)->constructed (object);
 
   if (!priv->area)
     {
@@ -424,8 +415,6 @@ gtk_tree_menu_constructor (GType                  type,
   priv->size_changed_id =
     g_signal_connect (priv->context, "notify",
                       G_CALLBACK (context_size_changed_cb), menu);
-
-  return object;
 }
 
 static void
@@ -1564,7 +1553,7 @@ gtk_tree_menu_set_model_internal (GtkTreeMenu  *menu,
  *
  * Creates a new #GtkTreeMenu.
  *
- * Return value: A newly created #GtkTreeMenu with no model or root.
+ * Returns: A newly created #GtkTreeMenu with no model or root.
  *
  * Since: 3.0
  */
@@ -1580,7 +1569,7 @@ _gtk_tree_menu_new (void)
  *
  * Creates a new #GtkTreeMenu using @area to render its cells.
  *
- * Return value: A newly created #GtkTreeMenu with no model or root.
+ * Returns: A newly created #GtkTreeMenu with no model or root.
  *
  * Since: 3.0
  */
@@ -1600,7 +1589,7 @@ _gtk_tree_menu_new_with_area (GtkCellArea    *area)
  *
  * Creates a new #GtkTreeMenu hierarchy from the provided @model and @root using @area to render its cells.
  *
- * Return value: A newly created #GtkTreeMenu.
+ * Returns: A newly created #GtkTreeMenu.
  *
  * Since: 3.0
  */
@@ -1643,8 +1632,8 @@ _gtk_tree_menu_set_model (GtkTreeMenu  *menu,
  *
  * Gets the @model currently used for the menu heirarhcy.
  *
- * Return value: (transfer none): the #GtkTreeModel which is used
- * for @menu's hierarchy.
+ * Returns: (transfer none): the #GtkTreeModel which is used
+ * for @menu’s hierarchy.
  *
  * Since: 3.0
  */
@@ -1665,7 +1654,7 @@ _gtk_tree_menu_get_model (GtkTreeMenu *menu)
  * @menu: a #GtkTreeMenu
  * @path: (allow-none): the #GtkTreePath which is the root of @menu, or %NULL.
  *
- * Sets the root of a @menu's hierarchy to be @path. @menu must already
+ * Sets the root of a @menu’s hierarchy to be @path. @menu must already
  * have a model set and @path must point to a valid path inside the model.
  *
  * Since: 3.0
@@ -1696,10 +1685,10 @@ _gtk_tree_menu_set_root (GtkTreeMenu *menu,
  * _gtk_tree_menu_get_root:
  * @menu: a #GtkTreeMenu
  *
- * Gets the @root path for @menu's hierarchy, or returns %NULL if @menu
+ * Gets the @root path for @menu’s hierarchy, or returns %NULL if @menu
  * has no model or is building a heirarchy for the entire model. *
  *
- * Return value: (transfer full) (allow-none): A newly created #GtkTreePath
+ * Returns: (transfer full) (allow-none): A newly created #GtkTreePath
  * pointing to the root of @menu which must be freed with gtk_tree_path_free().
  *
  * Since: 3.0
@@ -1725,7 +1714,7 @@ _gtk_tree_menu_get_root (GtkTreeMenu *menu)
  *
  * Gets whether this menu is build with a leading tearoff menu item.
  *
- * Return value: %TRUE if the menu has a tearoff item.
+ * Returns: %TRUE if the menu has a tearoff item.
  *
  * Since: 3.0
  */
@@ -1777,7 +1766,7 @@ _gtk_tree_menu_set_tearoff (GtkTreeMenu *menu,
  * Gets the wrap width which is used to determine the number of columns
  * for @menu. If the wrap width is larger than 1, @menu is in table mode.
  *
- * Return value: the wrap width.
+ * Returns: the wrap width.
  *
  * Since: 3.0
  */
@@ -1832,7 +1821,7 @@ _gtk_tree_menu_set_wrap_width (GtkTreeMenu *menu,
  * The row span column contains integers which indicate how many rows
  * a menu item should span.
  *
- * Return value: the column in @menu's model containing row span information, or -1.
+ * Returns: the column in @menu’s model containing row span information, or -1.
  *
  * Since: 3.0
  */
@@ -1888,7 +1877,7 @@ _gtk_tree_menu_set_row_span_column (GtkTreeMenu *menu,
  * The column span column contains integers which indicate how many columns
  * a menu item should span.
  *
- * Return value: the column in @menu's model containing column span information, or -1.
+ * Returns: the column in @menu’s model containing column span information, or -1.
  *
  * Since: 3.0
  */
@@ -1942,7 +1931,7 @@ _gtk_tree_menu_set_column_span_column (GtkTreeMenu *menu,
  *
  * Gets the current #GtkTreeViewRowSeparatorFunc separator function.
  *
- * Return value: the current row separator function.
+ * Returns: the current row separator function.
  *
  * Since: 3.0
  */
@@ -1999,7 +1988,7 @@ _gtk_tree_menu_set_row_separator_func (GtkTreeMenu          *menu,
  *
  * Gets the current #GtkTreeMenuHeaderFunc header function.
  *
- * Return value: the current header function.
+ * Returns: the current header function.
  *
  * Since: 3.0
  */

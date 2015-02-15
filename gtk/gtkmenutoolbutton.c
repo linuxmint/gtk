@@ -22,7 +22,6 @@
 #include "gtkmenutoolbutton.h"
 
 #include "gtktogglebutton.h"
-#include "gtkarrow.h"
 #include "gtkmenubutton.h"
 #include "gtkmenubuttonprivate.h"
 #include "gtkbox.h"
@@ -48,25 +47,20 @@
  * Use gtk_menu_tool_button_new() to create a new
  * #GtkMenuToolButton.
  *
- * <refsect2 id="GtkMenuToolButton-BUILDER-UI">
- * <title>GtkMenuToolButton as GtkBuildable</title>
- * <para>
- * The GtkMenuToolButton implementation of the GtkBuildable interface
- * supports adding a menu by specifying "menu" as the "type"
- * attribute of a &lt;child&gt; element.
+ * # GtkMenuToolButton as GtkBuildable
  *
- * <example>
- * <title>A UI definition fragment with menus</title>
- * <programlisting><![CDATA[
+ * The GtkMenuToolButton implementation of the GtkBuildable interface
+ * supports adding a menu by specifying “menu” as the “type” attribute
+ * of a <child> element.
+ *
+ * An example for a UI definition fragment with menus:
+ * |[
  * <object class="GtkMenuToolButton">
  *   <child type="menu">
  *     <object class="GtkMenu"/>
  *   </child>
  * </object>
- * ]]></programlisting>
- * </example>
- * </para>
- * </refsect2>
+ * ]|
  */
 
 
@@ -340,7 +334,7 @@ gtk_menu_tool_button_buildable_interface_init (GtkBuildableIface *iface)
  * Creates a new #GtkMenuToolButton using @icon_widget as icon and
  * @label as label.
  *
- * Return value: the new #GtkMenuToolButton
+ * Returns: the new #GtkMenuToolButton
  *
  * Since: 2.6
  **/
@@ -369,7 +363,7 @@ gtk_menu_tool_button_new (GtkWidget   *icon_widget,
  * The new #GtkMenuToolButton will contain an icon and label from
  * the stock item indicated by @stock_id.
  *
- * Return value: the new #GtkMenuToolButton
+ * Returns: the new #GtkMenuToolButton
  *
  * Since: 2.6
  *
@@ -431,7 +425,7 @@ gtk_menu_tool_button_set_menu (GtkMenuToolButton *button,
  *
  * Gets the #GtkMenu associated with #GtkMenuToolButton.
  *
- * Return value: (transfer none): the #GtkMenu associated
+ * Returns: (transfer none): the #GtkMenu associated
  *     with #GtkMenuToolButton
  *
  * Since: 2.6
@@ -453,7 +447,7 @@ gtk_menu_tool_button_get_menu (GtkMenuToolButton *button)
 /**
  * gtk_menu_tool_button_set_arrow_tooltip_text:
  * @button: a #GtkMenuToolButton
- * @text: text to be used as tooltip text for button's arrow button
+ * @text: text to be used as tooltip text for button’s arrow button
  *
  * Sets the tooltip text to be used as tooltip for the arrow button which
  * pops up the menu.  See gtk_tool_item_set_tooltip_text() for setting a tooltip
@@ -473,7 +467,7 @@ gtk_menu_tool_button_set_arrow_tooltip_text (GtkMenuToolButton *button,
 /**
  * gtk_menu_tool_button_set_arrow_tooltip_markup:
  * @button: a #GtkMenuToolButton
- * @markup: markup text to be used as tooltip text for button's arrow button
+ * @markup: markup text to be used as tooltip text for button’s arrow button
  *
  * Sets the tooltip markup text to be used as tooltip for the arrow button
  * which pops up the menu.  See gtk_tool_item_set_tooltip_text() for setting

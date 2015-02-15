@@ -97,7 +97,7 @@ test_type (gconstpointer data)
       g_type_is_a (type, GTK_TYPE_FILE_CHOOSER_WIDGET) ||
       g_type_is_a (type, GTK_TYPE_PLACES_SIDEBAR))
     return;
-
+ 
   klass = g_type_class_ref (type);
 
   if (g_type_is_a (type, GTK_TYPE_SETTINGS))
@@ -130,6 +130,19 @@ test_type (gconstpointer data)
 	continue;
 
       if ((pspec->flags & G_PARAM_READABLE) == 0)
+	continue;
+
+      /* This one has a special-purpose default value */
+      if (g_type_is_a (type, GTK_TYPE_DIALOG) &&
+	  (strcmp (pspec->name, "use-header-bar") == 0))
+	continue;
+
+      if (g_type_is_a (type, GTK_TYPE_ASSISTANT) &&
+	  (strcmp (pspec->name, "use-header-bar") == 0))
+	continue;
+
+      if (g_type_is_a (type, GTK_TYPE_POPOVER) &&
+	  (strcmp (pspec->name, "pointing-to") == 0))
 	continue;
 
       if (g_type_is_a (type, GDK_TYPE_DISPLAY_MANAGER) &&
@@ -402,6 +415,7 @@ main (int argc, char **argv)
   /* These must be set before before gtk_test_init */
   g_setenv ("GIO_USE_VFS", "local", TRUE);
   g_setenv ("GSETTINGS_BACKEND", "memory", TRUE);
+  g_setenv ("G_ENABLE_DIAGNOSTIC", "0", TRUE);
 
   gtk_test_init (&argc, &argv);
   gtk_test_register_all_types();

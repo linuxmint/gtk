@@ -8,7 +8,7 @@
 <link rel="up" href="TreeWidgetObjects.html" title="Tree, List and Icon Grid Widgets">
 <link rel="prev" href="GtkCellAreaBox.html" title="GtkCellAreaBox">
 <link rel="next" href="GtkCellRenderer.html" title="GtkCellRenderer">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -140,22 +140,22 @@
 <td class="property_flags">Read / Write / Construct Only</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GtkCellAreaContext.html#GtkCellAreaContext--minimum-height" title="The “minimum-height” property">minimum-height</a></td>
 <td class="property_flags">Read</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GtkCellAreaContext.html#GtkCellAreaContext--minimum-width" title="The “minimum-width” property">minimum-width</a></td>
 <td class="property_flags">Read</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GtkCellAreaContext.html#GtkCellAreaContext--natural-height" title="The “natural-height” property">natural-height</a></td>
 <td class="property_flags">Read</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GtkCellAreaContext.html#GtkCellAreaContext--natural-width" title="The “natural-width” property">natural-width</a></td>
 <td class="property_flags">Read</td>
 </tr>
@@ -183,7 +183,7 @@
 </div>
 <div class="refsect1">
 <a name="GtkCellAreaContext.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
     <span class="lineart">╰──</span> GtkCellAreaContext
 </pre>
 </div>
@@ -199,7 +199,7 @@ implementation via its <a class="link" href="GtkCellArea.html#GtkCellAreaClass.c
 method and is used to store cell sizes and alignments for a series of
 <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> rows that are requested and rendered in the same context.</p>
 <p><a class="link" href="GtkCellLayout.html" title="GtkCellLayout"><span class="type">GtkCellLayout</span></a> widgets can create any number of contexts in which to
-request and render groups of data rows. However, it's important that the
+request and render groups of data rows. However, it’s important that the
 same context which was used to request sizes for a given <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a>
 row also be used for the same row when calling other <a class="link" href="GtkCellArea.html" title="GtkCellArea"><span class="type">GtkCellArea</span></a> APIs
 such as <a class="link" href="GtkCellArea.html#gtk-cell-area-render" title="gtk_cell_area_render ()"><code class="function">gtk_cell_area_render()</code></a> and <a class="link" href="GtkCellArea.html#gtk-cell-area-event" title="gtk_cell_area_event ()"><code class="function">gtk_cell_area_event()</code></a>.</p>
@@ -216,7 +216,7 @@ gtk_cell_area_context_get_area (<em class="parameter"><code><a class="link" href
 it is important for the context implementation itself to
 fetch information about the area it is being used for.</p>
 <p>For instance at <a class="link" href="GtkCellAreaContext.html#GtkCellAreaContextClass.allocate"><code class="function">GtkCellAreaContextClass.allocate()</code></a> time
-it's important to know details about any cell spacing
+it’s important to know details about any cell spacing
 that the <a class="link" href="GtkCellArea.html" title="GtkCellArea"><span class="type">GtkCellArea</span></a> is configured with in order to
 compute a proper allocation.</p>
 <div class="refsect3">
@@ -246,8 +246,8 @@ compute a proper allocation.</p>
 <a name="gtk-cell-area-context-allocate"></a><h3>gtk_cell_area_context_allocate ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_cell_area_context_allocate (<em class="parameter"><code><a class="link" href="GtkCellAreaContext.html" title="GtkCellAreaContext"><span class="type">GtkCellAreaContext</span></a> *context</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> width</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> height</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> width</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> height</code></em>);</pre>
 <p>Allocates a width and/or a height for all rows which are to be
 rendered with <em class="parameter"><code>context</code></em>
 .</p>
@@ -338,8 +338,8 @@ of all the displayed row heights using
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_cell_area_context_get_preferred_width
                                (<em class="parameter"><code><a class="link" href="GtkCellAreaContext.html" title="GtkCellAreaContext"><span class="type">GtkCellAreaContext</span></a> *context</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *minimum_width</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *natural_width</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *minimum_width</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *natural_width</code></em>);</pre>
 <p>Gets the accumulative preferred width for all rows which have been
 requested with this context.</p>
 <p>After <a class="link" href="GtkCellAreaContext.html#gtk-cell-area-context-reset" title="gtk_cell_area_context_reset ()"><code class="function">gtk_cell_area_context_reset()</code></a> is called and/or before ever
@@ -361,14 +361,14 @@ requesting the size of a <a class="link" href="GtkCellArea.html" title="GtkCellA
 <tr>
 <td class="parameter_name"><p>minimum_width</p></td>
 <td class="parameter_description"><p> location to store the minimum width,
-or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>natural_width</p></td>
 <td class="parameter_description"><p> location to store the natural width,
-or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -381,8 +381,8 @@ or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_cell_area_context_get_preferred_height
                                (<em class="parameter"><code><a class="link" href="GtkCellAreaContext.html" title="GtkCellAreaContext"><span class="type">GtkCellAreaContext</span></a> *context</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *minimum_height</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *natural_height</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *minimum_height</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *natural_height</code></em>);</pre>
 <p>Gets the accumulative preferred height for all rows which have been
 requested with this context.</p>
 <p>After <a class="link" href="GtkCellAreaContext.html#gtk-cell-area-context-reset" title="gtk_cell_area_context_reset ()"><code class="function">gtk_cell_area_context_reset()</code></a> is called and/or before ever
@@ -404,14 +404,14 @@ requesting the size of a <a class="link" href="GtkCellArea.html" title="GtkCellA
 <tr>
 <td class="parameter_name"><p>minimum_height</p></td>
 <td class="parameter_description"><p> location to store the minimum height,
-or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>natural_height</p></td>
 <td class="parameter_description"><p> location to store the natural height,
-or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -424,9 +424,9 @@ or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_cell_area_context_get_preferred_height_for_width
                                (<em class="parameter"><code><a class="link" href="GtkCellAreaContext.html" title="GtkCellAreaContext"><span class="type">GtkCellAreaContext</span></a> *context</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> width</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *minimum_height</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *natural_height</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> width</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *minimum_height</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *natural_height</code></em>);</pre>
 <p>Gets the accumulative preferred height for <em class="parameter"><code>width</code></em>
  for all rows
 which have been requested for the same said <em class="parameter"><code>width</code></em>
@@ -455,14 +455,14 @@ requesting the size of a <a class="link" href="GtkCellArea.html" title="GtkCellA
 <tr>
 <td class="parameter_name"><p>minimum_height</p></td>
 <td class="parameter_description"><p> location to store the minimum height,
-or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>natural_height</p></td>
 <td class="parameter_description"><p> location to store the natural height,
-or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -475,9 +475,9 @@ or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_cell_area_context_get_preferred_width_for_height
                                (<em class="parameter"><code><a class="link" href="GtkCellAreaContext.html" title="GtkCellAreaContext"><span class="type">GtkCellAreaContext</span></a> *context</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> height</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *minimum_width</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *natural_width</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> height</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *minimum_width</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *natural_width</code></em>);</pre>
 <p>Gets the accumulative preferred width for <em class="parameter"><code>height</code></em>
  for all rows which
 have been requested for the same said <em class="parameter"><code>height</code></em>
@@ -506,14 +506,14 @@ requesting the size of a <a class="link" href="GtkCellArea.html" title="GtkCellA
 <tr>
 <td class="parameter_name"><p>minimum_width</p></td>
 <td class="parameter_description"><p> location to store the minimum width,
-or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>natural_width</p></td>
 <td class="parameter_description"><p> location to store the natural width,
-or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -525,8 +525,8 @@ or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.ht
 <a name="gtk-cell-area-context-get-allocation"></a><h3>gtk_cell_area_context_get_allocation ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_cell_area_context_get_allocation (<em class="parameter"><code><a class="link" href="GtkCellAreaContext.html" title="GtkCellAreaContext"><span class="type">GtkCellAreaContext</span></a> *context</code></em>,
-                                      <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *width</code></em>,
-                                      <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *height</code></em>);</pre>
+                                      <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *width</code></em>,
+                                      <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *height</code></em>);</pre>
 <p>Fetches the current allocation size for <em class="parameter"><code>context</code></em>
 .</p>
 <p>If the context was not allocated in width or height, or if the
@@ -548,13 +548,13 @@ the returned value will be -1.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>width</p></td>
-<td class="parameter_description"><p> location to store the allocated width, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> location to store the allocated width, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>height</p></td>
-<td class="parameter_description"><p> location to store the allocated height, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> location to store the allocated height, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -567,8 +567,8 @@ the returned value will be -1.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_cell_area_context_push_preferred_width
                                (<em class="parameter"><code><a class="link" href="GtkCellAreaContext.html" title="GtkCellAreaContext"><span class="type">GtkCellAreaContext</span></a> *context</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> minimum_width</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> natural_width</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> minimum_width</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> natural_width</code></em>);</pre>
 <p>Causes the minimum and/or natural width to grow if the new
 proposed sizes exceed the current minimum and natural width.</p>
 <p>This is used by <a class="link" href="GtkCellAreaContext.html" title="GtkCellAreaContext"><span class="type">GtkCellAreaContext</span></a> implementations during
@@ -612,8 +612,8 @@ progressively push the requested width over a series of
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_cell_area_context_push_preferred_height
                                (<em class="parameter"><code><a class="link" href="GtkCellAreaContext.html" title="GtkCellAreaContext"><span class="type">GtkCellAreaContext</span></a> *context</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> minimum_height</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> natural_height</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> minimum_height</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> natural_height</code></em>);</pre>
 <p>Causes the minimum and/or natural height to grow if the new
 proposed sizes exceed the current minimum and natural height.</p>
 <p>This is used by <a class="link" href="GtkCellAreaContext.html" title="GtkCellAreaContext"><span class="type">GtkCellAreaContext</span></a> implementations during
@@ -697,13 +697,13 @@ allocated sizes for the context.</p></td>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GtkCellAreaContextClass.get-preferred-height-for-width"></a>get_preferred_height_for_width</code></em> ()</p></td>
 <td class="struct_member_description"><p>Returns the aligned height for the given
-width that context must store while collecting sizes for it's rows.</p></td>
+width that context must store while collecting sizes for it’s rows.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GtkCellAreaContextClass.get-preferred-width-for-height"></a>get_preferred_width_for_height</code></em> ()</p></td>
 <td class="struct_member_description"><p>Returns the aligned width for the given
-height that context must store while collecting sizes for it's rows.</p></td>
+height that context must store while collecting sizes for it’s rows.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>
@@ -728,7 +728,7 @@ height that context must store while collecting sizes for it's rows.</p></td>
 <hr>
 <div class="refsect2">
 <a name="GtkCellAreaContext--minimum-height"></a><h3>The <code class="literal">“minimum-height”</code> property</h3>
-<pre class="programlisting">  “minimum-height”           <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “minimum-height”           <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>The minimum height for the <a class="link" href="GtkCellArea.html" title="GtkCellArea"><span class="type">GtkCellArea</span></a> in this context
 for all <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> rows that this context was requested
 for using <a class="link" href="GtkCellArea.html#gtk-cell-area-get-preferred-height" title="gtk_cell_area_get_preferred_height ()"><code class="function">gtk_cell_area_get_preferred_height()</code></a>.</p>
@@ -740,7 +740,7 @@ for using <a class="link" href="GtkCellArea.html#gtk-cell-area-get-preferred-hei
 <hr>
 <div class="refsect2">
 <a name="GtkCellAreaContext--minimum-width"></a><h3>The <code class="literal">“minimum-width”</code> property</h3>
-<pre class="programlisting">  “minimum-width”            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “minimum-width”            <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>The minimum width for the <a class="link" href="GtkCellArea.html" title="GtkCellArea"><span class="type">GtkCellArea</span></a> in this context
 for all <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> rows that this context was requested
 for using <a class="link" href="GtkCellArea.html#gtk-cell-area-get-preferred-width" title="gtk_cell_area_get_preferred_width ()"><code class="function">gtk_cell_area_get_preferred_width()</code></a>.</p>
@@ -752,7 +752,7 @@ for using <a class="link" href="GtkCellArea.html#gtk-cell-area-get-preferred-wid
 <hr>
 <div class="refsect2">
 <a name="GtkCellAreaContext--natural-height"></a><h3>The <code class="literal">“natural-height”</code> property</h3>
-<pre class="programlisting">  “natural-height”           <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “natural-height”           <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>The natural height for the <a class="link" href="GtkCellArea.html" title="GtkCellArea"><span class="type">GtkCellArea</span></a> in this context
 for all <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> rows that this context was requested
 for using <a class="link" href="GtkCellArea.html#gtk-cell-area-get-preferred-height" title="gtk_cell_area_get_preferred_height ()"><code class="function">gtk_cell_area_get_preferred_height()</code></a>.</p>
@@ -764,7 +764,7 @@ for using <a class="link" href="GtkCellArea.html#gtk-cell-area-get-preferred-hei
 <hr>
 <div class="refsect2">
 <a name="GtkCellAreaContext--natural-width"></a><h3>The <code class="literal">“natural-width”</code> property</h3>
-<pre class="programlisting">  “natural-width”            <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “natural-width”            <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>The natural width for the <a class="link" href="GtkCellArea.html" title="GtkCellArea"><span class="type">GtkCellArea</span></a> in this context
 for all <a class="link" href="GtkTreeModel.html" title="GtkTreeModel"><span class="type">GtkTreeModel</span></a> rows that this context was requested
 for using <a class="link" href="GtkCellArea.html#gtk-cell-area-get-preferred-width" title="gtk_cell_area_get_preferred_width ()"><code class="function">gtk_cell_area_get_preferred_width()</code></a>.</p>
@@ -777,6 +777,6 @@ for using <a class="link" href="GtkCellArea.html#gtk-cell-area-get-preferred-wid
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

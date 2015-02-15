@@ -16,88 +16,6 @@
 #define LARGE_WIDTH 240
 #define LARGE_HEIGHT 240
 
-static Window
-find_toplevel_window (Window xid)
-{
-  Window root, parent, *children;
-  guint nchildren;
-
-  do
-    {
-      if (XQueryTree (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), xid, &root,
-		      &parent, &children, &nchildren) == 0)
-	{
-	  g_warning ("Couldn't find window manager window");
-	  return None;
-	}
-
-      if (root == parent)
-	return xid;
-
-      xid = parent;
-    }
-  while (TRUE);
-}
-
-
-static gboolean
-adjust_size_callback (WidgetInfo *info)
-{
-  Window toplevel;
-  Window root;
-  GdkWindow *window;
-  gint tx;
-  gint ty;
-  guint twidth;
-  guint theight;
-  guint tborder_width;
-  guint tdepth;
-  gint target_width = 0;
-  gint target_height = 0;
-
-  window = gtk_widget_get_window (info->window);
-  toplevel = find_toplevel_window (GDK_WINDOW_XID (window));
-  XGetGeometry (GDK_WINDOW_XDISPLAY (window),
-		toplevel,
-		&root, &tx, &ty, &twidth, &theight, &tborder_width, &tdepth);
-
-  switch (info->size)
-    {
-    case SMALL:
-      target_width = SMALL_WIDTH;
-      target_height = SMALL_HEIGHT;
-      break;
-    case MEDIUM:
-      target_width = MEDIUM_WIDTH;
-      target_height = MEDIUM_HEIGHT;
-      break;
-    case LARGE:
-      target_width = LARGE_WIDTH;
-      target_height = LARGE_HEIGHT;
-      break;
-    case ASIS:
-      target_width = twidth;
-      target_height = theight;
-      break;
-    }
-
-  if (twidth > target_width ||
-      theight > target_height)
-    {
-      gtk_widget_set_size_request (info->window,
-				   2 + target_width - (twidth - target_width), /* Dunno why I need the +2 fudge factor; */
-				   2 + target_height - (theight - target_height));
-    }
-  return FALSE;
-}
-
-static void
-realize_callback (GtkWidget  *widget,
-		  WidgetInfo *info)
-{
-  gdk_threads_add_timeout (500, (GSourceFunc)adjust_size_callback, info);
-}
-
 static WidgetInfo *
 new_widget_info (const char *name,
 		 GtkWidget  *widget,
@@ -113,12 +31,10 @@ new_widget_info (const char *name,
       info->window = widget;
       gtk_window_set_resizable (GTK_WINDOW (info->window), FALSE);
       info->include_decorations = TRUE;
-      g_signal_connect (info->window, "realize", G_CALLBACK (realize_callback), info);
     }
   else
     {
       info->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-      gtk_window_set_has_resize_grip (GTK_WINDOW (info->window), FALSE);
       gtk_container_set_border_width (GTK_CONTAINER (info->window), 12);
       info->include_decorations = FALSE;
       gtk_widget_show_all (widget);
@@ -126,7 +42,6 @@ new_widget_info (const char *name,
     }
   info->no_focus = TRUE;
 
-  gtk_widget_set_app_paintable (info->window, TRUE);
   g_signal_connect (info->window, "focus", G_CALLBACK (gtk_true), NULL);
 
   switch (size)
@@ -463,8 +378,10 @@ create_info_bar (void)
 {
   GtkWidget *widget;
   GtkWidget *align;
+  WidgetInfo *info;
 
-  widget = gtk_info_bar_new_with_buttons ("Close", 0, NULL);
+  widget = gtk_info_bar_new ();
+  gtk_info_bar_set_show_close_button (GTK_INFO_BAR (widget), TRUE);
   gtk_info_bar_set_message_type (GTK_INFO_BAR (widget), GTK_MESSAGE_INFO);
   gtk_container_add (GTK_CONTAINER (gtk_info_bar_get_content_area (GTK_INFO_BAR (widget))),
                      gtk_label_new ("Info Bar"));
@@ -472,8 +389,78 @@ create_info_bar (void)
   align = gtk_alignment_new (0.5, 0, 1.0, 0.0);
   gtk_container_add (GTK_CONTAINER (align), widget);
 
-  return new_widget_info ("info-bar", align, SMALL);
+  info = new_widget_info ("info-bar", align, SMALL);
+  gtk_container_set_border_width (GTK_CONTAINER (info->window), 0);
+
+  return info;
 }
+
+static WidgetInfo *
+create_search_bar (void)
+{
+  GtkWidget *widget;
+  GtkWidget *entry;
+  WidgetInfo *info;
+  GtkWidget *view;
+  GtkWidget *box;
+
+  box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+  widget = gtk_search_bar_new ();
+
+  entry = gtk_search_entry_new ();
+  gtk_entry_set_text (GTK_ENTRY (entry), "Search Bar");
+  gtk_container_add (GTK_CONTAINER (widget), entry);
+  gtk_widget_show (entry);
+
+  gtk_search_bar_set_show_close_button (GTK_SEARCH_BAR (widget), TRUE);
+  gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (widget), TRUE);
+
+  gtk_container_add (GTK_CONTAINER (box), widget);
+
+  view = gtk_text_view_new ();
+  gtk_widget_show (view);
+  gtk_box_pack_start (GTK_BOX (box), view, TRUE, TRUE, 0);
+
+  info = new_widget_info ("search-bar", box, SMALL);
+  gtk_container_set_border_width (GTK_CONTAINER (info->window), 0);
+
+  return info;
+}
+
+static WidgetInfo *
+create_action_bar (void)
+{
+  GtkWidget *widget;
+  GtkWidget *button;
+  WidgetInfo *info;
+  GtkWidget *view;
+  GtkWidget *box;
+
+  box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+  view = gtk_text_view_new ();
+  gtk_widget_show (view);
+  gtk_box_pack_start (GTK_BOX (box), view, TRUE, TRUE, 0);
+
+  widget = gtk_action_bar_new ();
+
+  button = gtk_button_new_from_icon_name ("object-select-symbolic", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (button);
+  gtk_container_add (GTK_CONTAINER (widget), button);
+  button = gtk_button_new_from_icon_name ("call-start-symbolic", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (button);
+  gtk_container_add (GTK_CONTAINER (widget), button);
+  g_object_set (gtk_widget_get_parent (button), "margin", 6, "spacing", 6, NULL);
+
+  gtk_widget_show (widget);
+
+  gtk_container_add (GTK_CONTAINER (box), widget);
+
+  info = new_widget_info ("action-bar", box, SMALL);
+  gtk_container_set_border_width (GTK_CONTAINER (info->window), 0);
+
+  return info;
+}
+
 static WidgetInfo *
 create_recent_chooser_dialog (void)
 {
@@ -516,25 +503,35 @@ create_tree_view (void)
 {
   GtkWidget *widget;
   GtkWidget *tree_view;
-  GtkListStore *list_store;
+  GtkTreeStore *store;
   GtkTreeIter iter;
   WidgetInfo *info;
 
   widget = gtk_frame_new (NULL);
   gtk_frame_set_shadow_type (GTK_FRAME (widget), GTK_SHADOW_IN);
-  list_store = gtk_list_store_new (1, G_TYPE_STRING);
-  gtk_list_store_append (list_store, &iter);
-  gtk_list_store_set (list_store, &iter, 0, "Line One", -1);
-  gtk_list_store_append (list_store, &iter);
-  gtk_list_store_set (list_store, &iter, 0, "Line Two", -1);
-  gtk_list_store_append (list_store, &iter);
-  gtk_list_store_set (list_store, &iter, 0, "Line Three", -1);
+  store = gtk_tree_store_new (3, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_STRING);
+  gtk_tree_store_append (store, &iter, NULL);
+  gtk_tree_store_set (store, &iter, 0, "Line One", 1, FALSE, 2, "A", -1);
+  gtk_tree_store_append (store, &iter, NULL);
+  gtk_tree_store_set (store, &iter, 0, "Line Two", 1, TRUE, 2, "B", -1);
+  gtk_tree_store_append (store, &iter, &iter);
+  gtk_tree_store_set (store, &iter, 0, "Line Three", 1, FALSE, 2, "C", -1);
 
-  tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
+  tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+  gtk_tree_view_set_enable_tree_lines (GTK_TREE_VIEW (tree_view), TRUE);
   gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (tree_view),
-					       0, "List and Tree",
+					       0, "List",
 					       gtk_cell_renderer_text_new (),
 					       "text", 0, NULL);
+  gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (tree_view),
+					       1, "and",
+					       gtk_cell_renderer_toggle_new (),
+                                               "active", 1, NULL);
+  gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (tree_view),
+					       2, "Tree",
+					       g_object_new (GTK_TYPE_CELL_RENDERER_TEXT, "xalign", 0.5, NULL),
+					       "text", 2, NULL);
+  gtk_tree_view_expand_all (GTK_TREE_VIEW (tree_view));
   gtk_container_add (GTK_CONTAINER (widget), tree_view);
 
   info = new_widget_info ("list-and-tree", widget, MEDIUM);
@@ -926,8 +923,8 @@ create_message_dialog (void)
 				   GTK_BUTTONS_OK,
 				   NULL);
   gtk_window_set_icon_name (GTK_WINDOW (widget), "edit-copy");
-  gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (widget),
-				 "<b>Message Dialog</b>\n\nWith secondary text");
+  gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (widget), "Message Dialog");
+  gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (widget), "%s", "With secondary text");
   return new_widget_info ("messagedialog", widget, ASIS);
 }
 
@@ -1163,15 +1160,25 @@ create_spinner (void)
 static WidgetInfo *
 create_volume_button (void)
 {
-  GtkWidget *button, *widget;
-  GtkWidget *plus_button;
+  GtkWidget *button, *box;
+  GtkWidget *widget;
+  GtkWidget *popup;
+
+  widget = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_widget_set_size_request (widget, 100, 250);
+
+  box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+  gtk_container_add (GTK_CONTAINER (widget), box);
 
   button = gtk_volume_button_new ();
+  gtk_box_pack_end (GTK_BOX (box), button, FALSE, FALSE, 0);
+
   gtk_scale_button_set_value (GTK_SCALE_BUTTON (button), 33);
-  /* Hack: get the private dock */
-  plus_button = gtk_scale_button_get_plus_button (GTK_SCALE_BUTTON (button));
-  widget = gtk_widget_get_parent (gtk_widget_get_parent (gtk_widget_get_parent (plus_button)));
-  gtk_widget_show_all (widget);
+  popup = gtk_scale_button_get_popup (GTK_SCALE_BUTTON (button));
+  gtk_widget_realize (widget);
+  gtk_widget_show (box);
+  gtk_widget_show (popup);
+
   return new_widget_info ("volumebutton", widget, ASIS);
 }
 
@@ -1283,8 +1290,8 @@ create_headerbar (void)
   gtk_window_set_titlebar (GTK_WINDOW (window), bar);
   button = gtk_button_new ();
   gtk_container_add (GTK_CONTAINER (button), gtk_image_new_from_icon_name ("bookmark-new-symbolic", GTK_ICON_SIZE_BUTTON));
-  gtk_widget_show_all (button);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (bar), button);
+  gtk_widget_show_all (bar);
 
   return new_widget_info ("headerbar", window, ASIS);
 }
@@ -1430,12 +1437,58 @@ create_list_box (void)
   return info;
 }
 
+static WidgetInfo *
+create_flow_box (void)
+{
+  GtkWidget *widget;
+  GtkWidget *box;
+  GtkWidget *vbox;
+  GtkWidget *child;
+  GtkWidget *button;
+  WidgetInfo *info;
+
+  widget = gtk_frame_new (NULL);
+  gtk_frame_set_shadow_type (GTK_FRAME (widget), GTK_SHADOW_IN);
+
+  box = gtk_flow_box_new ();
+  gtk_flow_box_set_min_children_per_line (GTK_FLOW_BOX (box), 2);
+  gtk_flow_box_set_max_children_per_line (GTK_FLOW_BOX (box), 2);
+  gtk_flow_box_set_selection_mode (GTK_FLOW_BOX (box), GTK_SELECTION_BROWSE);
+  button = gtk_label_new ("Child One");
+  gtk_container_add (GTK_CONTAINER (box), button);
+  button = gtk_button_new_with_label ("Child Two");
+  gtk_container_add (GTK_CONTAINER (box), button);
+  child = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  gtk_container_add (GTK_CONTAINER (child), gtk_label_new ("Child Three"));
+  button = gtk_check_button_new ();
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_container_add (GTK_CONTAINER (child), button);
+  gtk_container_add (GTK_CONTAINER (box), child);
+  gtk_flow_box_select_child (GTK_FLOW_BOX (box),
+                             GTK_FLOW_BOX_CHILD (gtk_widget_get_parent (child)));
+
+  gtk_container_add (GTK_CONTAINER (widget), box);
+
+  vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+
+  gtk_box_pack_start (GTK_BOX (vbox), widget, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), gtk_label_new ("Flow Box"),
+                      FALSE, FALSE, 0);
+  info = new_widget_info ("flow-box", vbox, ASIS);
+  info->no_focus = FALSE;
+
+  return info;
+}
+
 GList *
 get_all_widgets (void)
 {
   GList *retval = NULL;
 
+  retval = g_list_prepend (retval, create_search_bar ());
+  retval = g_list_prepend (retval, create_action_bar ());
   retval = g_list_prepend (retval, create_list_box());
+  retval = g_list_prepend (retval, create_flow_box());
   retval = g_list_prepend (retval, create_headerbar ());
   retval = g_list_prepend (retval, create_placessidebar ());
   retval = g_list_prepend (retval, create_stack ());

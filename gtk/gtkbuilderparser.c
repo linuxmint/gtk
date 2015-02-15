@@ -216,24 +216,19 @@ builder_construct (ParserData  *data,
   return object;
 }
 
-static gchar *
+static GType
 _get_type_by_symbol (const gchar* symbol)
 {
   static GModule *module = NULL;
   GTypeGetFunc func;
-  GType type;
   
   if (!module)
     module = g_module_open (NULL, 0);
 
   if (!g_module_symbol (module, symbol, (gpointer)&func))
-    return NULL;
+    return G_TYPE_INVALID;
   
-  type = func ();
-  if (type == G_TYPE_INVALID)
-    return NULL;
-
-  return g_strdup (g_type_name (type));
+  return func ();
 }
 
 static void
@@ -301,7 +296,7 @@ is_requested_object (const gchar *object,
 
   for (l = data->requested_objects; l; l = l->next)
     {
-      if (strcmp (l->data, object) == 0)
+      if (g_strcmp0 (l->data, object) == 0)
         return TRUE;
     }
 
@@ -318,11 +313,11 @@ parse_object (GMarkupParseContext  *context,
 {
   ObjectInfo *object_info;
   ChildInfo* child_info;
-  int i;
-  gchar *object_class = NULL;
-  gchar *object_id = NULL;
-  gchar *constructor = NULL;
-  gint line, line2;
+  GType object_type = G_TYPE_INVALID;
+  const gchar *object_id = NULL;
+  const gchar *constructor = NULL;
+  gchar *internal_id = NULL;
+  gint i, line, line2;
 
   child_info = state_peek_info (data, ChildInfo);
   if (child_info && strcmp (child_info->tag.name, "object") == 0)
@@ -334,19 +329,30 @@ parse_object (GMarkupParseContext  *context,
   for (i = 0; names[i] != NULL; i++)
     {
       if (strcmp (names[i], "class") == 0)
-        object_class = g_strdup (values[i]);
+        {
+          object_type = gtk_builder_get_type_from_name (data->builder, values[i]);
+
+          if (object_type == G_TYPE_INVALID)
+            {
+              g_markup_parse_context_get_position (context, &line, NULL);
+              g_set_error (error, GTK_BUILDER_ERROR,
+                           GTK_BUILDER_ERROR_INVALID_VALUE,
+                           _("Invalid object type `%s' on line %d"),
+                           values[i], line);
+              return;
+            }
+        }
       else if (strcmp (names[i], "id") == 0)
-        object_id = g_strdup (values[i]);
+        object_id = values[i];
       else if (strcmp (names[i], "constructor") == 0)
-        constructor = g_strdup (values[i]);
+        constructor = values[i];
       else if (strcmp (names[i], "type-func") == 0)
         {
-	  /* Call the GType function, and return the name of the GType,
-	   * it's guaranteed afterwards that g_type_from_name on the name
-	   * will return our GType
-	   */
-          object_class = _get_type_by_symbol (values[i]);
-          if (!object_class)
+          /* Call the GType function, and return the GType, it's guaranteed afterwards
+           * that g_type_from_name on the name will return our GType
+           */
+          object_type = _get_type_by_symbol (values[i]);
+          if (object_type == G_TYPE_INVALID)
             {
               g_markup_parse_context_get_position (context, &line, NULL);
               g_set_error (error, GTK_BUILDER_ERROR,
@@ -363,7 +369,7 @@ parse_object (GMarkupParseContext  *context,
 	}
     }
 
-  if (!object_class)
+  if (object_type == G_TYPE_INVALID)
     {
       error_missing_attribute (data, element_name, "class", error);
       return;
@@ -371,8 +377,8 @@ parse_object (GMarkupParseContext  *context,
 
   if (!object_id)
     {
-      error_missing_attribute (data, element_name, "id", error);
-      return;
+      internal_id = g_strdup_printf ("___object_%d___", ++data->object_counter);
+      object_id = internal_id;
     }
 
   ++data->cur_object_level;
@@ -392,17 +398,15 @@ parse_object (GMarkupParseContext  *context,
         }
       else
         {
-          g_free (object_class);
-          g_free (object_id);
-          g_free (constructor);
+          g_free (internal_id);
           return;
         }
     }
 
   object_info = g_slice_new0 (ObjectInfo);
-  object_info->class_name = object_class;
-  object_info->id = object_id;
-  object_info->constructor = constructor;
+  object_info->type = object_type;
+  object_info->id = (internal_id) ? internal_id : g_strdup (object_id);
+  object_info->constructor = g_strdup (constructor);
   state_push (data, object_info);
   object_info->tag.name = element_name;
 
@@ -420,7 +424,6 @@ parse_object (GMarkupParseContext  *context,
       return;
     }
 
-
   g_hash_table_insert (data->object_ids, g_strdup (object_id), GINT_TO_POINTER (line));
 }
 
@@ -434,7 +437,8 @@ parse_template (GMarkupParseContext  *context,
 {
   ObjectInfo *object_info;
   int i;
-  gchar *object_class = NULL;
+  const gchar *object_class = NULL;
+  const gchar *parent_class = NULL;
   gint line, line2;
   GType template_type = _gtk_builder_get_template_type (data->builder);
   GType parsed_type;
@@ -459,9 +463,9 @@ parse_template (GMarkupParseContext  *context,
   for (i = 0; names[i] != NULL; i++)
     {
       if (strcmp (names[i], "class") == 0)
-        object_class = g_strdup (values[i]);
+        object_class = values[i];
       else if (strcmp (names[i], "parent") == 0)
-        /* Ignore 'parent' attribute, however it's needed by Glade */;
+        parent_class = values[i];
       else
 	{
 	  error_invalid_attribute (data, element_name, names[i], error);
@@ -486,10 +490,33 @@ parse_template (GMarkupParseContext  *context,
       return;
     }
 
+  if (parent_class)
+    {
+      GType parent_type = g_type_from_name (parent_class);
+      GType expected_type = g_type_parent (parsed_type);
+
+      if (parent_type == G_TYPE_INVALID)
+        {
+          g_set_error (error, GTK_BUILDER_ERROR,
+                       GTK_BUILDER_ERROR_INVALID_VALUE,
+                       "Invalid template parent type `%s'",
+                       parent_class);
+          return;
+        }      
+      if (parent_type != expected_type)
+        {
+          g_set_error (error, GTK_BUILDER_ERROR,
+                       GTK_BUILDER_ERROR_TEMPLATE_MISMATCH,
+                       "Template parent type `%s' does not match instance parent type `%s'.",
+                       parent_class, g_type_name (expected_type));
+          return;
+        }
+    }
+  
   ++data->cur_object_level;
 
   object_info = g_slice_new0 (ObjectInfo);
-  object_info->class_name = object_class;
+  object_info->type = parsed_type;
   object_info->id = g_strdup (object_class);
   object_info->object = gtk_builder_get_object (data->builder, object_class);
   state_push (data, object_info);
@@ -519,7 +546,6 @@ free_object_info (ObjectInfo *info)
                    (GFunc)free_property_info, NULL);
   g_slist_free (info->properties);
   g_free (info->constructor);
-  g_free (info->class_name);
   g_free (info->id);
   g_slice_free (ObjectInfo, info);
 }
@@ -587,11 +613,14 @@ parse_property (ParserData   *data,
                 GError      **error)
 {
   PropertyInfo *info;
-  gchar *name = NULL;
-  gchar *context = NULL;
+  const gchar *context = NULL;
+  const gchar *bind_source = NULL;
+  const gchar *bind_property = NULL;
+  GBindingFlags bind_flags = G_BINDING_DEFAULT;
   gboolean translatable = FALSE;
   ObjectInfo *object_info;
-  int i;
+  GParamSpec *pspec = NULL;
+  gint i;
 
   object_info = state_peek_info (data, ObjectInfo);
   if (!object_info || 
@@ -605,7 +634,26 @@ parse_property (ParserData   *data,
   for (i = 0; names[i] != NULL; i++)
     {
       if (strcmp (names[i], "name") == 0)
-        name = g_strdelimit (g_strdup (values[i]), "_", '-');
+        {
+          GObjectClass *oclass = g_type_class_ref (object_info->type);
+          gchar *name = g_strdelimit (g_strdup (values[i]), "_", '-');
+
+          g_assert (oclass != NULL);
+          pspec = g_object_class_find_property (oclass, name);
+          g_type_class_unref (oclass);
+          g_free (name);
+
+          if (!pspec)
+            {
+              gint line;
+              g_markup_parse_context_get_position (data->ctx, &line, NULL);
+              g_set_error (error, GTK_BUILDER_ERROR,
+                           GTK_BUILDER_ERROR_INVALID_PROPERTY,
+                           _("Invalid property: %s.%s on line %d"),
+                           g_type_name (object_info->type), values[i], line);
+              return;
+            }
+        }
       else if (strcmp (names[i], "translatable") == 0)
 	{
 	  if (!_gtk_builder_boolean_from_string (values[i], &translatable,
@@ -618,7 +666,21 @@ parse_property (ParserData   *data,
         }
       else if (strcmp (names[i], "context") == 0) 
         {
-          context = g_strdup (values[i]);
+          context = values[i];
+        }
+      else if (strcmp (names[i], "bind-source") == 0) 
+        {
+          bind_source = values[i];
+        }
+      else if (strcmp (names[i], "bind-property") == 0) 
+        {
+          bind_property = values[i];
+        }
+      else if (strcmp (names[i], "bind-flags") == 0) 
+        {
+          if (!_gtk_builder_flags_from_string (G_TYPE_BINDING_FLAGS, values[i],
+                                               &bind_flags, error))
+            return;
         }
       else
 	{
@@ -627,16 +689,36 @@ parse_property (ParserData   *data,
 	}
     }
 
-  if (!name)
+  if (!pspec)
     {
       error_missing_attribute (data, element_name, "name", error);
       return;
     }
 
+  if (bind_source && bind_property)
+    {
+      BindingInfo *binfo = g_slice_new0 (BindingInfo);
+
+      binfo->target_pspec = pspec;
+      binfo->source = g_strdup (bind_source);
+      binfo->source_property = g_strdup (bind_property);
+      binfo->flags = bind_flags;
+
+      object_info->bindings = g_slist_prepend (object_info->bindings, binfo);
+    }
+  else if (bind_source || bind_property)
+    {
+      error_missing_attribute (data, element_name,
+                               (bind_source) ? "bind-property" : "bind-source",
+                               error);
+      return;
+    }
+
   info = g_slice_new0 (PropertyInfo);
-  info->name = name;
+  info->pspec = pspec;
   info->translatable = translatable;
-  info->context = context;
+  info->bound = (bind_source && bind_property);
+  info->context = g_strdup (context);
   info->text = g_string_new ("");
   state_push (data, info);
 
@@ -647,7 +729,8 @@ static void
 free_property_info (PropertyInfo *info)
 {
   g_free (info->data);
-  g_free (info->name);
+  g_free (info->context);
+  /* info->text is already freed */
   g_slice_free (PropertyInfo, info);
 }
 
@@ -659,14 +742,15 @@ parse_signal (ParserData   *data,
               GError      **error)
 {
   SignalInfo *info;
-  gchar *name = NULL;
-  gchar *handler = NULL;
-  gchar *object = NULL;
+  const gchar *handler = NULL;
+  const gchar *object = NULL;
   gboolean after = FALSE;
   gboolean swapped = FALSE;
   gboolean swapped_set = FALSE;
   ObjectInfo *object_info;
-  int i;
+  guint  id = 0;
+  GQuark detail = 0;
+  gint i;
 
   object_info = state_peek_info (data, ObjectInfo);
   if (!object_info ||
@@ -680,9 +764,21 @@ parse_signal (ParserData   *data,
   for (i = 0; names[i] != NULL; i++)
     {
       if (strcmp (names[i], "name") == 0)
-        name = g_strdup (values[i]);
+        {
+          if (!g_signal_parse_name (values[i], object_info->type,
+                                    &id, &detail, FALSE))
+            {
+              gint line;
+              g_markup_parse_context_get_position (data->ctx, &line, NULL);
+              g_set_error (error, GTK_BUILDER_ERROR,
+                           GTK_BUILDER_ERROR_INVALID_SIGNAL,
+                           _("Invalid signal `%s' for type `%s' on line %d"),
+                           values[i], g_type_name (object_info->type), line);
+              return;
+            }
+        }
       else if (strcmp (names[i], "handler") == 0)
-        handler = g_strdup (values[i]);
+        handler = values[i];
       else if (strcmp (names[i], "after") == 0)
 	{
 	  if (!_gtk_builder_boolean_from_string (values[i], &after, error))
@@ -695,7 +791,7 @@ parse_signal (ParserData   *data,
 	  swapped_set = TRUE;
 	}
       else if (strcmp (names[i], "object") == 0)
-        object = g_strdup (values[i]);
+        object = values[i];
       else if (strcmp (names[i], "last_modification_time") == 0)
 	/* parse but ignore */
 	;
@@ -706,7 +802,7 @@ parse_signal (ParserData   *data,
 	}
     }
 
-  if (!name)
+  if (!id)
     {
       error_missing_attribute (data, element_name, "name", error);
       return;
@@ -722,13 +818,14 @@ parse_signal (ParserData   *data,
     swapped = TRUE;
   
   info = g_slice_new0 (SignalInfo);
-  info->name = name;
-  info->handler = handler;
+  info->id = id;
+  info->detail = detail;
+  info->handler = g_strdup (handler);
   if (after)
     info->flags |= G_CONNECT_AFTER;
   if (swapped)
     info->flags |= G_CONNECT_SWAPPED;
-  info->connect_object_name = object;
+  info->connect_object_name = g_strdup (object);
   state_push (data, info);
 
   info->tag.name = element_name;
@@ -739,7 +836,6 @@ void
 _free_signal_info (SignalInfo *info,
                    gpointer user_data)
 {
-  g_free (info->name);
   g_free (info->handler);
   g_free (info->connect_object_name);
   g_free (info->object_name);

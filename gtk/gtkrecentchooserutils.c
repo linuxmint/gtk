@@ -67,7 +67,7 @@ static void      delegate_item_activated    (GtkRecentChooser *receiver,
  * #GtkRecentChooser. A #GtkParamSpecOverride property is installed
  * for each property, using the values from the #GtkRecentChooserProp
  * enumeration. The caller must make sure itself that the enumeration
- * values don't collide with some other property values they
+ * values don’t collide with some other property values they
  * are using.
  */
 void
@@ -408,7 +408,7 @@ get_is_recent_filtered (GtkRecentFilter *filter,
  * #GtkRecentChooser interface inside the GtkRecentChooser::get_items
  * vfunc.
  *
- * Return value: a list of #GtkRecentInfo objects
+ * Returns: a list of #GtkRecentInfo objects
  */
 GList *
 _gtk_recent_chooser_get_items (GtkRecentChooser  *chooser,

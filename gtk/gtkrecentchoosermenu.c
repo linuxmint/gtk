@@ -120,9 +120,7 @@ enum {
 
 static void     gtk_recent_chooser_menu_finalize    (GObject                   *object);
 static void     gtk_recent_chooser_menu_dispose     (GObject                   *object);
-static GObject *gtk_recent_chooser_menu_constructor (GType                      type,
-						     guint                      n_construct_properties,
-						     GObjectConstructParam     *construct_params);
+static void     gtk_recent_chooser_menu_constructed (GObject                   *object);
 
 static void gtk_recent_chooser_iface_init      (GtkRecentChooserIface     *iface);
 
@@ -166,9 +164,6 @@ static void              gtk_recent_chooser_menu_set_show_tips      (GtkRecentCh
 
 static void     set_recent_manager (GtkRecentChooserMenu *menu,
 				    GtkRecentManager     *manager);
-
-static void     chooser_set_sort_type (GtkRecentChooserMenu *menu,
-				       GtkRecentSortType     sort_type);
 
 static void     item_activate_cb   (GtkWidget        *widget,
 			            gpointer          user_data);
@@ -222,7 +217,7 @@ gtk_recent_chooser_menu_class_init (GtkRecentChooserMenuClass *klass)
 {
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
-  gobject_class->constructor = gtk_recent_chooser_menu_constructor;
+  gobject_class->constructed = gtk_recent_chooser_menu_constructed;
   gobject_class->dispose = gtk_recent_chooser_menu_dispose;
   gobject_class->finalize = gtk_recent_chooser_menu_finalize;
   gobject_class->set_property = gtk_recent_chooser_menu_set_property;
@@ -244,7 +239,7 @@ gtk_recent_chooser_menu_class_init (GtkRecentChooserMenuClass *klass)
 							 P_("Show Numbers"),
 							 P_("Whether the items should be displayed with a number"),
 							 FALSE,
-							 GTK_PARAM_READWRITE));
+							 GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
 
   g_object_class_override_property (gobject_class, PROP_ACTIVATABLE_RELATED_ACTION, "related-action");
@@ -325,20 +320,13 @@ gtk_recent_chooser_menu_dispose (GObject *object)
   G_OBJECT_CLASS (gtk_recent_chooser_menu_parent_class)->dispose (object);
 }
 
-static GObject *
-gtk_recent_chooser_menu_constructor (GType                  type,
-				     guint                  n_params,
-				     GObjectConstructParam *params)
+static void
+gtk_recent_chooser_menu_constructed (GObject *object)
 {
-  GtkRecentChooserMenu *menu;
-  GtkRecentChooserMenuPrivate *priv;
-  GObjectClass *parent_class;
-  GObject *object;
-  
-  parent_class = G_OBJECT_CLASS (gtk_recent_chooser_menu_parent_class);
-  object = parent_class->constructor (type, n_params, params);
-  menu = GTK_RECENT_CHOOSER_MENU (object);
-  priv = menu->priv;
+  GtkRecentChooserMenu *menu = GTK_RECENT_CHOOSER_MENU (object);
+  GtkRecentChooserMenuPrivate *priv = menu->priv;
+
+  G_OBJECT_CLASS (gtk_recent_chooser_menu_parent_class)->constructed (object);
   
   g_assert (priv->manager);
 
@@ -364,8 +352,6 @@ gtk_recent_chooser_menu_constructor (GType                  type,
 
   /* (re)populate the menu */
   gtk_recent_chooser_menu_populate (menu);
-
-  return object;
 }
 
 static void
@@ -380,22 +366,38 @@ gtk_recent_chooser_menu_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_SHOW_NUMBERS:
-      priv->show_numbers = g_value_get_boolean (value);
+      if (priv->show_numbers != g_value_get_boolean (value))
+        {
+          priv->show_numbers = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_RECENT_MANAGER:
       set_recent_manager (menu, g_value_get_object (value));
       break;
     case GTK_RECENT_CHOOSER_PROP_SHOW_PRIVATE:
-      priv->show_private = g_value_get_boolean (value);
+      if (priv->show_private != g_value_get_boolean (value))
+        {
+          priv->show_private = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SHOW_NOT_FOUND:
-      priv->show_not_found = g_value_get_boolean (value);
+      if (priv->show_not_found != g_value_get_boolean (value))
+        {
+          priv->show_not_found = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SHOW_TIPS:
       gtk_recent_chooser_menu_set_show_tips (menu, g_value_get_boolean (value));
       break;
     case GTK_RECENT_CHOOSER_PROP_SHOW_ICONS:
-      priv->show_icons = g_value_get_boolean (value);
+      if (priv->show_icons != g_value_get_boolean (value))
+        {
+          priv->show_icons = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SELECT_MULTIPLE:
       g_warning ("%s: Choosers of type `%s' do not support selecting multiple items.",
@@ -403,13 +405,25 @@ gtk_recent_chooser_menu_set_property (GObject      *object,
                  G_OBJECT_TYPE_NAME (object));
       break;
     case GTK_RECENT_CHOOSER_PROP_LOCAL_ONLY:
-      priv->local_only = g_value_get_boolean (value);
+      if (priv->local_only != g_value_get_boolean (value))
+        {
+          priv->local_only = g_value_get_boolean (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_LIMIT:
-      priv->limit = g_value_get_int (value);
+      if (priv->limit != g_value_get_int (value))
+        {
+          priv->limit = g_value_get_int (value);
+          g_object_notify_by_pspec (object, pspec);
+        }
       break;
     case GTK_RECENT_CHOOSER_PROP_SORT_TYPE:
-      chooser_set_sort_type (menu, g_value_get_enum (value));
+      if (priv->sort_type != g_value_get_enum (value))
+        {
+          priv->sort_type = g_value_get_enum (value);
+          g_object_notify_by_pspec (object, pspec);
+        } 
       break;
     case GTK_RECENT_CHOOSER_PROP_FILTER:
       gtk_recent_chooser_menu_set_current_filter (menu, g_value_get_object (value));
@@ -488,10 +502,11 @@ gtk_recent_chooser_menu_set_current_uri (GtkRecentChooser  *chooser,
   GList *children, *l;
   GtkWidget *menu_item = NULL;
   gboolean found = FALSE;
+  gint i = 0;
   
   children = gtk_container_get_children (GTK_CONTAINER (menu));
   
-  for (l = children; l != NULL; l = l->next)
+  for (l = children; l != NULL; l = l->next, i++)
     {
       GtkRecentInfo *info;
       
@@ -503,9 +518,7 @@ gtk_recent_chooser_menu_set_current_uri (GtkRecentChooser  *chooser,
       
       if (strcmp (uri, gtk_recent_info_get_uri (info)) == 0)
         {
-          gtk_menu_shell_activate_item (GTK_MENU_SHELL (menu),
-	                                menu_item,
-					TRUE);
+          gtk_menu_set_active (GTK_MENU (menu), i);
 	  found = TRUE;
 
 	  break;
@@ -637,17 +650,6 @@ gtk_recent_chooser_menu_set_sort_func (GtkRecentChooser  *chooser,
       priv->sort_data_destroy = data_destroy;
     }
 }
-
-static void
-chooser_set_sort_type (GtkRecentChooserMenu *menu,
-		       GtkRecentSortType     sort_type)
-{
-  if (menu->priv->sort_type == sort_type)
-    return;
-
-  menu->priv->sort_type = sort_type;
-}
-
 
 static GList *
 gtk_recent_chooser_menu_get_items (GtkRecentChooser *chooser)
@@ -1103,6 +1105,7 @@ gtk_recent_chooser_menu_populate (GtkRecentChooserMenu *menu)
   					         idle_populate_func,
 					         pdata,
                                                  idle_populate_clean_up);
+  g_source_set_name_by_id (priv->populate_id, "[gtk+] idle_populate_func");
 }
 
 /* bounce activate signal from the recent menu item widget 
@@ -1113,7 +1116,9 @@ item_activate_cb (GtkWidget *widget,
 		  gpointer   user_data)
 {
   GtkRecentChooser *chooser = GTK_RECENT_CHOOSER (user_data);
-  
+  GtkRecentInfo *info = g_object_get_data (G_OBJECT (widget), "gtk-recent-info");
+
+  gtk_recent_chooser_menu_set_current_uri (chooser, gtk_recent_info_get_uri (info), NULL);
   _gtk_recent_chooser_item_activated (chooser);
 }
 
@@ -1188,6 +1193,7 @@ gtk_recent_chooser_menu_set_show_tips (GtkRecentChooserMenu *menu,
   
   priv->show_tips = show_tips;
   gtk_container_foreach (GTK_CONTAINER (menu), foreach_set_shot_tips, menu);
+  g_object_notify (G_OBJECT (menu), "show-tips");
 }
 
 static void
@@ -1242,7 +1248,7 @@ gtk_recent_chooser_sync_action_properties (GtkActivatable *activatable,
  * gtk_recent_chooser_menu_new_for_manager() function to know how to create
  * a #GtkRecentChooserMenu widget bound to another #GtkRecentManager object.
  *
- * Return value: a new #GtkRecentChooserMenu
+ * Returns: a new #GtkRecentChooserMenu
  *
  * Since: 2.10
  */
@@ -1266,7 +1272,7 @@ gtk_recent_chooser_menu_new (void)
  * object or if you wish to share a common #GtkRecentManager object
  * among multiple #GtkRecentChooser widgets.
  *
- * Return value: a new #GtkRecentChooserMenu, bound to @manager.
+ * Returns: a new #GtkRecentChooserMenu, bound to @manager.
  *
  * Since: 2.10
  */
@@ -1286,7 +1292,7 @@ gtk_recent_chooser_menu_new_for_manager (GtkRecentManager *manager)
  *
  * Returns the value set by gtk_recent_chooser_menu_set_show_numbers().
  * 
- * Return value: %TRUE if numbers should be shown.
+ * Returns: %TRUE if numbers should be shown.
  *
  * Since: 2.10
  */
@@ -1305,7 +1311,7 @@ gtk_recent_chooser_menu_get_show_numbers (GtkRecentChooserMenu *menu)
  *
  * Sets whether a number should be added to the items of @menu.  The
  * numbers are shown to provide a unique character for a mnemonic to
- * be used inside ten menu item's label.  Only the first the items
+ * be used inside ten menu item’s label.  Only the first the items
  * get a number to avoid clashes.
  *
  * Since: 2.10

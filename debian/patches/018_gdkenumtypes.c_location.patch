@@ -18,11 +18,13 @@ Bug-Ubuntu: https://launchpad.net/bugs/769256
  gdk/Makefile.am |   17 +++++++----------
  1 files changed, 7 insertions(+), 10 deletions(-)
 
---- a/gdk/Makefile.am
-+++ b/gdk/Makefile.am
-@@ -195,8 +195,8 @@
+Index: gtk+-3.14.0/gdk/Makefile.am
+===================================================================
+--- gtk+-3.14.0.orig/gdk/Makefile.am	2014-09-23 19:07:27.472374097 +0200
++++ gtk+-3.14.0/gdk/Makefile.am	2014-09-23 19:07:27.468374036 +0200
+@@ -206,8 +206,8 @@
  introspection_files = 		\
- 	$(filter-out gdkkeysyms-compat.h, $(gdk_public_h_sources))	\
+ 	$(filter-out gdkkeysyms-compat.h, $(gdk_h_sources))	\
  	$(gdk_c_sources)	\
 -        gdkenumtypes.c		\
 -        gdkenumtypes.h
@@ -31,7 +33,7 @@ Bug-Ubuntu: https://launchpad.net/bugs/769256
  
  Gdk-3.0.gir: libgdk-3.la Makefile
  Gdk_3_0_gir_SCANNERFLAGS = 	\
-@@ -299,7 +299,7 @@
+@@ -374,7 +374,7 @@
  
  lib_LTLIBRARIES = libgdk-3.la
  
@@ -40,24 +42,24 @@ Bug-Ubuntu: https://launchpad.net/bugs/769256
  EXTRA_DIST += \
  	$(gdk_built_sources)	\
  	fallback-c89.c
-@@ -313,18 +313,15 @@
+@@ -388,18 +388,15 @@
  	$(gdk_built_sources)			\
  	gdkconfig.h
  
 -gdkenumtypes.h: stamp-gdkenumtypes.h
 -	@true
--stamp-gdkenumtypes.h: $(gdk_public_h_sources) gdkenumtypes.h.template
+-stamp-gdkenumtypes.h: $(gdk_h_sources) gdkenumtypes.h.template
 +gdkenumtypes.h: $(gdk_public_h_sources) $(srcdir)/gdkenumtypes.h.template
  	$(AM_V_GEN) ( cd $(srcdir) && $(GLIB_MKENUMS) --template gdkenumtypes.h.template \
- 		$(gdk_public_h_sources) ) >> xgen-geth \
+ 		$(gdk_h_sources) ) >> xgen-geth \
 -	&& (cmp -s xgen-geth gdkenumtypes.h || cp xgen-geth gdkenumtypes.h ) \
 -	&& rm -f xgen-geth \
 -	&& echo timestamp > $(@F)
 +	&& (cmp -s xgen-geth gdkenumtypes.h || cp xgen-geth $(srcdir)/gdkenumtypes.h ) \
 +	&& rm -f xgen-geth 
- gdkenumtypes.c: $(gdk_public_h_sources) gdkenumtypes.c.template
+ gdkenumtypes.c: $(gdk_h_sources) gdkenumtypes.c.template
  	$(AM_V_GEN) ( cd $(srcdir) && $(GLIB_MKENUMS) --template gdkenumtypes.c.template \
- 		$(gdk_public_h_sources) ) > xgen-getc \
+ 		$(gdk_h_sources) ) > xgen-getc \
 -	&& cp xgen-getc gdkenumtypes.c  \
 +	&& cp xgen-getc $(srcdir)/gdkenumtypes.c  \
  	&& rm -f xgen-getc

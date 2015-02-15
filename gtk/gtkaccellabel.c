@@ -42,7 +42,7 @@
  * @See_also: #GtkAccelGroup
  *
  * The #GtkAccelLabel widget is a subclass of #GtkLabel that also displays an
- * accelerator key on the right of the label text, e.g. 'Ctl+S'.
+ * accelerator key on the right of the label text, e.g. “Ctl+S”.
  * It is commonly used in menus to show the keyboard short-cuts for commands.
  *
  * The accelerator key to display is not set explicitly.
@@ -51,10 +51,10 @@
  * gtk_accel_label_set_accel_widget().
  *
  * For example, a #GtkMenuItem widget may have an accelerator added to emit the
- * "activate" signal when the 'Ctl+S' key combination is pressed.
+ * “activate” signal when the “Ctl+S” key combination is pressed.
  * A #GtkAccelLabel is created and added to the #GtkMenuItem, and
  * gtk_accel_label_set_accel_widget() is called with the #GtkMenuItem as the
- * second argument. The #GtkAccelLabel will now display 'Ctl+S' after its label.
+ * second argument. The #GtkAccelLabel will now display “Ctl+S” after its label.
  *
  * Note that creating a #GtkMenuItem with gtk_menu_item_new_with_label() (or
  * one of the similar functions for #GtkCheckMenuItem and #GtkRadioMenuItem)
@@ -65,35 +65,37 @@
  * set (see #GtkAccelFlags).
  * A #GtkAccelLabel can display multiple accelerators and even signal names,
  * though it is almost always used to display just one accelerator key.
- * <example>
- * <title>Creating a simple menu item with an accelerator key.</title>
- * <programlisting>
+ *
+ * ## Creating a simple menu item with an accelerator key.
+ *
+ * |[<!-- language="C" -->
  *   GtkWidget *save_item;
  *   GtkAccelGroup *accel_group;
  *
- *   /<!---->* Create a GtkAccelGroup and add it to the window. *<!---->/
- *   accel_group = gtk_accel_group_new (<!-- -->);
+ *   // Create a GtkAccelGroup and add it to the window.
+ *   accel_group = gtk_accel_group_new ();
  *   gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
  *
- *   /<!---->* Create the menu item using the convenience function. *<!---->/
+ *   // Create the menu item using the convenience function.
  *   save_item = gtk_menu_item_new_with_label ("Save");
  *   gtk_widget_show (save_item);
  *   gtk_container_add (GTK_CONTAINER (menu), save_item);
  *
- *   /<!---->* Now add the accelerator to the GtkMenuItem. Note that since we called
- *      gtk_menu_item_new_with_label(<!-- -->) to create the GtkMenuItem the
- *      GtkAccelLabel is automatically set up to display the GtkMenuItem
- *      accelerators. We just need to make sure we use GTK_ACCEL_VISIBLE here. *<!---->/
+ *   // Now add the accelerator to the GtkMenuItem. Note that since we
+ *   // called gtk_menu_item_new_with_label() to create the GtkMenuItem
+ *   // the GtkAccelLabel is automatically set up to display the
+ *   // GtkMenuItem accelerators. We just need to make sure we use
+ *   // GTK_ACCEL_VISIBLE here.
  *   gtk_widget_add_accelerator (save_item, "activate", accel_group,
  *                               GDK_KEY_s, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
- * </programlisting>
- * </example>
+ * ]|
  */
 
 enum {
   PROP_0,
   PROP_ACCEL_CLOSURE,
-  PROP_ACCEL_WIDGET
+  PROP_ACCEL_WIDGET,
+  LAST_PROP
 };
 
 struct _GtkAccelLabelPrivate
@@ -107,9 +109,9 @@ struct _GtkAccelLabelPrivate
 
   guint           accel_key;         /* manual accel key specification if != 0 */
   GdkModifierType accel_mods;
-
-  gchar         *accel_text;         /* already-translated accel_string */
 };
+
+GParamSpec *props[LAST_PROP] = { NULL, };
 
 static void         gtk_accel_label_set_property (GObject            *object,
 						  guint               prop_id,
@@ -184,20 +186,21 @@ gtk_accel_label_class_init (GtkAccelLabelClass *class)
 
 #endif /* GDK_WINDOWING_QUARTZ */
 
-  g_object_class_install_property (gobject_class,
-                                   PROP_ACCEL_CLOSURE,
-                                   g_param_spec_boxed ("accel-closure",
-						       P_("Accelerator Closure"),
-						       P_("The closure to be monitored for accelerator changes"),
-						       G_TYPE_CLOSURE,
-						       GTK_PARAM_READWRITE));
-  g_object_class_install_property (gobject_class,
-                                   PROP_ACCEL_WIDGET,
-                                   g_param_spec_object ("accel-widget",
-                                                        P_("Accelerator Widget"),
-                                                        P_("The widget to be monitored for accelerator changes"),
-                                                        GTK_TYPE_WIDGET,
-                                                        GTK_PARAM_READWRITE));
+  props[PROP_ACCEL_CLOSURE] =
+    g_param_spec_boxed ("accel-closure",
+                        P_("Accelerator Closure"),
+                        P_("The closure to be monitored for accelerator changes"),
+                        G_TYPE_CLOSURE,
+                        GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
+
+  props[PROP_ACCEL_WIDGET] =
+    g_param_spec_object ("accel-widget",
+                         P_("Accelerator Widget"),
+                         P_("The widget to be monitored for accelerator changes"),
+                         GTK_TYPE_WIDGET,
+                         GTK_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
+
+  g_object_class_install_properties (gobject_class, LAST_PROP, props);
 }
 
 static void
@@ -261,7 +264,6 @@ gtk_accel_label_init (GtkAccelLabel *accel_label)
   priv->accel_closure = NULL;
   priv->accel_group = NULL;
   priv->accel_string = NULL;
-  priv->accel_text = NULL;
 }
 
 /**
@@ -303,7 +305,6 @@ gtk_accel_label_finalize (GObject *object)
   GtkAccelLabel *accel_label = GTK_ACCEL_LABEL (object);
 
   g_free (accel_label->priv->accel_string);
-  g_free (accel_label->priv->accel_text);
 
   G_OBJECT_CLASS (gtk_accel_label_parent_class)->finalize (object);
 }
@@ -381,7 +382,6 @@ gtk_accel_label_draw (GtkWidget *widget,
                       cairo_t   *cr)
 {
   GtkAccelLabel *accel_label = GTK_ACCEL_LABEL (widget);
-  GtkMisc *misc = GTK_MISC (accel_label);
   GtkTextDirection direction;
   guint ac_width;
   GtkAllocation allocation;
@@ -401,7 +401,6 @@ gtk_accel_label_draw (GtkWidget *widget,
 
       gint x;
       gint y;
-      gint xpad;
 
       context = gtk_widget_get_style_context (widget);
       label_layout = gtk_label_get_layout (GTK_LABEL (accel_label));
@@ -419,9 +418,7 @@ gtk_accel_label_draw (GtkWidget *widget,
       
       allocation.width -= ac_width;
       gtk_widget_set_allocation (widget, &allocation);
-      if (GTK_WIDGET_CLASS (gtk_accel_label_parent_class)->draw)
-        GTK_WIDGET_CLASS (gtk_accel_label_parent_class)->draw (widget,
-                                                               cr);
+      GTK_WIDGET_CLASS (gtk_accel_label_parent_class)->draw (widget, cr);
       allocation.width += ac_width;
       gtk_widget_set_allocation (widget, &allocation);
       if (gtk_label_get_ellipsize (label))
@@ -431,12 +428,10 @@ gtk_accel_label_draw (GtkWidget *widget,
 
       cairo_restore (cr);
 
-      gtk_misc_get_padding (misc, &xpad, NULL);
-
       if (direction == GTK_TEXT_DIR_RTL)
-        x = xpad;
+        x = 0;
       else
-        x = gtk_widget_get_allocated_width (widget) - xpad - ac_width;
+        x = gtk_widget_get_allocated_width (widget) - ac_width;
 
       gtk_label_get_layout_offsets (GTK_LABEL (accel_label), NULL, &y);
 
@@ -446,7 +441,6 @@ gtk_accel_label_draw (GtkWidget *widget,
 
       gtk_style_context_save (context);
       gtk_style_context_add_class (context, GTK_STYLE_CLASS_ACCELERATOR);
-
       gtk_render_layout (context, cr, x, y, accel_layout);
       gtk_style_context_restore (context);
 
@@ -454,8 +448,7 @@ gtk_accel_label_draw (GtkWidget *widget,
     }
   else
     {
-      if (GTK_WIDGET_CLASS (gtk_accel_label_parent_class)->draw)
-        GTK_WIDGET_CLASS (gtk_accel_label_parent_class)->draw (widget, cr);
+      GTK_WIDGET_CLASS (gtk_accel_label_parent_class)->draw (widget, cr);
     }
   
   return FALSE;
@@ -492,7 +485,7 @@ accel_widget_weak_ref_cb (GtkAccelLabel *accel_label,
                                         refetch_widget_accel_closure,
                                         accel_label);
   accel_label->priv->accel_widget = NULL;
-  g_object_notify (G_OBJECT (accel_label), "accel-widget");
+  g_object_notify_by_pspec (G_OBJECT (accel_label), props[PROP_ACCEL_WIDGET]);
 }
 
 /**
@@ -531,7 +524,7 @@ gtk_accel_label_set_accel_widget (GtkAccelLabel *accel_label,
                                    accel_label, G_CONNECT_SWAPPED);
           refetch_widget_accel_closure (accel_label);
         }
-      g_object_notify (G_OBJECT (accel_label), "accel-widget");
+      g_object_notify_by_pspec (G_OBJECT (accel_label), props[PROP_ACCEL_WIDGET]);
     }
 }
 
@@ -594,7 +587,7 @@ gtk_accel_label_set_accel_closure (GtkAccelLabel *accel_label,
 				   accel_label, 0);
 	}
       gtk_accel_label_reset (accel_label);
-      g_object_notify (G_OBJECT (accel_label), "accel-closure");
+      g_object_notify_by_pspec (G_OBJECT (accel_label), props[PROP_ACCEL_CLOSURE]);
     }
 }
 
@@ -616,7 +609,7 @@ gtk_accel_label_get_string (GtkAccelLabel *accel_label)
 }
 
 /* Underscores in key names are better displayed as spaces
- * E.g., Page_Up should be "Page Up".
+ * E.g., Page_Up should be “Page Up”.
  *
  * Some keynames also have prefixes that are not suitable
  * for display, e.g XF86AudioMute, so strip those out, too.
@@ -906,12 +899,6 @@ gtk_accel_label_refetch (GtkAccelLabel *accel_label)
       accel_label->priv->accel_string = NULL;
     }
 
-  if (accel_label->priv->accel_text)
-    {
-      accel_label->priv->accel_string = g_strdup (accel_label->priv->accel_text);
-      return FALSE;
-    }
-
   g_object_get (gtk_widget_get_settings (GTK_WIDGET (accel_label)),
                 "gtk-enable-accels", &enable_accels,
                 NULL);
@@ -991,18 +978,32 @@ gtk_accel_label_set_accel (GtkAccelLabel   *accel_label,
                            guint            accelerator_key,
                            GdkModifierType  accelerator_mods)
 {
+  g_return_if_fail (GTK_IS_ACCEL_LABEL (accel_label));
+
   accel_label->priv->accel_key = accelerator_key;
   accel_label->priv->accel_mods = accelerator_mods;
 
   gtk_accel_label_reset (accel_label);
 }
 
+/**
+ * gtk_accel_label_get_accel:
+ * @accel_label: a #GtkAccelLabel
+ * @accelerator_key: (out): return location for the keyval
+ * @accelerator_mods: (out): return location for the modifier mask
+ *
+ * Gets the keyval and modifier mask set with
+ * gtk_accel_label_set_accel().
+ *
+ * Since: 3.12
+ */
 void
-_gtk_accel_label_set_accel_text (GtkAccelLabel *accel_label,
-                                 const gchar   *accel_text)
+gtk_accel_label_get_accel (GtkAccelLabel   *accel_label,
+                           guint           *accelerator_key,
+                           GdkModifierType *accelerator_mods)
 {
-  g_free (accel_label->priv->accel_text);
-  accel_label->priv->accel_text = g_strdup (accel_text);
+  g_return_if_fail (GTK_IS_ACCEL_LABEL (accel_label));
 
-  gtk_accel_label_reset (accel_label);
+  *accelerator_key = accel_label->priv->accel_key;
+  *accelerator_mods = accel_label->priv->accel_mods;
 }

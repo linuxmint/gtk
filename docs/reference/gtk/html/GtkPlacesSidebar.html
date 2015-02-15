@@ -5,10 +5,10 @@
 <title>GTK+ 3 Reference Manual: GtkPlacesSidebar</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
-<link rel="up" href="SelectorWidgets.html" title="Selectors (Color/File/Font)">
+<link rel="up" href="SelectorWidgets.html" title="Selector Widgets and Dialogs">
 <link rel="prev" href="GtkFontChooserDialog.html" title="GtkFontChooserDialog">
 <link rel="next" href="Ornaments.html" title="Ornaments">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -77,7 +77,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="returnvalue">GFile</span></a> *
+<a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="returnvalue">GFile</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-get-location" title="gtk_places_sidebar_get_location ()">gtk_places_sidebar_get_location</a> <span class="c_punctuation">()</span>
@@ -93,7 +93,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-get-show-desktop" title="gtk_places_sidebar_get_show_desktop ()">gtk_places_sidebar_get_show_desktop</a> <span class="c_punctuation">()</span>
@@ -117,7 +117,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+<a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-list-shortcuts" title="gtk_places_sidebar_list_shortcuts ()">gtk_places_sidebar_list_shortcuts</a> <span class="c_punctuation">()</span>
@@ -125,7 +125,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="returnvalue">GFile</span></a> *
+<a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="returnvalue">GFile</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-get-nth-bookmark" title="gtk_places_sidebar_get_nth_bookmark ()">gtk_places_sidebar_get_nth_bookmark</a> <span class="c_punctuation">()</span>
@@ -133,7 +133,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-get-show-connect-to-server" title="gtk_places_sidebar_get_show_connect_to_server ()">gtk_places_sidebar_get_show_connect_to_server</a> <span class="c_punctuation">()</span>
@@ -145,6 +145,38 @@
 </td>
 <td class="function_name">
 <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-set-show-connect-to-server" title="gtk_places_sidebar_set_show_connect_to_server ()">gtk_places_sidebar_set_show_connect_to_server</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-get-local-only" title="gtk_places_sidebar_get_local_only ()">gtk_places_sidebar_get_local_only</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-set-local-only" title="gtk_places_sidebar_set_local_only ()">gtk_places_sidebar_set_local_only</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-get-show-enter-location" title="gtk_places_sidebar_get_show_enter_location ()">gtk_places_sidebar_get_show_enter_location</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-set-show-enter-location" title="gtk_places_sidebar_set_show_enter_location ()">gtk_places_sidebar_set_show_enter_location</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 </tbody>
@@ -160,13 +192,13 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkPlacesSidebar.html#GtkPlacesSidebar--local-only" title="The “local-only” property">local-only</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a> *</td>
+<a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="type">GFile</span></a> *</td>
 <td class="property_name"><a class="link" href="GtkPlacesSidebar.html#GtkPlacesSidebar--location" title="The “location” property">location</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -176,13 +208,18 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkPlacesSidebar.html#GtkPlacesSidebar--show-connect-to-server" title="The “show-connect-to-server” property">show-connect-to-server</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkPlacesSidebar.html#GtkPlacesSidebar--show-desktop" title="The “show-desktop” property">show-desktop</a></td>
+<td class="property_flags">Read / Write</td>
+</tr>
+<tr>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_name"><a class="link" href="GtkPlacesSidebar.html#GtkPlacesSidebar--show-enter-location" title="The “show-enter-location” property">show-enter-location</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 </tbody>
@@ -198,12 +235,12 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="signal_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a></td>
+<td class="signal_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a></td>
 <td class="signal_name"><a class="link" href="GtkPlacesSidebar.html#GtkPlacesSidebar-drag-action-ask" title="The “drag-action-ask” signal">drag-action-ask</a></td>
 <td class="signal_flags">Run Last</td>
 </tr>
 <tr>
-<td class="signal_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a></td>
+<td class="signal_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a></td>
 <td class="signal_name"><a class="link" href="GtkPlacesSidebar.html#GtkPlacesSidebar-drag-action-requested" title="The “drag-action-requested” signal">drag-action-requested</a></td>
 <td class="signal_flags">Run Last</td>
 </tr>
@@ -225,6 +262,11 @@
 <tr>
 <td class="signal_type"><span class="returnvalue">void</span></td>
 <td class="signal_name"><a class="link" href="GtkPlacesSidebar.html#GtkPlacesSidebar-show-connect-to-server" title="The “show-connect-to-server” signal">show-connect-to-server</a></td>
+<td class="signal_flags">Run First</td>
+</tr>
+<tr>
+<td class="signal_type"><span class="returnvalue">void</span></td>
+<td class="signal_name"><a class="link" href="GtkPlacesSidebar.html#GtkPlacesSidebar-show-enter-location" title="The “show-enter-location” signal">show-enter-location</a></td>
 <td class="signal_flags">Run First</td>
 </tr>
 <tr>
@@ -256,8 +298,8 @@
 </div>
 <div class="refsect1">
 <a name="GtkPlacesSidebar.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBin.html" title="GtkBin">GtkBin</a>
@@ -279,7 +321,7 @@ GtkPlacesSidebar implements
 <div class="refsect1">
 <a name="GtkPlacesSidebar.description"></a><h2>Description</h2>
 <p><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> is a widget that displays a list of frequently-used places in the
-file system:  the user's home directory, the user's bookmarks, and volumes and drives.
+file system:  the user’s home directory, the user’s bookmarks, and volumes and drives.
 This widget is used as a sidebar in <a class="link" href="GtkFileChooser.html" title="GtkFileChooser"><span class="type">GtkFileChooser</span></a> and may be used by file managers
 and similar programs.</p>
 <p>The places sidebar displays drives and volumes, and will automatically mount
@@ -322,19 +364,19 @@ gtk_places_sidebar_set_open_flags (<em class="parameter"><code><a class="link" h
                                    <em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html#GtkPlacesOpenFlags" title="enum GtkPlacesOpenFlags"><span class="type">GtkPlacesOpenFlags</span></a> flags</code></em>);</pre>
 <p>Sets the way in which the calling application can open new locations from
 the places sidebar.  For example, some applications only open locations
-"directly" into their main view, while others may support opening locations
+“directly” into their main view, while others may support opening locations
 in a new notebook tab or a new window.</p>
 <p>This function is used to tell the places <em class="parameter"><code>sidebar</code></em>
  about the ways in which the
 application can open new locations, so that the sidebar can display (or not)
-the "Open in new tab" and "Open in new window" menu items as appropriate.</p>
+the “Open in new tab” and “Open in new window” menu items as appropriate.</p>
 <p>When the <a class="link" href="GtkPlacesSidebar.html#GtkPlacesSidebar-open-location" title="The “open-location” signal"><span class="type">“open-location”</span></a> signal is emitted, its flags
 argument will be set to one of the <em class="parameter"><code>flags</code></em>
  that was passed in
 <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-set-open-flags" title="gtk_places_sidebar_set_open_flags ()"><code class="function">gtk_places_sidebar_set_open_flags()</code></a>.</p>
 <p>Passing 0 for <em class="parameter"><code>flags</code></em>
  will cause <a class="link" href="GtkPlacesSidebar.html#GTK-PLACES-OPEN-NORMAL:CAPS"><span class="type">GTK_PLACES_OPEN_NORMAL</span></a> to always be sent
-to callbacks for the "open-location" signal.</p>
+to callbacks for the “open-location” signal.</p>
 <div class="refsect3">
 <a name="id-1.3.14.15.11.3.8"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -393,7 +435,7 @@ gtk_places_sidebar_get_open_flags (<em class="parameter"><code><a class="link" h
 <a name="gtk-places-sidebar-set-location"></a><h3>gtk_places_sidebar_set_location ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_places_sidebar_set_location (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>,
-                                 <em class="parameter"><code><a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a> *location</code></em>);</pre>
+                                 <em class="parameter"><code><a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="type">GFile</span></a> *location</code></em>);</pre>
 <p>Sets the location that is being shown in the widgets surrounding the
 <em class="parameter"><code>sidebar</code></em>
 , for example, in a folder view in a file manager.  In turn, the
@@ -418,8 +460,8 @@ places in the list.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>location</p></td>
-<td class="parameter_description"><p> location to select, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> for no current path. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
+<td class="parameter_description"><p> location to select, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> for no current path. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -429,16 +471,16 @@ places in the list.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-places-sidebar-get-location"></a><h3>gtk_places_sidebar_get_location ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="returnvalue">GFile</span></a> *
+<pre class="programlisting"><a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="returnvalue">GFile</span></a> *
 gtk_places_sidebar_get_location (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>);</pre>
 <p>Gets the currently-selected location in the <em class="parameter"><code>sidebar</code></em>
-.  This can be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> when
+.  This can be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> when
 nothing is selected, for example, when <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-set-location" title="gtk_places_sidebar_set_location ()"><code class="function">gtk_places_sidebar_set_location()</code></a> has
-been called with a location that is not among the sidebar's list of places to
+been called with a location that is not among the sidebar’s list of places to
 show.</p>
 <p>You can use this function to get the selection in the <em class="parameter"><code>sidebar</code></em>
 .  Also, if you
-connect to the <span class="type">“popup-menu”</span> signal, you can use this
+connect to the <a class="link" href="GtkPlacesSidebar.html#GtkPlacesSidebar-populate-popup" title="The “populate-popup” signal"><span class="type">“populate-popup”</span></a> signal, you can use this
 function to get the location that is being referred to during the callbacks
 for your menu items.</p>
 <div class="refsect3">
@@ -458,7 +500,7 @@ for your menu items.</p>
 </div>
 <div class="refsect3">
 <a name="id-1.3.14.15.11.6.7"></a><h4>Returns</h4>
-<p> a GFile with the selected location, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if nothing is visually
+<p> a GFile with the selected location, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if nothing is visually
 selected. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -469,11 +511,11 @@ selected. </p>
 <a name="gtk-places-sidebar-set-show-desktop"></a><h3>gtk_places_sidebar_set_show_desktop ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_places_sidebar_set_show_desktop (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>,
-                                     <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> show_desktop</code></em>);</pre>
+                                     <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> show_desktop</code></em>);</pre>
 <p>Sets whether the <em class="parameter"><code>sidebar</code></em>
  should show an item for the Desktop folder.
 The default value for this option is determined by the desktop
-environment and the user's configuration, but this function can be
+environment and the user’s configuration, but this function can be
 used to override it on a per-application basis.</p>
 <div class="refsect3">
 <a name="id-1.3.14.15.11.7.5"></a><h4>Parameters</h4>
@@ -502,7 +544,7 @@ used to override it on a per-application basis.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-places-sidebar-get-show-desktop"></a><h3>gtk_places_sidebar_get_show_desktop ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_places_sidebar_get_show_desktop (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>);</pre>
 <p>Returns the value previously set with <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-set-show-desktop" title="gtk_places_sidebar_set_show_desktop ()"><code class="function">gtk_places_sidebar_set_show_desktop()</code></a></p>
 <div class="refsect3">
@@ -522,7 +564,7 @@ gtk_places_sidebar_get_show_desktop (<em class="parameter"><code><a class="link"
 </div>
 <div class="refsect3">
 <a name="id-1.3.14.15.11.8.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the sidebar will display a builtin shortcut to the desktop folder.</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the sidebar will display a builtin shortcut to the desktop folder.</p>
 <p></p>
 </div>
 <p class="since">Since 3.10</p>
@@ -532,17 +574,17 @@ gtk_places_sidebar_get_show_desktop (<em class="parameter"><code><a class="link"
 <a name="gtk-places-sidebar-add-shortcut"></a><h3>gtk_places_sidebar_add_shortcut ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_places_sidebar_add_shortcut (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>,
-                                 <em class="parameter"><code><a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a> *location</code></em>);</pre>
+                                 <em class="parameter"><code><a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="type">GFile</span></a> *location</code></em>);</pre>
 <p>Applications may want to present some folders in the places sidebar if
 they could be immediately useful to users.  For example, a drawing
-program could add a "/usr/share/clipart" location when the sidebar is
-being used in an "Insert Clipart" dialog box.</p>
+program could add a “/usr/share/clipart” location when the sidebar is
+being used in an “Insert Clipart” dialog box.</p>
 <p>This function adds the specified <em class="parameter"><code>location</code></em>
  to a special place for immutable
 shortcuts.  The shortcuts are application-specific; they are not shared
 across applications, and they are not persistent.  If this function
 is called multiple times with different locations, then they are added
-to the sidebar's list in the same order as the function is called.</p>
+to the sidebar’s list in the same order as the function is called.</p>
 <div class="refsect3">
 <a name="id-1.3.14.15.11.9.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -572,7 +614,7 @@ to the sidebar's list in the same order as the function is called.</p>
 <a name="gtk-places-sidebar-remove-shortcut"></a><h3>gtk_places_sidebar_remove_shortcut ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_places_sidebar_remove_shortcut (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>,
-                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a> *location</code></em>);</pre>
+                                    <em class="parameter"><code><a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="type">GFile</span></a> *location</code></em>);</pre>
 <p>Removes an application-specific shortcut that has been previously been
 inserted with <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-add-shortcut" title="gtk_places_sidebar_add_shortcut ()"><code class="function">gtk_places_sidebar_add_shortcut()</code></a>.  If the <em class="parameter"><code>location</code></em>
  is not a
@@ -604,7 +646,7 @@ shortcut in the sidebar, then nothing is done.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-places-sidebar-list-shortcuts"></a><h3>gtk_places_sidebar_list_shortcuts ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
 gtk_places_sidebar_list_shortcuts (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>);</pre>
 <p>Gets the list of shortcuts.</p>
 <div class="refsect3">
@@ -624,7 +666,7 @@ gtk_places_sidebar_list_shortcuts (<em class="parameter"><code><a class="link" h
 </div>
 <div class="refsect3">
 <a name="id-1.3.14.15.11.11.6"></a><h4>Returns</h4>
-<p>    A <a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> of <a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a> of the locations that have been added as
+<p>    A <a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> of <a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="type">GFile</span></a> of the locations that have been added as
 application-specific shortcuts with <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-add-shortcut" title="gtk_places_sidebar_add_shortcut ()"><code class="function">gtk_places_sidebar_add_shortcut()</code></a>.
 To free this list, you can use</p>
 <div class="informalexample">
@@ -632,7 +674,7 @@ To free this list, you can use</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="http://library.gnome.org/devel/glib/unstable/glib-Singly-Linked-Lists.html#g-slist-free-full">g_slist_free_full</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">list</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="http://library.gnome.org/devel/glib/unstable/glib-Datasets.html#GDestroyNotify">GDestroyNotify</a></span><span class="symbol">)</span><span class="normal"> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="symbol">);</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#g-slist-free-full">g_slist_free_full</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">list</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify">GDestroyNotify</a></span><span class="symbol">)</span><span class="normal"> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -646,12 +688,12 @@ To free this list, you can use</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-places-sidebar-get-nth-bookmark"></a><h3>gtk_places_sidebar_get_nth_bookmark ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="returnvalue">GFile</span></a> *
+<pre class="programlisting"><a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="returnvalue">GFile</span></a> *
 gtk_places_sidebar_get_nth_bookmark (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>,
-                                     <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n</code></em>);</pre>
+                                     <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> n</code></em>);</pre>
 <p>This function queries the bookmarks added by the user to the places sidebar,
 and returns one of them.  This function is used by <a class="link" href="GtkFileChooser.html" title="GtkFileChooser"><span class="type">GtkFileChooser</span></a> to implement
-the "Alt-1", "Alt-2", etc. shortcuts, which activate the cooresponding bookmark.</p>
+the “Alt-1”, “Alt-2”, etc. shortcuts, which activate the cooresponding bookmark.</p>
 <div class="refsect3">
 <a name="id-1.3.14.15.11.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -678,8 +720,8 @@ the "Alt-1", "Alt-2", etc. shortcuts, which activate the cooresponding bookmark.
 <a name="id-1.3.14.15.11.12.6"></a><h4>Returns</h4>
 <p> The bookmark specified by the index <em class="parameter"><code>n</code></em>
 , or
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if no such index exist.  Note that the indices start at 0, even though
-the file chooser starts them with the keyboard shortcut "Alt-1". </p>
+<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if no such index exist.  Note that the indices start at 0, even though
+the file chooser starts them with the keyboard shortcut “Alt-1”. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 <p class="since">Since 3.10</p>
@@ -687,7 +729,7 @@ the file chooser starts them with the keyboard shortcut "Alt-1". </p>
 <hr>
 <div class="refsect2">
 <a name="gtk-places-sidebar-get-show-connect-to-server"></a><h3>gtk_places_sidebar_get_show_connect_to_server ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_places_sidebar_get_show_connect_to_server
                                (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>);</pre>
 <p>Returns the value previously set with <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-set-show-connect-to-server" title="gtk_places_sidebar_set_show_connect_to_server ()"><code class="function">gtk_places_sidebar_set_show_connect_to_server()</code></a></p>
@@ -708,7 +750,7 @@ gtk_places_sidebar_get_show_connect_to_server
 </div>
 <div class="refsect3">
 <a name="id-1.3.14.15.11.13.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the sidebar will display a "Connect to Server" item.</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the sidebar will display a “Connect to Server” item.</p>
 <p></p>
 </div>
 <p class="since">Since 3.10</p>
@@ -719,7 +761,7 @@ gtk_places_sidebar_get_show_connect_to_server
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_places_sidebar_set_show_connect_to_server
                                (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> show_connect_to_server</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> show_connect_to_server</code></em>);</pre>
 <p>Sets whether the <em class="parameter"><code>sidebar</code></em>
  should show an item for connecting to a network server; this is off by default.
 An application may want to turn this on if it implements a way for the user to connect
@@ -747,6 +789,130 @@ to network servers directly.</p>
 </table></div>
 </div>
 <p class="since">Since 3.10</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-places-sidebar-get-local-only"></a><h3>gtk_places_sidebar_get_local_only ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gtk_places_sidebar_get_local_only (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>);</pre>
+<p>Returns the value previously set with <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-set-local-only" title="gtk_places_sidebar_set_local_only ()"><code class="function">gtk_places_sidebar_set_local_only()</code></a>.</p>
+<div class="refsect3">
+<a name="id-1.3.14.15.11.15.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>sidebar</p></td>
+<td class="parameter_description"><p>a places sidebar</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.14.15.11.15.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the sidebar will only show local files.</p>
+<p></p>
+</div>
+<p class="since">Since 3.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-places-sidebar-set-local-only"></a><h3>gtk_places_sidebar_set_local_only ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtk_places_sidebar_set_local_only (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>,
+                                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> local_only</code></em>);</pre>
+<p>Sets whether the <em class="parameter"><code>sidebar</code></em>
+ should only show local files.</p>
+<div class="refsect3">
+<a name="id-1.3.14.15.11.16.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>sidebar</p></td>
+<td class="parameter_description"><p>a places sidebar</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>local_only</p></td>
+<td class="parameter_description"><p>whether to show only local files</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 3.12</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-places-sidebar-get-show-enter-location"></a><h3>gtk_places_sidebar_get_show_enter_location ()</h3>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gtk_places_sidebar_get_show_enter_location
+                               (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>);</pre>
+<p>Returns the value previously set with <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-set-show-enter-location" title="gtk_places_sidebar_set_show_enter_location ()"><code class="function">gtk_places_sidebar_set_show_enter_location()</code></a></p>
+<div class="refsect3">
+<a name="id-1.3.14.15.11.17.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>sidebar</p></td>
+<td class="parameter_description"><p>a places sidebar</p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.3.14.15.11.17.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the sidebar will display an “Enter Location” item.</p>
+<p></p>
+</div>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gtk-places-sidebar-set-show-enter-location"></a><h3>gtk_places_sidebar_set_show_enter_location ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gtk_places_sidebar_set_show_enter_location
+                               (<em class="parameter"><code><a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar</code></em>,
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> show_enter_location</code></em>);</pre>
+<p>Sets whether the <em class="parameter"><code>sidebar</code></em>
+ should show an item for connecting to a network server; this is off by default.
+An application may want to turn this on if it implements a way for the user to connect
+to network servers directly.</p>
+<div class="refsect3">
+<a name="id-1.3.14.15.11.18.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>sidebar</p></td>
+<td class="parameter_description"><p>a places sidebar</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>show_enter_location</p></td>
+<td class="parameter_description"><p>whether to show an item for the Connect to Server command</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since 3.14</p>
 </div>
 </div>
 <div class="refsect1">
@@ -816,7 +982,7 @@ default mode of operation.</p>
 <a name="GtkPlacesSidebar.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GtkPlacesSidebar--local-only"></a><h3>The <code class="literal">“local-only”</code> property</h3>
-<pre class="programlisting">  “local-only”               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “local-only”               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>Whether the sidebar only includes local files.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>
@@ -824,7 +990,7 @@ default mode of operation.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkPlacesSidebar--location"></a><h3>The <code class="literal">“location”</code> property</h3>
-<pre class="programlisting">  “location”                 <a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a> *</pre>
+<pre class="programlisting">  “location”                 <a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="type">GFile</span></a> *</pre>
 <p>The location to highlight in the sidebar.</p>
 <p>Flags: Read / Write</p>
 </div>
@@ -839,7 +1005,7 @@ default mode of operation.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkPlacesSidebar--show-connect-to-server"></a><h3>The <code class="literal">“show-connect-to-server”</code> property</h3>
-<pre class="programlisting">  “show-connect-to-server”   <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “show-connect-to-server”   <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>Whether the sidebar includes a builtin shortcut to a 'Connect to server' dialog.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>
@@ -847,20 +1013,28 @@ default mode of operation.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkPlacesSidebar--show-desktop"></a><h3>The <code class="literal">“show-desktop”</code> property</h3>
-<pre class="programlisting">  “show-desktop”             <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “show-desktop”             <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>Whether the sidebar includes a builtin shortcut to the Desktop folder.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: TRUE</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GtkPlacesSidebar--show-enter-location"></a><h3>The <code class="literal">“show-enter-location”</code> property</h3>
+<pre class="programlisting">  “show-enter-location”      <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<p>Whether the sidebar includes a builtin shortcut to manually enter a location.</p>
+<p>Flags: Read / Write</p>
+<p>Default value: FALSE</p>
 </div>
 </div>
 <div class="refsect1">
 <a name="GtkPlacesSidebar.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2">
 <a name="GtkPlacesSidebar-drag-action-ask"></a><h3>The <code class="literal">“drag-action-ask”</code> signal</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 user_function (<a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>              actions,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>              actions,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
 <p>The places sidebar emits this signal when it needs to ask the application
 to pop up a menu to ask the user for which drag action to perform.</p>
 <div class="refsect3">
@@ -902,12 +1076,12 @@ of the drag-and-drop operation.</p>
 <hr>
 <div class="refsect2">
 <a name="GtkPlacesSidebar-drag-action-requested"></a><h3>The <code class="literal">“drag-action-requested”</code> signal</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 user_function (<a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar,
                <a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a>   *context,
-               <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>          *dest_file,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          source_file_list,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
+               <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>          *dest_file,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          source_file_list,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
 <p>When the user starts a drag-and-drop operation and the sidebar needs
 to ask the application for which drag action to perform, then the
 sidebar will emit this signal.</p>
@@ -934,18 +1108,18 @@ possible actions for the destination <em class="parameter"><code>dest_file</code
 </tr>
 <tr>
 <td class="parameter_name"><p>context</p></td>
-<td class="parameter_description"><p><a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> with information about the drag operation</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> <a href="http://developer.gnome.org/gdk2/gdk3-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> with information about the drag operation. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> Gdk.DragContext]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>dest_file</p></td>
-<td class="parameter_description"><p><a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a> with the tentative location that is being hovered for a drop</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> <a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="type">GFile</span></a> with the tentative location that is being hovered for a drop. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> Gio.File]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>source_file_list</p></td>
-<td class="parameter_description"><p> List of <a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a> that are being dragged. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GFile][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+<td class="parameter_description"><p>  List of <a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="type">GFile</span></a> that are being dragged. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> GLib.List][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GFile][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>user_data</p></td>
@@ -971,10 +1145,10 @@ are not allowed in the specified <em class="parameter"><code>dest_file</code></e
 <a name="GtkPlacesSidebar-drag-perform-drop"></a><h3>The <code class="literal">“drag-perform-drop”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar,
-               <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>          *dest_file,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          source_file_list,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>              action,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
+               <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>          *dest_file,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          source_file_list,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a>              action,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
 <p>The places sidebar emits this signal when the user completes a
 drag-and-drop operation and one of the sidebar's items is the
 destination.  This item is in the <em class="parameter"><code>dest_file</code></em>
@@ -999,13 +1173,13 @@ which should be copied/moved/etc. based on the specified <em class="parameter"><
 </tr>
 <tr>
 <td class="parameter_name"><p>dest_file</p></td>
-<td class="parameter_description"><p>Destination <a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a>.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> Destination <a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="type">GFile</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> Gio.File]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>source_file_list</p></td>
-<td class="parameter_description"><p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a> that got dropped. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GFile][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
+<td class="parameter_description"><p>  <a href="https://developer.gnome.org/glib/unstable/glib-Doubly-Linked-Lists.html#GList"><span class="type">GList</span></a> of <a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="type">GFile</span></a> that got dropped. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> GLib.List][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> GFile][<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>action</p></td>
@@ -1028,9 +1202,9 @@ which should be copied/moved/etc. based on the specified <em class="parameter"><
 <a name="GtkPlacesSidebar-open-location"></a><h3>The <code class="literal">“open-location”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a>  *sidebar,
-               <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>           *location,
+               <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>           *location,
                <a class="link" href="GtkPlacesSidebar.html#GtkPlacesOpenFlags" title="enum GtkPlacesOpenFlags"><span class="type">GtkPlacesOpenFlags</span></a> open_flags,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>           user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>           user_data)</pre>
 <p>The places sidebar emits this signal when the user selects a location
 in it.  The calling application should display the contents of that
 location; for example, a file manager should show a list of files in
@@ -1051,8 +1225,8 @@ the specified location.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>location</p></td>
-<td class="parameter_description"><p><a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a> to which the caller should switch.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> <a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="type">GFile</span></a> to which the caller should switch. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> Gio.File]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>open_flags</p></td>
@@ -1076,10 +1250,10 @@ should be opened.</p></td>
 <a name="GtkPlacesSidebar-populate-popup"></a><h3>The <code class="literal">“populate-popup”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar,
-               <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>          *menu,
-               <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>          *selected_item,
-               <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>          *selected_volume,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
+               <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>          *menu,
+               <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>          *selected_item,
+               <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a>          *selected_volume,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
 <p>The places sidebar emits this signal when the user invokes a contextual
 menu on one of its items.  In the signal handler, the application may
 add extra items to the menu as appropriate.  For example, a file manager
@@ -1090,10 +1264,10 @@ during their GtkMenuItem::activate callbacks, the application can use
 <a class="link" href="GtkPlacesSidebar.html#gtk-places-sidebar-get-location" title="gtk_places_sidebar_get_location ()"><code class="function">gtk_places_sidebar_get_location()</code></a> to get the file to which the item
 refers.</p>
 <p>The <em class="parameter"><code>selected_item</code></em>
- argument may be <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> in case the selection refers to
+ argument may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> in case the selection refers to
 a volume.  In this case, <em class="parameter"><code>selected_volume</code></em>
  will be non-NULL.  In this case,
-the calling application will have to <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a> the <em class="parameter"><code>selected_volume</code></em>
+the calling application will have to <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-ref"><code class="function">g_object_ref()</code></a> the <em class="parameter"><code>selected_volume</code></em>
  and
 keep it around for the purposes of its menu item's "activate" callback.</p>
 <p>The <em class="parameter"><code>menu</code></em>
@@ -1116,19 +1290,19 @@ emitted) every time the user activates the contextual menu.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>menu</p></td>
-<td class="parameter_description"><p>a <a class="link" href="GtkMenu.html" title="GtkMenu"><span class="type">GtkMenu</span></a>.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> a <a class="link" href="GtkMenu.html" title="GtkMenu"><span class="type">GtkMenu</span></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> Gtk.Menu]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>selected_item</p></td>
-<td class="parameter_description"><p><a href="http://library.gnome.org/devel/gio/unstable/GFile.html"><span class="type">GFile</span></a> with the item to which the menu should refer, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> in the case of a <em class="parameter"><code>selected_volume</code></em>
-.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> <a href="https://developer.gnome.org/gio/unstable/GFile.html"><span class="type">GFile</span></a> with the item to which the menu should refer, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> in the case of a <em class="parameter"><code>selected_volume</code></em>
+. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> Gio.File][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>selected_volume</p></td>
-<td class="parameter_description"><p><a href="http://library.gnome.org/devel/gio/unstable/GVolume.html"><span class="type">GVolume</span></a> if the selected item is a volume, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if it is a file.</p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> <a href="https://developer.gnome.org/gio/unstable/GVolume.html"><span class="type">GVolume</span></a> if the selected item is a volume, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if it is a file. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> Gio.Volume][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>user_data</p></td>
@@ -1146,12 +1320,12 @@ emitted) every time the user activates the contextual menu.</p>
 <a name="GtkPlacesSidebar-show-connect-to-server"></a><h3>The <code class="literal">“show-connect-to-server”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
 <p>The places sidebar emits this signal when it needs the calling
 application to present an way to connect directly to a network server.
 For example, the application may bring up a dialog box asking for
 a URL like "sftp://ftp.example.com".  It is up to the application to create
-the corresponding mount by using, for example, <a href="http://library.gnome.org/devel/gio/unstable/GFile.html#g-file-mount-enclosing-volume"><code class="function">g_file_mount_enclosing_volume()</code></a>.</p>
+the corresponding mount by using, for example, <a href="https://developer.gnome.org/gio/unstable/GFile.html#g-file-mount-enclosing-volume"><code class="function">g_file_mount_enclosing_volume()</code></a>.</p>
 <div class="refsect3">
 <a name="id-1.3.14.15.14.7.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
@@ -1179,18 +1353,53 @@ the corresponding mount by using, for example, <a href="http://library.gnome.org
 </div>
 <hr>
 <div class="refsect2">
+<a name="GtkPlacesSidebar-show-enter-location"></a><h3>The <code class="literal">“show-enter-location”</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+user_function (<a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
+<p>The places sidebar emits this signal when it needs the calling
+application to present an way to directly enter a location.
+For example, the application may bring up a dialog box asking for
+a URL like "http://http.example.com".</p>
+<div class="refsect3">
+<a name="id-1.3.14.15.14.8.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>sidebar</p></td>
+<td class="parameter_description"><p>the object which received the signal.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data set when the signal handler was connected.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p>Flags: Run First</p>
+<p class="since">Since 3.14</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GtkPlacesSidebar-show-error-message"></a><h3>The <code class="literal">“show-error-message”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GtkPlacesSidebar.html" title="GtkPlacesSidebar"><span class="type">GtkPlacesSidebar</span></a> *sidebar,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>            *primary,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>            *secondary,
-               <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>            *primary,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>            *secondary,
+               <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>          user_data)</pre>
 <p>The places sidebar emits this signal when it needs the calling
 application to present an error message.  Most of these messages
 refer to mounting or unmounting media, for example, when a drive
 cannot be started for some reason.</p>
 <div class="refsect3">
-<a name="id-1.3.14.15.14.8.5"></a><h4>Parameters</h4>
+<a name="id-1.3.14.15.14.9.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -1232,6 +1441,6 @@ cannot be started for some reason.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

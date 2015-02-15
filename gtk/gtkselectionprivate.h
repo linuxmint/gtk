@@ -23,13 +23,13 @@
  * ignored. This structure has object semantics - no fields should be
  * modified directly, they should not be created directly, and
  * pointers to them should not be stored beyond the duration of a
- * callback. (If the last is changed, we'll need to add reference
+ * callback. (If the last is changed, we’ll need to add reference
  * counting.) The time field gives the timestamp at which the data was
  * sent.
  */
 
-#ifndef __GTK_SELECTIONPRIVATE_H__
-#define __GTK_SELECTIONPRIVATE_H__
+#ifndef __GTK_SELECTION_PRIVATE_H__
+#define __GTK_SELECTION_PRIVATE_H__
 
 #include "gtkselection.h"
 
@@ -37,6 +37,7 @@ G_BEGIN_DECLS
 
 struct _GtkSelectionData
 {
+  /*< private >*/
   GdkAtom       selection;
   GdkAtom       target;
   GdkAtom       type;
@@ -48,18 +49,10 @@ struct _GtkSelectionData
 
 struct _GtkTargetList
 {
+  /*< private >*/
   GList *list;
   guint ref_count;
  };
-
-typedef struct _GtkTargetPair GtkTargetPair;
-struct _GtkTargetPair
-{
-  GdkAtom   target;
-  guint     flags;
-  guint     info;
-};
-
 
 gboolean _gtk_selection_clear           (GtkWidget         *widget,
                                          GdkEventSelection *event);
@@ -74,4 +67,4 @@ gboolean _gtk_selection_property_notify (GtkWidget         *widget,
 
 G_END_DECLS
 
-#endif /* __GTK_SELECTIONPRIVATE_H__ */
+#endif /* __GTK_SELECTION_PRIVATE_H__ */

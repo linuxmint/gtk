@@ -29,6 +29,7 @@
 #include <stdlib.h>
 
 #include "gtkscaleprivate.h"
+#include "gtkrangeprivate.h"
 
 #include "gtkadjustment.h"
 #include "gtkbindings.h"
@@ -50,7 +51,7 @@
  * @Title: GtkScale
  *
  * A GtkScale is a slider control used to select a numeric value. 
- * To use it, you'll probably want to investigate the methods on
+ * To use it, you’ll probably want to investigate the methods on
  * its base class, #GtkRange, in addition to the methods for GtkScale itself.
  * To set the value of a scale, you would normally use gtk_range_set_value().
  * To detect changes to the value, you would normally use the
@@ -61,14 +62,14 @@
  * applications that want to show an undeterminate value on the scale, without
  * changing the layout of the application (such as movie or music players).
  *
- * <refsect2 id="GtkScale-BUILDER-UI"><title>GtkScale as GtkBuildable</title>
- * GtkScale supports a custom &lt;marks&gt; element, which
- * can contain multiple &lt;mark&gt; elements. The "value" and "position"
- * attributes have the same meaning as gtk_scale_add_mark() parameters of the
- * same name. If the element is not empty, its content is taken as the markup
- * to show at the mark. It can be translated with the usual "translatable and
- * "context" attributes.
- * </refsect2>
+ * # GtkScale as GtkBuildable
+ *
+ * GtkScale supports a custom <marks> element, which can contain multiple
+ * <mark> elements. The “value” and “position” attributes have the same
+ * meaning as gtk_scale_add_mark() parameters of the same name. If the
+ * element is not empty, its content is taken as the markup to show at
+ * the mark. It can be translated with the usual ”translatable” and
+ * “context” attributes.
  */
 
 
@@ -267,7 +268,6 @@ gtk_scale_class_init (GtkScaleClass *class)
 
   range_class->slider_detail = "Xscale";
   range_class->get_range_border = gtk_scale_get_range_border;
-  range_class->no_warp = FALSE;
 
   class->get_layout_offsets = gtk_scale_real_get_layout_offsets;
 
@@ -281,18 +281,18 @@ gtk_scale_class_init (GtkScaleClass *class)
    * @value. That string will then be used to display the scale's value.
    *
    * Here's an example signal handler which displays a value 1.0 as
-   * with "--&gt;1.0&lt;--".
-   * |[
+   * with "-->1.0<--".
+   * |[<!-- language="C" -->
    * static gchar*
    * format_value_callback (GtkScale *scale,
    *                        gdouble   value)
    * {
-   *   return g_strdup_printf ("--&gt;&percnt;0.*g&lt;--",
+   *   return g_strdup_printf ("-->\%0.*g<--",
    *                           gtk_scale_get_digits (scale), value);
    *  }
    * ]|
    *
-   * Return value: allocated string representing @value
+   * Returns: allocated string representing @value
    */
   signals[FORMAT_VALUE] =
     g_signal_new (I_("format-value"),
@@ -307,20 +307,18 @@ gtk_scale_class_init (GtkScaleClass *class)
   g_object_class_install_property (gobject_class,
                                    PROP_DIGITS,
                                    g_param_spec_int ("digits",
-						     P_("Digits"),
-						     P_("The number of decimal places that are displayed in the value"),
-						     -1,
-						     MAX_DIGITS,
-						     1,
-						     GTK_PARAM_READWRITE));
+                                                     P_("Digits"),
+                                                     P_("The number of decimal places that are displayed in the value"),
+                                                     -1, MAX_DIGITS, 1,
+                                                     GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
   
   g_object_class_install_property (gobject_class,
                                    PROP_DRAW_VALUE,
                                    g_param_spec_boolean ("draw-value",
-							 P_("Draw Value"),
-							 P_("Whether the current value is displayed as a string next to the slider"),
-							 TRUE,
-							 GTK_PARAM_READWRITE));
+                                                         P_("Draw Value"),
+                                                         P_("Whether the current value is displayed as a string next to the slider"),
+                                                         TRUE,
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (gobject_class,
                                    PROP_HAS_ORIGIN,
@@ -328,25 +326,23 @@ gtk_scale_class_init (GtkScaleClass *class)
                                                          P_("Has Origin"),
                                                          P_("Whether the scale has an origin"),
                                                          TRUE,
-                                                         GTK_PARAM_READWRITE));
+                                                         GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   g_object_class_install_property (gobject_class,
                                    PROP_VALUE_POS,
                                    g_param_spec_enum ("value-pos",
-						      P_("Value Position"),
-						      P_("The position in which the current value is displayed"),
-						      GTK_TYPE_POSITION_TYPE,
-						      GTK_POS_TOP,
-						      GTK_PARAM_READWRITE));
+                                                      P_("Value Position"),
+                                                      P_("The position in which the current value is displayed"),
+                                                      GTK_TYPE_POSITION_TYPE,
+                                                      GTK_POS_TOP,
+                                                      GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
 
   gtk_widget_class_install_style_property (widget_class,
-					   g_param_spec_int ("slider-length",
-							     P_("Slider Length"),
-							     P_("Length of scale's slider"),
-							     0,
-							     G_MAXINT,
-							     31,
-							     GTK_PARAM_READABLE));
+                                           g_param_spec_int ("slider-length",
+                                                             P_("Slider Length"),
+                                                             P_("Length of scale's slider"),
+                                                             0, G_MAXINT, 31,
+                                                             GTK_PARAM_READABLE));
 
   gtk_widget_class_install_style_property (widget_class,
 					   g_param_spec_int ("value-spacing",
@@ -568,13 +564,13 @@ gtk_scale_get_property (GObject      *object,
 
 /**
  * gtk_scale_new:
- * @orientation: the scale's orientation.
+ * @orientation: the scale’s orientation.
  * @adjustment: (allow-none): the #GtkAdjustment which sets the range
  *              of the scale, or %NULL to create a new adjustment.
  *
  * Creates a new #GtkScale.
  *
- * Return value: a new #GtkScale
+ * Returns: a new #GtkScale
  *
  * Since: 3.0
  **/
@@ -593,14 +589,14 @@ gtk_scale_new (GtkOrientation  orientation,
 
 /**
  * gtk_scale_new_with_range:
- * @orientation: the scale's orientation.
+ * @orientation: the scale’s orientation.
  * @min: minimum value
  * @max: maximum value
  * @step: step increment (tick size) used with keyboard shortcuts
  *
  * Creates a new scale widget with the given orientation that lets the
  * user input a number between @min and @max (including @min and @max)
- * with the increment @step.  @step must be nonzero; it's the distance
+ * with the increment @step.  @step must be nonzero; it’s the distance
  * the slider moves when using the arrow keys to adjust the scale
  * value.
  *
@@ -608,7 +604,7 @@ gtk_scale_new (GtkOrientation  orientation,
  * is a power of ten. If the resulting precision is not suitable for your
  * needs, use gtk_scale_set_digits() to correct it.
  *
- * Return value: a new #GtkScale
+ * Returns: a new #GtkScale
  *
  * Since: 3.0
  */
@@ -1131,14 +1127,12 @@ gtk_scale_draw (GtkWidget *widget,
   GtkRange *range = GTK_RANGE (scale);
   GtkStyleContext *context;
   gint *marks;
-  gint focus_padding;
   gint slider_width;
   gint value_spacing;
   gint min_sep = 4;
 
   context = gtk_widget_get_style_context (widget);
   gtk_widget_style_get (widget,
-                        "focus-padding", &focus_padding,
                         "slider-width", &slider_width,
                         "value-spacing", &value_spacing,
                         NULL);
@@ -1411,7 +1405,7 @@ gtk_scale_real_get_layout_offsets (GtkScale *scale,
  * Emits #GtkScale::format-value signal to format the value, 
  * if no user signal handlers, falls back to a default format.
  * 
- * Return value: formatted value
+ * Returns: formatted value
  */
 gchar*
 _gtk_scale_format_value (GtkScale *scale,
@@ -1451,7 +1445,7 @@ gtk_scale_finalize (GObject *object)
  * object is owned by the scale so does not need to be freed by
  * the caller.
  *
- * Return value: (transfer none): the #PangoLayout for this scale,
+ * Returns: (transfer none): the #PangoLayout for this scale,
  *     or %NULL if the #GtkScale:draw-value property is %FALSE.
  *
  * Since: 2.4
@@ -1576,12 +1570,12 @@ gtk_scale_clear_marks (GtkScale *scale)
  * gtk_scale_add_mark:
  * @scale: a #GtkScale
  * @value: the value at which the mark is placed, must be between
- *   the lower and upper limits of the scales' adjustment
+ *   the lower and upper limits of the scales’ adjustment
  * @position: where to draw the mark. For a horizontal scale, #GTK_POS_TOP
  *   and %GTK_POS_LEFT are drawn above the scale, anything else below.
  *   For a vertical scale, #GTK_POS_LEFT and %GTK_POS_TOP are drawn to
  *   the left of the scale, anything else to the right.
- * @markup: (allow-none): Text to be shown at the mark, using <link linkend="PangoMarkupFormat">Pango markup</link>, or %NULL
+ * @markup: (allow-none): Text to be shown at the mark, using [Pango markup][PangoMarkupFormat], or %NULL
  *
  *
  * Adds a mark at @value.

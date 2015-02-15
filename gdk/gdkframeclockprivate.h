@@ -12,9 +12,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
@@ -33,6 +31,10 @@
 
 G_BEGIN_DECLS
 
+/**
+ * GdkFrameClock:
+ * @parent_instance: The parent instance.
+ */
 struct _GdkFrameClock
 {
   GObject parent_instance;
@@ -41,9 +43,23 @@ struct _GdkFrameClock
   GdkFrameClockPrivate *priv;
 };
 
+/**
+ * GdkFrameClockClass:
+ * @parent_class: The parent class.
+
+ * @get_frame_time: Gets the time that should currently be used for
+ *    animations.
+ * @request_phase: Asks the frame clock to run a particular phase.
+ * @begin_updating: Starts updates for an animation.
+ * @end_updating: Stops updates for an animation.
+ * @freeze: 
+ * @thaw: 
+ */
 struct _GdkFrameClockClass
 {
   GObjectClass parent_class;
+
+  /*< public >*/
 
   gint64   (* get_frame_time) (GdkFrameClock *clock);
 
@@ -67,6 +83,7 @@ struct _GdkFrameClockClass
 
 struct _GdkFrameTimings
 {
+  /*< private >*/
   guint ref_count;
 
   gint64 frame_counter;

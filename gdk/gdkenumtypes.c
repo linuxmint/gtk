@@ -205,6 +205,7 @@ gdk_drag_protocol_get_type (void)
             { GDK_DRAG_PROTO_WIN32_DROPFILES, "GDK_DRAG_PROTO_WIN32_DROPFILES", "win32-dropfiles" },
             { GDK_DRAG_PROTO_OLE2, "GDK_DRAG_PROTO_OLE2", "ole2" },
             { GDK_DRAG_PROTO_LOCAL, "GDK_DRAG_PROTO_LOCAL", "local" },
+            { GDK_DRAG_PROTO_WAYLAND, "GDK_DRAG_PROTO_WAYLAND", "wayland" },
             { 0, NULL, NULL }
         };
         etype = g_enum_register_static (g_intern_static_string ("GdkDragProtocol"), values);
@@ -686,6 +687,7 @@ gdk_window_type_get_type (void)
             { GDK_WINDOW_TEMP, "GDK_WINDOW_TEMP", "temp" },
             { GDK_WINDOW_FOREIGN, "GDK_WINDOW_FOREIGN", "foreign" },
             { GDK_WINDOW_OFFSCREEN, "GDK_WINDOW_OFFSCREEN", "offscreen" },
+            { GDK_WINDOW_SUBSURFACE, "GDK_WINDOW_SUBSURFACE", "subsurface" },
             { 0, NULL, NULL }
         };
         etype = g_enum_register_static (g_intern_static_string ("GdkWindowType"), values);

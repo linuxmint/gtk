@@ -1,25 +1,28 @@
 Source: gtk+3.0
 Section: libs
 Priority: optional
-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-XSBC-Original-Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
+Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
 Uploaders: @GNOME_TEAM@
 Build-Depends: debhelper (>= 8.1.3),
-               cdbs (>= 0.4.93~),
-               dbus-x11,
-               at-spi2-core,
+               cdbs (>= 0.4.93),
                gnome-pkg-tools (>= 0.11),
                dpkg-dev (>= 1.16.0),
-               gtk-doc-tools (>= 1.11),
+               gtk-doc-tools (>= 1.20),
                dh-autoreconf,
                gettext,
                pkg-config,
                autotools-dev,
-               libglib2.0-dev (>= 2.37.5),
-               libgdk-pixbuf2.0-dev (>= 2.27.1),
-               libpango1.0-dev (>= 1.32.4),
+               dbus-x11,
+               gsettings-desktop-schemas,
+               adwaita-icon-theme,
+               at-spi2-core,
+               libglib2.0-dev (>= 2.41.2),
+               libgdk-pixbuf2.0-dev (>= 2.30.0),
+               libpango1.0-dev (>= 1.36.7),
                libatk1.0-dev (>= 2.7.5),
                libatk-bridge2.0-dev,
+               libwayland-dev (>= 1.5.91) [linux-any],
+               libxkbcommon-dev (>= 0.2.0),
                libx11-dev (>= 2:1.3.3-2),
                libxext-dev (>= 2:1.1.1-3),
                libxi-dev (>= 2:1.3-4),
@@ -33,30 +36,31 @@ Build-Depends: debhelper (>= 8.1.3),
                libxkbfile-dev,
                libxinerama-dev (>= 2:1.1-3),
                libxfixes-dev (>= 1:3.0.0-3),
-               libcairo2-dev (>= 1.13.0~20140204),
+               libcairo2-dev (>= 1.12.0),
                x11proto-xext-dev,
                libcups2-dev (>= 1.2),
                libcolord-dev (>= 0.1.9),
-               gobject-introspection (>= 1.32.0),
-               libgirepository1.0-dev (>= 1.32.0),
-               xvfb,
-               libwayland-dev (>= 1.2.0),
-# Previous versions generated overly strict shlibs
-               libxkbcommon-dev (>= 0.2.0-0ubuntu3~)
+               librest-dev,
+               libjson-glib-dev,
+               gobject-introspection (>= 1.41.3),
+               libgirepository1.0-dev (>= 1.39.0),
+               xvfb
 Build-Depends-Indep: docbook-xml,
                      docbook-utils,
                      libglib2.0-doc,
                      libatk1.0-doc,
                      libpango1.0-doc,
                      libcairo2-doc
-Standards-Version: 3.9.4
-Vcs-Bzr: https://code.launchpad.net/~ubuntu-desktop/gtk/ubuntugtk3
+Standards-Version: 3.9.6
+Vcs-Svn: svn://anonscm.debian.org/pkg-gnome/desktop/unstable/gtk+3.0/
+Vcs-Browser: http://anonscm.debian.org/viewvc/pkg-gnome/desktop/unstable/gtk+3.0/
 Homepage: http://www.gtk.org/
 XS-Testsuite: autopkgtest
 
 Package: @SHARED_PKG@
 Architecture: any
-Depends: @COMMON_PKG@ (>= ${source:Upstream-Version}),
+Multi-Arch: same
+Depends: @COMMON_PKG@ (>= ${source:Version}),
          ${misc:Depends},
          ${shlibs:Depends},
          shared-mime-info
@@ -68,9 +72,7 @@ Suggests: librsvg2-common,
 Breaks: gnome-themes-standard (<< 3.6),
         murrine-themes (<= 0.98.2),
         libvte-2.90-9 (<< 1:0.32),
-        libwebkitgtk-3.0-0 (<< 1.8.0),
-        gtk3-engines-unico (<< 1.0.2-0ubuntu2)
-Multi-Arch: same
+        libwebkitgtk-3.0-0 (<< 1.8.0)
 Pre-Depends: ${misc:Pre-Depends}
 Description: GTK+ graphical user interface library
  GTK+ is a multi-platform toolkit for creating graphical user
@@ -102,11 +104,11 @@ Description: GTK+ graphical user interface library - minimal runtime
 Package: @COMMON_PKG@
 Section: misc
 Architecture: all
-Depends: ${misc:Depends}
+Multi-Arch: foreign
+Depends: ${misc:Depends}, adwaita-icon-theme (>= ${gnome:Version})
 Recommends: @SHARED_PKG@
 Breaks: @SHARED_PKG@ (<< 3.5.4)
 Replaces: @SHARED_PKG@ (<< 3.5.4)
-Multi-Arch: foreign
 Description: common files for the GTK+ graphical user interface library
  GTK+ is a multi-platform toolkit for creating graphical user
  interfaces. Offering a complete set of widgets, GTK+ is suitable
@@ -118,10 +120,10 @@ Description: common files for the GTK+ graphical user interface library
 Package: @BIN_PKG@
 Section: misc
 Architecture: any
+Multi-Arch: foreign
 Depends: ${misc:Depends}, ${shlibs:Depends},
          @SHARED_PKG@ (>= ${source:Version}),
-         @COMMON_PKG@ (>= ${source:Upstream-Version})
-Multi-Arch: foreign
+         @COMMON_PKG@ (>= ${source:Version})
 Description: programs for the GTK+ graphical user interface library
  GTK+ is a multi-platform toolkit for creating graphical user
  interfaces. Offering a complete set of widgets, GTK+ is suitable
@@ -134,20 +136,19 @@ Description: programs for the GTK+ graphical user interface library
 Package: @DEV_PKG@
 Section: libdevel
 Architecture: any
+Multi-Arch: same
 Depends: @SHARED_PKG@ (= ${binary:Version}),
          gir1.2-gtk-3.0 (= ${binary:Version}),
          @COMMON_PKG@,
          ${misc:Depends},
          ${shlibs:Depends},
-         libglib2.0-dev (>= 2.37.5),
+         libglib2.0-dev (>= 2.41.2),
          libgdk-pixbuf2.0-dev (>= 2.27.1),
-         libpango1.0-dev (>= 1.32.4),
+         libpango1.0-dev (>= 1.36.7),
          libatk1.0-dev (>= 2.7.5),
          libatk-bridge2.0-dev,
-         libcairo2-dev (>= 1.13.0~20140204),
-         libwayland-dev (>= 1.2.0),
+         libcairo2-dev (>= 1.10.0),
          libx11-dev,
-         libxkbcommon-dev,
          libxext-dev,
          libxinerama-dev,
          libxi-dev,
@@ -156,7 +157,9 @@ Depends: @SHARED_PKG@ (= ${binary:Version}),
          libxfixes-dev,
          libxcomposite-dev,
          libxdamage-dev,
-         pkg-config (>= 0.26-1)
+         pkg-config (>= 0.26-1),
+         libwayland-dev (>= 1.4.0) [linux-any],
+         libxkbcommon-dev
 Suggests: @DOC_PKG@
 Description: development files for the GTK+ library
  GTK+ is a multi-platform toolkit for creating graphical user
@@ -174,7 +177,6 @@ Architecture: any
 Depends: @SHARED_PKG@ (= ${binary:Version}),
          @COMMON_PKG@,
          ${misc:Depends}
-Multi-Arch: same
 Description: GTK+ libraries and debugging symbols
  GTK+ is a multi-platform toolkit for creating graphical user
  interfaces. Offering a complete set of widgets, GTK+ is suitable
@@ -188,12 +190,12 @@ Description: GTK+ libraries and debugging symbols
 Package: @DOC_PKG@
 Section: doc
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}
 Recommends: libglib2.0-doc,
             libatk1.0-doc,
             libpango1.0-doc
 Suggests: devhelp
-Multi-Arch: foreign
 Description: documentation for the GTK+ graphical user interface library
  GTK+ is a multi-platform toolkit for creating graphical user
  interfaces. Offering a complete set of widgets, GTK+ is suitable
@@ -224,6 +226,7 @@ Description: example files for GTK+ 3
 Package: gir1.2-gtk-3.0
 Section: introspection
 Architecture: any
+Multi-Arch: same
 Depends: @COMMON_PKG@,
          ${misc:Depends},
          ${shlibs:Depends},
@@ -239,11 +242,11 @@ Description: GTK+ graphical user interface library -- gir bindings
 
 Package: libgail-3-0
 Architecture: any
+Multi-Arch: same
 Depends: ${misc:Depends},
          ${shlibs:Depends},
          @SHARED_PKG@ (= ${binary:Version}),
          at-spi2-core
-Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Description: GNOME Accessibility Implementation Library -- shared libraries
  Gail implements ATK interfaces for GTK+ widgets which are dynamically
@@ -255,6 +258,7 @@ Description: GNOME Accessibility Implementation Library -- shared libraries
 
 Package: libgail-3-dev
 Architecture: any
+Multi-Arch: same
 Section: libdevel
 Depends: ${misc:Depends},
          libgail-3-0 (= ${binary:Version}),
@@ -272,11 +276,11 @@ Description: GNOME Accessibility Implementation Library -- development files
 
 Package: libgail-3-0-dbg
 Architecture: any
+Multi-Arch: same
 Section: debug
 Priority: extra
 Depends: ${misc:Depends}, libgail-3-0 (= ${binary:Version})
 Recommends: @DEBUG_PKG@
-Multi-Arch: same
 Description: Gail libraries and debugging symbols
  Gail is the "GNOME Accessibility Implementation Library".
  .
@@ -286,10 +290,10 @@ Description: Gail libraries and debugging symbols
 
 Package: libgail-3-doc
 Architecture: all
+Multi-Arch: foreign
 Section: doc
 Depends: ${misc:Depends}
 Suggests: devhelp
-Multi-Arch: foreign
 Description: documentation files of the Gail library
  Gail implements ATK interfaces for GTK+ widgets which are dynamically
  loadable at runtime by a GTK+ application. Once loaded, those parts of

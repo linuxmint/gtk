@@ -419,7 +419,7 @@ example_app_window_class_init (ExampleAppWindowClass *class)
         <para>(<ulink url="https://git.gnome.org/browse/gtk+/tree/examples/application2/exampleappwin.c">full source</ulink>)</para>
       </informalexample>
 
-      <para>You may have noticed that we used the _from_resource() variant
+      <para>You may have noticed that we used the <literal>_from_resource(<!-- -->)</literal> variant
       of the function that sets a template. Now we need to use GLib's resource
       functionality to include the ui file in the binary. This is commonly
       done by listing all resources in a .gresource.xml file, such as this:
@@ -456,10 +456,10 @@ example_app_window_class_init (ExampleAppWindowClass *class)
 
       <para>To this end, we add a private struct to our application
       window subclass and keep a reference to the #GtkStack there.
-      The gtk_widget_class_bind_child() function arranges things so
-      that after instantiating the template, the @stack member of
-      the private struct will point to the widget of the same name
-      from the template.</para>
+      The gtk_widget_class_bind_template_child_private() function
+      arranges things so that after instantiating the template, the
+      @stack member of the private struct will point to the widget of
+      the same name from the template.</para>
 
       <informalexample>
         <programlisting><![CDATA[
@@ -605,12 +605,16 @@ example_app_startup (GApplication *app)
 {
   GtkBuilder *builder;
   GMenuModel *app_menu;
+  const gchar *quit_accels[2] = { "&lt;Ctrl&gt;Q", NULL };
 
   G_APPLICATION_CLASS (example_app_parent_class)->startup (app);
 
   g_action_map_add_action_entries (G_ACTION_MAP (app),
                                    app_entries, G_N_ELEMENTS (app_entries),
                                    app);
+  gtk_application_set_accels_for_action (GTK_APPLICATION (app),
+                                         "app.quit",
+                                         quit_accels);
 
   builder = gtk_builder_new_from_resource ("/org/gtk/exampleapp/app-menu.ui");
   app_menu = G_MENU_MODEL (gtk_builder_get_object (builder, "appmenu"));
@@ -633,7 +637,7 @@ example_app_class_init (ExampleAppClass *class)
       <para>Our preferences menu item does not do anything yet,
       but the Quit menu item is fully functional. Note that it
       can also be activated by the usual Ctrl-Q shortcut. The
-      shortcut was specified in the ui file.
+      shortcut was added with gtk_application_set_accels_for_action().
       </para>
 
       <para>The application menu looks like this:</para>
@@ -720,7 +724,7 @@ example_app_window_init (ExampleAppWindow *win)
         <programlisting><xi:include href="../../../../examples/application6/exampleappprefs.c" parse="text"><xi:fallback>FIXME: MISSING XINCLUDE CONTENT</xi:fallback></xi:include></programlisting>
       </informalexample>
 
-      <para>Now we revisit the preferences_activated() function in our
+      <para>Now we revisit the <literal>preferences_activated(<!-- -->)</literal> function in our
       application class, and make it open a new preference dialog.</para>
 
       <informalexample>
@@ -863,8 +867,8 @@ example_app_window_init (ExampleAppWindow *win)
         <programlisting><xi:include href="../../../../examples/application8/gears-menu.ui" parse="text"><xi:fallback>FIXME: MISSING XINCLUDE CONTENT</xi:fallback></xi:include></programlisting>
       </informalexample>
 
-      <para>To connect the menuitem to the show-words setting,
-      we use a #GSettingsAction.</para>
+      <para>To connect the menuitem to the show-words setting, we use
+      a #GAction corresponding to the given #GSettings key.</para>
 
       <informalexample>
         <programlisting><![CDATA[
@@ -959,7 +963,7 @@ example_app_window_init (ExampleAppWindow *win)
       <ulink url="https://git.gnome.org/browse/gtk+/tree/examples/application9/exampleappwin.c">full source</ulink>
       if you are interested in the details.</para>
 
-      <para>This brings our example application to its final appearance:</para>
+      <para>This brings our example application to this appearance:</para>
 
       <informalfigure>
         <mediaobject>
@@ -968,6 +972,35 @@ example_app_window_init (ExampleAppWindow *win)
           </imageobject>
         </mediaobject>
       </informalfigure>
+    </section>
+    <section>
+      <title>Header bar</title>
+
+      <para>Our application already uses a GtkHeaderBar, but so far it
+      still gets a 'normal' window titlebar on top of that. This is a
+      bit redundant, and we will now tell GTK+ to use the header bar
+      as replacement for the titlebar. To do so, we move it around to
+      be a direct child of the window, and set its type to be titlebar.</para>
+
+      <informalexample>
+        <programlisting><xi:include href="../../../../examples/application10/window.ui" parse="text"><xi:fallback>FIXME: MISSING XINCLUDE CONTENT</xi:fallback></xi:include></programlisting>
+      </informalexample>
+
+      <para>A small extra bonus of using a header bar is that we get
+      a fallback application menu for free. Here is how the
+      application now looks, if this fallback is used.</para>
+
+      <informalfigure>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="getting-started-app10.png" format="PNG"/>
+          </imageobject>
+        </mediaobject>
+      </informalfigure>
+
+      <para>If we set up the window icon for our window, the menu button
+      will use that instead of the generic placeholder icon you see
+      here.</para>
     </section>
   </section>
 </chapter>

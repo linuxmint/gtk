@@ -48,7 +48,7 @@ typedef struct _GdkWindowRedirect    GdkWindowRedirect;
  * @GDK_INPUT_OUTPUT windows are the standard kind of window you might expect.
  * Such windows receive events and are also displayed on screen.
  * @GDK_INPUT_ONLY windows are invisible; they are usually placed above other
- * windows in order to trap or filter the events. You can't draw on
+ * windows in order to trap or filter the events. You can’t draw on
  * @GDK_INPUT_ONLY windows.
  */
 typedef enum
@@ -67,7 +67,10 @@ typedef enum
  *  #GtkMenu)
  * @GDK_WINDOW_FOREIGN: foreign window (see gdk_window_foreign_new())
  * @GDK_WINDOW_OFFSCREEN: offscreen window (see
- *  <xref linkend="OFFSCREEN-WINDOWS"/>). Since 2.18
+ *  [Offscreen Windows][OFFSCREEN-WINDOWS]). Since 2.18
+ * @GDK_WINDOW_SUBSURFACE: subsurface-based window; This window is visually
+ *  tied to a toplevel, and is moved/stacked with it. Currently this window
+ *  type is only implemented in Wayland. Since 3.14
  *
  * Describes the kind of window.
  */
@@ -78,7 +81,8 @@ typedef enum
   GDK_WINDOW_CHILD,
   GDK_WINDOW_TEMP,
   GDK_WINDOW_FOREIGN,
-  GDK_WINDOW_OFFSCREEN
+  GDK_WINDOW_OFFSCREEN,
+  GDK_WINDOW_SUBSURFACE
 } GdkWindowType;
 
 /**
@@ -93,8 +97,8 @@ typedef enum
  * @GDK_WA_TYPE_HINT: Honor the type_hint field
  *
  * Used to indicate which fields in the #GdkWindowAttr struct should be honored.
- * For example, if you filled in the "cursor" and "x" fields of #GdkWindowAttr,
- * pass "@GDK_WA_X | @GDK_WA_CURSOR" to gdk_window_new(). Fields in
+ * For example, if you filled in the “cursor” and “x” fields of #GdkWindowAttr,
+ * pass “@GDK_WA_X | @GDK_WA_CURSOR” to gdk_window_new(). Fields in
  * #GdkWindowAttr not covered by a bit in this enum are required; for example,
  * the @width/@height, @wclass, and @window_type fields are required, they have
  * no corresponding flag in #GdkWindowAttributesType.
@@ -122,9 +126,9 @@ typedef enum
  * @GDK_HINT_ASPECT: aspect ratio fields are set
  * @GDK_HINT_RESIZE_INC: resize increment fields are set
  * @GDK_HINT_WIN_GRAVITY: window gravity field is set
- * @GDK_HINT_USER_POS: indicates that the window's position was explicitly set
+ * @GDK_HINT_USER_POS: indicates that the window’s position was explicitly set
  *  by the user
- * @GDK_HINT_USER_SIZE: indicates that the window's size was explicitly set by
+ * @GDK_HINT_USER_SIZE: indicates that the window’s size was explicitly set by
  *  the user
  *
  * Used to indicate which fields of a #GdkGeometry struct should be paid
@@ -168,7 +172,7 @@ typedef enum
  * @GDK_WINDOW_TYPE_HINT_POPUP_MENU: A menu that does not belong to a menubar,
  *  e.g. a context menu.
  * @GDK_WINDOW_TYPE_HINT_TOOLTIP: A tooltip.
- * @GDK_WINDOW_TYPE_HINT_NOTIFICATION: A notification - typically a "bubble"
+ * @GDK_WINDOW_TYPE_HINT_NOTIFICATION: A notification - typically a “bubble”
  *  that belongs to a status icon.
  * @GDK_WINDOW_TYPE_HINT_COMBO: A popup from a combo box.
  * @GDK_WINDOW_TYPE_HINT_DND: A window that is used to implement a DND cursor.
@@ -177,10 +181,8 @@ typedef enum
  * the window has. The window manager can use this when determining decoration
  * and behaviour of the window. The hint must be set before mapping the window.
  *
- * See the
- * <ulink url="http://www.freedesktop.org/Standards/wm-spec">Extended
- * Window Manager Hints</ulink> specification for more details about
- * window types.
+ * See the [Extended Window Manager Hints](http://www.freedesktop.org/Standards/wm-spec)
+ * specification for more details about window types.
  */
 typedef enum
 {
@@ -274,8 +276,8 @@ typedef enum
  * Defines the reference point of a window and the meaning of coordinates
  * passed to gtk_window_move(). See gtk_window_move() and the "implementation
  * notes" section of the
- * <ulink url="http://www.freedesktop.org/Standards/wm-spec">Extended
- * Window Manager Hints</ulink> specification for more details.
+ * [Extended Window Manager Hints](http://www.freedesktop.org/Standards/wm-spec)
+ * specification for more details.
  */
 typedef enum
 {
@@ -346,8 +348,8 @@ typedef enum
  * @visual: #GdkVisual for window
  * @window_type: type of window
  * @cursor: cursor for the window (see gdk_window_set_cursor())
- * @wmclass_name: don't use (see gtk_window_set_wmclass())
- * @wmclass_class: don't use (see gtk_window_set_wmclass())
+ * @wmclass_name: don’t use (see gtk_window_set_wmclass())
+ * @wmclass_class: don’t use (see gtk_window_set_wmclass())
  * @override_redirect: %TRUE to bypass the window manager
  * @type_hint: a hint of the function of the window
  *
@@ -391,7 +393,7 @@ struct _GdkWindowAttr
  * @win_gravity: window gravity, see gtk_window_set_gravity()
  *
  * The #GdkGeometry struct gives the window manager information about
- * a window's geometry constraints. Normally you would set these on
+ * a window’s geometry constraints. Normally you would set these on
  * the GTK+ level using gtk_window_set_geometry_hints(). #GtkWindow
  * then sets the hints on the #GdkWindow it creates.
  *
@@ -416,12 +418,12 @@ struct _GdkWindowAttr
  * size of one character in the terminal. Finally, the base size should be set
  * to the size of one character. The net effect is that the minimum size of the
  * terminal will have a 1x1 character terminal area, and only terminal sizes on
- * the "character grid" will be allowed.
+ * the “character grid” will be allowed.
  *
- * Here's an example of how the terminal example would be implemented, assuming
- * a terminal area widget called "terminal" and a toplevel window "toplevel":
+ * Here’s an example of how the terminal example would be implemented, assuming
+ * a terminal area widget called “terminal” and a toplevel window “toplevel”:
  *
- * <informalexample><programlisting><![CDATA[
+ * |[<!-- language="C" -->
  * 	GdkGeometry hints;
  *
  * 	hints.base_width = terminal->char_width;
@@ -437,7 +439,7 @@ struct _GdkWindowAttr
  *                                 GDK_HINT_RESIZE_INC |
  *                                 GDK_HINT_MIN_SIZE |
  *                                 GDK_HINT_BASE_SIZE);
- * ]]></programlisting></informalexample>
+ * ]|
  *
  * The other useful fields are the @min_aspect and @max_aspect fields; these
  * contain a width/height ratio as a floating point number. If a geometry widget
@@ -633,7 +635,7 @@ void gdk_window_set_composited   (GdkWindow *window,
 
 /*
  * This routine allows you to merge (ie ADD) child shapes to your
- * own window's shape keeping its current shape and ADDING the child
+ * own window’s shape keeping its current shape and ADDING the child
  * shapes to it.
  * 
  * - Raster
@@ -742,7 +744,7 @@ void	      gdk_window_begin_paint_region (GdkWindow          *window,
 					     const cairo_region_t    *region);
 GDK_AVAILABLE_IN_ALL
 void	      gdk_window_end_paint          (GdkWindow          *window);
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 void	      gdk_window_flush             (GdkWindow          *window);
 
 GDK_AVAILABLE_IN_ALL
@@ -1048,12 +1050,12 @@ GDK_AVAILABLE_IN_ALL
 void       gdk_window_set_debug_updates   (gboolean      setting);
 
 GDK_AVAILABLE_IN_ALL
-void       gdk_window_constrain_size      (GdkGeometry  *geometry,
-                                           guint         flags,
-                                           gint          width,
-                                           gint          height,
-                                           gint         *new_width,
-                                           gint         *new_height);
+void       gdk_window_constrain_size      (GdkGeometry    *geometry,
+                                           GdkWindowHints  flags,
+                                           gint            width,
+                                           gint            height,
+                                           gint           *new_width,
+                                           gint           *new_height);
 
 GDK_DEPRECATED_IN_3_8
 void gdk_window_enable_synchronized_configure (GdkWindow *window);
@@ -1089,6 +1091,22 @@ GdkFrameClock* gdk_window_get_frame_clock      (GdkWindow     *window);
 GDK_AVAILABLE_IN_3_10
 void       gdk_window_set_opaque_region        (GdkWindow      *window,
                                                 cairo_region_t *region);
+
+GDK_AVAILABLE_IN_3_12
+void       gdk_window_set_event_compression    (GdkWindow      *window,
+                                                gboolean        event_compression);
+GDK_AVAILABLE_IN_3_12
+gboolean   gdk_window_get_event_compression    (GdkWindow      *window);
+
+GDK_AVAILABLE_IN_3_12
+void       gdk_window_set_shadow_width         (GdkWindow      *window,
+                                                gint            left,
+                                                gint            right,
+                                                gint            top,
+                                                gint            bottom);
+GDK_AVAILABLE_IN_3_14
+gboolean  gdk_window_show_window_menu          (GdkWindow      *window,
+                                                GdkEvent       *event);
 
 G_END_DECLS
 

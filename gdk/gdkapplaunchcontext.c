@@ -34,10 +34,10 @@
  * handles launching an application in a graphical context. It provides
  * startup notification and allows to launch applications on a specific
  * screen or workspace.
- * <example>
- * <title>Launching an application</title>
- * <informalexample>
- * <programlisting>
+ *
+ * ## Launching an application
+ *
+ * |[<!-- language="C" -->
  * GdkAppLaunchContext *context;
  *
  * context = gdk_display_get_app_launch_context (display);
@@ -49,9 +49,7 @@
  *   g_warning ("Launching failed: %s\n", error->message);
  *
  * g_object_unref (context);
- * </programlisting>
- * </informalexample>
- * </example>
+ * ]|
  */
 
 
@@ -238,8 +236,7 @@ gdk_app_launch_context_set_screen (GdkAppLaunchContext *context,
  * Sets the workspace on which applications will be launched when
  * using this context when running under a window manager that
  * supports multiple workspaces, as described in the
- * <ulink url="http://www.freedesktop.org/Standards/wm-spec">Extended
- * Window Manager Hints</ulink>.
+ * [Extended Window Manager Hints](http://www.freedesktop.org/Standards/wm-spec).
  *
  * When the workspace is not specified or @desktop is set to -1,
  * it is up to the window manager to pick one, typically it will

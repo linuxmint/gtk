@@ -54,7 +54,7 @@ G_BEGIN_DECLS
  * GtkKeySnoopFunc:
  * @grab_widget: the widget to which the event will be delivered
  * @event: the key event
- * @func_data: data supplied to gtk_key_snooper_install()
+ * @func_data: (closure): data supplied to gtk_key_snooper_install()
  *
  * Key snooper functions are called before normal event delivery.
  * They can be used to implement custom key event handling.
@@ -143,6 +143,8 @@ GDK_AVAILABLE_IN_ALL
 void           gtk_disable_setlocale    (void);
 GDK_AVAILABLE_IN_ALL
 PangoLanguage *gtk_get_default_language (void);
+GDK_AVAILABLE_IN_3_12
+GtkTextDirection gtk_get_locale_direction (void);
 GDK_AVAILABLE_IN_ALL
 gboolean       gtk_events_pending       (void);
 

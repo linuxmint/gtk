@@ -281,7 +281,7 @@ gtk_widget_accessible_ref_relation_set (AtkObject *obj)
               GtkWidget *temp_widget;
 
               temp_widget = gtk_widget_get_parent (widget);
-
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
               if (GTK_IS_ALIGNMENT (temp_widget))
                 {
                   temp_widget = gtk_widget_get_parent (temp_widget);
@@ -292,6 +292,7 @@ gtk_widget_accessible_ref_relation_set (AtkObject *obj)
                         label = find_label (gtk_widget_get_parent (temp_widget));
                     }
                 }
+G_GNUC_END_IGNORE_DEPRECATIONS
             }
           else if (GTK_IS_COMBO_BOX (widget))
             /*
@@ -456,7 +457,7 @@ gtk_widget_accessible_get_index_in_parent (AtkObject *accessible)
 /* This function is the default implementation for the notify_gtk
  * vfunc which gets called when a property changes value on the
  * GtkWidget associated with a GtkWidgetAccessible. It constructs
- * an AtkPropertyValues structure and emits a "property_changed"
+ * an AtkPropertyValues structure and emits a “property_changed”
  * signal which causes the user specified AtkPropertyChangeHandler
  * to be called.
  */
@@ -604,21 +605,6 @@ gtk_widget_accessible_get_extents (AtkComponent   *component,
     }
 }
 
-static void
-gtk_widget_accessible_get_size (AtkComponent *component,
-                                gint         *width,
-                                gint         *height)
-{
-  GtkWidget *widget;
-
-  widget = gtk_accessible_get_widget (GTK_ACCESSIBLE (component));
-  if (widget == NULL)
-    return;
-
-  *width = gtk_widget_get_allocated_width (widget);
-  *height = gtk_widget_get_allocated_height (widget);
-}
-
 static AtkLayer
 gtk_widget_accessible_get_layer (AtkComponent *component)
 {
@@ -760,7 +746,6 @@ static void
 atk_component_interface_init (AtkComponentIface *iface)
 {
   iface->get_extents = gtk_widget_accessible_get_extents;
-  iface->get_size = gtk_widget_accessible_get_size;
   iface->get_layer = gtk_widget_accessible_get_layer;
   iface->grab_focus = gtk_widget_accessible_grab_focus;
   iface->set_extents = gtk_widget_accessible_set_extents;

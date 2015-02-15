@@ -1,343 +1,335 @@
-gtk+3.0 (3.10.8~8) qiana; urgency=medium
+gtk+3.0 (3.14.5-1) unstable; urgency=medium
 
-  * Fixed regression in 3.10.8~7, causing segfaults in pavucontrol, easystroke and a few other programs.
+  * New upstream bugfix release.
+  * debian/patches/077_fix_menu_height_calculating.patch:
+    + Dropped, merged upstream.
 
- -- Clement Lefebvre <root@linuxmint.com>  Sun, 26 Oct 2014 02:16:41 +0100
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Tue, 11 Nov 2014 18:55:46 +0100
 
-gtk+3.0 (3.10.8~7) qiana; urgency=medium
+gtk+3.0 (3.14.4-2) unstable; urgency=medium
 
-  * gtkrange: Disable drag-and-hold zoom mode (still works with shift-drag)
-  * Brought back ability to warp to mouse pointer in sliders
+  [ Rico Tzschichholz ]
+  * Install org.gtk.Settings.Debug.gschema.xml
 
- -- Clement Lefebvre <root@linuxmint.com>  Wed, 22 Oct 2014 11:09:39 +0200
+  [ Dmitry Shachnev ]
+  * debian/patches/077_fix_menu_height_calculating.patch: backport upstream
+    commit to fix calculation of menu height (closes: #767906).
 
-gtk+3.0 (3.10.8~6) qiana; urgency=medium
+ -- Dmitry Shachnev <mitya57@debian.org>  Tue, 04 Nov 2014 17:19:48 +0300
 
-  * Fixed crash in GtkLockButton if a button with permission set to NULL is clicked.
+gtk+3.0 (3.14.4-1) unstable; urgency=medium
 
- -- Clement Lefebvre <root@linuxmint.com>  Wed, 10 Sep 2014 12:41:30 +0200
+  * New upstream release.
 
-gtk+3.0 (3.10.8~5) qiana; urgency=medium
+ -- Michael Biebl <biebl@debian.org>  Thu, 23 Oct 2014 15:43:31 +0200
 
-  * Fixed a memory leak in GdkCursor
-  * Fixed keyboard Property key breaking keyboard grabs and leading to freezes, cascades of menus when held down
+gtk+3.0 (3.14.3-1) unstable; urgency=medium
 
- -- Clement Lefebvre <root@linuxmint.com>  Wed, 10 Sep 2014 12:35:00 +0200
+  * New upstream release.
+  * Install typelib files into multiarch paths.
+  * Mark gir and dev package as Multi-Arch: same.
+  * Bump Standards-Version to 3.9.6. No further changes.
 
-gtk+3.0 (3.10.8~4) qiana; urgency=medium
+ -- Michael Biebl <biebl@debian.org>  Mon, 13 Oct 2014 23:35:40 +0200
 
-  * Fix for "GtkMenu has unnecessary scroll handles" https://bugzilla.gnome.org/show_bug.cgi?id=726030
+gtk+3.0 (3.14.2-1) unstable; urgency=medium
 
- -- Clement Lefebvre <root@linuxmint.com>  Thu, 12 Jun 2014 11:11:01 +0100
+  * New upstream release.
+    - includes fix gtkbuilder fix for problems affecting libgweather
+      users (like gnome-clocks, Closes: #764681)
 
-gtk+3.0 (3.10.8~3) qiana; urgency=medium
+ -- Andreas Henriksson <andreas@fatal.se>  Sat, 11 Oct 2014 15:12:08 +0200
 
-  * Full color icons in Gtk file browser dialogs
-  * No warp when clicking on scrollbars
+gtk+3.0 (3.14.1-1) unstable; urgency=medium
 
- -- Clement Lefebvre <root@linuxmint.com>  Wed, 21 May 2014 10:50:55 +0100
+  [ Emilio Pozuelo Monfort ]
+  * New upstream release.
 
-gtk+3.0 (3.10.8~2) qiana; urgency=medium
-
-  * Make GtkTreeView honor GtkScrollable policies
-
- -- Clement Lefebvre <root@linuxmint.com>  Sun, 11 May 2014 09:18:25 +0100
-
-gtk+3.0 (3.10.8~1) qiana; urgency=medium
-
-  * Fixed tooltips temporarily drawing at 0x0
-
- -- Clement Lefebvre <root@linuxmint.com>  Fri, 09 May 2014 13:42:09 +0100
-
-gtk+3.0 (3.10.8-0ubuntu1) trusty; urgency=medium
-
-  * New upstream version, drop backports included in the update
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 07 Apr 2014 16:59:16 +0200
-
-gtk+3.0 (3.10.7-0ubuntu5) trusty; urgency=medium
-
-  * debian/patches/git_grid_theming.patch:
-    - "grid: draw css background and borders", that's needed to be able to
-      workraround background color issues with our scrollbars/theme,
-      thanks Lars Uebernickel
-
-  [ William Hua ]
-  * debian/patches/x-canonical-accel.patch:
-    - allow setting menu item accelerator text directly (lp: #1208019)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 03 Apr 2014 18:52:08 +0200
-
-gtk+3.0 (3.10.7-0ubuntu4) trusty; urgency=medium
-
-  * debian/patches/ubuntu_gtk_custom_menu_items.patch:
-    - clean leftover debug g_message() call
-  * debian/patches/git_popup_menu_shift.patch:
-    - "gtkmenu: displace popups by their css margin. Without a margin, 
-       the pointer is above the first (or last) menu item, making it easy 
-       to accidentally activate that item.", thanks Lars Uebernickel
-       (lp: #1281617)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 06 Mar 2014 11:53:02 +0100
-
-gtk+3.0 (3.10.7-0ubuntu3) trusty; urgency=medium
-
-  * debian/patches/git_new_gtkdoc_build.patch:
-    - backport commit to fix the build with the new gtk-doc (lp: #1283226)
-  * debian/patches/git_print_replace_button.patch:
-    - Show "Replace" button when printing to existing file
-  * debian/patches/git_print_tab_visiblity.patch:
-    - Fix visibility of tabs in print dialog
-  * debian/patches/git_touch_popover_underline.patch:
-    - touch popover: use underlines
-  * debian/patches/git_subtitle_typo.patch:
-    - Trivial typo fix in "subtitle" string (lp: #1260935)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 25 Feb 2014 12:35:39 +0100
-
-gtk+3.0 (3.10.7-0ubuntu2) trusty; urgency=medium
-
-  * debian/control.in: rebuild with the current cairo for Hi-DPI support
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 17 Feb 2014 12:32:48 +0100
-
-gtk+3.0 (3.10.7-0ubuntu1) trusty; urgency=medium
-
-  * New upstream version
-  * debian/patches/git_search_printer_location.patch:
-    - Enable search through locations in printers list (lp: #1188571)
-  * debian/patches/testsuite-ppc64el-failure.patch:
-    - dropped, the changes are in the new version
-
-  [ Iain Lane ]
-  * Override the default for org.gtk.Settings.FileChooser startup-mode to
-    start file choosers in the working directory (defaulting to the home
-    directory) by default, instead of 'Recent Files', which has proved
-    unpopular with users.  (LP: #959505)
-  * Make a writable directory for the testsuite to use during the build -
-    fixes failure in `make check' if home dir can't be written to. 
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 28 Jan 2014 13:16:19 +0100
-
-gtk+3.0 (3.10.6-0ubuntu3) trusty; urgency=medium
-
-  * Fix clean target to not fail when it's already been run (rm *-f*,
-    people)
-  * debian/patches/testsuite-ppc64el-failure.patch: fix prototypes of
-    signal callbacks in the test suite.  Closes LP: #1262380.
-
- -- Steve Langasek <steve.langasek@ubuntu.com>  Thu, 26 Dec 2013 18:33:37 -0800
-
-gtk+3.0 (3.10.6-0ubuntu2) trusty; urgency=low
-
-  * debian/tests/build: update to not use gtkstock which is deprecated,
-    the warning is making the autopkgtest unhappy
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 11 Dec 2013 10:52:41 +0100
-
-gtk+3.0 (3.10.6-0ubuntu1) trusty; urgency=low
-
-  * New upstream version, should fix those issues:
-    - gedit invalid free when some ims are used (lp: #1196523)
-    - eog geometry being wrong cause some scaling for the image (lp: #1247564)
-    - scroll issue when using the mouse wheel (lp: #1240957, #1184159)
-    - the fileselector uses a new sidebar for more consistency with nautilus
-      (lp: #937971)
-  * debian/control.in:
-    - Build-Depends on dbus-x11n g_test_dbus_up() is using dbus-launch
-    - Build-Depends on at-spi2-core, needed for the tests
-    - updated cairo, glib, wayland requirements
-  * Renamed some patches to follow in serie and indicate correct origin
-  * debian/patches/git_bookmark_ellipsize.patch:
-    - dropped, the fix is in the new version
-  * debian/patches/git_menu_separator_style.patch:
-    - backport upstream commit for theming issues
+  [ Andreas Henriksson ]
+  * Add debian/patches/reftest-known-fail.patch
+    - make it possible to tag individual reftests as ok to fail.
   * debian/rules:
-    - copy build hacks from debian to use local schemas
-    - drop armhf -O0 workaround, gcc got fixed since
-    - workaround build issues due to autogenerated wayland sources
+    touch testsuite/reftests/style-properties-nth-child.ui.known_fail
+    - reftest shows this intermittently has a couple of pixels
+      difference on some architectures. No big deal.
+      Noone is willing to investigate and consensus is it's ok to disable.
 
-  [ Lars Uebernickel ]
-  * New upstream version (lp: #1171587)
-  * debian/patches/git-gtkmodelmenuitem-icon-support.patch,
-    debian/patches/git_frame_disconnect.patch,
-    debian/patches/git_frame_update.patch,
-    debian/patches/git_list_handlers.patch,
-    debian/patches/git_submenus_leak.patch,
-    debian/patches/revert_git_a11y_stopped.patch,
-    debian/patches/031_ia64_children_test.patch:
-    - drop: fixed upstream
-  * debian/patches/abicheck-dynamic-backends:
-    - drop: abicheck was removed upstream
-  * debian/patches/075_expose_gdkwidget_for_gtkrange.patch:
-    - drop: ido doesn't use this anymore
-  * debian/patches/102_add_wayland_symbols.patch:
-    - drop: symbols are exported automatically now
-  * debian/patches/015_default-fallback-icon-theme.patch,
-    debian/patches/018_gdkenumtypes.c_location.patch,
-    debian/patches/032_mips_treeview_row_separator_height.patch
-    - update from debian
-  * debian/patches/uimanager-guard-against-nested-node-updates.patch:
-    - update: make it apply (gtkuimanager.c was moved to deprecated)
-  * debian/patches/ubuntu_gtk_custom_menu_items.patch:
-    - update: gtkmodelmenu was replaced by gtkmenutracker
-  * debian/patches/073_treeview_almost_fixed.patch:
-    - update: property wrongly marked as readable (caught by the new tests)
-  * 015_default-fallback-icon-theme.patch:
-    - drop: fixed differently upstream
+ -- Michael Biebl <biebl@debian.org>  Thu, 02 Oct 2014 01:49:16 +0200
 
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 10 Dec 2013 11:51:53 +0100
+gtk+3.0 (3.14.0-1) unstable; urgency=medium
 
-gtk+3.0 (3.8.7-0ubuntu1) trusty; urgency=low
+  * New upstream release.
+  * Refresh patches.
 
-  * New upstream version:
-    - should make scroll working again in gedit under xfce (lp: #1171342),
-      there is an xserver side change that is going to be required for other
-      environments though (e.g under compiz)
-  * debian/patches/git_frame_disconnect.patch,
-    debian/patches/git_frame_update.patch,
-    debian/patches/git_submenus_leak.patch:
-    - dropped, the fixes are in the new version
+ -- Michael Biebl <biebl@debian.org>  Tue, 23 Sep 2014 22:25:42 +0200
 
- -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 22 Nov 2013 16:41:24 +0100
+gtk+3.0 (3.13.9-2) unstable; urgency=medium
 
-gtk+3.0 (3.8.6-0ubuntu4) trusty; urgency=low
+  * Upload to unstable.
 
-  [ Ritesh Khadgaray ]
-  * debian/patches/git_bookmark_ellipsize.patch:
-    - GtkFileChooserButton dialog stretched, when user has a really long name
-      saved to bookmark (lp: #956855)
+ -- Andreas Henriksson <andreas@fatal.se>  Fri, 19 Sep 2014 22:25:39 +0200
 
- -- Ritesh Khadgaray <ritesh@canonical.com>  Wed, 06 Nov 2013 15:28:06 +0100
+gtk+3.0 (3.13.9-1) experimental; urgency=medium
 
-gtk+3.0 (3.8.6-0ubuntu2) saucy; urgency=low
+  [ Andreas Henriksson ]
+  * libgtk-3-common: Depend on adwaita-icon-theme (>= ${gnome:Version})
+    - gtk+ should guarantee we have atleast one sane icon theme available.
+  * debian/rules: Include gnome-version.mk to generate ${gnome:Version}
 
-  * Backport fixes from git
-  * debian/patches/git_frame_disconnect.patch
-    debian/patches/git_frame_update.patch:
-    - "This fixes high wake-up count from any application using GtkTreeView,
-       even idle ones."
-  * debian/patches/git_submenus_leak.patch:
-    - "don't leak submenus", thanks Lars Uebernickel (lp: #1199877)
+  [ Emilio Pozuelo Monfort ]
+  * New upstream development release.
+  * debian/control.in:
+    + Bump libpango1.0-dev minimum (build-)dependency.
 
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 28 Oct 2013 10:50:18 -0700
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Fri, 19 Sep 2014 17:37:42 +0200
 
-gtk+3.0 (3.8.6-0ubuntu1) saucy; urgency=low
+gtk+3.0 (3.13.8-1) experimental; urgency=medium
 
-  * New upstream version
-  * debian/patches/git_padding_value.patch:
-    - drop, the fix is the new version
-  * debian/patches/git_list_handlers.patch: gtk was made, during 
-    the 3.8 cycle, to ignore the mimetype handlers with NoDisplay=true. 
-    The change turned out to be wrong and got reverted in 3.10, doing the
-    same here. It makes, e.g shotwell to be listed again (lp: #1238149)
+  [ Andreas Henriksson ]
+  * New upstream development release (3.13.7)
+  * Update build-dependencies according to configure.ac
+    - bump libglib2.0-dev to (>= 2.41.2)
+  * Update libgtk-3.0-dev dependency on libglib2.0-dev to (>= 2.41.2)
+  * Massage debian/patches/018_gdkenumtypes.c_location.patch to apply again
+  * Drop backported/merged patches now in released version:
+    - debian/patches/072_Avoid-pkg-config-atleast-version.patch
+  * Have quilt refresh remaining patches.
+  * Bump gobject-introspection build-dependency to (>= 1.41.3)
+    - this one supports new "nullable" annotation.
+  * Build-depend on adwaita-icon-theme instead of gnome-icon-theme-symbolic
+  * Update debian/libgtk-3-0.symbols with many additions
+  * New upstream development release (3.13.8)
+  * Update build-dependencies according to configure.ac changes:
+    - Bump libgdk-pixbuf2.0-dev to (>= 2.30.0)
+    - Bump libwayland-dev to (>= 1.5.91)
+  * debian/patches/032_mips_treeview_row_separator_height.patch:
+    - massage the patch into applying again.
+  * Update debian/libgtk-3-0.symbols
+    - 4 dropped gdk_wayland_*_libgtk_only symbols, should be unused.
+    - 3 new wayland related symbols
 
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 21 Oct 2013 11:32:56 -0400
+ -- Sjoerd Simons <sjoerd@debian.org>  Fri, 05 Sep 2014 22:50:11 +0200
 
-gtk+3.0 (3.8.4-0ubuntu3) saucy; urgency=low
+gtk+3.0 (3.12.2-3) unstable; urgency=medium
 
-  * debian/patches/git_padding_value.patch: don't use a negative padding, 
-    that fixes gnome-session-properties' dialog segfault on empty lists,
-    thanks Ryan Lortie (lp: #1193913)
+  * Team upload
+  * debian/missing-sources/zlib.js-0.1.6: add missing source code for
+    gdk/broadway/rawinflate.min.js (Closes: #753968)
+    - some files in zlib.js upstream had missing source code themselves
+      (closure-compiler.jar) or are not needed here, and have been removed
+      to save space; see debian/missing-sources/README for details
+    - make debian/missing-sources/rawinflate.js a symlink into zlib.js-0.1.6
+      to reassure lintian that source is present
+  * d/p/073-Use-AC_USE_SYSTEM_EXTENSIONS-to-get-_GNU_SOURCE-_XOP.patch:
+    define _GNU_SOURCE on non-Linux to fix "assignment makes pointer from
+    integer without a cast" found by build-log scanning on kFreeBSD
 
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 30 Sep 2013 16:11:25 +0200
+ -- Simon McVittie <smcv@debian.org>  Sun, 17 Aug 2014 15:26:50 +0100
 
-gtk+3.0 (3.8.4-0ubuntu2) saucy; urgency=low
+gtk+3.0 (3.12.2-2) unstable; urgency=medium
 
-  [ William Hua ]
-  * debian/patches/git-gtkmodelmenuitem-icon-support.patch:
-    - git backport from 3.9, add upstream's GtkModelMenuItem GIcon support
-    (lp: #186961)
+  * Team upload
 
- -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 25 Sep 2013 11:53:05 +0200
+  [ Dmitry Shachnev ]
+  * Autopkgtests fixes: add missing xauth dependency, and stop using
+    deprecated GtkStock item.
 
-gtk+3.0 (3.8.4-0ubuntu1) saucy; urgency=low
+  [ Simon McVittie ]
+  * debian/patches/072_Avoid-pkg-config-atleast-version.patch:
+    stop AM_PATH_GTK_3_0([3], [], [], [gthread]) trying to require
+    gthread-2.0 >= 3, which doesn't exist (Closes: #756476)
 
-  * New upstream version
-  * Dropped the patches included in the new version
+ -- Simon McVittie <smcv@debian.org>  Sun, 10 Aug 2014 17:26:57 +0100
 
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 09 Sep 2013 19:08:12 +0200
+gtk+3.0 (3.12.2-1) unstable; urgency=medium
 
-gtk+3.0 (3.8.2-3ubuntu7) saucy; urgency=low
+  * New upstream release.
 
-  * ubuntu_gtk_custom_menu_items.patch: Fix checking for NULL actions
-    before applying action namespace
+ -- Andreas Henriksson <andreas@fatal.se>  Fri, 16 May 2014 12:12:48 +0200
 
- -- Ted Gould <ted@ubuntu.com>  Thu, 15 Aug 2013 22:32:25 -0500
+gtk+3.0 (3.12.1-1) unstable; urgency=medium
 
-gtk+3.0 (3.8.2-3ubuntu6) saucy; urgency=low
+  * New upstream release
 
-  * Relax dependencies on the -common package, just require
-    libgtk-3-common (>= ${source:Upstream-Version})......
-  * Enable parallel builds.
+ -- Sjoerd Simons <sjoerd@debian.org>  Sat, 26 Apr 2014 16:44:41 +0200
 
- -- Matthias Klose <doko@ubuntu.com>  Sat, 03 Aug 2013 21:18:30 +0200
+gtk+3.0 (3.12.0-4) unstable; urgency=medium
 
-gtk+3.0 (3.8.2-3ubuntu5) saucy; urgency=low
+  * Build-depend on gnome-icon-theme-symbolic and make test suite errors
+    fatal again.
 
-  * debian/patches/git_check_for_gdkpixbuf_first.patch:
-    - Backport patch to fix slow icon loading in GNOME's Background Setttings
-      panel. Thanks Ryan Lortie for the fix! (LP: #1205562)
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Thu, 03 Apr 2014 19:45:56 +0200
 
- -- Jeremy Bicha <jbicha@ubuntu.com>  Thu, 01 Aug 2013 20:37:08 -0400
+gtk+3.0 (3.12.0-3) unstable; urgency=medium
 
-gtk+3.0 (3.8.2-3ubuntu4) saucy; urgency=low
+  * debian/control.in:
+    + Loosen the dependencies on libgtk-3-common from = ${source:Version}
+      to >= ${source:Version} to make libgtk-3-bin and libgtk-3-0 installable
+      when a new source version is uploaded.
+    + Don't build depend on gnome-icon-theme-symbolic as that pulls
+      gnome-icon-theme which in turns pulls libgtk-3-bin, which isn't
+      installable at the moment.
+  * debian/rules:
+    + Temporarily make the test suite non-fatal as gnome-icon-theme-symbolic
+      is needed for some tests.
 
-  * Add new symbol from last upload
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Wed, 02 Apr 2014 19:11:32 +0200
 
- -- Jeremy Bicha <jbicha@ubuntu.com>  Mon, 22 Jul 2013 21:53:35 -0400
+gtk+3.0 (3.12.0-2) unstable; urgency=medium
 
-gtk+3.0 (3.8.2-3ubuntu3) saucy; urgency=low
+  * Upload to unstable.
 
-  * debian/patches: Cherrypick upstream git iconcache fixes (LP: #1186694)
-    - git_iconcache_ref_GtkIconData.patch
-    - git_icontheme_move_changed_emission.patch
-  * debian/patches/git_disable_frame_sync_gtkplug.patch:
-    - Fixes gnome-screensaver not redrawing when used with lightdm
-      on gnome-shell (LP: #1181632)
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Wed, 02 Apr 2014 16:10:12 +0200
 
- -- Tim Lunn <tim@feathertop.org>  Tue, 23 Jul 2013 09:27:13 +1000
+gtk+3.0 (3.12.0-1) experimental; urgency=medium
 
-gtk+3.0 (3.8.2-3ubuntu2) saucy; urgency=low
+  * New upstream release.
+  * Update debian/libgtk-3-0.symbols with added symbols.
 
-  * Use simply expanded variable to avoid FTBFS due to recursive reference of
-    CFLAGS on armhf.
+ -- Andreas Henriksson <andreas@fatal.se>  Tue, 25 Mar 2014 10:17:09 +0100
 
- -- Iain Lane <iain.lane@canonical.com>  Mon, 08 Jul 2013 17:32:34 +0100
+gtk+3.0 (3.11.8-1) experimental; urgency=medium
 
-gtk+3.0 (3.8.2-3ubuntu1) saucy; urgency=low
+  * New upstream release.
+  * debian/control.in,
+    debian/rules:
+    + Enable Google cloud print support on the normal build.
 
-  [ Sebastien Bacher ]
-  * debian/patches/git_filechooser_signal.patch:
-    "GtkFileChooserButton: Also emit 'file-set' when changing the selection 
-      through the combo box"
-  * debian/patches/git_fileselect_subdir.patch:
-    " GtkFileChooserEntry: don't inline-complete if the entry 
-      doesn't have the focus" (lp: #1102042)
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Sun, 09 Mar 2014 15:07:56 +0100
 
-  [ Iain Lane ]
-  * Merge with Debian. Remaining changes:
-    + Enable Wayland backend.
-    + Set Multi-Arch: same on the library.
-    + Break old gtk3-engines-unico versions incompatible with this GTK,
-    + Drop 061_multiarch_module_fallback.patch - unneeded in Ubuntu since we
-      cleared all old gtk modules out.
-    + Don't build with optimisations on armhf to work around bug #1194123.
-    + Install the settings.ini file to set our themes.
-    + Ubuntu specific patches:
-      - 073_treeview_almost_fixed.patch
-      - 075_expose_gdkwidget_for_gtkrange.patch
-      - 102_add_wayland_symbols.patch
-      - abicheck-dynamic-backends
-      - git_fileselect_subdir.patch 
-      - git_gtkcellrenderer_grabbing_modifier.patch
-      - git-gtkmodelmenuitem-icon-support.patch
-      - print-dialog-show-options-of-remote-dnssd-printers.patch
-      - revert_git_a11y_stopped.patch
-      - ubuntu_gtk_custom_menu_items.patch
-      - uimanager-guard-against-nested-node-updates.patch
+gtk+3.0 (3.11.7-1) experimental; urgency=medium
 
- -- Iain Lane <iain.lane@canonical.com>  Mon, 08 Jul 2013 16:31:25 +0100
+  * New upstream release.
+  * Bump build-dependencies according to configure.ac:
+    - glib 2.39.5 and gtk-doc 1.20
+  * Use quilt to refresh all patches.
+  * Update debian/libgtk-3-0.symbols
+
+ -- Andreas Henriksson <andreas@fatal.se>  Tue, 18 Feb 2014 20:22:50 +0100
+
+gtk+3.0 (3.11.5-1) experimental; urgency=medium
+
+  * New upstream development release.
+  * debian/control.in:
+    + Update build dependencies.
+    + Build depend on gnome-icon-theme-symbolic, needed for some tests.
+    + Standards-Version is 3.9.5, no changes needed.
+  * debian/libgtk-3-0.symbols:
+    + Add new symbols. A couple of wayland-related symbols,
+      gdk_wayland_display_get_wl_shell{,_surface} are gone in favor of
+      gdk_wayland_display_get_xdg_shell. The wayland backend is not fully
+      stable yet and nothing in the archive should be depending on them,
+      so this should be fine.
+    + Drop four commented-out symbols that weren't exported after 3.9.10,
+      as mentioned below in the 3.9.14 changelog entry. Those for symbols
+      were not exported in the headers and were only used internally by
+      gdk.
+  * debian/patches/080_disable-parallel-docs-build.patch:
+     + Dropped, gtk-doc 1.20 works fine with parallel builds.
+  * debian/rules:
+     + Break colord<->gtk+ loop when bootstrapping. Thanks Daniel Schepler.
+       Closes: #738603.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Mon, 17 Feb 2014 18:57:53 +0100
+
+gtk+3.0 (3.10.7-1) unstable; urgency=low
+
+  * debian/libgtk-3-bin.install:
+    + Ship broadwayd.
+  * debian/rules:
+    + Enable parallel builds.
+  * New upstream release.
+  * debian/patches/080_disable-parallel-docs-build.patch:
+    + Disable parallel support for the docs as that has races, see
+      the similar glib2.0 patch for a longer explanation.
+  * Upload to unstable.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Sat, 15 Feb 2014 14:15:56 +0100
+
+gtk+3.0 (3.10.2-1) experimental; urgency=low
+
+  * debian/libgtk-3-0.symbols:
+    + Mark wayland symbols as linux-any.
+  * New upstream release.
+    + debian/libgtk-3-0.symbols:
+      - Removed a couple of private structs that shouldn't have been
+        exported.
+  * debian/rules:
+    + Set VERBOSE so we get more information about test failures.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Mon, 28 Oct 2013 02:08:26 +0100
+
+gtk+3.0 (3.10.1-1) experimental; urgency=low
+
+  [ Emilio Pozuelo Monfort ]
+  * debian/control.in,
+    debian/rules:
+    + Only build the wayland backend on linux-any.
+
+  [ Andreas Henriksson ]
+  * New upstream release
+  * Bump libwayland-dev (build-)dependency to >= 1.2.0
+  * Update debian/libgtk-3-0.symbols with added symbols
+
+ -- Andreas Henriksson <andreas@fatal.se>  Sun, 13 Oct 2013 20:14:15 +0200
+
+gtk+3.0 (3.9.14-1) experimental; urgency=low
+
+  [ Andreas Henriksson ]
+  * New upstream development release (3.9.10)
+  * Bump glib (build-)dependency to >= 2.37.3 as per configure.ac
+  * Trivial update in 015_default-fallback-icon-theme.patch to apply.
+  * Update debian/patches/018_gdkenumtypes.c_location.patch to apply
+    after upstream dropped --disable-rebuilds.
+  * Disable 030_tests_skip_filechooser.patch
+    - testsuite moved and restructured....
+  * Updated to apply patch against new testsuite file location:
+    - 032_mips_treeview_row_separator_height.patch
+  * Drop 031_ia64_children_test.patch
+    - fixed differently upstream (see GBZ #702370)
+  * Drop 080_correct_padding_of_submenu_arrows.patch
+    - previously cherry-picked, now included in upstream release.
+  * Refresh all patches to apply without offset.
+  * Ignore testsuite failures for now...
+  * Update debian/libgtk-3-0.symbols
+    - many added symbols, and four missing:
+      gdk_frame_clock_idle_get_type,
+      gdk_offscreen_window_get_type,
+      gdk_window_impl_get_type,
+      gdk_window_impl_x11_get_type.
+  * Explicitly set which GDK backends to build:
+    - enable x11,wayland,broadway in regular build
+    - disable wayland,broadway and enable x11 in udeb build
+  * Add build-dependencies needed by wayland backend:
+    - libwayland-dev (>= 1.1.90), libxkbcommon-dev (>= 0.2.0)
+  * Update debian/libgtk-3-0.symbols with added broadway & wayland symbols.
+  * New upstream release (3.9.12)
+    - bump cairo build-dependency to >= 1.12
+
+  [ Sjoerd Simons ]
+  * Add libwayland-dev depend in libgtk-3-dev since we're building the wayland
+    backend now
+  * Also needs libxkbcommon-dev now due to the wayland backend (Found by Andrew
+    Lee)
+  * debian/libgtk-3-0.symbols: Update for new symbols (Patch by Andrew Lee)
+
+  [ Emilio Pozuelo Monfort ]
+  * New upstream development release (3.9.14).
+  * debian/libgtk-3-0.symbols:
+    + Updated for new symbols.
+  * debian/control.in:
+    + Bump minimum libglib2.0-dev build dependency.
+    + Build depend on gsettings-desktop-schemas for the testsuite.
+    + Build depend on dbus-x11 for the testsuite.
+    + Build depend on at-spi2-core as libatspi2.0-0 seems to require it,
+      tests that use dbus fail otherwise.
+  * debian/rules:
+    + Set XDG_DATA_DIRS and copy and copile the gsettings schemas so that
+      gsettings can find them. Makes the test suite happy.
+    + Set XDG_RUNTIME_DIR, makes the test suite even happier.
+    + Make the test suite fatal again.
+
+ -- Emilio Pozuelo Monfort <pochu@debian.org>  Tue, 10 Sep 2013 01:23:06 +0200
 
 gtk+3.0 (3.8.2-3) unstable; urgency=low
 
@@ -375,85 +367,6 @@ gtk+3.0 (3.8.2-1) unstable; urgency=low
   * Bump Standards-Version to 3.9.4. No further changes.
 
  -- Michael Biebl <biebl@debian.org>  Thu, 23 May 2013 16:23:37 +0200
-
-gtk+3.0 (3.8.2-0ubuntu7) saucy; urgency=low
-
-  * Revert the previous change and work around the GCC-4.8 breakage by
-    building without optimisations on armhf. For the GCC problem, see bug
-    #1194123 
-
- -- Iain Lane <iain.lane@canonical.com>  Tue, 25 Jun 2013 10:58:43 +0100
-
-gtk+3.0 (3.8.2-0ubuntu6) saucy; urgency=low
-
-  * debian/rules: don't stop the build on failings tests, on armhf.
-    There is a test that started failing recently there, and the issue is
-    not easily reproducible. Since the version mismatch between archs is 
-    breaking builds, let's unblock those while we debug
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 20 Jun 2013 13:29:00 +0200
-
-gtk+3.0 (3.8.2-0ubuntu5) saucy; urgency=low
-
-  * debian/patches/git_no_segfault_on_icon_theme_update.patch: git backport
-    to fix nautilus segfaulting when being used after an icon theme update,
-    which typically happens when a package installing an icon is installed or
-    upgraded (lp: #1187709)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 19 Jun 2013 11:08:26 +0200
-
-gtk+3.0 (3.8.2-0ubuntu4) saucy; urgency=low
-
-  * debian/patches/043_ubuntu_menu_proxy.patch,
-    debian/libgtk-3-0.symbols:
-    - drop old menu patches, we deprecate appmenu-gtk in favor of the new
-      unity-gtk-module code
-  * debian/patches/git-gtkmodelmenuitem-icon-support.patch:
-    - git backport from 3.9, add upstream's GtkModelMenuItem GIcon support, 
-      thanks William Hua
-  * debian/gtk-3-examples.install: 
-    - list gtk3-demo-application there
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 07 Jun 2013 17:08:06 +0200
-
-gtk+3.0 (3.8.2-0ubuntu3) saucy; urgency=low
-
-  * debian/patches/uimanager-guard-against-nested-node-updates.patch:
-    - Avoid crashing due to nested update_node calls in GtkUIManager.
-      LP: #1053862
-
- -- Michael Terry <mterry@ubuntu.com>  Tue, 30 Apr 2013 15:38:37 -0700
-
-gtk+3.0 (3.8.2-0ubuntu2) saucy; urgency=low
-
-  * debian/patches/ubuntu_gtk_custom_menu_items.patch:
-    - Update custom menu items patch, thanks Lars Uebernickel
-  * debian/libgtk-3-0.symbols:
-    - updated symbols list for the new patch
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 30 May 2013 19:48:44 +0200
-
-gtk+3.0 (3.8.2-0ubuntu1) saucy; urgency=low
-
-  * New version update:
-    - includes fix for wayland backend segfault (lp: #1113424)
-    - don't use tick mark instead of apostrophe (lp: #896986)
-    - we now support touch friendly popups on entries and text views
-      in place of context menus, on touch devices
-    - The print dialog now shows printers that are discovered
-      using avahi (lp: #1082519)
-    - File chooser dialog doesn't provide network access (lp: #304345)
-    - selection is reported incorrectly in file chooser button (lp: #1041546)
-  * debian/libgtk-3-0.symbols:
-    - new version update
-  * debian/patches/git_color_annotation_fix.patch,
-    debian/patches/git_cssimage_load_when_needed.patch,
-    debian/patches/git_dont_duplicate_bookmark.patch:
-    - dropped, those fixes are in the new version
-  * debian/patches/102_add_wayland_symbols.patch:
-    - updated for new symbols
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 25 Feb 2013 16:29:19 +0100
 
 gtk+3.0 (3.8.0-1) experimental; urgency=low
 
@@ -528,68 +441,6 @@ gtk+3.0 (3.6.4-1) experimental; urgency=low
 
  -- Sjoerd Simons <sjoerd@debian.org>  Tue, 08 Jan 2013 13:54:26 +0100
 
-gtk+3.0 (3.6.4-0ubuntu6) raring; urgency=low
-
-  * Cherry-pick upstream patches to only load CSS image data when needed,
-    saving a substantial amount of memory.
-
- -- Colin Watson <cjwatson@ubuntu.com>  Mon, 04 Feb 2013 13:04:06 +0000
-
-gtk+3.0 (3.6.4-0ubuntu5) raring; urgency=low
-
-  [ Sebastien Bacher ]
-  * debian/patches/git_color_annotation_fix.patch:
-    - backport annotation fix from trunk (lp: #1101301)
-  * debian/patches/062_ubuntu-set-grab-add.patch:
-    - drop that patch, it was needed at some point by ido/indicator-sound
-      but this code has been rewritten without the new for those hacks,
-      thanks Lars Uebernickel for checking
-
-  [ Iain Lane ]
-  * BD on newer libxkbcommon; previous versions generated very strict shlibs.
-
- -- Iain Lane <iain.lane@canonical.com>  Fri, 01 Feb 2013 16:51:15 +0000
-
-gtk+3.0 (3.6.4-0ubuntu4) raring; urgency=low
-
-  * Only build the wayland backend for the shared library, not the udeb. 
-  * Make the abicheck.sh test dynamic on the enabled GDK backends, so the
-    exported symbols can vary between shared lib and udeb build.
-
- -- Iain Lane <iain.lane@canonical.com>  Mon, 28 Jan 2013 12:10:20 +0000
-
-gtk+3.0 (3.6.4-0ubuntu3) raring; urgency=low
-
-  * debian/control.in:
-    - Add libwayland-dev and libxkbcommon-dev as dependencies to
-      libgtk-3-dev (LP: #1106188)
-
- -- Jeremy Bicha <jbicha@ubuntu.com>  Sat, 26 Jan 2013 17:45:46 -0500
-
-gtk+3.0 (3.6.4-0ubuntu2) raring; urgency=low
-
-  * Enable Wayland backend (LP: #954352)
-
- -- Darxus <darxus@chaosreigns.com>  Fri, 25 Jan 2013 22:48:49 +0100
-
-gtk+3.0 (3.6.4-0ubuntu1) raring; urgency=low
-
-  [ Sebastien Bacher ]
-  * debian/patches/git_dont_duplicate_bookmark.patch:
-    - "Remove bookmark duplicate of shortcut" (lp: #316959)
-
-  [ Robert Ancell ]
-  * New upstream release
-  * debian/control.in:
-    - Add ${shlibs:Depends} Depends to libgtk-3-bin
-  * debian/libgtk-3-bin.install:
-    - Install gtk-launch man page.
-  * debian/libgtk-3-dev.install:
-    - Install gtkbuilder.rng RELAX NG schema file which can be used to
-      validate GtkBuilder ui files.
-
- -- Robert Ancell <robert.ancell@canonical.com>  Thu, 10 Jan 2013 17:05:45 +1300
-
 gtk+3.0 (3.6.3-1) experimental; urgency=low
 
   * New upstream release.
@@ -599,17 +450,6 @@ gtk+3.0 (3.6.3-1) experimental; urgency=low
     which can be used to validate GtkBuilder ui files.
 
  -- Michael Biebl <biebl@debian.org>  Fri, 04 Jan 2013 23:23:45 +0100
-
-gtk+3.0 (3.6.2-0ubuntu1) raring; urgency=low
-
-  * New upstream version:
-    - refactor some fileselector code to avoid segfaults, 
-      thanks William Hua for tracking those issues (lp: #851843)
-  * Drop patches included in the new version
-  * debian/libgtk-3-0.symbols:
-    - updated for the new version, dropping private symbols
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 12 Nov 2012 18:52:30 +0100
 
 gtk+3.0 (3.6.1-1) experimental; urgency=low
 
@@ -649,269 +489,6 @@ gtk+3.0 (3.6.0-1) experimental; urgency=low
     changes
 
  -- Sjoerd Simons <sjoerd@debian.org>  Wed, 03 Oct 2012 09:07:16 +0200
-
-gtk+3.0 (3.6.0-0ubuntu4) raring; urgency=low
-
-  * debian/patches/git_robust_a11y_unrealized.patch: "Be robust against 
-    unrealized windows in GtkWindowAccessible" (lp: #1064992)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 09 Nov 2012 17:47:37 +0100
-
-gtk+3.0 (3.6.0-0ubuntu3.1) quantal-proposed; urgency=low
-
-  * Cherry-pick some upstream patches from 3.6.1 (LP: #1068585)
-    + appchooserwidget: check for g_app_info_should_show(). This ensures
-      NoDisplay=true or NotShowIn/OnlyShowIn values in the desktop file are
-      respected.
-    + Make process_all_updates draw synchronously to improve rendering
-      performance.
-
- -- Iain Lane <iain.lane@canonical.com>  Thu, 18 Oct 2012 17:49:38 +0100
-
-gtk+3.0 (3.6.0-0ubuntu3) quantal-proposed; urgency=low
-
-  * debian/patches/revert_git_a11y_stopped.patch:
-    - revert recent commit which unload a11y on shutdown, 
-      that's an optimization and not strictly necessary and it's creating 
-      issue with e.g ubiquity (lp: #1056300). That's a workaround but seems
-      to be the safest solution for quantal.
-  * debian/patches/git_iconview_render_item_select.patch: 
-    - "iconview: Render focus even in non-selected items"
-  * debian/control.in:
-    - let libgtk depends on at-spi-core2 (rather than libgail) since that's
-      the library which is using the service, that should fix issues the
-      warnings raised on some configurations (including the QA tests)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 09 Oct 2012 11:48:15 +0200
-
-gtk+3.0 (3.6.0-0ubuntu2) quantal-proposed; urgency=low
-
-  * debian/patches/git_use_right_display.patch:
-    - should fix gedit or evince hitting an Xerror when opened two times 
-      with different displays, e.g one from unity and one by clicking 
-      on a file in nautilus (lp: #1047431)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 27 Sep 2012 15:30:06 +0200
-
-gtk+3.0 (3.6.0-0ubuntu1) quantal; urgency=low
-
-  * New upstream stable release
-  * debian/libgtk-3-0.symbols:
-    - Updated
-
- -- Robert Ancell <robert.ancell@canonical.com>  Tue, 25 Sep 2012 12:56:48 +1200
-
-gtk+3.0 (3.5.18-0ubuntu3) quantal-proposed; urgency=low
-
-  * debian/patches/print-dialog-show-options-of-remote-dnssd-printers.patch:
-    Make printing on remote DNS-SD/Bonjour-shared printers working
-    (LP: #1053891).
-
- -- Till Kamppeter <till.kamppeter@gmail.com>  Fri, 21 Sep 2012 10:56:30 +0200
-
-gtk+3.0 (3.5.18-0ubuntu2) quantal-proposed; urgency=low
-
-  * Merge fix from Albert Astals Cid to not hijack mnemonics for non-menubar
-    menus (for example context menus). The standard gtk codepath performs more
-    sanity checks that we need. Fixes, for example, the 'R' mnemonic in
-    Nautilus (rename). (LP: #896740)
-
- -- Iain Lane <iain.lane@canonical.com>  Wed, 19 Sep 2012 17:09:56 +0100
-
-gtk+3.0 (3.5.18-0ubuntu1) quantal; urgency=low
-
-  * New upstream bugfix release
-  * debian/libgtk-3-0.symbols:
-    - Updated
-
-  [ Sebastien Bacher ]
-  * debian/patches/101_revert_symbolic_icon_search.patch:
-    - drop the revert workaround done for precise, the icon theme should 
-      be fixed rather in quantal since that's the correct solution,
-      the patch also creates issues in gnome-shell (lp: #1001229)
-
- -- Robert Ancell <robert.ancell@canonical.com>  Wed, 19 Sep 2012 13:20:34 +1200
-
-gtk+3.0 (3.5.16-0ubuntu1) quantal; urgency=low
-
-  * New upstream bugfix release
-  * debian/libgtk-3-0.symbols:
-    - Updated
-  * debian/patches/00git_gtkactionhelper.patch:
-    - Applied upstream
-
- -- Robert Ancell <robert.ancell@canonical.com>  Wed, 05 Sep 2012 15:21:29 +1200
-
-gtk+3.0 (3.5.12-0ubuntu3) quantal-proposed; urgency=low
-
-  * debian/patches/00git_gtkactionhelper.patch:
-    - Fix crash adding actions
-
- -- Robert Ancell <robert.ancell@canonical.com>  Wed, 22 Aug 2012 17:32:00 +1200
-
-gtk+3.0 (3.5.12-0ubuntu2) quantal-proposed; urgency=low
-
-  * debian/control.in: updated glib requirement
-  * debian/patches/ubuntu_gtk_custom_menu_items.patch:
-    - define new gtk_model_menu_create_custom_item function, it's required 
-      for the indicator-message on gmenu update, thanks Lars Uebernickel
-      (lp: #1039476)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 21 Aug 2012 13:57:05 +0200
-
-gtk+3.0 (3.5.12-0ubuntu1) quantal-proposed; urgency=low
-
-  * New upstream version:
-    GtkApplication:
-    - Add gtk_application_get_active_window to get the active window
-    - Add gtk_widget_insert_action_group to allow more flexibility
-      when associating widgets with actions
-    GtkMenuButton:
-    - The gtk_menu_button_set_menu function is getting renamed
-      to gtk_menu_button_set_popup. The old name is still available
-      for now, but will be removed before 3.6
-    GtkToolbar:
-    - use CSS properties instead of style properties for padding
-    Input method support:
-    - GtkEntry and GtkTextView now have input-purpose and input-hints
-      properties that let applications provide useful hints to
-      input methods, like 'this entry is for a phone nr'.
-  * debian/libgtk-3-0.symbols:
-    - updated
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 21 Aug 2012 11:59:37 +0200
-
-gtk+3.0 (3.5.10-0ubuntu1) quantal-proposed; urgency=low
-
-  * New upstream release (LP: #1033867).
-  * Refresh patches to apply cleanly. 
-  * Drop debian/patches/revert_nautilus_segfault.patch: Fixed properly
-    upstream.
-  * Remove ubuntu revisions from symbols which are not Ubuntu specific. 
-  * debian/control{,.in}: XC-Package-Type → Package-Type. Thanks, lintian.
-
- -- Iain Lane <iain.lane@canonical.com>  Tue, 07 Aug 2012 09:52:01 +0100
-
-gtk+3.0 (3.5.8-0ubuntu2) quantal-proposed; urgency=low
-
-  * debian/patches/revert_nautilus_segfault.patch:
-    - revert commit that makes nautilus segfault randomly (lp: #1018896)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 18 Jul 2012 21:28:53 +0200
-
-gtk+3.0 (3.5.8-0ubuntu1) quantal-proposed; urgency=low
-
-  * New upstream version (lp: #1025531)
-    * gtk-launch: A new commandline utility to launch an application from 
-      its desktop file
-    * GtkStrengthBar: A new widget for displaying the strength or level 
-      or some quantity
-    * Wayland: Updates for changes in the Wayland protocol
-    * Bugs fixed
-  * debian/control.in:
-    - libgail-3-0 depends on at-spi2-core since a11y is an hard depends
-  * debian/libgtk-3-0.symbols:
-    - Updated
-  * debian/libgtk-3-bin.install:
-    - install gtk-launcher there
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 18 Jul 2012 16:15:26 +0200
-
-gtk+3.0 (3.5.6-0ubuntu5) quantal; urgency=low
-
-  * Add debian/tests/control: DEP-8 autopkgtest control file. Add XS-Testsuite
-    header to debian/control.in.
-  * Add debian/tests/build: autopkgtest check: Build and run a program against
-    GTK+, to verify that the headers and pkg-config file are installed
-    correctly.
-  * Add debian/tests/python3-gi: autopkgtest check: Run a python3 program
-    against gir1.2-gtk-3.0 to check the introspection part.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 11 Jul 2012 10:48:41 +0200
-
-gtk+3.0 (3.5.6-0ubuntu4) quantal-proposed; urgency=low
-
-  * debian/control.in: Add missing xvfb build dependency for the tests.
-  * debian/rules: Set G_HOME to avoid tests failing in restricted buildd
-    environments, similar to glib.
-  * debian/rules: Create .local/share dir in our local home directory, to work
-    around https://bugzilla.gnome.org/show_bug.cgi?id=678808.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 04 Jul 2012 12:53:42 +0200
-
-gtk+3.0 (3.5.6-0ubuntu3) quantal-proposed; urgency=low
-
-  * 043_ubuntu_menu_proxy.patch: Add the missing three symbols to
-    gtk/gtk.symbols, to unbreak the abicheck.sh test.
-  * 062_ubuntu-set-grab-add.patch: Unfuzz for previous change.
-  * debian/rules: Fail the build on failed tests.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 04 Jul 2012 10:00:24 +0200
-
-gtk+3.0 (3.5.6-0ubuntu2) quantal-proposed; urgency=low
-
-  * debian/control:
-    - libgtk-3-dev depends on libatk-bridge2.0-dev
-
- -- Robert Ancell <robert.ancell@canonical.com>  Thu, 28 Jun 2012 15:31:27 +1200
-
-gtk+3.0 (3.5.6-0ubuntu1) quantal-proposed; urgency=low
-
-  * New upstream release
-  * debian/control:
-    - Build depend on libatk-bridge2.0-dev
-  * debian/libgtk-3-0.symbols:
-    - Updated
-
- -- Robert Ancell <robert.ancell@canonical.com>  Wed, 27 Jun 2012 17:24:13 +1200
-
-gtk+3.0 (3.5.4-0ubuntu1) quantal; urgency=low
-
-  [ Jeremy Bicha ]
-  * settings.ini:
-    Set gnome-panel menu-bar icon size to 24 so that Ubuntu logo
-    for the Applications menu isn't set too small (LP: #986969)
-
-  [ Robert Ancell ]
-  * New upstream release (LP: #1000545)
-  * debian/control:
-    - Bump build-depends on libglib2.0-dev
-    - Add breaks older version of gtk3-engines-unico
-  * debian/libgtk-3-0.symbols:
-    - Updated
-  * debian/libgtk-3-0.install.in:
-  * debian/rules:
-    - Install settings.ini in rules
-  * debian/patches/00git_gtkimage_cleanup_crash.patch:
-    - Applied upstream
-
-  [ Sebastien Bacher ]
-  * Rebase on Debian, including:
-    - simplified the build rules and .install
-    - dropped the static build (not really useful and costing time and efforts)
-  * Remaining diffs:
-  * debian/control.in:
-    - updated replace versions
-  * debian/patches/100_overlay_scrollbar_loading.patch: 
-    -dropped, the new scollbar code doesn't require that hack
-  * Drop fallback support for pre-multiarch loaders
-  * Remaining patches:
-    - 043_ubuntu_menu_proxy.patch
-    - 062_ubuntu-set-grab-add.patch
-    - 073_treeview_almost_fixed.patch
-    - 075_expose_gdkwidget_for_gtkrange.patch
-    - 099_eventbox_scroll_mask.patch
-    - git_gtkcellrenderer_grabbing_modifier.patch
-
-  [ Ken VanDine ]
-  * debian/patches/101_revert_symbolic_icon_search.patch
-    - Revert symbolic icon search changes from 3.4.2, it breaks the icon 
-      displayed in indicator-power because of the order the icons are searched
-      in.  It looks like ubuntu-mono should drop the old icon names and 
-      use the new -symbolic icons.  We need to carry this patch until 
-      ubuntu-mono fixes it's handling of symbolic icons.  (LP: #1001229)
-
- -- Robert Ancell <robert.ancell@canonical.com>  Fri, 15 Jun 2012 11:36:11 +1200
 
 gtk+3.0 (3.4.2-6) unstable; urgency=low
 
@@ -1075,403 +652,6 @@ gtk+3.0 (3.3.16-1) experimental; urgency=low
 
  -- Michael Biebl <biebl@debian.org>  Wed, 07 Mar 2012 01:16:05 +0100
 
-gtk+3.0 (3.4.1-0ubuntu1) precise-proposed; urgency=low
-
-  * New upstream bug fix release:
-    - Custom theme can crash apps with GtkEntryCompletion
-    - Window expands horizontally rather than the text entry growing
-    - conflict between srcdir != builddir and generated enum types
-    - Wayland and X11 backends simultaneously enabled is broken
-    - Anchored widgets inside GtkTextView are drawn out of place
-    - gtk file-chooser: Autocompletion - Dropdown-list: selection fails
-    - windows draw as unfocused/backdrop on window managers
-    - URL to mailing lists in README incorrect
-    - gactionmuxer: Fix list_actions
-    - After clicking empty parts of a toolbar/menubar the next mouse click
-      (button release) does not work
-    - shouldn't set GDK_SOURCE_TOUCHSCREEN based on the name
-    - GtkTreeView should not handle extra mouse buttons
-    - GdkEventButton contains wrong buttons in modifier mask for button
-      releases
-    - entrycompletion: set_property() should use property setter functions
-    - application-window: try to use the desktop name in the fallback menu
-    - Deal more gracefully with a flood of scroll events
-    - Translation updates.
-  * Drop patches which are upstream now:
-    - upstream_treeview_rendering.patch
-    - git_filechooser_selection.patch
-    - no_touchscreen_name_hack.patch
-    - git_dont_ignore_button_release_event.patch
-    - git_shrinkable_widget.patch
-    - git_scrolling_performances.patch
-  * debian/control.in: Bump Build dependencies as per upstream configure.ac.
-  * Add 00git_gtkimage_cleanup_crash.patch: GtkImage: Move the freeing of the
-    icon_helper from the destory to the finalize function to avoid segfaults
-    when trying to access a destroyed object before it is disposed. This often
-    happens in signal handlers which get called asynchronously after destroy.
-    Patch cherrypicked from upstream git head. (LP: #938090, same in
-    LP#946463)
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 16 Apr 2012 10:28:54 +0200
-
-gtk+3.0 (3.4.0-0ubuntu5) precise-proposed; urgency=low
-
-  * debian/patches/git_scrolling_performances.patch:
-    "Don't call gdk_window_process_updates() when scrolling
-     This can cause lagging when scrolling as it causes us to repaint
-     on every scroll event. This wasn't historically a great problem,
-     but with smooth scrolling we get a lot more events, so this
-     now creates visible lagging on slower machines."
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 05 Apr 2012 23:29:06 +0200
-
-gtk+3.0 (3.4.0-0ubuntu4) precise-proposed; urgency=low
-
-  * debian/patches/no_touchscreen_name_hack.patch:
-    - drop the hack to make devices which are named with "touch" to be
-      touchscreen, it's not the case for i.e "appletouch" (lp: #965311)
-  * debian/patches/git_dont_ignore_button_release_event.patch:
-    - "Don't ignore button releases after a wmspec move/resize"
-  * debian/patches/git_shrinkable_widget.patch:
-    - git patch, should fix empathy resizing horizontally when it shouldn't
-      (lp: #903779)
-
-  [ Didier Roche ]
-  * debian/patches/git_gtkcellrenderer_grabbing_modifier.patch:
-    - upstream patch to support modifier 'tapping' (LP: #969256)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 05 Apr 2012 11:59:18 +0200
-
-gtk+3.0 (3.4.0-0ubuntu3) precise; urgency=low
-
-  * debian/patches/043_ubuntu_menu_proxy.patch:
-    - Revert my changes to add back ubuntu-local.  It caused a new bug
-      (LP: #971459) that caused menubars to pop in and out on startup.
-      Since the patch was added largely for glade's benefit, we can
-      just blacklist glade in appmenu-gtk instead.
-
- -- Michael Terry <mterry@ubuntu.com>  Mon, 02 Apr 2012 10:39:28 -0400
-
-gtk+3.0 (3.4.0-0ubuntu2) precise; urgency=low
-
-  * debian/patches/upstream_treeview_rendering.patch:
-    - upstream fix for treeview expanders not always being rendered 
-      (lp: #963862)
-  * debian/patches/git_filechooser_selection.patch:
-    - git patch, fixes selection in filechooser dropdown locations list
-      (lp: #964491)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 30 Mar 2012 16:29:36 +0200
-
-gtk+3.0 (3.4.0-0ubuntu1) precise-proposed; urgency=low
-
-  * New upstream version
-  * debian/patches/dont_show_numlock_warning.patch:
-   - dropped, the patch is in the new version
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 26 Mar 2012 17:25:00 +0200
-
-gtk+3.0 (3.3.20-0ubuntu1) precise; urgency=low
-
-  * New upstream version
-  * debian/control.in:
-    - drop individual gir build-depends
-  * debian/patches/git_touchpad_like_mouse.patch,
-    debian/patches/git_scroll_reset.patch,
-    debian/patches/dont_rename_annotation.patch:
-    - dropped, the fixes are in the new version
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 20 Mar 2012 19:26:29 +0100
-
-gtk+3.0 (3.3.18-0ubuntu4) precise; urgency=low
-
-  * debian/patches/git_touchpad_like_mouse.patch:
-    - git patch, a touchpad device should behave like a mouse and not like a
-       touchscreen (lp: #949414) 
-
- -- Matthieu Baerts (matttbe) <matttbe@gmail.com>  Tue, 20 Mar 2012 10:28:45 +0100
-
-gtk+3.0 (3.3.18-0ubuntu3) precise; urgency=low
-
-  * debian/patches/043_ubuntu_menu_proxy.patch:
-    - Add back 'ubuntu-local' property for GtkMenuBar to allow apps to
-      opt-out of the global bar on a per-menubar basis.  (Used for glade,
-      freeciv, and maybe others)
-
- -- Michael Terry <mterry@ubuntu.com>  Fri, 16 Mar 2012 11:55:09 -0400
-
-gtk+3.0 (3.3.18-0ubuntu2) precise; urgency=low
-
-  * debian/patches/git_scroll_reset.patch: git patch, should fix issues where 
-    it seemed like events where skipped during the scrolling
-
-  [ Ken VanDine ]
-  * debian/patches/099_eventbox_scroll_mask.patch
-    - Added GDK_SCROLL_MASK to GdkEventBox
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 09 Mar 2012 18:07:03 +0100
-
-gtk+3.0 (3.3.18-0ubuntu1) precise; urgency=low
-
-  * New upstream version
-    * Add support for touch devices
-    - New device types GDK_SOURCE_TOUCHSCREEN and GDK_SOURCE_TOUCHPAD for 
-      direct and indirect touch devices
-    - New event GdkEventTouch and GDK_TOUCH_MASK
-    - New signal GtkWidget::touch-event
-    * Add support for smooth scrolling
-    - Scroll events can contain scroll deltas, obtainable via 
-      gdk_event_get_scroll_deltas()
-    - Scroll direction for such events is GDK_SCROLL_SMOOTH
-    - To receive scroll events, widgets must now
-      set either GDK_SCROLL_MASK or GDK_SMOOTH_SCROLL_MASK
-    * GtkScrolledWindow will do kinetic scrolling with touch devices
-    * XInput2 is now required for building the X11 backend, 
-      support for XInput1 has been removed
-    * Deprecations are now versioned, and new API is marked with the version 
-      it was introduced. Use these with GDK_VERSION_{MIN,MAX}_REQUIRED
-    * Theming:
-      - Memory consumption of the CSS parser has been reduced
-      - CSS selectors of the form "a + b" and "a ~ b" work now
-  * debian/control.in: updated glib requirement
-  * debian/libgtk-3-0.symbols: new version update
-  * debian/rules:
-    - drop deprecated --enable-xinput option
-    - updated shlib ver
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 06 Mar 2012 21:30:36 +0100
-
-gtk+3.0 (3.3.16-0ubuntu1) precise; urgency=low
-
-  * New upstream version:
-    - The widget-factory theme test is now installed as a demo named 
-      gtk3-widget-factory  
-    - GtkColorSelectionDialog has been deprecated in favor of a new color 
-      chooser widget named GtkColorChooserDialog
-  * debian/control.in:
-    - updated glib requirement
-  * debian/gtk-3-examples.install.in:
-    - install gtk3-widget-factory there
-  * debian/libgtk-3-0.symbols:
-    - new version update
-  * debian/rules:
-    - updated shlib version
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 21 Feb 2012 18:06:50 +0100
-
-gtk+3.0 (3.3.14-0ubuntu4) precise; urgency=low
-
-  * debian/libgtk-3-0.install.in:
-    - install the settings.ini
-  * debian/patches/015_default-fallback-icon-theme.patch:
-    - dropped in favor of the settings.in configuration
-  * debian/patches/060_ignore-random-icons.patch:
-    - dropped, GNOME bug #451634 states the issue has been fixed slightly
-      different upstream which means the patch is not required
-  * debian/patches/063_resize_grip_default.patch:
-    - dropped, Cimi said it's not needed and can be done from the theme
-  * debian/patches/072_indicator_menu_update.patch:
-    - dropped, it's not required with the current dbusmenu
-  * debian/settings.in:
-    - define default themes there, it's better than hardcoding, also define
-      the default sound theme (lp: #932716)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 20 Feb 2012 12:00:06 +0100
-
-gtk+3.0 (3.3.14-0ubuntu3) precise; urgency=low
-
-  * Revert the previous upload, it turned gnome-control-center to a segfault 
-    land (and probably others), we will update to the next gtk including that 
-    stack of commits once upstream rolls a tested tarball    
-    (lp: #932876, #932644)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 15 Feb 2012 19:46:17 +0100
-
-gtk+3.0 (3.3.14-0ubuntu2) precise; urgency=low
-
-  * Pull the updated GtkTreeViewAccessible code from GTK git master to fix
-    regular crashes that are being experienced by precise users running orca.
-
- -- Luke Yelavich <themuso@ubuntu.com>  Wed, 15 Feb 2012 12:31:30 +1100
-
-gtk+3.0 (3.3.14-0ubuntu1) precise; urgency=low
-
-  * New upstream version
-  * debian/control.in: updated gdk-pixbuf requirement
-  * debian/patches/git_appchooser_ref_hold.patch: 
-    - dropped the fix is in the new version
-    
-  [ Marc Deslauriers ]
-  * debian/patches/dont_show_numlock_warning.patch: Don't show a warning
-    for the numlock key in gtkentry boxes, as some hardware tracks numlock
-    status differently. (LP: #841541, LP: #877456, LP: #835649)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 07 Feb 2012 16:18:49 +0100
-
-gtk+3.0 (3.3.12-0ubuntu1) precise; urgency=low
-
-  * New upstream version, drop git backports, they are in the new version
-  * debian/control.in:
-    - require the new glib
-  * debian/libgtk-3-0.symbols:
-    - new version update
-  * debian/patches/dont_rename_annotation.patch:
-    - don't rename gtk_menu_popup_for_device it's an api break for bindings
-      (lp: #923171)
-  * debian/patches/git_appchooser_ref_hold.patch:
-    - correct hold the reference, avoid a segfault (lp: #864249)
-  * debian/rules:
-    - updated shlib version
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 02 Feb 2012 19:47:03 +0100
-
-gtk+3.0 (3.3.10-0ubuntu3) precise; urgency=low
-
-  [ Lars Uebernickel ]
-  * debian/patches/043_ubuntu_menu_proxy.patch:
-    - don't try to show the global menu when the menuproxy module wasn't
-    loaded
-
-  [ Ken VanDine ]
-  * debian/patches/git_treeview_catch_all.patch
-    - fixes a crasher when searching the empathy contact list (LP: #914927)
-
- -- Ken VanDine <ken.vandine@canonical.com>  Thu, 26 Jan 2012 17:33:17 -0500
-
-gtk+3.0 (3.3.10-0ubuntu2) precise; urgency=low
-
-  * debian/patches/git_gtkrecentmanager_updated.patch:
-    - git patches to ensure that saved files are recorded in the recently
-      used files, which will make them i.e available in the files lens
-      (lp: #920961)
-  * debian/patches/git_gtktimer_unref_protection.patch:
-    - git patch, fixes a possible invalid unread in gtktimer, 
-      should fix a common nautilus segfault (lp: #804891)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 26 Jan 2012 17:40:10 +0100
-
-gtk+3.0 (3.3.10-0ubuntu1) precise; urgency=low
-
-  * New upstream version
-  * debian/control.in:
-    - updated glib requirement
-  * debian/patches/git_revert_property_change.patch:
-    - drop, the change is in the new version
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 23 Jan 2012 17:19:45 +0100
-
-gtk+3.0 (3.3.8-0ubuntu2) precise; urgency=low
-
-  * debian/patches/git_revert_property_change.patch:
-    - revert the change that leaded to i.e eog not starting (lp: #917940)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 18 Jan 2012 11:34:43 +0100
-
-gtk+3.0 (3.3.8-0ubuntu1) precise; urgency=low
-
-  * New upstream version
-    * GtkApplication:
-      - Supports logout notification and inhibiting
-      - Buttons, toolbuttons and switches can now be connected to GActions
-    * GtkSpinButton no longer allows to change the value when not editable
-    * GtkLabel link support has been rewritten to be be more robust
-    * GtkBuilder:
-      - Supports the 'id' in GtkComboBoxText
-      - Can parse GVariant-valued properties
-      - Support loading from a GResource
-    * GtkImage: Support loading from a GResource
-    * GtkUIManager: Support loading from a GResource
-    * Accessibility: key snooping support has been removed
-    * Wayland backend and Theming improvements
-    * Miscellaneous:
-      - Turn default theme css files and dnd cursors into GResources
-    * Bugs fixed:
-      - "Drag & Drop broken for remote X sessions" (lp: #587856)
-      - "Folder selector broken in Precise" (lp: #914356)
-      - "Save file dialog arbitrary selects file name" (lp: #912420)
-      - "Gnome-screenshot fails to save pictures in the good folder" 
-        (lp: #916577)
-      - "Changing selection no longer sets cursor" (lp: #911905)
-  * debian/control.in:
-    - updated glib requirement
-  * debian/libgtk-3-0.symbols:
-    - updated for the new version and the overlay scrollbar update
-  * drop patches included in the new version
-  * debian/patches/100_overlay_scrollbar_loading.patch:
-    - updated patch from Cimi (lp: #911263)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 17 Jan 2012 13:47:37 +0100
-
-gtk+3.0 (3.3.6-0ubuntu3) precise; urgency=low
-
-  * debian/patches/043_ubuntu_menu_proxy.patch:
-    - updated version to fix visual issues under non unity sessions,
-      that should stop the menubars to be hidden first and displayed
-      then after a delay, thanks desrt and Cimi (lp: #915241)
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 12 Jan 2012 15:06:52 +0100
-
-gtk+3.0 (3.3.6-0ubuntu2) precise; urgency=low
-
-  * debian/patches/gtkmenuitemaccessible-set-alt-name.patch: Drop, as the
-    existing code already does what we want it to do. I misunderstood the call
-    to the get_name method in the parent class, in this case, the AtkObject
-    class. This means that apps can set alternative accessible names for menu
-    items without any extra code needed in GTK at all.
-  * debian/patches/git_Revert_x11_Avoid_spurious_focus_events_on_grabs.patch:
-    - Git patch to restore proper functionality of focus change events for
-      a11y.
-
- -- Luke Yelavich <themuso@ubuntu.com>  Fri, 06 Jan 2012 20:53:07 +1100
-
-gtk+3.0 (3.3.6-0ubuntu1) precise; urgency=low
-
-  * New upstream version, dropped the patches backported from git:
-    - trap XIQueryDevice errors to avoid sessions errors issues after suspend
-      (lp: #882956)
-    - don't grab mouse input when the menu bar or the resize-grip are clicked
-      (lp: #878859)
-  * debian/control.in:
-    - updated glib requirement
-  * debian/libgtk-3-0.postinst.in, debian/rules:
-    - don't list the old non-multi-arch ims directory, everything using gtk3
-      should be updated and it breaks the update when the directory is empty 
-      (lp: #908801)
-  * debian/libgtk-3-0.symbols:
-    - new version update
-  * debian/patches/003_gdk.pc_privates.patch:
-    - dropped, upstream did similar changes in the new version
-  * debian/patches/042_treeview_single-focus.patch:
-    - comment that debian change, it has no comment explaining what it's 
-      supposed to do and needs to be updating if still needed.
-  * debian/rules:
-    - updated shlibs version
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 03 Jan 2012 22:35:24 +0100
-
-gtk+3.0 (3.3.4-0ubuntu2) precise; urgency=low
-
-  * debian/patches/git_fix_padding_issues.patch: should fix the 
-    incorrect padding and spacing issues in gnome-control-center
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 16 Dec 2011 11:25:48 +0100
-
-gtk+3.0 (3.3.4-0ubuntu1) precise; urgency=low
-
-  * New upstream version
-  * Refreshed the patches for the new version
-  * Dropped patches backported from git they are included in the tarball
-  * debian/control.in:
-    - require the new glib
-  * debian/libgtk-3-0.symbols:
-    - new version update
-  * debian/rules:
-    - updated shlibs version
-  * debian/patches/041_ia32-libs.patch: 
-    - dropped, that seems a leftover in the multiarch world
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 13 Dec 2011 16:38:04 +0100
-
 gtk+3.0 (3.2.3-1) unstable; urgency=low
 
   * New upstream release.
@@ -1543,95 +723,6 @@ gtk+3.0 (3.2.2-3) unstable; urgency=low
     Closes: #650223
 
  -- Michael Biebl <biebl@debian.org>  Wed, 30 Nov 2011 00:25:29 +0100
-
-gtk+3.0 (3.2.2-2ubuntu4) precise; urgency=low
-
-  * debian/patches/gtkmenuitemaccessible-set-alt-name.patch: Extend the
-    GtkMenuItemAccessible object so applications can set an alternative
-    textual description for a menu item that has an icon, where the icon
-    is used to give the user more information about the item in question.
-    This textual description is used by assistive technologies such as Orca
-    to label the menu item.
-
- -- Luke Yelavich <themuso@ubuntu.com>  Tue, 13 Dec 2011 10:37:12 +1100
-
-gtk+3.0 (3.2.2-2ubuntu3) precise; urgency=low
-
-  * No-change rebuild to drop spurious libsfgcc1 dependency on armhf.
-
- -- Adam Conrad <adconrad@ubuntu.com>  Fri, 02 Dec 2011 17:28:22 -0700
-
-gtk+3.0 (3.2.2-2ubuntu2) precise; urgency=low
-
-  * debian/patches/git_invalid_unref_call.patch:
-    - git patch to fix a segfault in the fileselector added in the recent 
-      version (lp: #897891)
-  * debian/patches/git_fix_appchooser_segfault.patch,
-    debian/patches/git_fix_appchooser_button_segfault.patch:
-    - git backports to fix segfaults in gtk_app_chooser (lp: #864249, #861605)
-
-  [ Martin Pitt ]
-  * debian/control.in: Move -bin to Arch: any.
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 02 Dec 2011 17:43:57 +0100
-
-gtk+3.0 (3.2.2-2ubuntu1) precise; urgency=low
-
-  * Merge with Debian unstable and SVN head. Remaining Ubuntu changes:
-    - Ubuntu specific patches, see their patch headers:
-      043_ubuntu_menu_proxy.patch
-      062_ubuntu-set-grab-add.patch
-      063_resize_grip_default.patch
-      072_indicator_menu_update.patch
-      073_treeview_almost_fixed.patch
-      075_expose_gdkwidget_for_gtkrange.patch
-      100_overlay_scrollbar_loading.patch
-    - debian/libgtk-3-0.symbols: Add symbols from menu proxy and
-      075_expose_gdkwidget_for_gtkrange patches.
-    - debian/watch: Watch for unstable versions.
-    - debian/patches/series: Disable 043_notebook_scroll.patch. This is a
-      Debian change and we want the upstream behaviour or at least a rationale
-      for this.
-  * debian/patches/*: Add standard patch headers to Ubuntu patches, as
-    available.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Tue, 22 Nov 2011 13:05:45 +0100
-
-gtk+3.0 (3.2.2-3) UNRELEASED; urgency=low
-
-  * Add 000git_gtk_tree_view_get_tooltip_context_annotation.patch: Fix
-    gtk_tree_view_get_tooltip_context() transfer annotation, causing crashes
-    when using this method from Python.
-  * Add 016_no_offscreen_widgets_grabbing.patch: Widgets inside
-    GtkOffscreenWindow seem like they should not be allowed to do
-    grab the mouse or whatever, as this can deactivate open menus.
-    (LP: #512427, GNOME #607668)
-  * Add 017_no_offscreen_device_grabbing.patch: Do not allow devices in an
-    offscreen hierarchy to take grabs. (LP: #804009, GNOME #658563)
-  * Add 018_gdkenumtypes.c_location.patch: Always generate gdk/gdkenumtypes.c
-    in the source tree, and fix path in the introspection sources. With this,
-    gdkenumtypes.c is correctly included with separate build trees, too.  This
-    fixes missing GTypes in the .gir when using a separate build tree.
-    (LP: #769256, GNOME #647729)
-  * debian/rules: Bump SHVER to 3.1.90.
-  * Build for multiarch. Adapted Steve Langasek's changes to Ubuntu's gtk+2.0
-    package:
-    - debian/control.in: Bump build dependencies to multiarch aware versions.
-    - debian/control.in: Add Multi-Arch: and necessary Pre-Depends: fields.
-      (libraries/-dbg are "same", -doc/-bin are "foreign").
-    - debian/rules: Use multiarch LIBDIR.
-    - debian/libgail-3-dev.install, debian/libgail-3-0.install: Rename to
-      *.in, and use @LIBDIR@ instead of hardcoded usr/lib.
-    - debian/gir1.2-gtk-3.0.install.in: Use @LIBDIR@.
-    - debian/libgtk-3-0.triggers.in, debian/libgtk-3-0.postinst.in,
-      debian/rules: Also trigger on changes to the fallback non-multiarch
-      module directory, which is now called @OLD_MODULES_BASE_PATH@.
-    - Add 061_multiarch_module_fallback.patch: Fall back to the hard-coded
-      pre-multiarch module directory when searching for modules. This
-      maintains compatibility with packages installing modules to
-      the old directories.
-
- -- Martin Pitt <mpitt@debian.org>  Tue, 22 Nov 2011 09:34:45 +0100
 
 gtk+3.0 (3.2.2-2) unstable; urgency=low
 
@@ -1760,325 +851,6 @@ gtk+3.0 (3.0.10-1) unstable; urgency=low
 
  -- Josselin Mouette <joss@debian.org>  Sat, 04 Jun 2011 22:51:06 +0200
 
-gtk+3.0 (3.2.2-0ubuntu1) precise; urgency=low
-
-  * New upstream bug fix release.
-    - Fix hotkeys in printer dialog. (LP: #879897)
-  * Add 000git_gtk_tree_view_get_tooltip_context_annotation.patch: Fix
-    gtk_tree_view_get_tooltip_context() transfer annotation, causing crashes
-    when using this method from Python.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 14 Nov 2011 16:12:01 +0100
-
-gtk+3.0 (3.2.0-0ubuntu3) oneiric-proposed; urgency=low
-
-  * debian/patches/043_ubuntu_menu_proxy.patch: Fix menu accelerator
-    support for UI generated with GtkBuilder or using GtkMenus
-    submenus. Instead of using the gtk_widget_get_visible() function
-    we check for the internal shown variable as it represents the
-    real state (LP: #849732)
-
- -- Marco Trevisan (Treviño) <3v1n0@ubuntu.com>  Sat, 15 Oct 2011 04:44:23 +0200
-
-gtk+3.0 (3.2.0-0ubuntu2) oneiric; urgency=low
-
-  * debian/patches/043_ubuntu_menu_proxy.patch: Fix mnemonic
-    support to activate remote menus (LP: #821290)
-
- -- Ted Gould <ted@ubuntu.com>  Mon, 03 Oct 2011 10:50:58 +0100
-
-gtk+3.0 (3.2.0-0ubuntu1) oneiric; urgency=low
-
-  * New upstream version
-  * debian/rules: updated shlibs version to the current symbols one
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 26 Sep 2011 16:04:59 +0200
-
-gtk+3.0 (3.1.92-0ubuntu1) oneiric; urgency=low
-
-  * New upstream bug fix release.
-  * Drop 000git_updates_since_3.1.90.patch
-  * Refresh patches.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 21 Sep 2011 16:14:01 +0200
-
-gtk+3.0 (3.1.90-0ubuntu1) oneiric; urgency=low
-
-  * New upstream bug fix release.
-  * Add 000git_updates_since_3.1.90.patch: Upstream changes since 3.1.90, to
-    get as close to 3.1.91 as we can:
-    - 3 small bug fixes.
-    - 4 translation updates.
-  * 101_gdkenumtypes.c_location.patch: Update to the current version sent to
-    upstream, which also works with distcheck.
-  * debian/libgtk-3-0.symbols: Update for new upstream version. Note that
-    some gtk_font_chooser_*() symbols got dropped, but they only existed since
-    3.1.12. Only gtkmm3.0 references them, and no gtkmm3.0 rdepends uses that
-    API.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Thu, 15 Sep 2011 06:44:26 +0200
-
-gtk+3.0 (3.1.18-0ubuntu3) oneiric; urgency=low
-
-  * debian/patches/111_no_offscreen_device_grabs.patch: Do not allow 
-    widgets in an offscreen hiearchy to make grabs. Required to fix 
-    LP: #804009. Thanks Robert Carr
-
- -- Didier Roche <didrocks@ubuntu.com>  Mon, 12 Sep 2011 17:33:08 +0200
-
-gtk+3.0 (3.1.18-0ubuntu2) oneiric; urgency=low
-
-  * Add 101_gdkenumtypes.c_location.patch: Always generate gdk/gdkenumtypes.c
-    in the source tree, and fix path in the introspection sources. With this,
-    gdkenumtypes.c is correctly included with separate build trees, too. This
-    fixes missing GTypes in the .gir when using a separate build tree.
-    (LP: #769256)
-  * Ship pregenerated documentation from upstream tarball again:
-    - debian/rules: Drop --enable-gtk-doc again.
-    - debian/control.in: Move gtk-doc-tools back to B-D-I.
-    - debian/libgtk-3-doc.install.in, debian/libgail-3-doc.install: Update
-      origins to install from source tree.
-    - (LP: #842543)
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Thu, 08 Sep 2011 12:45:18 +0200
-
-gtk+3.0 (3.1.18-0ubuntu1) oneiric; urgency=low
-
-  * New upstream release.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Tue, 06 Sep 2011 09:21:59 +0200
-
-gtk+3.0 (3.1.16-0ubuntu2) oneiric; urgency=low
-
-  * debian/control.in: Move gtk-doc-tools from B-D-I to B-D, to avoid having
-    to add a dynamic "i386 or not" check to debian/rules.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 05 Sep 2011 13:39:09 +0200
-
-gtk+3.0 (3.1.16-0ubuntu1) oneiric; urgency=low
-
-  * New upstream release.
-  * Port debian/patches/043_ubuntu_menu_proxy.patch for new upstream version.
-  * Unfuzz patches.
-  * debian/control.in: Bump libatk1.0-dev build dependency as per upstream
-    configure.ac.
-  * Drop 101_css_provider_load_from_data_crash.patch, applied upstream.
-  * debian/rules: Explicitly build with --enable-gtk-doc for shared build.
-  * debian/libgtk-3-0.symbols: Add new symbols from this release.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 05 Sep 2011 13:01:21 +0200
-
-gtk+3.0 (3.1.12-0ubuntu2) oneiric; urgency=low
-
-  * debian/patches/101_css_provider_load_from_data_crash.patch:
-    - Fix crash when passing load_from_data a length argument, as the
-      Python bindings do.  LP: #831812
-
- -- Michael Terry <mterry@ubuntu.com>  Thu, 25 Aug 2011 14:52:16 -0400
-
-gtk+3.0 (3.1.12-0ubuntu1) oneiric; urgency=low
-
-  * New upstream version, clean patches backported from git
-  * debian/control.in: 
-    - updated gdk-pixbuf requirement
-  * debian/rules:
-    - updated shlibs version
-  * debian/libgtk-3-0.symbols:
-    - new version update
-  * debian/patches/093_no_deprecated.patch:
-    - don't build tests with DGTK_DISABLE_DEPRECATED to workaround build issues
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 16 Aug 2011 16:08:06 +0200
-
-gtk+3.0 (3.1.10-0ubuntu3) oneiric; urgency=low
-
-  * debian/patches/001_git_combobox_entry_style_class.patch
-    - add a "combobox-entry" style class for comboboxes with entries
-
- -- Ken VanDine <ken.vandine@canonical.com>  Wed, 10 Aug 2011 11:47:27 -0400
-
-gtk+3.0 (3.1.10-0ubuntu2) oneiric; urgency=low
-
-  * debian/patches/043_ubuntu_menu_proxy.patch
-    - Updated patch 
-  * debian/libgtk-3-0.symbols
-    - Added menubar symbols
-
- -- Ken VanDine <ken.vandine@canonical.com>  Thu, 04 Aug 2011 11:58:59 -0400
-
-gtk+3.0 (3.1.10-0ubuntu1) oneiric; urgency=low
-
-  * New upstream version
-  * Dropped patches included in the new version
-  * debian/control.in: updated glib and pango requirements
-  * debian/libgtk-3-0.symbols: updated the symbols list 
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 25 Jul 2011 21:02:29 +0200
-
-gtk+3.0 (3.1.8-0ubuntu6) oneiric; urgency=low
-
-  * debian/control.in:
-    - update the glib requirements, gtk3 was using glib in a non documented
-      way and required patching to keep working with the new glib
-    - don't build-depends on the individual girs, those are install by the
-      respective libraries which depends on those
-  * debian/patches/090_new_glib_compat.patch:
-    - backported git patch to adapt to the new glib behaviour
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 21 Jul 2011 15:41:49 +0200
-
-gtk+3.0 (3.1.8-0ubuntu5) oneiric; urgency=low
-
-  * debian/patches/043_ubuntu_menu_proxy.patch:
-    - Don't overwrite 'ubuntu-local' property when 'show-local' changes.
-      LP: #743265
-
- -- Michael Terry <mterry@ubuntu.com>  Wed, 20 Jul 2011 10:44:29 -0400
-
-gtk+3.0 (3.1.8-0ubuntu4) oneiric; urgency=low
-
-  * debian/patches/063_resize_grip_default.patch
-    - Make the grab handles default configurable (LP: #809919)
-
- -- Ken VanDine <ken.vandine@canonical.com>  Fri, 15 Jul 2011 12:45:26 -0400
-
-gtk+3.0 (3.1.8-0ubuntu3) oneiric; urgency=low
-
-  * debian/patches/001_git_dont_increase_font.patch:
-    - Add upstream patch to avoid increasing the primary text font on every
-      call to gtk_message_dialog_format_secondary_text (LP: #808419) 
-
- -- Rodrigo Moya <rodrigo.moya@canonical.com>  Fri, 15 Jul 2011 15:37:28 +0200
-
-gtk+3.0 (3.1.8-0ubuntu2) oneiric; urgency=low
-
-  * debian/patches/001_git_gtk_assitant.patch:
-    - backported some git commits to fix gtkassistant issues
-  *  debian/libgtk-3-0.symbols:
-     - updated the symbols list
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 13 Jul 2011 17:45:10 +0200
-
-gtk+3.0 (3.1.8-0ubuntu1) oneiric; urgency=low
-
-  * New upstream version
-  * debian/rules
-    - updated shlib version
-  * debian/patches/00git_image_init_variable.patch:
-    - dropped, the fix is in the new version
-  * debian/patches/076_invalidate_order_on_changes.patch:
-    - dropped, the fix is in the new version
-  
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 07 Jul 2011 11:36:29 +0200
-
-gtk+3.0 (3.1.6-0ubuntu4) oneiric; urgency=low
-
-  * debian/patches/076_invalidate_order_on_changes.patch
-    - Invalidate order on changes (LP: #798377)
-
- -- Ken VanDine <ken.vandine@canonical.com>  Wed, 29 Jun 2011 10:26:26 +0100
-
-gtk+3.0 (3.1.6-0ubuntu3) oneiric; urgency=low
-
-  * debian/patches/100_overlay_scrollbar_loading.patch
-    - Added support for the ayatana overlay scrollbars
-  * debian/libgtk-3-0.symbols
-    - Added new symbols from the scrollbars patch
-
- -- Ken VanDine <ken.vandine@canonical.com>  Thu, 16 Jun 2011 09:01:45 -0400
-
-gtk+3.0 (3.1.6-0ubuntu2) oneiric; urgency=low
-
-  * Add 00git_image_init_variable.patch: Fix crash in
-    ensure_stated_icon_from_info() due to uninitialized variable. Patch taken
-    from upstream git head.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 15 Jun 2011 12:06:54 +0200
-
-gtk+3.0 (3.1.6-0ubuntu1) oneiric; urgency=low
-
-  * New upstream version
-    - GtkOverlay is a new container that allows to place one or more 'overlay' 
-      widgets on top of another widget. 
-      This can be used for 'floating statusbars' and similar interfaces.
-    - GtkLockButton has been simplified in appearance to look like a normal 
-      button
-    - GtkNotebook now supports height-for-width layout
-    - Accessibility for menuitems and combo boxes has been restored
-    - The horizontal and vertical subclasses of GtkBox, GtkPaned,
-      GtkSeparator, GtkScrollbar, GtkScale and GtkButtonBox have been deprecated
-  * debian/patches/libgtk-3-0.symbols: 
-    - updated symbols list
-  * debian/patches/091_bugzilla_tooltip_refresh.patch: 
-    - commented from the series, it's not clear it's still needed with GTK3 and 
-      will need updating to work with the new version
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 14 Jun 2011 19:41:19 +0200
-
-gtk+3.0 (3.1.4-0ubuntu1) oneiric; urgency=low
-
-  * New upstream version, refreshed patches and updated symbol list.
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 10 Jun 2011 10:38:08 +0200
-
-gtk+3.0 (3.0.11-0ubuntu1) oneiric; urgency=low
-
-  * New upstream version
-  * Resynchronize on Debian, see the 3.0.0-1ubuntu1 changelog entry which
-    has a summary of the remaining Ubuntu changes
-  * 043_notebook_scroll.patch: 
-    - dropped, that's a Debian change and we want the upstream behaviour rather
-      or at least a rational to ship a diff over upstream for it
-  * debian/control.in: clean some unrequired diffs over Debian
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 07 Jun 2011 18:46:06 +0200
-
-gtk+3.0 (3.0.10-1) unstable; urgency=low
-
-  [ Josselin Mouette ]
-  * libgtk-3-0.postrm.in: fix badly written test.
-
-  [ Fabian Greffrath ]
-  * Remove leftover diversions from the libgtk3.0-bin package
-    that got replaced by libgtk-3-bin (Closes: #617662 ).
-
-  [ Michael Biebl ]
-  * debian/watch: Switch to .bz2 tarballs.
-  * New upstream release.
-  * Refresh patches.
-  * Bump Standards-Version to 3.9.2. No further changes.
-  * Drop Build-Depends on dpkg-dev (>= 1.13.19). Even lenny has a more recent
-    version.
-  * Update package descriptions.
-  * Drop debian/gruik2devhelp.awk and Build-Depends on gawk, obsolete.
-
-  [ Josselin Mouette ]
-  * 043_notebook_scroll.patch: new patch. Reintroduce tab scrolling in 
-    GtkNotebook, but this time only when Alt is pressed, as recommended 
-    by upstream, and from the whole notebook area.
-  * Drop debhelper 8 requirement so that it can build.
-  * libgtk-3-bin.preinst: only remove libgtk3.0-bin diversions if they 
-    already exist.
-
- -- Josselin Mouette <joss@debian.org>  Sat, 04 Jun 2011 22:51:06 +0200
-
-gtk+3.0 (3.0.9-0ubuntu2) oneiric; urgency=low
-
-  * 043_ubuntu_menu_proxy.patch: Add missing "gtkprivate.h" include module to
-    actually get the declaration of _gtk_find_module(). Should fix FTBFS on
-    amd64 on the buildds.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Tue, 17 May 2011 19:32:35 +0200
-
-gtk+3.0 (3.0.9-0ubuntu1) oneiric; urgency=low
-
-  * Merge with Debian unstable. See 3.0.0-1ubuntu1 for remaining Ubuntu
-    changes.
-  * New upstream bug fix release.
-  * 043_ubuntu_menu_proxy.patch: Update for new release.
-
- -- Martin Pitt <martin.pitt@ubuntu.com>  Tue, 17 May 2011 16:53:30 +0200
-
 gtk+3.0 (3.0.8-1) unstable; urgency=low
 
   * Make the -dev package depend on the gir package.
@@ -2088,12 +860,6 @@ gtk+3.0 (3.0.8-1) unstable; urgency=low
   * Upload to unstable; drop check-dist include.
 
  -- Josselin Mouette <joss@debian.org>  Sun, 10 Apr 2011 18:29:44 +0200
-
-gtk+3.0 (3.0.8-0ubuntu1) natty; urgency=low
-
-  * New upstream release
-
- -- Robert Ancell <robert.ancell@canonical.com>  Mon, 04 Apr 2011 11:03:11 +1000
 
 gtk+3.0 (3.0.6-1) experimental; urgency=low
 
@@ -2105,20 +871,6 @@ gtk+3.0 (3.0.6-1) experimental; urgency=low
 
  -- Emilio Pozuelo Monfort <pochu@debian.org>  Sat, 26 Mar 2011 00:00:41 +0000
 
-gtk+3.0 (3.0.6-0ubuntu1) natty; urgency=low
-
-  * New upstream release
-  * debian/libgtk-3-0.symbols:
-    - Updated
-
- -- Robert Ancell <robert.ancell@canonical.com>  Mon, 28 Mar 2011 16:42:52 +1100
-
-gtk+3.0 (3.0.5-0ubuntu1) natty; urgency=low
-
-  * New upstream release
-
- -- Robert Ancell <robert.ancell@canonical.com>  Thu, 24 Mar 2011 17:26:16 +1100
-
 gtk+3.0 (3.0.3-1) experimental; urgency=low
 
   * New upstream release.
@@ -2126,12 +878,6 @@ gtk+3.0 (3.0.3-1) experimental; urgency=low
       - Bump minimum libpango1.0-dev dependency.
 
  -- Emilio Pozuelo Monfort <pochu@debian.org>  Mon, 14 Mar 2011 23:34:09 +0000
-
-gtk+3.0 (3.0.3-0ubuntu1) natty; urgency=low
-
-  * New upstream release
-
- -- Robert Ancell <robert.ancell@canonical.com>  Tue, 15 Mar 2011 17:55:39 +1100
 
 gtk+3.0 (3.0.2-1) experimental; urgency=low
 
@@ -2141,12 +887,6 @@ gtk+3.0 (3.0.2-1) experimental; urgency=low
 
  -- Sjoerd Simons <sjoerd@debian.org>  Wed, 09 Mar 2011 23:46:48 +0000
 
-gtk+3.0 (3.0.2-0ubuntu1) natty; urgency=low
-
-  * New upstream release
-
- -- Robert Ancell <robert.ancell@canonical.com>  Tue, 08 Mar 2011 15:38:10 +1100
-
 gtk+3.0 (3.0.1-2) experimental; urgency=low
 
   * debian/patches/080_prevent_invalid_free.patch
@@ -2154,12 +894,6 @@ gtk+3.0 (3.0.1-2) experimental; urgency=low
       git)
 
  -- Sjoerd Simons <sjoerd@debian.org>  Sat, 26 Feb 2011 16:02:13 +0000
-
-gtk+3.0 (3.0.1-1ubuntu1) natty; urgency=low
-
-  * New upstream release
-
- -- Robert Ancell <robert.ancell@canonical.com>  Thu, 24 Feb 2011 11:03:41 +1100
 
 gtk+3.0 (3.0.1-1) experimental; urgency=low
 
@@ -2172,45 +906,6 @@ gtk+3.0 (3.0.1-1) experimental; urgency=low
   * New upstream release.
 
  -- Emilio Pozuelo Monfort <pochu@debian.org>  Tue, 22 Feb 2011 20:36:55 +0000
-
-gtk+3.0 (3.0.0-1ubuntu2) natty; urgency=low
-
-  * debian/libgtk-3-bin.postrm:
-  * debian/libgtk-3-bin.preinst:
-    - Fix package name used in diversion
-
- -- Robert Ancell <robert.ancell@canonical.com>  Tue, 22 Feb 2011 14:33:15 +1100
-
-gtk+3.0 (3.0.0-1ubuntu1) natty; urgency=low
-
-  * Merge with Debian experimental, remaining Ubuntu changes:
-  * debian/control:
-    - Add Vcs-Bzr link  
-  * debian/libgtk2.0-0.symbols:
-    - Add Ubuntu specific symbols
-  * debian/watch:
-    - Watch for unstable versions
-  * debian/patches/043_menu_proxy.patch
-    - Add GtkMenuProxy support for remoting menus.
-  * debian/patches/062_dnd_menubar.patch:
-    - Allow click on menubars for dnd
-  * debian/patches/071_no_offscreen_widgets_grabbing.patch:
-    - Don't let offscreen widgets do grabbing
-  * debian/patches/072_indicator_menu_update.patch:
-    - Change by Cody Russell to send an update event on menu changes,
-      should make the bluetooth indicator refresh correctly
-  * debian/patches/073_treeview_almost_fixed.patch:
-    - "ubuntu-almost-fixed-height" private property to speed-up software-center
-  * debian/patches/075_expose_gdkwidget_for_gtkrange.patch:
-    - Expose the event window for ido
-  * debian/patches/091_bugzilla_tooltip_refresh.patch:
-    - Upstream bugzilla change to have better looking tooltips the gtk theme
-      need to set "new-tooltip-style" to use those
-  * debian/patches/092_default_to_xdg_document_dir.patch:
-    - Use $XDG_DOCUMENTS_DIR as default directory rather than the home
-      directory for the 'Print to File' function.
-
- -- Robert Ancell <robert.ancell@canonical.com>  Mon, 21 Feb 2011 15:49:45 +1100
 
 gtk+3.0 (3.0.0-1) experimental; urgency=low
 
@@ -2246,101 +941,6 @@ gtk+3.0 (3.0.0-1) experimental; urgency=low
 
  -- Emilio Pozuelo Monfort <pochu@debian.org>  Sat, 19 Feb 2011 11:40:36 +0000
 
-gtk+3.0 (3.0.0-0ubuntu1) natty; urgency=low
-
-  * New upstream release
-  * debian/control:
-    - Bump build-depends on libglib2.0-dev, libgdk-pixbuf2.0-dev, libatk1.0-dev,
-      gobject-introspection
-    - Disable pixbuf engine, it is not provided by this version
-  * debian/libgail3.0-0.symbols:
-  * debian/libgtk3.0-0.symbols:
-    - Updated
-    - Mark symbols with stable version number
-  * debian/rules:
-    - Bump SHVER
-
- -- Robert Ancell <robert.ancell@canonical.com>  Mon, 14 Feb 2011 09:56:54 +1100
-
-gtk+3.0 (2.99.3-0ubuntu1) natty; urgency=low
-
-  [ Rico Tzschichholz ]
-  * New upstream release
-  * debian/patches:
-    - refreshed as needed
-    - 006_reenable_pixbuf_engine.patch dropped is upstream
-    - 065_gir_set_packages.patch dropped is upstream
-  * debian/libgtk3.0-dev.*, debian/rules:
-    - remove gtk-builder-convert references
-  * debian/libgtk3.0-0.symbols:
-    - updated
-
-  [ Michael Terry ]
-  * debian/watch:
-    - Fix regex and grab bz2 tarballs now that we're format 3.0
-
- -- Rico Tzschichholz <ricotz@ubuntu.com>  Thu, 03 Feb 2011 12:58:11 -0500
-
-gtk+3.0 (2.99.2-1ubuntu3) natty; urgency=low
-
-  * debian/patches/043_ubuntu_menu_proxy.patch:
-    - Update to proxy F10 presses to the global menu.  LP: #689178
-  * debian/libgtk3.0-0.symbols:
-    - Add new symbol ubuntu_gtk_menu_shell_activate_first
-
- -- Michael Terry <mterry@ubuntu.com>  Thu, 27 Jan 2011 10:01:43 -0500
-
-gtk+3.0 (2.99.2-1ubuntu2) natty; urgency=low
-
-  * debian/patches/065_gir_set_packages.patch
-    - Added the package back and updated to fix build problems
-
- -- Ken VanDine <ken.vandine@canonical.com>  Thu, 20 Jan 2011 15:03:42 -0500
-
-gtk+3.0 (2.99.2-1ubuntu1) natty; urgency=low
-
-  [ Robert Ancell ]
-  * Merge with Debian experimental, remaining Ubuntu changes:
-  * debian/control:
-    - Build-depend on dh-autoreconf
-    - Move gtk-doc-tools from Build-Depends-Indep to Build-Depends as it is
-      required by dh_autoreconf
-    - Add Vcs-Bzr link
-  * debian/libgtk2.0-0.symbols:
-    - Add Ubuntu specific symbols
-  * debian/rules:
-    - Use autoreconf.mk
-  * debian/watch:
-    - Watch for unstable versions
-  * debian/patches/043_menu_proxy.patch
-    - Add GtkMenuProxy support for remoting menus.
-  * debian/patches/062_dnd_menubar.patch:
-    - Allow click on menubars for dnd
-  * debian/patches/065_gir_set_packages.patch
-    - Added _gir_PACKAGES for each gir created, to match gir to pkg which is
-      needed by vapigen-0.12
-  * debian/patches/071_no_offscreen_widgets_grabbing.patch:
-    - Don't let offscreen widgets do grabbing
-  * debian/patches/072_indicator_menu_update.patch:
-    - Change by Cody Russell to send an update event on menu changes,
-      should make the bluetooth indicator refresh correctly
-  * debian/patches/073_treeview_almost_fixed.patch:
-    - "ubuntu-almost-fixed-height" private property to speed-up software-center
-  * debian/patches/075_expose_gdkwidget_for_gtkrange.patch:
-    - Expose the event window for ido
-  * debian/patches/091_bugzilla_tooltip_refresh.patch:
-    - Upstream bugzilla change to have better looking tooltips the gtk theme
-      need to set "new-tooltip-style" to use those
-  * debian/patches/092_default_to_xdg_document_dir.patch:
-    - Use $XDG_DOCUMENTS_DIR as default directory rather than the home
-      directory for the 'Print to File' function.
-
-  [ Sebastien Bacher ]
-  * debian/patches/065_gir_set_packages.patch:
-    - dropped since it breaks the build
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 20 Jan 2011 15:26:57 +0100
-
 gtk+3.0 (2.99.2-1) experimental; urgency=low
 
   * New upstream release.
@@ -2354,33 +954,6 @@ gtk+3.0 (2.99.2-1) experimental; urgency=low
       - Bumped the shver.
 
  -- Emilio Pozuelo Monfort <pochu@debian.org>  Thu, 13 Jan 2011 18:36:27 +0000
-
-gtk+3.0 (2.99.2-0ubuntu1) UNRELEASED; urgency=low
-
-  * New upstream release
-  * debian/patches/015_default-fallback-icon-theme.patch:
-  * debian/patches/043_ubuntu_menu_proxy.patch:
-  * debian/patches/071_no_offscreen_widgets_grabbing.patch:
-  * debian/patches/072_indicator_menu_update.patch:
-  * debian/patches/091_bugzilla_tooltip_refresh.patch:
-    - Rebased patches
-  * debian/patches/004_gir_with_separate_build_tree.patch:
-  * debian/patches/005_support_disabling_x11_extensions.patch:
-  * debian/patches/061_use_pdf_as_default_printing_standard.patch:
-  * debian/patches/074_expose_active_menu_item.patch:
-  * debian/patches/093_dso_link_issues.patch:
-  * debian/patches/094_gtkprint_test_fix.patch:
-    - Remove upstreamed and obsolete patches
-  * debian/libgtk3.0-0.install.in:
-  * debian/libgtk3.0-bin.install.in:
-  * debian/libgtk3.0-dev.install.in:
-  * debian/libgtk3.0-dev.manpages:
-    - Fix to install correct files
-  * debian/libgtk3.0-0.symbols:
-  * debian/libgail3.0-0.symbols:
-    - Updated to new API
-
- -- Rodrigo Moya <rodrigo.moya@canonical.com>  Thu, 13 Jan 2011 16:05:39 +0100
 
 gtk+3.0 (2.99.1-1) experimental; urgency=low
 
@@ -2441,95 +1014,6 @@ gtk+3.0 (2.99.1-1) experimental; urgency=low
 
  -- Emilio Pozuelo Monfort <pochu@debian.org>  Wed, 12 Jan 2011 22:06:17 +0000
 
-gtk+3.0 (2.91.7-1ubuntu1) natty; urgency=low
-
-  * Merge with Debian experimental, remaining Ubuntu changes:
-  * debian/control:
-    - Build-depend on dh-autoreconf
-    - Move gtk-doc-tools from Build-Depends-Indep to Build-Depends as it is
-      required by dh_autoreconf
-    - Add Vcs-Bzr link
-  * debian/libgtk2.0-0.symbols:
-    - Add Ubuntu specific symbols
-  * debian/rules:
-    - Use dh_autoreconf
-    - Remove gdk/gdkenumtypes.h before build
-  * debian/watch:
-    - Watch for unstable versions
-  * debian/patches/004_gir_with_separate_build_tree.patch:
-    - When using a separate build tree, gdk/gdkenumtypes.h gets generated in the
-      build dir, not in the source dir. Therefore we need to add the build
-      directory to the include search path when building the GIRs, so that
-      gdk/gdk.h can actually find <gdk/gdkenumtypes.h>.
-  * debian/patches/043_menu_proxy.patch
-    - Add GtkMenuProxy support for remoting menus.
-  * debian/patches/062_dnd_menubar.patch:
-    - Allow click on menubars for dnd
-  * debian/patches/065_gir_set_packages.patch
-    - Added _gir_PACKAGES for each gir created, to match gir to pkg which is
-      needed by vapigen-0.12
-  * debian/patches/071_no_offscreen_widgets_grabbing.patch:
-    - Don't let offscreen widgets do grabbing
-  * debian/patches/072_indicator_menu_update.patch:
-    - Change by Cody Russell to send an update event on menu changes,
-      should make the bluetooth indicator refresh correctly
-  * debian/patches/073_treeview_almost_fixed.patch:
-    - "ubuntu-almost-fixed-height" private property to speed-up software-center
-  * debian/patches/074_expose_active_menu_item.patch:
-    - Expose the active menu for the soundmenu
-  * debian/patches/075_expose_gdkwidget_for_gtkrange.patch:
-    - Expose the event window for ido
-  * debian/patches/091_bugzilla_tooltip_refresh.patch:
-    - Upstream bugzilla change to have better looking tooltips the gtk theme
-      need to set "new-tooltip-style" to use those
-  * debian/patches/092_default_to_xdg_document_dir.patch:
-    - Use $XDG_DOCUMENTS_DIR as default directory rather than the home
-      directory for the 'Print to File' function.
-  * debian/patches/093_dso_link_issues.patch:
-  * debian/patches/094_gtkprint_test_fix.patch:
-    - Build fixes
-
- -- Robert Ancell <robert.ancell@canonical.com>  Thu, 23 Dec 2010 15:03:09 +1100
-
-gtk+3.0 (2.91.7-1) UNRELEASED; urgency=low
-
-  * debian/control.in:
-    - Bump build-depends on libglib2.0-dev
-  * debian/libgtk3.0-0.symbols:
-    - Updated.
-  * debian/libgtk3.0-dev.install.in
-    - gdkconfig.h no longer distributed
-  * debian/rules:
-    - Bumped the shver.
-  * debian/patches/001_static-linking-dont-query-immodules.patch:
-  * debian/patches/005_support_disabling_x11_extensions.patch:
-  * debian/patches/003_gdk.pc_privates.patch:
-  * debian/patches/070_mandatory-relibtoolize.patch:
-  * debian/patches/041_ia32-libs.patch:
-  * debian/patches/002_static-linking-dont-build-perf.patch:
-  * debian/patches/004_git_add_missing_include.patch:
-  * debian/patches/042_treeview_single-focus.patch:
-    - Refreshed
-
- -- Robert Ancell <robert.ancell@canonical.com>  Thu, 23 Dec 2010 14:09:17 +1100
-
-gtk+3.0 (2.91.7-0ubuntu1) natty; urgency=low
-
-  * New upstream release
-  * debian/libgtk3.0-dev.install.in:
-    - gdkconfig.h no longer distributed
-  * debian/libgtk3.0-0.symbols:
-     - Updated
-  * debian/rules:
-    - Update matching rule for chrpath due to library name change
-  * debian/patches/093_xsync_include.patch:
-    - Applied upstream
-  * debian/patches/093_dso_link_issues.patch:
-  * debian/patches/094_gtkprint_test_fix.patch:
-    - Build fixes
-
- -- Robert Ancell <robert.ancell@canonical.com>  Thu, 23 Dec 2010 09:53:49 +1100
-
 gtk+3.0 (2.91.6-1) experimental; urgency=low
 
   * New upstream release.
@@ -2552,37 +1036,6 @@ gtk+3.0 (2.91.6-1) experimental; urgency=low
   * Let gir1.2-gtk-3.0 replace gir1.0-gtk-3.0.
 
  -- Emilio Pozuelo Monfort <pochu@debian.org>  Sat, 18 Dec 2010 16:00:23 +0000
-
-gtk+3.0 (2.91.6-0ubuntu2) natty; urgency=low
-
-  * Updated for gir abi transition.
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 16 Dec 2010 17:30:37 +0100
-
-gtk+3.0 (2.91.6-0ubuntu1) natty; urgency=low
-
-  * New upstream release
-  * debian/control:
-    - Disable gtk3-engines-pixbuf package, as the pixbuf engine is currently
-      disabled
-  * debian/libgtk3.0-0.symbols:
-     - Updated
-  * debian/patches/093_xsync_include.patch:
-    - Add missing X11/Xlib.h include
-
-  [ Martin Pitt ]
-
-  * Add 004_gir_with_separate_build_tree.patch: When using a separate build
-    tree, gdk/gdkenumtypes.h gets generated in the build dir, not in the
-    source dir. Therefore we need to add the build directory to the include
-    search path when building the GIRs, so that gdk/gdk.h can actually find
-    <gdk/gdkenumtypes.h>. (GNOME #636043)
-  * debian/rules: Remove gdk/gdkenumtypes.h from the source dir, so that it
-    gets built in the build tree. This is a workaround to put back proper type
-    information to the Gdk GIR, until this issue is fully understood.
-    (See GNOME #636043)
-
- -- Robert Ancell <robert.ancell@canonical.com>  Wed, 08 Dec 2010 19:05:20 +1100
 
 gtk+3.0 (2.91.5-2) experimental; urgency=low
 
@@ -2610,18 +1063,6 @@ gtk+3.0 (2.91.5-1) experimental; urgency=low
       - Updated.
 
  -- Emilio Pozuelo Monfort <pochu@debian.org>  Tue, 30 Nov 2010 23:13:17 +0100
-
-gtk+3.0 (2.91.5-0ubuntu1) natty; urgency=low
-
-  * New upstream release
-  * debian/control:
-    - Remove unnecessary ${shlibs:Depends} from gir and -dev packages
-  * debian/libgtk3.0-0.symbols:
-    - Updated
-  * debian/patches/00git_gdk_lib.patch:
-    - Applied upstream
-
- -- Robert Ancell <robert.ancell@canonical.com>  Tue, 30 Nov 2010 11:43:13 +1100
 
 gtk+3.0 (2.91.4-2) experimental; urgency=low
 
@@ -2662,28 +1103,6 @@ gtk+3.0 (2.91.4-1) experimental; urgency=low
 
  -- Emilio Pozuelo Monfort <pochu@debian.org>  Tue, 16 Nov 2010 06:30:33 +0100
 
-gtk+3.0 (2.91.4-0ubuntu2) natty; urgency=low
-
-  [ Sebastien Bacher ]
-  * debian/copyright: update from Debian
-
-  [ Ken VanDine ]
-  * debian/patches/065_gir_set_packages.patch
-    - Added _gir_PACKAGES for each gir created, to match gir to pkg which is
-      needed by vapigen-0.12
-
- -- Ken VanDine <ken.vandine@canonical.com>  Fri, 19 Nov 2010 14:01:06 -0500
-
-gtk+3.0 (2.91.4-0ubuntu1) natty; urgency=low
-
-  * New upstream release
-  * debian/control:
-    - Bump build-depends on libglib2.0-dev
-  * debian/patches/00git_gdk_lib.patch:
-    - Fix build
-
- -- Robert Ancell <robert.ancell@canonical.com>  Thu, 11 Nov 2010 13:12:48 +1100
-
 gtk+3.0 (2.91.3-1) experimental; urgency=low
 
   [ Sebastian Dröge ]
@@ -2718,176 +1137,6 @@ gtk+3.0 (2.91.3-1) experimental; urgency=low
   * debian/copyright updated/rewritten
 
  -- Sjoerd Simons <sjoerd@debian.org>  Sun, 07 Nov 2010 20:45:46 +0000
-
-gtk+3.0 (2.91.3-0ubuntu1) natty; urgency=low
-
-  [ Michael Terry ]
-  * debian/libgtk3.0-0.symbols:
-    - Fix some symbols that had debian versioning cruft
-  * debian/rules:
-    - Set introspection=no for non-shared build
-  * debian/libgtk3.0-doc.doc-base.gtk-faq:
-    - Dropped, as faq docs are no longer shipped
-  * debian/libgtk3.0-doc.doc-base.gtk.in:
-    - Rename to just .gtk and specify DOC_PKG manually.  Many other files
-      hardcode it anyway and it was confusing the build system.
-  * debian/libgtk3.0-doc.links.in:
-    - Drop non-existant faq doc symlink
-  * debian/libgail3.0-doc.links:
-    - Update directories to match where the source installs docs
-  * debian/libgail3.0-doc.doc-base.gail-reference:
-    - Fix document name to not conflict with 2.0 version
-    - Update directories to match where the source installs docs
-
-  [ Bilal Akhtar ]
-  * debian/patches/092_default_to_xdg_document_dir.patch:
-    - Use $XDG_DOCUMENTS_DIR as default directory rather than the home
-      directory for the 'Print to File' function. (LP: #611011)
-
- -- Michael Terry <mterry@ubuntu.com>  Fri, 05 Nov 2010 11:45:26 -0400
-
-gtk+3.0 (2.91.3-0ubuntu1~build3) natty; urgency=low
-
-  * Upload to natty
-  * debian/rules, debian/control:
-    - Build gir package
-
- -- Michael Terry <mterry@ubuntu.com>  Tue, 02 Nov 2010 13:42:42 -0400
-
-gtk+3.0 (2.91.3-0ubuntu1~build2) maverick; urgency=low
-
-  * debian/control*:
-    - Update required version of glib to 2.27.2
-
- -- Michael Terry <mterry@ubuntu.com>  Tue, 02 Nov 2010 11:54:19 -0400
-
-gtk+3.0 (2.91.3-0ubuntu1~build1) maverick; urgency=low
-
-  * New upstream release
-  * debian/rules, debian/control:
-    - Use dh_autoreconf
-  * debian/patches/70_mandatory-relibtoolize.patch:
-    - Dropped in favor of dh_autoreconf
-  * debian/libgtk3.0-0.symbols:
-    - Update to match new API
-
- -- Michael Terry <mterry@ubuntu.com>  Tue, 02 Nov 2010 10:27:22 -0400
-
-gtk+3.0 (2.91.2-0ubuntu1~build1) maverick; urgency=low
-
-  [ Michael Terry ]
-  * New upstream release
-  * debian/control.in:
-    - Require GLib 2.27.1
-  * debian/libgtk3.0-0.symbols:
-    - Updated to match new API
-  * debian/patches/043_ubuntu_menu_proxy.patch,
-    debian/patches/070_mandatory-relibtoolize.patch,
-    debian/patches/073_treeview_almost_fixed.patch:
-    - Refresh
-  * debian/patches/074_use_comboboxtext_to_fix_amd64.patch:
-    - Remove, applied upstream 
-  * debian/libgtk3.0-doc.install.in:
-    - Remove doc faq file no more shipped
-
-  [ Didier Roche ]
-  * debian/patches/074_expose_active_menu_item.patch:
-    - Expose the active menu for the soundmenu (LP: #655760)
-  * debian/patches/075_expose_gdkwidget_for_gtkrange.patch:
-    - expose the event window for ido (LP: #655756)
-  * debian/libgtk3.0-0.symbols:
-    - add symbols from last patches
-
- -- Michael Terry <mterry@ubuntu.com>  Tue, 26 Oct 2010 18:58:33 -0400
-
-gtk+3.0 (2.91.1-0ubuntu1~build2) maverick; urgency=low
-
-  [ Sebastien Bacher ]
-  * New upstream version
-  * debian/patches/062_ubuntu-set-grab-add.patch:
-    - updated and added back to the series
-  * debian/libgtk2.0-0.symbols:
-    - updated
-  * don't install the upstream changelog to save cd space
-  * don't install the tutorial since upstream dropped it
-  * debian/patches/043_ubuntu_menu_proxy.patch:
-    - new version update
-  * debian/libgtk3.0-common.install: install the fileselector schemas
-  * debian/rules:
-    - shlib update
-
-  [ Michael Terry ]
-  * 074_use_comboboxtext_to_fix_amd64.patch:
-    - fix amd64 FTBFS in ppa
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 18 Oct 2010 11:19:26 +0200
-
-gtk+3.0 (2.91.0-1) experimental; urgency=low
-
-  [ Sebastian Dröge ]
-  * Initial GTK+ 3 packaging.
-
-  [ Rico Tzschichholz ]
-  * New upstream development release
-  * some fixes and changes
-
-  [ Sjoerd Simons ]
-  * New upstream release (2.91.0)
-  * debian/patches/009_gtk-export-filechooser.patch:
-    + Removed. Doesn't apply anymore and was only needed for hildon
-  * Update build-depends to cairo >= 1.10.0 and glib-2.0 >= 2.27.0
-  * debian/patches/070_mandatory-relibtoolize.patch
-    + Updated
-  * Update the faq/tutorial index files names
-  * debian/control.in:
-    + Add dependency on docbook-utils for db2html to generate the documentation
-      html during build
-  * Update the symbols file
-  * Version various document index files so they don't conflict with their
-    gtk2 flavour
-  * debian/libgtk3-bin.preinst, debian/libgtk3-bin.postrm:
-    + Divert gtk+2.0's update-icon-caches. The format remained the same so this
-      is safe to do
-
- -- Sjoerd Simons <sjoerd@debian.org>  Sun, 10 Oct 2010 14:06:26 +0100
-
-gtk+3.0 (2.91.0-1~build2) maverick; urgency=low
-
-  * Review ubuntu patches
-  * debian/control:
-    - set ubuntu vcs
-    - updated the binaries list and build depends for the gir
-  * debian/libgtk2.0-0.symbols:
-    - updated for the ubuntu defined symbols
-  * debian/gir1.0-gtk-3.0.install.in, debian/libgtk3.0-dev.install.in:
-    - updated for the gir build
-  * debian/patches/043_ubuntu_menu_proxy.patch:
-    - updated version of the ubuntu menu proxy patch, thanks Cody Russell
-  * debian/patches/071_no_offscreen_widgets_grabbing.patch:
-    - change by Cody Russell to not let offscreen widgets do grabbing
-  * debian/patches/072_indicator_menu_update.patch:
-    - extra signals required for the indicator updates
-  * debian/patches/073_treeview_almost_fixed.patch:
-    - "ubuntu-almost-fixed-height" private property to speed-up software-center
-  * debian/patches/091_bugzilla_tooltip_refresh.patch:
-    - updated version from the fedora git
-  * debian/rules:
-    - build the gir
-  * debian/patches/062_ubuntu-set-grab-add.patch:
-    - commented for now since it needs to be updated
-  * Don't use gir yet to workaround build issues
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 12 Oct 2010 12:13:42 +0200
-
-gtk+3.0 (2.91.0-1~build1) maverick; urgency=low
-
-  * Upload the debian experimental stock version to a ppa for testing,
-    the ubuntu patches needs to be reviewed and reapplied in a later build
-  * workaround build issues in the rules
-  * Don't build the static version for now, it will be faster to build and
-    workaround a build issues with this one
-
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 11 Oct 2010 19:16:30 +0200
 
 gtk+2.0 (2.21.5-1) experimental; urgency=low
 

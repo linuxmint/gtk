@@ -8,7 +8,7 @@
 <link rel="up" href="theming.html" title="Part IV. Theming in GTK+">
 <link rel="prev" href="GtkCssProvider.html" title="GtkCssProvider">
 <link rel="next" href="gtk3-GtkStyleProperties.html" title="GtkStyleProperties">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -59,7 +59,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkStyleProvider.html#gtk-style-provider-get-style-property" title="gtk_style_provider_get_style_property ()">gtk_style_provider_get_style_property</a> <span class="c_punctuation">()</span>
@@ -138,10 +138,10 @@ gtk_style_provider_get_icon_factory (<em class="parameter"><code><a class="link"
                                      <em class="parameter"><code><a class="link" href="gtk3-GtkWidgetPath.html#GtkWidgetPath" title="GtkWidgetPath"><span class="type">GtkWidgetPath</span></a> *path</code></em>);</pre>
 <div class="warning">
 <p><code class="literal">gtk_style_provider_get_icon_factory</code> has been deprecated since version 3.8 and should not be used in newly-written code.</p>
-<p>Will always return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for all GTK-provided style providers.</p>
+<p>Will always return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for all GTK-provided style providers.</p>
 </div>
 <p>Returns the <a class="link" href="gtk3-Themeable-Stock-Images.html#GtkIconFactory"><span class="type">GtkIconFactory</span></a> defined to be in use for <em class="parameter"><code>path</code></em>
-, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none
+, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none
 is defined.</p>
 <div class="refsect3">
 <a name="id-1.5.4.9.2.7"></a><h4>Parameters</h4>
@@ -168,7 +168,7 @@ is defined.</p>
 <div class="refsect3">
 <a name="id-1.5.4.9.2.8"></a><h4>Returns</h4>
 <p> The icon factory to use for <em class="parameter"><code>path</code></em>
-, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
+, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 <p class="since">Since 3.0</p>
@@ -181,13 +181,13 @@ gtk_style_provider_get_style (<em class="parameter"><code><a class="link" href="
                               <em class="parameter"><code><a class="link" href="gtk3-GtkWidgetPath.html#GtkWidgetPath" title="GtkWidgetPath"><span class="type">GtkWidgetPath</span></a> *path</code></em>);</pre>
 <div class="warning">
 <p><code class="literal">gtk_style_provider_get_style</code> has been deprecated since version 3.8 and should not be used in newly-written code.</p>
-<p>Will always return <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for all GTK-provided style providers
+<p>Will always return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for all GTK-provided style providers
     as the interface cannot correctly work the way CSS is specified.</p>
 </div>
 <p>Returns the style settings affecting a widget defined by <em class="parameter"><code>path</code></em>
-, or <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if
+, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if
 <em class="parameter"><code>provider</code></em>
- doesn't contemplate styling <em class="parameter"><code>path</code></em>
+ doesn’t contemplate styling <em class="parameter"><code>path</code></em>
 .</p>
 <div class="refsect3">
 <a name="id-1.5.4.9.3.7"></a><h4>Parameters</h4>
@@ -223,12 +223,12 @@ style settings affecting <em class="parameter"><code>path</code></em>
 <hr>
 <div class="refsect2">
 <a name="gtk-style-provider-get-style-property"></a><h3>gtk_style_provider_get_style_property ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_style_provider_get_style_property (<em class="parameter"><code><a class="link" href="GtkStyleProvider.html" title="GtkStyleProvider"><span class="type">GtkStyleProvider</span></a> *provider</code></em>,
                                        <em class="parameter"><code><a class="link" href="gtk3-GtkWidgetPath.html#GtkWidgetPath" title="GtkWidgetPath"><span class="type">GtkWidgetPath</span></a> *path</code></em>,
                                        <em class="parameter"><code><a class="link" href="gtk3-Standard-Enumerations.html#GtkStateFlags" title="enum GtkStateFlags"><span class="type">GtkStateFlags</span></a> state</code></em>,
-                                       <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-GParamSpec.html#GParamSpec"><span class="type">GParamSpec</span></a> *pspec</code></em>,
-                                       <em class="parameter"><code><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
+                                       <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-GParamSpec.html#GParamSpec"><span class="type">GParamSpec</span></a> *pspec</code></em>,
+                                       <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Looks up a widget style property as defined by <em class="parameter"><code>provider</code></em>
  for
 the widget represented by <em class="parameter"><code>path</code></em>
@@ -259,7 +259,7 @@ the widget represented by <em class="parameter"><code>path</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>pspec</p></td>
-<td class="parameter_description"><p>The <a href="http://library.gnome.org/devel/gobject/unstable/gobject-GParamSpec.html#GParamSpec"><span class="type">GParamSpec</span></a> to query</p></td>
+<td class="parameter_description"><p>The <a href="https://developer.gnome.org/gobject/unstable/gobject-GParamSpec.html#GParamSpec"><span class="type">GParamSpec</span></a> to query</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -272,7 +272,7 @@ the widget represented by <em class="parameter"><code>path</code></em>
 </div>
 <div class="refsect3">
 <a name="id-1.5.4.9.4.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the property was found and has a value, <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the property was found and has a value, <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
 <p></p>
 </div>
 <p class="since">Since 3.0</p>
@@ -283,8 +283,6 @@ the widget represented by <em class="parameter"><code>path</code></em>
 <div class="refsect2">
 <a name="GtkStyleProviderIface"></a><h3>struct GtkStyleProviderIface</h3>
 <pre class="programlisting">struct GtkStyleProviderIface {
-  GTypeInterface g_iface;
-
   GtkStyleProperties * (* get_style) (GtkStyleProvider *provider,
                                       GtkWidgetPath    *path);
 
@@ -307,11 +305,6 @@ the widget represented by <em class="parameter"><code>path</code></em>
 <col width="200px" class="struct_members_annotations">
 </colgroup>
 <tbody>
-<tr>
-<td class="struct_member_name"><p><a href="http://library.gnome.org/devel/gobject/unstable/gobject-Type-Information.html#GTypeInterface"><span class="type">GTypeInterface</span></a> <em class="structfield"><code><a name="GtkStyleProviderIface.g-iface"></a>g_iface</code></em>;</p></td>
-<td> </td>
-<td> </td>
-</tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="GtkStyleProviderIface.get-style"></a>get_style</code></em> ()</p></td>
 <td class="struct_member_description"><p>Gets a set of style information that applies to a widget path.</p></td>
@@ -343,6 +336,10 @@ the widget represented by <em class="parameter"><code>path</code></em>
 </pre>
 <p>The priority used for default style information
 that is used in the absence of themes.</p>
+<p>Note that this is not very useful for providing default
+styling for custom style classes - themes are likely to
+override styling provided at this priority with
+catch-all <code class="literal">* {...}</code> rules.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -376,7 +373,7 @@ for application-specific style information.</p>
 <pre class="programlisting">#define GTK_STYLE_PROVIDER_PRIORITY_USER        800
 </pre>
 <p>The priority used for the style information from
-<code class="filename">~/.gtk-3.0.css</code>.</p>
+<code class="literal">~/.gtk-3.0.css</code>.</p>
 <p>You should not use priorities higher than this, to
 give the user the last word.</p>
 </div>
@@ -388,6 +385,6 @@ give the user the last word.</p>
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

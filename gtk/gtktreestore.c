@@ -38,18 +38,18 @@
  * can use all of the methods available there.  It also implements the
  * #GtkTreeSortable interface so it can be sorted by the view.  Finally,
  * it also implements the tree
- * <link linkend="gtk3-GtkTreeView-drag-and-drop">drag and drop</link>
+ * [drag and drop][gtk3-GtkTreeView-drag-and-drop]
  * interfaces.
  *
- * <refsect2 id="GtkTreeStore-BUILDER-UI">
- * <title>GtkTreeStore as GtkBuildable</title>
+ * # GtkTreeStore as GtkBuildable
+ *
  * The GtkTreeStore implementation of the #GtkBuildable interface allows
- * to specify the model columns with a &lt;columns&gt; element that may
- * contain multiple &lt;column&gt; elements, each specifying one model
- * column. The "type" attribute specifies the data type for the column.
- * <example>
- * <title>A UI Definition fragment for a tree store</title>
- * <programlisting><![CDATA[
+ * to specify the model columns with a <columns> element that may contain
+ * multiple <column> elements, each specifying one model column. The “type”
+ * attribute specifies the data type for the column.
+ *
+ * An example of a UI Definition fragment for a tree store:
+ * |[
  * <object class="GtkTreeStore">
  *   <columns>
  *     <column type="gchararray"/>
@@ -57,9 +57,7 @@
  *     <column type="gint"/>
  *   </columns>
  * </object>
- * ]]></programlisting>
- * </example>
- * </refsect2>
+ * ]|
  */
 
 struct _GtkTreeStorePrivate
@@ -306,11 +304,11 @@ gtk_tree_store_init (GtkTreeStore *tree_store)
  * in.  Note that only types derived from standard GObject fundamental types
  * are supported.
  *
- * As an example, <literal>gtk_tree_store_new (3, G_TYPE_INT, G_TYPE_STRING,
- * GDK_TYPE_PIXBUF);</literal> will create a new #GtkTreeStore with three columns, of type
- * <type>int</type>, <type>string</type> and #GdkPixbuf respectively.
+ * As an example, `gtk_tree_store_new (3, G_TYPE_INT, G_TYPE_STRING,
+ * GDK_TYPE_PIXBUF);` will create a new #GtkTreeStore with three columns, of type
+ * #gint, #gchararray, and #GdkPixbuf respectively.
  *
- * Return value: a new #GtkTreeStore
+ * Returns: a new #GtkTreeStore
  **/
 GtkTreeStore *
 gtk_tree_store_new (gint n_columns,
@@ -344,14 +342,13 @@ gtk_tree_store_new (gint n_columns,
   return retval;
 }
 /**
- * gtk_tree_store_newv:
+ * gtk_tree_store_newv: (rename-to gtk_tree_store_new)
  * @n_columns: number of columns in the tree store
  * @types: (array length=n_columns): an array of #GType types for the columns, from first to last
  *
  * Non vararg creation function.  Used primarily by language bindings.
  *
- * Return value: (transfer full): a new #GtkTreeStore
- * Rename to: gtk_tree_store_new
+ * Returns: (transfer full): a new #GtkTreeStore
  **/
 GtkTreeStore *
 gtk_tree_store_newv (gint   n_columns,
@@ -498,7 +495,7 @@ gtk_tree_store_finalize (GObject *object)
 
 /* fulfill the GtkTreeModel requirements */
 /* NOTE: GtkTreeStore::root is a GNode, that acts as the parent node.  However,
- * it is not visible to the tree or to the user., and the path "0" refers to the
+ * it is not visible to the tree or to the user., and the path “0” refers to the
  * first child of GtkTreeStore::root.
  */
 
@@ -1076,7 +1073,7 @@ gtk_tree_store_set_valist_internal (GtkTreeStore *tree_store,
 }
 
 /**
- * gtk_tree_store_set_valuesv:
+ * gtk_tree_store_set_valuesv: (rename-to gtk_tree_store_set)
  * @tree_store: A #GtkTreeStore
  * @iter: A valid #GtkTreeIter for the row being modified
  * @columns: (array length=n_values): an array of column numbers
@@ -1089,7 +1086,6 @@ gtk_tree_store_set_valist_internal (GtkTreeStore *tree_store,
  * the number of columns to change is not known until run-time.
  *
  * Since: 2.12
- * Rename to: gtk_tree_store_set
  **/
 void
 gtk_tree_store_set_valuesv (GtkTreeStore *tree_store,
@@ -1127,9 +1123,9 @@ gtk_tree_store_set_valuesv (GtkTreeStore *tree_store,
  * gtk_tree_store_set_valist:
  * @tree_store: A #GtkTreeStore
  * @iter: A valid #GtkTreeIter for the row being modified
- * @var_args: <type>va_list</type> of column/value pairs
+ * @var_args: va_list of column/value pairs
  *
- * See gtk_tree_store_set(); this version takes a <type>va_list</type> for
+ * See gtk_tree_store_set(); this version takes a va_list for
  * use by language bindings.
  *
  **/
@@ -1173,8 +1169,8 @@ gtk_tree_store_set_valist (GtkTreeStore *tree_store,
  * The variable argument list should contain integer column numbers,
  * each column number followed by the value to be set.
  * The list is terminated by a -1. For example, to set column 0 with type
- * %G_TYPE_STRING to "Foo", you would write
- * <literal>gtk_tree_store_set (store, iter, 0, "Foo", -1)</literal>.
+ * %G_TYPE_STRING to “Foo”, you would write
+ * `gtk_tree_store_set (store, iter, 0, "Foo", -1)`.
  *
  * The value will be referenced by the store if it is a %G_TYPE_OBJECT, and it
  * will be copied if it is a %G_TYPE_STRING or %G_TYPE_BOXED.
@@ -1200,7 +1196,7 @@ gtk_tree_store_set (GtkTreeStore *tree_store,
  * next valid row at that level, or invalidated if it previously pointed to the
  * last one.
  *
- * Return value: %TRUE if @iter is still valid, %FALSE if not.
+ * Returns: %TRUE if @iter is still valid, %FALSE if not.
  **/
 gboolean
 gtk_tree_store_remove (GtkTreeStore *tree_store,
@@ -1329,7 +1325,7 @@ gtk_tree_store_insert (GtkTreeStore *tree_store,
  * @sibling: (allow-none): A valid #GtkTreeIter, or %NULL
  *
  * Inserts a new row before @sibling.  If @sibling is %NULL, then the row will
- * be appended to @parent 's children.  If @parent and @sibling are %NULL, then
+ * be appended to @parent ’s children.  If @parent and @sibling are %NULL, then
  * the row will be appended to the toplevel.  If both @sibling and @parent are
  * set, then @parent must be the parent of @sibling.  When @sibling is set,
  * @parent is optional.
@@ -1410,7 +1406,7 @@ gtk_tree_store_insert_before (GtkTreeStore *tree_store,
  * @sibling: (allow-none): A valid #GtkTreeIter, or %NULL
  *
  * Inserts a new row after @sibling.  If @sibling is %NULL, then the row will be
- * prepended to @parent 's children.  If @parent and @sibling are %NULL, then
+ * prepended to @parent ’s children.  If @parent and @sibling are %NULL, then
  * the row will be prepended to the toplevel.  If both @sibling and @parent are
  * set, then @parent must be the parent of @sibling.  When @sibling is set,
  * @parent is optional.
@@ -1498,9 +1494,9 @@ gtk_tree_store_insert_after (GtkTreeStore *tree_store,
  * the values given to this function.
  *
  * Calling
- * <literal>gtk_tree_store_insert_with_values (tree_store, iter, position, ...)</literal>
+ * `gtk_tree_store_insert_with_values (tree_store, iter, position, ...)`
  * has the same effect as calling
- * |[
+ * |[<!-- language="C" -->
  * gtk_tree_store_insert (tree_store, iter, position);
  * gtk_tree_store_set (tree_store, iter, ...);
  * ]|
@@ -1577,7 +1573,7 @@ gtk_tree_store_insert_with_values (GtkTreeStore *tree_store,
 }
 
 /**
- * gtk_tree_store_insert_with_valuesv:
+ * gtk_tree_store_insert_with_valuesv: (rename-to gtk_tree_store_insert_with_values)
  * @tree_store: A #GtkTreeStore
  * @iter: (out) (allow-none): An unset #GtkTreeIter to set the new row, or %NULL.
  * @parent: (allow-none): A valid #GtkTreeIter, or %NULL
@@ -1591,7 +1587,6 @@ gtk_tree_store_insert_with_values (GtkTreeStore *tree_store,
  * function is mainly intended for language bindings.
  *
  * Since: 2.10
- * Rename to: gtk_tree_store_insert_with_values
  */
 void
 gtk_tree_store_insert_with_valuesv (GtkTreeStore *tree_store,
@@ -1782,7 +1777,7 @@ gtk_tree_store_append (GtkTreeStore *tree_store,
  * Returns %TRUE if @iter is an ancestor of @descendant.  That is, @iter is the
  * parent (or grandparent or great-grandparent) of @descendant.
  * 
- * Return value: %TRUE, if @iter is an ancestor of @descendant
+ * Returns: %TRUE, if @iter is an ancestor of @descendant
  **/
 gboolean
 gtk_tree_store_is_ancestor (GtkTreeStore *tree_store,
@@ -1806,7 +1801,7 @@ gtk_tree_store_is_ancestor (GtkTreeStore *tree_store,
  * Returns the depth of @iter.  This will be 0 for anything on the root level, 1
  * for anything down a level, etc.
  * 
- * Return value: The depth of @iter
+ * Returns: The depth of @iter
  **/
 gint
 gtk_tree_store_iter_depth (GtkTreeStore *tree_store,
@@ -1919,7 +1914,7 @@ gtk_tree_store_iter_is_valid_helper (GtkTreeIter *iter,
  *
  * Checks if the given iter is a valid iter for this #GtkTreeStore.
  *
- * Return value: %TRUE if the iter is valid, %FALSE if the iter is invalid.
+ * Returns: %TRUE if the iter is valid, %FALSE if the iter is invalid.
  *
  * Since: 2.2
  **/
@@ -2253,11 +2248,11 @@ gtk_tree_store_reorder_func (gconstpointer a,
 
 /**
  * gtk_tree_store_reorder: (skip)
- * @tree_store: A #GtkTreeStore.
- * @parent: A #GtkTreeIter.
+ * @tree_store: A #GtkTreeStore
+ * @parent: (nullable): A #GtkTreeIter, or %NULL
  * @new_order: (array): an array of integers mapping the new position of each child
  *      to its old position before the re-ordering,
- *      i.e. @new_order<literal>[newpos] = oldpos</literal>.
+ *      i.e. @new_order`[newpos] = oldpos`.
  *
  * Reorders the children of @parent in @tree_store to follow the order
  * indicated by @new_order. Note that this function only works with
@@ -2284,6 +2279,12 @@ gtk_tree_store_reorder (GtkTreeStore *tree_store,
     level = G_NODE (tree_store->priv->root)->children;
   else
     level = G_NODE (parent->user_data)->children;
+
+  if (G_UNLIKELY (!level))
+    {
+      g_warning ("%s: Cannot reorder, parent has no children", G_STRLOC);
+      return;
+    }
 
   /* count nodes */
   node = level;

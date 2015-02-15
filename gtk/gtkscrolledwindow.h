@@ -53,11 +53,22 @@ struct _GtkScrolledWindow
   GtkScrolledWindowPrivate *priv;
 };
 
+/**
+ * GtkScrolledWindowClass:
+ * @parent_class: The parent class.
+ * @scrollbar_spacing: 
+ * @scroll_child: Keybinding signal which gets emitted when a
+ *    keybinding that scrolls is pressed.
+ * @move_focus_out: Keybinding signal which gets emitted when focus is
+ *    moved away from the scrolled window by a keybinding.
+ */
 struct _GtkScrolledWindowClass
 {
   GtkBinClass parent_class;
 
   gint scrollbar_spacing;
+
+  /*< public >*/
 
   /* Action signals for keybindings. Do not connect to these signals
    */
@@ -73,12 +84,58 @@ struct _GtkScrolledWindowClass
   void (* move_focus_out) (GtkScrolledWindow *scrolled_window,
 			   GtkDirectionType   direction);
 
+  /*< private >*/
+
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);
   void (*_gtk_reserved2) (void);
   void (*_gtk_reserved3) (void);
   void (*_gtk_reserved4) (void);
 };
+
+
+/**
+ * GtkCornerType:
+ * @GTK_CORNER_TOP_LEFT: Place the scrollbars on the right and bottom of the
+ *  widget (default behaviour).
+ * @GTK_CORNER_BOTTOM_LEFT: Place the scrollbars on the top and right of the
+ *  widget.
+ * @GTK_CORNER_TOP_RIGHT: Place the scrollbars on the left and bottom of the
+ *  widget.
+ * @GTK_CORNER_BOTTOM_RIGHT: Place the scrollbars on the top and left of the
+ *  widget.
+ *
+ * Specifies which corner a child widget should be placed in when packed into
+ * a #GtkScrolledWindow. This is effectively the opposite of where the scroll
+ * bars are placed.
+ */
+typedef enum
+{
+  GTK_CORNER_TOP_LEFT,
+  GTK_CORNER_BOTTOM_LEFT,
+  GTK_CORNER_TOP_RIGHT,
+  GTK_CORNER_BOTTOM_RIGHT
+} GtkCornerType;
+
+
+/**
+ * GtkPolicyType:
+ * @GTK_POLICY_ALWAYS: The scrollbar is always visible. The view size is
+ *  independent of the content.
+ * @GTK_POLICY_AUTOMATIC: The scrollbar will appear and disappear as necessary.
+ *  For example, when all of a #GtkTreeView can not be seen.
+ * @GTK_POLICY_NEVER: The scrollbar should never appear. In this mode the
+ *  content determines the size.
+ *
+ * Determines how the size should be computed to achieve the one of the
+ * visibility mode for the scrollbars.
+ */
+typedef enum
+{
+  GTK_POLICY_ALWAYS,
+  GTK_POLICY_AUTOMATIC,
+  GTK_POLICY_NEVER
+} GtkPolicyType;
 
 
 GDK_AVAILABLE_IN_ALL

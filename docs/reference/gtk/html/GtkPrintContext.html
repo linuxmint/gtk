@@ -8,7 +8,7 @@
 <link rel="up" href="Printing.html" title="Printing">
 <link rel="prev" href="gtk3-High-level-Printing-API.html" title="GtkPrintOperation">
 <link rel="next" href="GtkPrintSettings.html" title="GtkPrintSettings">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -66,7 +66,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkPrintContext.html#gtk-print-context-get-width" title="gtk_print_context_get_width ()">gtk_print_context_get_width</a> <span class="c_punctuation">()</span>
@@ -74,7 +74,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkPrintContext.html#gtk-print-context-get-height" title="gtk_print_context_get_height ()">gtk_print_context_get_height</a> <span class="c_punctuation">()</span>
@@ -82,7 +82,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkPrintContext.html#gtk-print-context-get-dpi-x" title="gtk_print_context_get_dpi_x ()">gtk_print_context_get_dpi_x</a> <span class="c_punctuation">()</span>
@@ -90,7 +90,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkPrintContext.html#gtk-print-context-get-dpi-y" title="gtk_print_context_get_dpi_y ()">gtk_print_context_get_dpi_y</a> <span class="c_punctuation">()</span>
@@ -122,7 +122,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkPrintContext.html#gtk-print-context-get-hard-margins" title="gtk_print_context_get_hard_margins ()">gtk_print_context_get_hard_margins</a> <span class="c_punctuation">()</span>
@@ -146,7 +146,7 @@
 </div>
 <div class="refsect1">
 <a name="GtkPrintContext.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
     <span class="lineart">╰──</span> GtkPrintContext
 </pre>
 </div>
@@ -165,9 +165,9 @@ of the cairo surface.</p>
 <p>GtkPrintContext objects gets passed to the <a class="link" href="gtk3-High-level-Printing-API.html#GtkPrintOperation-begin-print" title="The “begin-print” signal"><span class="type">“begin-print”</span></a>,
 <a class="link" href="gtk3-High-level-Printing-API.html#GtkPrintOperation-end-print" title="The “end-print” signal"><span class="type">“end-print”</span></a>, <a class="link" href="gtk3-High-level-Printing-API.html#GtkPrintOperation-request-page-setup" title="The “request-page-setup” signal"><span class="type">“request-page-setup”</span></a> and
 <a class="link" href="gtk3-High-level-Printing-API.html#GtkPrintOperation-draw-page" title="The “draw-page” signal"><span class="type">“draw-page”</span></a> signals on the <a class="link" href="gtk3-High-level-Printing-API.html#GtkPrintOperation"><span class="type">GtkPrintOperation</span></a>.</p>
-<div class="example">
-<a name="id-1.3.17.3.7.4"></a><p class="title"><b>Example 62. Using GtkPrintContext in a <a class="link" href="gtk3-High-level-Printing-API.html#GtkPrintOperation-draw-page" title="The “draw-page” signal"><span class="type">“draw-page”</span></a> callback</b></p>
-<div class="example-contents">
+<div class="refsect3">
+<a name="id-1.3.17.3.7.4"></a><h4>Using GtkPrintContext in a <a class="link" href="gtk3-High-level-Printing-API.html#GtkPrintOperation-draw-page" title="The “draw-page” signal"><span class="type">“draw-page”</span></a> callback</h4>
+<div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
       <tr>
@@ -271,15 +271,16 @@ of the cairo surface.</p>
 <span class="normal">  </span><span class="function">cairo_set_source_rgb</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0.0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">1.0</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="function">cairo_fill</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
 
-<span class="normal">  </span><span class="function"><a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">layout</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">layout</span><span class="symbol">);</span>
 <span class="cbracket">}</span></pre></td>
       </tr>
     </tbody>
   </table>
 </div>
 
+<p></p>
+<p>Printing support was added in GTK+ 2.10.</p>
 </div>
-<br class="example-break"><p>Printing support was added in GTK+ 2.10.</p>
 </div>
 <div class="refsect1">
 <a name="GtkPrintContext.functions_details"></a><h2>Functions</h2>
@@ -394,7 +395,7 @@ dimensions of the <a class="link" href="GtkPrintContext.html" title="GtkPrintCon
 <hr>
 <div class="refsect2">
 <a name="gtk-print-context-get-width"></a><h3>gtk_print_context_get_width ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
 gtk_print_context_get_width (<em class="parameter"><code><a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a> *context</code></em>);</pre>
 <p>Obtains the width of the <a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a>, in pixels.</p>
 <div class="refsect3">
@@ -423,7 +424,7 @@ gtk_print_context_get_width (<em class="parameter"><code><a class="link" href="G
 <hr>
 <div class="refsect2">
 <a name="gtk-print-context-get-height"></a><h3>gtk_print_context_get_height ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
 gtk_print_context_get_height (<em class="parameter"><code><a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a> *context</code></em>);</pre>
 <p>Obtains the height of the <a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a>, in pixels.</p>
 <div class="refsect3">
@@ -452,7 +453,7 @@ gtk_print_context_get_height (<em class="parameter"><code><a class="link" href="
 <hr>
 <div class="refsect2">
 <a name="gtk-print-context-get-dpi-x"></a><h3>gtk_print_context_get_dpi_x ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
 gtk_print_context_get_dpi_x (<em class="parameter"><code><a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a> *context</code></em>);</pre>
 <p>Obtains the horizontal resolution of the <a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a>,
 in dots per inch.</p>
@@ -482,7 +483,7 @@ in dots per inch.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-print-context-get-dpi-y"></a><h3>gtk_print_context_get_dpi_y ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>
 gtk_print_context_get_dpi_y (<em class="parameter"><code><a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a> *context</code></em>);</pre>
 <p>Obtains the vertical resolution of the <a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a>,
 in dots per inch.</p>
@@ -603,12 +604,12 @@ with the <a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><sp
 <hr>
 <div class="refsect2">
 <a name="gtk-print-context-get-hard-margins"></a><h3>gtk_print_context_get_hard_margins ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_print_context_get_hard_margins (<em class="parameter"><code><a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a> *context</code></em>,
-                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *top</code></em>,
-                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *bottom</code></em>,
-                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *left</code></em>,
-                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *right</code></em>);</pre>
+                                    <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *top</code></em>,
+                                    <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *bottom</code></em>,
+                                    <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *left</code></em>,
+                                    <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *right</code></em>);</pre>
 <p>Obtains the hardware printer margins of the <a class="link" href="GtkPrintContext.html" title="GtkPrintContext"><span class="type">GtkPrintContext</span></a>, in units.</p>
 <div class="refsect3">
 <a name="id-1.3.17.3.8.12.5"></a><h4>Parameters</h4>
@@ -649,7 +650,7 @@ gtk_print_context_get_hard_margins (<em class="parameter"><code><a class="link" 
 </div>
 <div class="refsect3">
 <a name="id-1.3.17.3.8.12.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the hard margins were retrieved</p>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the hard margins were retrieved</p>
 <p></p>
 </div>
 <p class="since">Since 2.20</p>
@@ -665,6 +666,6 @@ gtk_print_context_get_hard_margins (<em class="parameter"><code><a class="link" 
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

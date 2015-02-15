@@ -46,7 +46,7 @@ typedef struct _GtkCellAreaContext       GtkCellAreaContext;
 
 /**
  * GTK_CELL_AREA_WARN_INVALID_CELL_PROPERTY_ID:
- * @object: the #GObject on which set_cell_property() or get_get_property()
+ * @object: the #GObject on which set_cell_property() or get_cell_property()
  *     was called
  * @property_id: the numeric id of the property
  * @pspec: the #GParamSpec of the property
@@ -65,7 +65,7 @@ typedef struct _GtkCellAreaContext       GtkCellAreaContext;
  * The type of the callback functions used for iterating over
  * the cell renderers of a #GtkCellArea, see gtk_cell_area_foreach().
  *
- * Return value: %TRUE to stop iterating over cells.
+ * Returns: %TRUE to stop iterating over cells.
  */
 typedef gboolean    (*GtkCellCallback) (GtkCellRenderer  *renderer,
                                         gpointer          data);
@@ -83,7 +83,7 @@ typedef gboolean    (*GtkCellCallback) (GtkCellRenderer  *renderer,
  * cell renderers and their allocated areas inside a #GtkCellArea,
  * see gtk_cell_area_foreach_alloc().
  *
- * Return value: %TRUE to stop iterating over cells.
+ * Returns: %TRUE to stop iterating over cells.
  */
 typedef gboolean    (*GtkCellAllocCallback) (GtkCellRenderer    *renderer,
                                              const GdkRectangle *cell_area,
@@ -112,7 +112,7 @@ struct _GtkCellArea
  * @event: Handle an event in the area, this is generally used to activate
  *     a cell at the event location for button events but can also be used
  *     to generically pass events to #GtkWidgets drawn onto the area.
- * @render: Actually render the area's cells to the specified rectangle,
+ * @render: Actually render the area’s cells to the specified rectangle,
  *     @background_area should be correctly distributed to the cells
  *     corresponding background areas.
  * @apply_attributes: Apply the cell attributes to the cells. This is
@@ -159,7 +159,7 @@ struct _GtkCellArea
  *     focus from cell to cell inside the area and return %FALSE if focus
  *     logically leaves the area with the following exceptions: When the
  *     area contains no activatable cells, the entire area recieves focus.
- *     Focus should not be given to cells that are actually "focus siblings"
+ *     Focus should not be given to cells that are actually “focus siblings”
  *     of other sibling cells (see gtk_cell_area_get_focus_from_sibling()).
  *     Focus is set by calling gtk_cell_area_set_focus_cell().
  * @is_activatable: Returns whether the #GtkCellArea can respond to
@@ -388,6 +388,11 @@ GDK_AVAILABLE_IN_ALL
 void                  gtk_cell_area_attribute_disconnect           (GtkCellArea        *area,
                                                                     GtkCellRenderer    *renderer,
                                                                     const gchar        *attribute);
+GDK_AVAILABLE_IN_3_14
+gint                  gtk_cell_area_attribute_get_column           (GtkCellArea        *area,
+                                                                    GtkCellRenderer    *renderer,
+                                                                    const gchar        *attribute);
+
 
 /* Cell Properties */
 GDK_AVAILABLE_IN_ALL

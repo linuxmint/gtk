@@ -98,8 +98,8 @@ gdk_screen_class_init (GdkScreenClass *klass)
 				   g_param_spec_double ("resolution",
 							P_("Font resolution"),
 							P_("The resolution for fonts on the screen"),
-							-G_MAXDOUBLE,
-							G_MAXDOUBLE,
+							-1.0,
+							10000.0,
 							-1.0,
 							G_PARAM_READWRITE|G_PARAM_STATIC_NAME|
 							G_PARAM_STATIC_NICK|G_PARAM_STATIC_BLURB));
@@ -195,7 +195,7 @@ _gdk_screen_close (GdkScreen *screen)
 }
 
 /* Fallback used when the monitor "at" a point or window
- * doesn't exist.
+ * doesn’t exist.
  */
 static gint
 get_nearest_monitor (GdkScreen *screen,
@@ -336,7 +336,7 @@ gdk_screen_get_monitor_at_window (GdkScreen      *screen,
  * 
  * Returns the width of the default screen in pixels.
  * 
- * Return value: the width of the default screen in pixels.
+ * Returns: the width of the default screen in pixels.
  **/
 gint
 gdk_screen_width (void)
@@ -349,7 +349,7 @@ gdk_screen_width (void)
  * 
  * Returns the height of the default screen in pixels.
  * 
- * Return value: the height of the default screen in pixels.
+ * Returns: the height of the default screen in pixels.
  **/
 gint
 gdk_screen_height (void)
@@ -363,7 +363,7 @@ gdk_screen_height (void)
  * Returns the width of the default screen in millimeters.
  * Note that on many X servers this value will not be correct.
  * 
- * Return value: the width of the default screen in millimeters,
+ * Returns: the width of the default screen in millimeters,
  * though it is not always correct.
  **/
 gint
@@ -378,7 +378,7 @@ gdk_screen_width_mm (void)
  * Returns the height of the default screen in millimeters.
  * Note that on many X servers this value will not be correct.
  * 
- * Return value: the height of the default screen in millimeters,
+ * Returns: the height of the default screen in millimeters,
  * though it is not always correct.
  **/
 gint
@@ -394,7 +394,7 @@ gdk_screen_height_mm (void)
  *   previously set default font options.
  *
  * Sets the default font options for the screen. These
- * options will be set on any #PangoContext's newly created
+ * options will be set on any #PangoContext’s newly created
  * with gdk_pango_context_get_for_screen(). Changing the
  * default set of font options does not affect contexts that
  * have already been created.
@@ -427,8 +427,8 @@ gdk_screen_set_font_options (GdkScreen                  *screen,
  * 
  * Gets any options previously set with gdk_screen_set_font_options().
  * 
- * Return value: the current font options, or %NULL if no default
- *  font options have been set.
+ * Returns: (nullable): the current font options, or %NULL if no
+ *  default font options have been set.
  *
  * Since: 2.10
  **/
@@ -443,7 +443,7 @@ gdk_screen_get_font_options (GdkScreen *screen)
 /**
  * gdk_screen_set_resolution:
  * @screen: a #GdkScreen
- * @dpi: the resolution in "dots per inch". (Physical inches aren't actually
+ * @dpi: the resolution in “dots per inch”. (Physical inches aren’t actually
  *   involved; the terminology is conventional.)
  
  * Sets the resolution for font handling on the screen. This is a
@@ -456,6 +456,31 @@ gdk_screen_get_font_options (GdkScreen *screen)
 void
 gdk_screen_set_resolution (GdkScreen *screen,
 			   gdouble    dpi)
+{
+  g_return_if_fail (GDK_IS_SCREEN (screen));
+
+  if (dpi < 0)
+    dpi = -1.0;
+
+  screen->resolution_set = TRUE;
+
+  if (screen->resolution != dpi)
+    {
+      screen->resolution = dpi;
+
+      g_object_notify (G_OBJECT (screen), "resolution");
+    }
+}
+
+/* Just like gdk_screen_set_resolution(), but doesn't change
+ * screen->resolution. This is us to allow us to distinguish
+ * resolution changes that the backend picks up from resolution
+ * changes made through the public API - perhaps using
+ * g_object_set(<GtkSetting>, "gtk-xft-dpi", ...);
+ */
+void
+_gdk_screen_set_resolution (GdkScreen *screen,
+                            gdouble    dpi)
 {
   g_return_if_fail (GDK_IS_SCREEN (screen));
 
@@ -477,7 +502,7 @@ gdk_screen_set_resolution (GdkScreen *screen,
  * Gets the resolution for font handling on the screen; see
  * gdk_screen_set_resolution() for full details.
  * 
- * Return value: the current resolution, or -1 if no resolution
+ * Returns: the current resolution, or -1 if no resolution
  * has been set.
  *
  * Since: 2.10
@@ -687,7 +712,7 @@ gdk_screen_get_n_monitors (GdkScreen *screen)
  * @screen: a #GdkScreen.
  *
  * Gets the primary monitor for @screen.  The primary monitor
- * is considered the monitor where the 'main desktop' lives.
+ * is considered the monitor where the “main desktop” lives.
  * While normal application windows typically allow the window
  * manager to place the windows, specialized desktop applications
  * such as panels should place themselves on the primary monitor.
@@ -760,8 +785,8 @@ gdk_screen_get_monitor_height_mm (GdkScreen *screen,
  * Usually something like VGA, DVI, or TV, not the actual
  * product name of the display device.
  *
- * Returns: a newly-allocated string containing the name of the monitor,
- *   or %NULL if the name cannot be determined
+ * Returns: (nullable): a newly-allocated string containing the name
+ *   of the monitor, or %NULL if the name cannot be determined
  *
  * Since: 2.14
  */
@@ -814,11 +839,15 @@ gdk_screen_get_monitor_geometry (GdkScreen    *screen,
  *     the monitor workarea
  *
  * Retrieves the #GdkRectangle representing the size and position of
- * the "work area" on a monitor within the entire screen area.
+ * the “work area” on a monitor within the entire screen area.
  *
  * The work area should be considered when positioning menus and
  * similar popups, to avoid placing them below panels, docks or other
  * desktop components.
+ *
+ * Note that not all backends may have a concept of workarea. This
+ * function will return the monitor geometry if a workarea is not
+ * available, or does not apply.
  *
  * Monitor numbers start at 0. To obtain the number of monitors of
  * @screen, use gdk_screen_get_n_monitors().
@@ -846,9 +875,9 @@ gdk_screen_get_monitor_workarea (GdkScreen    *screen,
  * For example, a visual might support 24-bit color, or 8-bit color,
  * and might expect pixels to be in a certain format.
  *
- * Call g_list_free() on the return value when you're finished with it.
+ * Call g_list_free() on the return value when you’re finished with it.
  *
- * Return value: (transfer container) (element-type GdkVisual):
+ * Returns: (transfer container) (element-type GdkVisual):
  *     a list of visuals; the list must be freed, but not its contents
  *
  * Since: 2.2
@@ -865,11 +894,11 @@ gdk_screen_list_visuals (GdkScreen *screen)
  * gdk_screen_get_system_visual:
  * @screen: a #GdkScreen.
  *
- * Get the system's default visual for @screen.
+ * Get the system’s default visual for @screen.
  * This is the visual for the root window of the display.
  * The return value should not be freed.
  *
- * Return value: (transfer none): the system visual
+ * Returns: (transfer none): the system visual
  *
  * Since: 2.2
  **/
@@ -889,7 +918,7 @@ gdk_screen_get_system_visual (GdkScreen * screen)
  * The windowing system on which GTK+ is running
  * may not support this capability, in which case %NULL will
  * be returned. Even if a non-%NULL value is returned, its
- * possible that the window's alpha channel won't be honored
+ * possible that the window’s alpha channel won’t be honored
  * when displaying the window on the screen: in particular, for
  * X an appropriate windowing manager and compositing manager
  * must be running to provide appropriate display.
@@ -899,8 +928,9 @@ gdk_screen_get_system_visual (GdkScreen * screen)
  * For setting an overall opacity for a top-level window, see
  * gdk_window_set_opacity().
  *
- * Return value: (transfer none): a visual to use for windows with an
- *     alpha channel or %NULL if the capability is not available.
+ * Returns: (nullable) (transfer none): a visual to use for windows
+ *     with an alpha channel or %NULL if the capability is not
+ *     available.
  *
  * Since: 2.8
  **/
@@ -923,7 +953,7 @@ gdk_screen_get_rgba_visual (GdkScreen *screen)
  * On X11 this function returns whether a compositing manager is
  * compositing @screen.
  *
- * Return value: Whether windows with RGBA visuals can reasonably be
+ * Returns: Whether windows with RGBA visuals can reasonably be
  * expected to have their alpha channels drawn correctly on the screen.
  *
  * Since: 2.10
@@ -943,7 +973,7 @@ gdk_screen_is_composited (GdkScreen *screen)
  * Determines the name to pass to gdk_display_open() to get
  * a #GdkDisplay with this screen as the default screen.
  *
- * Return value: a newly allocated string, free with g_free()
+ * Returns: a newly allocated string, free with g_free()
  *
  * Since: 2.2
  **/
@@ -959,12 +989,12 @@ gdk_screen_make_display_name (GdkScreen *screen)
  * gdk_screen_get_active_window:
  * @screen: a #GdkScreen
  *
- * Returns the screen's currently active window.
+ * Returns the screen’s currently active window.
  *
  * On X11, this is done by inspecting the _NET_ACTIVE_WINDOW property
- * on the root window, as described in the <ulink
- * url="http://www.freedesktop.org/Standards/wm-spec">Extended Window
- * Manager Hints</ulink>. If there is no currently currently active
+ * on the root window, as described in the
+ * [Extended Window Manager Hints](http://www.freedesktop.org/Standards/wm-spec).
+ * If there is no currently currently active
  * window, or the window manager does not support the
  * _NET_ACTIVE_WINDOW hint, this function returns %NULL.
  *
@@ -974,7 +1004,8 @@ gdk_screen_make_display_name (GdkScreen *screen)
  * The returned window should be unrefed using g_object_unref() when
  * no longer needed.
  *
- * Return value: (transfer full): the currently active window, or %NULL.
+ * Returns: (nullable) (transfer full): the currently active window,
+ *   or %NULL.
  *
  * Since: 2.10
  **/
@@ -990,13 +1021,13 @@ gdk_screen_get_active_window (GdkScreen *screen)
  * gdk_screen_get_window_stack:
  * @screen: a #GdkScreen
  *
- * Returns a #GList of #GdkWindow<!-- -->s representing the current
+ * Returns a #GList of #GdkWindows representing the current
  * window stack.
  *
  * On X11, this is done by inspecting the _NET_CLIENT_LIST_STACKING
- * property on the root window, as described in the <ulink
- * url="http://www.freedesktop.org/Standards/wm-spec">Extended Window
- * Manager Hints</ulink>. If the window manager does not support the
+ * property on the root window, as described in the
+ * [Extended Window Manager Hints](http://www.freedesktop.org/Standards/wm-spec).
+ * If the window manager does not support the
  * _NET_CLIENT_LIST_STACKING hint, this function returns %NULL.
  *
  * On other platforms, this function may return %NULL, depending on whether
@@ -1006,9 +1037,8 @@ gdk_screen_get_active_window (GdkScreen *screen)
  * windows it contains, so it should be freed using g_list_free() and
  * its windows unrefed using g_object_unref() when no longer needed.
  *
- * Return value: (transfer full) (element-type GdkWindow):
- *     a list of #GdkWindow<!-- -->s for the current window stack,
- *               or %NULL.
+ * Returns: (nullable) (transfer full) (element-type GdkWindow): a
+ *     list of #GdkWindows for the current window stack, or %NULL.
  *
  * Since: 2.10
  **/
@@ -1059,11 +1089,11 @@ gdk_screen_get_setting (GdkScreen   *screen,
  * on very high density outputs this can be a higher value (often 2).
  *
  * This can be used if you want to create pixel based data for a
- * particula monitor, but most of the time you're drawing to a window
+ * particula monitor, but most of the time you’re drawing to a window
  * where it is better to use gdk_window_get_scale_factor() instead.
  *
  * Since: 3.10
- * Return value: the scale factor
+ * Returns: the scale factor
  */
 gint
 gdk_screen_get_monitor_scale_factor (GdkScreen *screen,

@@ -217,7 +217,9 @@ draw_cb_extension (GtkWidget *widget, cairo_t *cr)
   gtk_style_context_save (context);
 
   gtk_style_context_add_class (context, "notebook");
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_style_context_add_region (context, GTK_STYLE_REGION_TAB, 0);
+G_GNUC_END_IGNORE_DEPRECATIONS
 
   gtk_style_context_set_state (context, 0);
   gtk_render_extension (context, cr, 26, 12, 24, 12, GTK_POS_BOTTOM);
@@ -322,7 +324,6 @@ int main (int argc, char *argv[])
     what = "check";
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_has_resize_grip (GTK_WINDOW (window), FALSE);
   ebox = gtk_event_box_new ();
   gtk_event_box_set_visible_window (GTK_EVENT_BOX (ebox), TRUE);
   gtk_container_add (GTK_CONTAINER (window), ebox);

@@ -45,8 +45,6 @@
 #define sleep(n) _sleep(n)
 #endif
 
-#include "prop-editor.h"
-
 #include "test.xpm"
 
 gboolean
@@ -2094,7 +2092,9 @@ reparent_label (GtkWidget *widget,
 
   label = g_object_get_data (G_OBJECT (widget), "user_data");
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_widget_reparent (label, new_parent);
+G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 static void
@@ -3736,7 +3736,9 @@ static gulong sw_destroyed_handler = 0;
 static gboolean
 scrolled_windows_delete_cb (GtkWidget *widget, GdkEventAny *event, GtkWidget *scrollwin)
 {
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_widget_reparent (scrollwin, sw_parent);
+G_GNUC_END_IGNORE_DEPRECATIONS
   
   g_signal_handler_disconnect (sw_parent, sw_destroyed_handler);
   sw_float_parent = NULL;
@@ -3757,11 +3759,19 @@ scrolled_windows_destroy_cb (GtkWidget *widget, GtkWidget *scrollwin)
 }
 
 static void
-scrolled_windows_remove (GtkWidget *widget, GtkWidget *scrollwin)
+scrolled_windows_remove (GtkWidget *dialog, gint response, GtkWidget *scrollwin)
 {
+  if (response != GTK_RESPONSE_APPLY)
+    {
+      gtk_widget_destroy (dialog);
+      return;
+    }
+
   if (sw_parent)
     {
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       gtk_widget_reparent (scrollwin, sw_parent);
+G_GNUC_END_IGNORE_DEPRECATIONS
       gtk_widget_destroy (sw_float_parent);
 
       g_signal_handler_disconnect (sw_parent, sw_destroyed_handler);
@@ -3774,11 +3784,13 @@ scrolled_windows_remove (GtkWidget *widget, GtkWidget *scrollwin)
       sw_parent = gtk_widget_get_parent (scrollwin);
       sw_float_parent = gtk_window_new (GTK_WINDOW_TOPLEVEL);
       gtk_window_set_screen (GTK_WINDOW (sw_float_parent),
-			     gtk_widget_get_screen (widget));
+			     gtk_widget_get_screen (dialog));
       
       gtk_window_set_default_size (GTK_WINDOW (sw_float_parent), 200, 200);
       
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       gtk_widget_reparent (scrollwin, sw_float_parent);
+G_GNUC_END_IGNORE_DEPRECATIONS
       gtk_widget_show (sw_float_parent);
 
       sw_destroyed_handler =
@@ -3793,10 +3805,10 @@ static void
 create_scrolled_windows (GtkWidget *widget)
 {
   static GtkWidget *window;
-  GtkWidget *content_area, *action_area;
+  GtkWidget *content_area;
   GtkWidget *scrolled_window;
-  GtkWidget *grid;
   GtkWidget *button;
+  GtkWidget *grid;
   char buffer[32];
   int i, j;
 
@@ -3812,7 +3824,6 @@ create_scrolled_windows (GtkWidget *widget)
 			&window);
 
       content_area = gtk_dialog_get_content_area (GTK_DIALOG (window));
-      action_area = gtk_dialog_get_action_area (GTK_DIALOG (window));
 
       gtk_window_set_title (GTK_WINDOW (window), "dialog");
       gtk_container_set_border_width (GTK_CONTAINER (window), 0);
@@ -3844,24 +3855,17 @@ create_scrolled_windows (GtkWidget *widget)
 	    gtk_widget_show (button);
 	  }
 
+      gtk_dialog_add_button (GTK_DIALOG (window),
+                             "Close",
+                             GTK_RESPONSE_CLOSE);
 
-      button = gtk_button_new_with_label ("Close");
-      g_signal_connect_swapped (button, "clicked",
-			        G_CALLBACK (gtk_widget_destroy),
-				window);
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-      gtk_widget_grab_default (button);
-      gtk_widget_show (button);
+      gtk_dialog_add_button (GTK_DIALOG (window),
+                             "Reparent Out",
+                             GTK_RESPONSE_APPLY);
 
-      button = gtk_button_new_with_label ("Reparent Out");
-      g_signal_connect (button, "clicked",
+      g_signal_connect (window, "response",
 			G_CALLBACK (scrolled_windows_remove),
 			scrolled_window);
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-      gtk_widget_grab_default (button);
-      gtk_widget_show (button);
 
       gtk_window_set_default_size (GTK_WINDOW (window), 300, 300);
     }
@@ -3952,15 +3956,6 @@ entry_toggle_pulse (GtkWidget *checkbutton,
 }
 
 static void
-props_clicked (GtkWidget *button,
-               GObject   *object)
-{
-  GtkWidget *window = create_prop_editor (object, 0);
-
-  gtk_window_set_title (GTK_WINDOW (window), "Object Properties");
-}
-
-static void
 create_entry (GtkWidget *widget)
 {
   static GtkWidget *window = NULL;
@@ -4005,12 +4000,6 @@ create_entry (GtkWidget *widget)
       gtk_entry_set_text (GTK_ENTRY (entry), "hello world \330\247\331\204\330\263\331\204\330\247\331\205 \330\271\331\204\331\212\331\203\331\205");
       gtk_editable_select_region (GTK_EDITABLE (entry), 0, 5);
       gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, TRUE, 0);
-
-      button = gtk_button_new_with_mnemonic ("_Props");
-      gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-      g_signal_connect (button, "clicked",
-			G_CALLBACK (props_clicked),
-			entry);
 
       cb = GTK_COMBO_BOX_TEXT (gtk_combo_box_text_new_with_entry ());
 
@@ -4900,6 +4889,10 @@ cursor_event (GtkWidget          *widget,
 
 #ifdef GDK_WINDOWING_X11
 #include "x11/gdkx.h"
+#endif
+#ifdef GDK_WINDOWING_WAYLAND
+#include "wayland/gdkwayland.h"
+#endif
 
 static void
 change_cursor_theme (GtkWidget *widget,
@@ -4908,6 +4901,7 @@ change_cursor_theme (GtkWidget *widget,
   const gchar *theme;
   gint size;
   GList *children;
+  GdkDisplay *display;
 
   children = gtk_container_get_children (GTK_CONTAINER (data));
 
@@ -4916,10 +4910,16 @@ change_cursor_theme (GtkWidget *widget,
 
   g_list_free (children);
 
-  gdk_x11_display_set_cursor_theme (gtk_widget_get_display (widget),
-				    theme, size);
-}
+  display = gtk_widget_get_display (widget);
+#ifdef GDK_WINDOWING_X11
+  if (GDK_IS_X11_DISPLAY (display))
+    gdk_x11_display_set_cursor_theme (display, theme, size);
 #endif
+#ifdef GDK_WINDOWING_WAYLAND
+  if (GDK_IS_WAYLAND_DISPLAY (display))
+    gdk_wayland_display_set_cursor_theme (display, theme, size);
+#endif
+}
 
 
 static void
@@ -4938,6 +4938,7 @@ create_cursors (GtkWidget *widget)
   GtkAdjustment *adjustment;
   GtkWidget *entry;
   GtkWidget *size;  
+  gboolean cursor_demo = FALSE;
 
   if (!window)
     {
@@ -4967,6 +4968,14 @@ create_cursors (GtkWidget *widget)
 
 #ifdef GDK_WINDOWING_X11
       if (GDK_IS_X11_DISPLAY (gtk_widget_get_display (vbox)))
+        cursor_demo = TRUE;
+#endif
+#ifdef GDK_WINDOWING_WAYLAND
+      if (GDK_IS_WAYLAND_DISPLAY (gtk_widget_get_display (vbox)))
+        cursor_demo = TRUE;
+#endif
+
+    if (cursor_demo)
         {
           hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
           gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
@@ -4990,7 +4999,6 @@ create_cursors (GtkWidget *widget)
           g_signal_connect (size, "changed", 
                             G_CALLBACK (change_cursor_theme), hbox);
         }
-#endif
 
       hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
       gtk_container_set_border_width (GTK_CONTAINER (hbox), 5);
@@ -5080,7 +5088,6 @@ create_color_selection (GtkWidget *widget)
       GtkWidget *picker;
       GtkWidget *hbox;
       GtkWidget *label;
-      GtkWidget *button;
       
       window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
       gtk_window_set_screen (GTK_WINDOW (window), 
@@ -5103,12 +5110,6 @@ create_color_selection (GtkWidget *widget)
       picker = gtk_color_button_new ();
       gtk_color_chooser_set_use_alpha (GTK_COLOR_CHOOSER (picker), TRUE);
       gtk_container_add (GTK_CONTAINER (hbox), picker);
-
-      button = gtk_button_new_with_mnemonic ("_Props");
-      gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
-      g_signal_connect (button, "clicked",
-			G_CALLBACK (props_clicked),
-			picker);
     }
 
   if (!gtk_widget_get_visible (window))
@@ -5202,8 +5203,8 @@ void
 create_flipping (GtkWidget *widget)
 {
   static GtkWidget *window = NULL;
-  GtkWidget *check_button, *button;
-  GtkWidget *action_area, *content_area;
+  GtkWidget *check_button;
+  GtkWidget *content_area;
 
   if (!window)
     {
@@ -5217,7 +5218,6 @@ create_flipping (GtkWidget *widget)
 			&window);
 
       content_area = gtk_dialog_get_content_area (GTK_DIALOG (window));
-      action_area = gtk_dialog_get_action_area (GTK_DIALOG (window));
 
       gtk_window_set_title (GTK_WINDOW (window), "Bidirectional Flipping");
 
@@ -5250,10 +5250,8 @@ create_flipping (GtkWidget *widget)
 			  create_forward_back ("Right-to-Left", GTK_TEXT_DIR_RTL),
 			  TRUE, TRUE, 0);
 
-      button = gtk_button_new_with_label ("Close");
-      g_signal_connect_swapped (button, "clicked",
-			        G_CALLBACK (gtk_widget_destroy), window);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
+      gtk_dialog_add_button (GTK_DIALOG (window), "Close", GTK_RESPONSE_CLOSE);
+      g_signal_connect (window, "response", G_CALLBACK (gtk_widget_destroy), NULL);
     }
   
   if (!gtk_widget_get_visible (window))
@@ -5417,32 +5415,44 @@ create_font_selection (GtkWidget *widget)
 static GtkWidget *dialog_window = NULL;
 
 static void
-label_toggle (GtkWidget  *widget,
-	      GtkWidget **label)
+dialog_response_cb (GtkWidget *widget, gint response, gpointer unused)
 {
-  if (!(*label))
+  GtkWidget *content_area;
+  GList *l, *children;
+
+  if (response == GTK_RESPONSE_APPLY)
     {
-      *label = gtk_label_new ("Dialog Test");
-      g_signal_connect (*label,
-			"destroy",
-			G_CALLBACK (gtk_widget_destroyed),
-			label);
-      g_object_set (*label, "margin", 10, NULL);
-      gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog_window))),
-			  *label, TRUE, TRUE, 0);
-      gtk_widget_show (*label);
+      content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog_window));
+      children = gtk_container_get_children (GTK_CONTAINER (content_area));
+
+      for (l = children; l; l = l->next)
+        {
+          if (GTK_IS_LABEL (l->data))
+            {
+              gtk_container_remove (GTK_CONTAINER (content_area), l->data);
+              break;
+            }
+        }
+
+      /* no label removed, so add one */
+      if (l == NULL)
+        {
+          GtkWidget *label;
+          
+          label = gtk_label_new ("Dialog Test");
+          g_object_set (label, "margin", 10, NULL);
+          gtk_box_pack_start (GTK_BOX (content_area),
+                              label, TRUE, TRUE, 0);
+          gtk_widget_show (label);
+        }
+      
+      g_list_free (children);
     }
-  else
-    gtk_widget_destroy (*label);
 }
 
 static void
 create_dialog (GtkWidget *widget)
 {
-  static GtkWidget *label;
-  GtkWidget *action_area;
-  GtkWidget *button;
-
   if (!dialog_window)
     {
       /* This is a terrible example; it's much simpler to create
@@ -5458,26 +5468,21 @@ create_dialog (GtkWidget *widget)
 			G_CALLBACK (gtk_widget_destroyed),
 			&dialog_window);
 
-      action_area = gtk_dialog_get_action_area (GTK_DIALOG (dialog_window));
 
       gtk_window_set_title (GTK_WINDOW (dialog_window), "GtkDialog");
       gtk_container_set_border_width (GTK_CONTAINER (dialog_window), 0);
 
-      button = gtk_button_new_with_label ("OK");
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-      gtk_widget_grab_default (button);
-      gtk_widget_show (button);
+      gtk_dialog_add_button (GTK_DIALOG (dialog_window),
+                             "OK",
+                             GTK_RESPONSE_OK);
 
-      button = gtk_button_new_with_label ("Toggle");
-      g_signal_connect (button, "clicked",
-			G_CALLBACK (label_toggle),
-			&label);
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-      gtk_widget_show (button);
-
-      label = NULL;
+      gtk_dialog_add_button (GTK_DIALOG (dialog_window),
+                             "Toggle",
+                             GTK_RESPONSE_APPLY);
+      
+      g_signal_connect (dialog_window, "response",
+			G_CALLBACK (dialog_response_cb),
+			NULL);
     }
 
   if (!gtk_widget_get_visible (dialog_window))
@@ -5669,7 +5674,7 @@ event_watcher_toggle (void)
 static void
 create_event_watcher (GtkWidget *widget)
 {
-  GtkWidget *action_area, *content_area;
+  GtkWidget *content_area;
   GtkWidget *button;
 
   if (!dialog_window)
@@ -5686,7 +5691,6 @@ create_event_watcher (GtkWidget *widget)
 			NULL);
 
       content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog_window));
-      action_area = gtk_dialog_get_action_area (GTK_DIALOG (dialog_window));
 
       gtk_window_set_title (GTK_WINDOW (dialog_window), "Event Watcher");
       gtk_container_set_border_width (GTK_CONTAINER (dialog_window), 0);
@@ -5700,14 +5704,8 @@ create_event_watcher (GtkWidget *widget)
       gtk_box_pack_start (GTK_BOX (content_area), button, TRUE, TRUE, 0);
       gtk_widget_show (button);
 
-      button = gtk_button_new_with_label ("Close");
-      g_signal_connect_swapped (button, "clicked",
-			        G_CALLBACK (gtk_widget_destroy),
-				dialog_window);
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-      gtk_widget_grab_default (button);
-      gtk_widget_show (button);
+      gtk_dialog_add_button (GTK_DIALOG (dialog_window), "Close", GTK_RESPONSE_CLOSE);
+      g_signal_connect (dialog_window, "response", G_CALLBACK (gtk_widget_destroy), NULL);
     }
 
   if (!gtk_widget_get_visible (dialog_window))
@@ -6020,8 +6018,8 @@ create_pages (GtkNotebook *notebook, gint start, gint end)
       g_object_set_data (G_OBJECT (child), "tab_pixmap", pixwid);
 			   
       gtk_box_pack_start (GTK_BOX (label_box), pixwid, FALSE, TRUE, 0);
-      gtk_widget_set_margin_left (pixwid, 3);
-      gtk_widget_set_margin_right (pixwid, 3);
+      gtk_widget_set_margin_start (pixwid, 3);
+      gtk_widget_set_margin_end (pixwid, 3);
       gtk_widget_set_margin_bottom (pixwid, 1);
       gtk_widget_set_margin_top (pixwid, 1);
       label = gtk_label_new_with_mnemonic (accel_buffer);
@@ -6034,8 +6032,8 @@ create_pages (GtkNotebook *notebook, gint start, gint end)
       g_object_set_data (G_OBJECT (child), "menu_pixmap", pixwid);
       
       gtk_box_pack_start (GTK_BOX (menu_box), pixwid, FALSE, TRUE, 0);
-      gtk_widget_set_margin_left (pixwid, 3);
-      gtk_widget_set_margin_right (pixwid, 3);
+      gtk_widget_set_margin_start (pixwid, 3);
+      gtk_widget_set_margin_end (pixwid, 3);
       gtk_widget_set_margin_bottom (pixwid, 1);
       gtk_widget_set_margin_top (pixwid, 1);
       label = gtk_label_new (buffer);
@@ -6250,31 +6248,6 @@ create_notebook (GtkWidget *widget)
     gtk_widget_destroy (window);
 }
 
-void
-create_settings (GtkWidget *widget)
-{
-  static GtkWidget *window = NULL;
-
-  if (!window)
-    {
-      window = create_prop_editor (G_OBJECT (gtk_settings_get_default ()), GTK_TYPE_SETTINGS);
-      gtk_window_set_screen (GTK_WINDOW (window),
-                             gtk_widget_get_screen (widget));
-
-      gtk_widget_hide (window);
-      gtk_window_set_title (GTK_WINDOW (window), "GTK+ Settings");
-
-      g_signal_connect (window, "destroy",
-                        G_CALLBACK (gtk_widget_destroyed),
-                        &window);
-    }
-
-  if (!gtk_widget_get_visible (window))
-    gtk_widget_show (window);
-  else
-    gtk_widget_destroy (window);
-}
-
 /*
  * GtkPanes
  */
@@ -6301,15 +6274,6 @@ toggle_shrink (GtkWidget *widget, GtkWidget *child)
   gtk_container_child_set_property (container, child, "shrink", &value);
 }
 
-static void
-paned_props_clicked (GtkWidget *button,
-		     GObject   *paned)
-{
-  GtkWidget *window = create_prop_editor (paned, GTK_TYPE_PANED);
-  
-  gtk_window_set_title (GTK_WINDOW (window), "Paned Properties");
-}
-
 GtkWidget *
 create_pane_options (GtkPaned    *paned,
 		     const gchar *frame_label,
@@ -6320,7 +6284,6 @@ create_pane_options (GtkPaned    *paned,
   GtkWidget *frame;
   GtkWidget *grid;
   GtkWidget *label;
-  GtkWidget *button;
   GtkWidget *check_button;
 
   child1 = gtk_paned_get_child1 (paned);
@@ -6367,12 +6330,6 @@ create_pane_options (GtkPaned    *paned,
   g_signal_connect (check_button, "toggled",
 		    G_CALLBACK (toggle_shrink),
                     child2);
-
-  button = gtk_button_new_with_mnemonic ("_Properties");
-  gtk_grid_attach (GTK_GRID (grid), button, 0, 3, 2, 1);
-  g_signal_connect (button, "clicked",
-		    G_CALLBACK (paned_props_clicked),
-		    paned);
 
   return frame;
 }
@@ -6857,8 +6814,7 @@ shape_pressed (GtkWidget *widget, GdkEventButton *event)
                    GDK_OWNERSHIP_NONE,
                    TRUE,
                    GDK_BUTTON_RELEASE_MASK |
-                   GDK_BUTTON_MOTION_MASK |
-                   GDK_POINTER_MOTION_HINT_MASK,
+                   GDK_BUTTON_MOTION_MASK,
                    NULL,
                    event->time);
 }
@@ -6922,7 +6878,6 @@ shape_create_icon (GdkScreen *screen,
   gtk_widget_set_events (window, 
 			 gtk_widget_get_events (window) |
 			 GDK_BUTTON_MOTION_MASK |
-			 GDK_POINTER_MOTION_HINT_MASK |
 			 GDK_BUTTON_PRESS_MASK);
 
   gtk_widget_realize (window);
@@ -8243,8 +8198,7 @@ entry_changed (GtkWidget *widget, ProgressData *pdata)
 void
 create_progress_bar (GtkWidget *widget)
 {
-  GtkWidget *action_area, *content_area;
-  GtkWidget *button;
+  GtkWidget *content_area;
   GtkWidget *vbox;
   GtkWidget *vbox2;
   GtkWidget *hbox;
@@ -8287,7 +8241,6 @@ create_progress_bar (GtkWidget *widget)
       pdata->timer = 0;
 
       content_area = gtk_dialog_get_content_area (GTK_DIALOG (pdata->window));
-      action_area = gtk_dialog_get_action_area (GTK_DIALOG (pdata->window));
 
       gtk_window_set_title (GTK_WINDOW (pdata->window), "GtkProgressBar");
       gtk_container_set_border_width (GTK_CONTAINER (pdata->window), 0);
@@ -8383,13 +8336,10 @@ create_progress_bar (GtkWidget *widget)
 			G_CALLBACK (toggle_activity_mode), pdata);
       gtk_grid_attach (GTK_GRID (grid), check, 0, 15, 1, 1);
 
-      button = gtk_button_new_with_label ("close");
-      g_signal_connect_swapped (button, "clicked",
-				G_CALLBACK (gtk_widget_destroy),
-				pdata->window);
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-      gtk_widget_grab_default (button);
+      gtk_dialog_add_button (GTK_DIALOG (pdata->window), "Close", GTK_RESPONSE_CLOSE);
+      g_signal_connect (pdata->window, "response",
+			G_CALLBACK (gtk_widget_destroy),
+			NULL);
     }
 
   if (!gtk_widget_get_visible (pdata->window))
@@ -8541,147 +8491,6 @@ find_widget_at_pointer (GdkDevice *device)
      return widget;
    }
  return NULL;
-}
-
-struct PropertiesData {
-  GtkWidget **window;
-  GdkCursor *cursor;
-  gboolean in_query;
-  gulong handler;
-};
-
-static void
-destroy_properties (GtkWidget             *widget,
-		    struct PropertiesData *data)
-{
-  if (data->window)
-    {
-      *data->window = NULL;
-      data->window = NULL;
-    }
-
-  if (data->cursor)
-    {
-      g_object_unref (data->cursor);
-      data->cursor = NULL;
-    }
-
-  if (data->handler)
-    {
-      g_signal_handler_disconnect (widget, data->handler);
-      data->handler = 0;
-    }
-
-  g_free (data);
-}
-
-static gint
-property_query_event (GtkWidget             *widget,
-                      GdkEvent              *event,
-                      struct PropertiesData *data)
-{
-  GtkWidget *res_widget = NULL;
-
-  if (!data->in_query)
-    return FALSE;
-
-  if (event->type == GDK_BUTTON_RELEASE)
-    {
-      gtk_grab_remove (widget);
-      gdk_device_ungrab (gdk_event_get_device (event), GDK_CURRENT_TIME);
-
-      res_widget = find_widget_at_pointer (gdk_event_get_device (event));
-      if (res_widget)
-	{
-	  g_object_set_data (G_OBJECT (res_widget), "prop-editor-screen",
-			     gtk_widget_get_screen (widget));
-	  create_prop_editor (G_OBJECT (res_widget), 0);
-	}
-
-      data->in_query = FALSE;
-    }
-  return FALSE;
-}
-
-
-static void
-query_properties (GtkButton *button,
-		  struct PropertiesData *data)
-{
-  GtkWidget *widget = GTK_WIDGET (button);
-  GdkDisplay *display;
-  GdkDeviceManager *device_manager;
-  GdkDevice *device;
-
-  g_signal_connect (button, "event",
-		    G_CALLBACK (property_query_event), data);
-
-  display = gtk_widget_get_display (widget);
-
-  if (!data->cursor)
-    data->cursor = gdk_cursor_new_for_display (display, GDK_TARGET);
-
-  device_manager = gdk_display_get_device_manager (display);
-  device = gdk_device_manager_get_client_pointer (device_manager);
-  gdk_device_grab (device,
-                   gtk_widget_get_window (widget),
-                   GDK_OWNERSHIP_NONE,
-                   TRUE,
-                   GDK_BUTTON_RELEASE_MASK,
-                   data->cursor,
-                   GDK_CURRENT_TIME);
-  gtk_grab_add (widget);
-
-  data->in_query = TRUE;
-}
-
-static void
-create_properties (GtkWidget *widget)
-{
-  static GtkWidget *window = NULL;
-  GtkWidget *button;
-  GtkWidget *vbox;
-  GtkWidget *label;
-  struct PropertiesData *data;
-
-  data = g_new (struct PropertiesData, 1);
-  data->window = &window;
-  data->in_query = FALSE;
-  data->cursor = NULL;
-  data->handler = 0;
-
-  if (!window)
-    {
-      window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-
-      gtk_window_set_screen (GTK_WINDOW (window),
-			     gtk_widget_get_screen (widget));      
-
-      data->handler = g_signal_connect (window, "destroy",
-					G_CALLBACK (destroy_properties),
-					data);
-
-      gtk_window_set_title (GTK_WINDOW (window), "test properties");
-      gtk_container_set_border_width (GTK_CONTAINER (window), 10);
-
-      vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 1);
-      gtk_container_add (GTK_CONTAINER (window), vbox);
-            
-      label = gtk_label_new ("This is just a dumb test to test properties.\nIf you need a generic module, get gtkparasite.");
-      gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
-      
-      button = gtk_button_new_with_label ("Query properties");
-      gtk_box_pack_start (GTK_BOX (vbox), button, TRUE, TRUE, 0);
-      g_signal_connect (button, "clicked",
-			G_CALLBACK (query_properties),
-			data);
-    }
-
-  if (!gtk_widget_get_visible (window))
-    gtk_widget_show_all (window);
-  else
-    gtk_widget_destroy (window);
-  
 }
 
 struct SnapshotData {
@@ -8912,9 +8721,15 @@ selection_test_received (GtkWidget        *tree_view,
 }
 
 void
-selection_test_get_targets (GtkWidget *widget, GtkWidget *tree_view)
+selection_test_get_targets (GtkWidget *dialog, gint response, GtkWidget *tree_view)
 {
   static GdkAtom targets_atom = GDK_NONE;
+
+  if (response != GTK_RESPONSE_APPLY)
+    {
+      gtk_widget_destroy (dialog);
+      return;
+    }
 
   if (targets_atom == GDK_NONE)
     targets_atom = gdk_atom_intern ("TARGETS", FALSE);
@@ -8927,8 +8742,7 @@ void
 create_selection_test (GtkWidget *widget)
 {
   static GtkWidget *window = NULL;
-  GtkWidget *action_area, *content_area;
-  GtkWidget *button;
+  GtkWidget *content_area;
   GtkWidget *vbox;
   GtkWidget *scrolled_win;
   GtkListStore* store;
@@ -8949,7 +8763,6 @@ create_selection_test (GtkWidget *widget)
 			&window);
 
       content_area = gtk_dialog_get_content_area (GTK_DIALOG (window));
-      action_area = gtk_dialog_get_action_area (GTK_DIALOG (window));
 
       gtk_window_set_title (GTK_WINDOW (window), "Selection Test");
       gtk_container_set_border_width (GTK_CONTAINER (window), 0);
@@ -8983,18 +8796,16 @@ create_selection_test (GtkWidget *widget)
 			G_CALLBACK (selection_test_received), NULL);
 
       /* .. And create some buttons */
-      button = gtk_button_new_with_label ("Get Targets");
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
+      gtk_dialog_add_button (GTK_DIALOG (window),
+                             "Get Targets",
+                             GTK_RESPONSE_APPLY);
 
-      g_signal_connect (button, "clicked",
+      g_signal_connect (window, "response",
 			G_CALLBACK (selection_test_get_targets), tree_view);
 
-      button = gtk_button_new_with_label ("Quit");
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-
-      g_signal_connect_swapped (button, "clicked",
-				G_CALLBACK (gtk_widget_destroy),
-				window);
+      gtk_dialog_add_button (GTK_DIALOG (window),
+                             "Quit",
+                             GTK_RESPONSE_CLOSE);
     }
 
   if (!gtk_widget_get_visible (window))
@@ -9087,11 +8898,10 @@ void
 create_scroll_test (GtkWidget *widget)
 {
   static GtkWidget *window = NULL;
-  GtkWidget *action_area, *content_area;
+  GtkWidget *content_area;
   GtkWidget *hbox;
   GtkWidget *drawing_area;
   GtkWidget *scrollbar;
-  GtkWidget *button;
   GtkAdjustment *adjustment;
   GdkGeometry geometry;
   GdkWindowHints geometry_mask;
@@ -9108,7 +8918,6 @@ create_scroll_test (GtkWidget *widget)
 			&window);
 
       content_area = gtk_dialog_get_content_area (GTK_DIALOG (window));
-      action_area = gtk_dialog_get_action_area (GTK_DIALOG (window));
 
       gtk_window_set_title (GTK_WINDOW (window), "Scroll Test");
       gtk_container_set_border_width (GTK_CONTAINER (window), 0);
@@ -9144,13 +8953,12 @@ create_scroll_test (GtkWidget *widget)
       
       /* .. And create some buttons */
 
-      button = gtk_button_new_with_label ("Quit");
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-
-      g_signal_connect_swapped (button, "clicked",
+      gtk_dialog_add_button (GTK_DIALOG (window),
+                             "Quit",
+                             GTK_RESPONSE_CLOSE);
+      g_signal_connect_swapped (window, "response",
 				G_CALLBACK (gtk_widget_destroy),
 				window);
-      gtk_widget_show (button);
 
       /* Set up gridded geometry */
 
@@ -9286,254 +9094,6 @@ create_timeout_test (GtkWidget *widget)
 }
 
 /*
- * Idle Test
- */
-
-static int idle_id = 0;
-
-static gint
-idle_test (GtkWidget *label)
-{
-  static int count = 0;
-  static char buffer[32];
-
-  sprintf (buffer, "count: %d", ++count);
-  gtk_label_set_text (GTK_LABEL (label), buffer);
-
-  return G_SOURCE_CONTINUE;
-}
-
-static void
-start_idle_test (GtkWidget *widget,
-		 GtkWidget *label)
-{
-  if (!idle_id)
-    {
-      idle_id = g_idle_add ((GSourceFunc) idle_test, label);
-    }
-}
-
-static void
-stop_idle_test (GtkWidget *widget,
-		gpointer   data)
-{
-  if (idle_id)
-    {
-      g_source_remove (idle_id);
-      idle_id = 0;
-    }
-}
-
-static void
-destroy_idle_test (GtkWidget  *widget,
-		   GtkWidget **window)
-{
-  stop_idle_test (NULL, NULL);
-
-  *window = NULL;
-}
-
-static void
-toggle_idle_container (GObject *button,
-		       GtkContainer *container)
-{
-  gtk_container_set_resize_mode (container, GPOINTER_TO_INT (g_object_get_data (button, "user_data")));
-}
-
-static void
-create_idle_test (GtkWidget *widget)
-{
-  static GtkWidget *window = NULL;
-  GtkWidget *button;
-  GtkWidget *label;
-  GtkWidget *container;
-
-  if (!window)
-    {
-      GtkWidget *action_area, *content_area;
-      GtkWidget *button2;
-      GtkWidget *frame;
-      GtkWidget *box;
-
-      window = gtk_dialog_new ();
-
-      gtk_window_set_screen (GTK_WINDOW (window),
-			     gtk_widget_get_screen (widget));
-
-      g_signal_connect (window, "destroy",
-			G_CALLBACK (destroy_idle_test),
-			&window);
-
-      content_area = gtk_dialog_get_content_area (GTK_DIALOG (window));
-      action_area = gtk_dialog_get_action_area (GTK_DIALOG (window));
-
-      gtk_window_set_title (GTK_WINDOW (window), "Idle Test");
-      gtk_container_set_border_width (GTK_CONTAINER (window), 0);
-
-      label = gtk_label_new ("count: 0");
-      g_object_set (label, "margin", 10, NULL);
-      gtk_widget_show (label);
-      
-      container =
-	g_object_new (GTK_TYPE_BOX,
-			"visible", TRUE,
-			/* "GtkContainer::child", g_object_new (GTK_TYPE_HBOX,
-			 * "GtkWidget::visible", TRUE,
-			 */
-			 "child", label,
-			/* NULL), */
-			NULL);
-      gtk_box_pack_start (GTK_BOX (content_area), container, TRUE, TRUE, 0);
-
-      frame =
-	g_object_new (GTK_TYPE_FRAME,
-			"border_width", 5,
-			"label", "Label Container",
-			"visible", TRUE,
-			"parent", content_area,
-			NULL);
-      box =
-	g_object_new (GTK_TYPE_BOX,
-			"visible", TRUE,
-			"parent", frame,
-                        "orientation", GTK_ORIENTATION_VERTICAL,
-			NULL);
-      button =
-	g_object_connect (g_object_new (GTK_TYPE_RADIO_BUTTON,
-					  "label", "Resize-Parent",
-					  "user_data", (void*)GTK_RESIZE_PARENT,
-					  "visible", TRUE,
-					  "parent", box,
-					  NULL),
-			  "signal::clicked", toggle_idle_container, container,
-			  NULL);
-      button = g_object_new (GTK_TYPE_RADIO_BUTTON,
-			       "label", "Resize-Queue",
-			       "user_data", (void*)GTK_RESIZE_QUEUE,
-			       "group", button,
-			       "visible", TRUE,
-			       "parent", box,
-			       NULL);
-      g_object_connect (button,
-			"signal::clicked", toggle_idle_container, container,
-			NULL);
-      button2 = g_object_new (GTK_TYPE_RADIO_BUTTON,
-				"label", "Resize-Immediate",
-				"user_data", (void*)GTK_RESIZE_IMMEDIATE,
-				NULL);
-      g_object_connect (button2,
-			"signal::clicked", toggle_idle_container, container,
-			NULL);
-      g_object_set (button2,
-		    "group", button,
-		    "visible", TRUE,
-		    "parent", box,
-		    NULL);
-
-      button = gtk_button_new_with_label ("close");
-      g_signal_connect_swapped (button, "clicked",
-				G_CALLBACK (gtk_widget_destroy),
-				window);
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-      gtk_widget_grab_default (button);
-      gtk_widget_show (button);
-
-      button = gtk_button_new_with_label ("start");
-      g_signal_connect (button, "clicked",
-			G_CALLBACK (start_idle_test),
-			label);
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-      gtk_widget_show (button);
-
-      button = gtk_button_new_with_label ("stop");
-      g_signal_connect (button, "clicked",
-			G_CALLBACK (stop_idle_test),
-			NULL);
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-      gtk_widget_show (button);
-    }
-
-  if (!gtk_widget_get_visible (window))
-    gtk_widget_show (window);
-  else
-    gtk_widget_destroy (window);
-}
-
-/*
- * rc file test
- */
-
-void
-create_rc_file (GtkWidget *widget)
-{
-  static GtkWidget *window = NULL;
-  GtkWidget *action_area, *content_area;
-  GtkWidget *button;
-  GtkWidget *frame;
-  GtkWidget *vbox;
-  GtkWidget *label;
-
-  if (!window)
-    {
-      window = gtk_dialog_new ();
-
-      gtk_window_set_screen (GTK_WINDOW (window),
-			     gtk_widget_get_screen (widget));
-
-      g_signal_connect (window, "destroy",
-			G_CALLBACK (gtk_widget_destroyed),
-			&window);
-
-      content_area = gtk_dialog_get_content_area (GTK_DIALOG (window));
-      action_area = gtk_dialog_get_action_area (GTK_DIALOG (window));
-
-      frame = gtk_aspect_frame_new ("Testing RC file prioritization", 0.5, 0.5, 0.0, TRUE);
-      gtk_box_pack_start (GTK_BOX (content_area), frame, FALSE, FALSE, 0);
-
-      vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-      gtk_container_add (GTK_CONTAINER (frame), vbox);
-      
-      label = gtk_label_new ("This label should be red");
-      gtk_widget_set_name (label, "testgtk-red-label");
-      gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-      label = gtk_label_new ("This label should be green");
-      gtk_widget_set_name (label, "testgtk-green-label");
-      gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-      label = gtk_label_new ("This label should be blue");
-      gtk_widget_set_name (label, "testgtk-blue-label");
-      gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-      gtk_window_set_title (GTK_WINDOW (window), "Reload Rc file");
-      gtk_container_set_border_width (GTK_CONTAINER (window), 0);
-
-      button = gtk_button_new_with_label ("Reload");
-      g_signal_connect_swapped (button, "clicked",
-                                G_CALLBACK (gtk_style_context_reset_widgets),
-                                gtk_widget_get_screen (button));
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-      gtk_widget_grab_default (button);
-
-      button = gtk_button_new_with_label ("Close");
-      g_signal_connect_swapped (button, "clicked",
-				G_CALLBACK (gtk_widget_destroy),
-				window);
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-    }
-
-  if (!gtk_widget_get_visible (window))
-    gtk_widget_show_all (window);
-  else
-    gtk_widget_destroy (window);
-}
-
-/*
  * Test of recursive mainloop
  */
 
@@ -9548,9 +9108,8 @@ void
 create_mainloop (GtkWidget *widget)
 {
   static GtkWidget *window = NULL;
-  GtkWidget *action_area, *content_area;
+  GtkWidget *content_area;
   GtkWidget *label;
-  GtkWidget *button;
 
   if (!window)
     {
@@ -9566,7 +9125,6 @@ create_mainloop (GtkWidget *widget)
 			&window);
 
       content_area = gtk_dialog_get_content_area (GTK_DIALOG (window));
-      action_area = gtk_dialog_get_action_area (GTK_DIALOG (window));
 
       label = gtk_label_new ("In recursive main loop...");
       g_object_set (label, "margin", 20, NULL);
@@ -9574,17 +9132,12 @@ create_mainloop (GtkWidget *widget)
       gtk_box_pack_start (GTK_BOX (content_area), label, TRUE, TRUE, 0);
       gtk_widget_show (label);
 
-      button = gtk_button_new_with_label ("Leave");
-      gtk_box_pack_start (GTK_BOX (action_area), button, FALSE, TRUE, 0);
-
-      g_signal_connect_swapped (button, "clicked",
+      gtk_dialog_add_button (GTK_DIALOG (window),
+                             "Leave",
+                             GTK_RESPONSE_OK);
+      g_signal_connect_swapped (window, "response",
 				G_CALLBACK (gtk_widget_destroy),
 				window);
-
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_widget_grab_default (button);
-
-      gtk_widget_show (button);
     }
 
   if (!gtk_widget_get_visible (window))
@@ -9721,147 +9274,6 @@ void create_layout (GtkWidget *widget)
     gtk_widget_destroy (window);
 }
 
-#if 0
-/* FIXME: need to completely redo this for GtkStyleContext */
-void
-create_styles (GtkWidget *widget)
-{
-  static GtkWidget *window = NULL;
-  GtkWidget *content_area, *action_area;
-  GtkWidget *label;
-  GtkWidget *button;
-  GtkWidget *entry;
-  GtkWidget *vbox;
-  static GdkRGBA red =    { 1,0,0,1 };
-  static GdkRGBA green =  { 0,1,0,1 };
-  static GdkRGBA blue =   { 0,0,1,1 };
-  static GdkRGBA yellow = { 1,1,0,1 };
-  static GdkRGBA cyan =   { 0,1,1,1 };
-  PangoFontDescription *font_desc;
-
-  GtkRcStyle *rc_style;
-
-  if (!window)
-    {
-      window = gtk_dialog_new ();
-      gtk_window_set_screen (GTK_WINDOW (window),
-			     gtk_widget_get_screen (widget));
-     
-      g_signal_connect (window, "destroy",
-			G_CALLBACK (gtk_widget_destroyed),
-			&window);
-
-      content_area = gtk_dialog_get_content_area (GTK_DIALOG (window));
-      action_area = gtk_dialog_get_action_area (GTK_DIALOG (window));
-
-      button = gtk_button_new_with_label ("Close");
-      g_signal_connect_swapped (button, "clicked",
-				G_CALLBACK (gtk_widget_destroy),
-				window);
-      gtk_widget_set_can_default (button, TRUE);
-      gtk_box_pack_start (GTK_BOX (action_area), button, TRUE, TRUE, 0);
-      gtk_widget_show (button);
-
-      vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
-      gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
-      gtk_box_pack_start (GTK_BOX (content_area), vbox, FALSE, FALSE, 0);
-      
-      label = gtk_label_new ("Font:");
-      gtk_widget_set_halign (label, GTK_ALIGN_START);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-      gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-      font_desc = pango_font_description_from_string ("Helvetica,Sans Oblique 18");
-
-      button = gtk_button_new_with_label ("Some Text");
-      gtk_widget_override_font (gtk_bin_get_child (GTK_BIN (button)), font_desc);
-      gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-
-      label = gtk_label_new ("Foreground:");
-      gtk_widget_set_halign (label, GTK_ALIGN_START);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-      gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-      button = gtk_button_new_with_label ("Some Text");
-      gtk_widget_override_color (gtk_bin_get_child (GTK_BIN (button)), 0, &red);
-      gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-
-      label = gtk_label_new ("Background:");
-      gtk_widget_set_halign (label, GTK_ALIGN_START);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-      gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-      button = gtk_button_new_with_label ("Some Text");
-      gtk_widget_override_background_color (button, 0, &green);
-      gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-
-      label = gtk_label_new ("Text:");
-      gtk_widget_set_halign (label, GTK_ALIGN_START);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-      gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-      entry = gtk_entry_new ();
-      gtk_entry_set_text (GTK_ENTRY (entry), "Some Text");
-      gtk_widget_override_color (entry, 0, &blue);
-      gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
-
-      label = gtk_label_new ("Base:");
-      gtk_widget_set_halign (label, GTK_ALIGN_START);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-      gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-      entry = gtk_entry_new ();
-      gtk_entry_set_text (GTK_ENTRY (entry), "Some Text");
-      gtk_widget_override_background_color (entry, 0, &yellow);
-      gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
-
-      label = gtk_label_new ("Cursor:");
-      gtk_widget_set_halign (label, GTK_ALIGN_START);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-      gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-      entry = gtk_entry_new ();
-      gtk_entry_set_text (GTK_ENTRY (entry), "Some Text");
-      gtk_widget_modify_cursor (entry, &red, &red);
-      gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
-
-      label = gtk_label_new ("Multiple:");
-      gtk_widget_set_halign (label, GTK_ALIGN_START);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-      gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-
-      button = gtk_button_new_with_label ("Some Text");
-
-      rc_style = gtk_rc_style_new ();
-
-      rc_style->font_desc = pango_font_description_copy (font_desc);
-      rc_style->color_flags[GTK_STATE_NORMAL] = GTK_RC_FG | GTK_RC_BG;
-      rc_style->color_flags[GTK_STATE_PRELIGHT] = GTK_RC_FG | GTK_RC_BG;
-      rc_style->color_flags[GTK_STATE_ACTIVE] = GTK_RC_FG | GTK_RC_BG;
-      rc_style->fg[GTK_STATE_NORMAL] = yellow;
-      rc_style->bg[GTK_STATE_NORMAL] = blue;
-      rc_style->fg[GTK_STATE_PRELIGHT] = blue;
-      rc_style->bg[GTK_STATE_PRELIGHT] = yellow;
-      rc_style->fg[GTK_STATE_ACTIVE] = red;
-      rc_style->bg[GTK_STATE_ACTIVE] = cyan;
-      rc_style->xthickness = 5;
-      rc_style->ythickness = 5;
-
-      gtk_widget_modify_style (button, rc_style);
-      gtk_widget_modify_style (gtk_bin_get_child (GTK_BIN (button)), rc_style);
-
-      g_object_unref (rc_style);
-      
-      gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-    }
-  
-  if (!gtk_widget_get_visible (window))
-    gtk_widget_show_all (window);
-  else
-    gtk_widget_destroy (window);
-}
-#endif
-
 /*
  * Main Window and Exit
  */
@@ -9910,26 +9322,19 @@ struct {
   { "paned keyboard", create_paned_keyboard_navigation },
   { "pixbuf", create_pixbuf },
   { "progress bar", create_progress_bar },
-  { "properties", create_properties },
   { "radio buttons", create_radio_buttons },
   { "range controls", create_range_controls },
-  { "rc file", create_rc_file },
   { "reparent", create_reparent },
   { "resize grips", create_resize_grips },
   { "rotated label", create_rotated_label },
   { "rotated text", create_rotated_text },
   { "saved position", create_saved_position },
   { "scrolled windows", create_scrolled_windows },
-  { "settings", create_settings },
   { "shapes", create_shapes },
   { "size groups", create_size_groups },
   { "snapshot", create_snapshot },
   { "spinbutton", create_spins },
   { "statusbar", create_statusbar },
-#if 0
-  { "styles", create_styles },
-#endif
-  { "test idle", create_idle_test },
   { "test mainloop", create_mainloop, TRUE },
   { "test scrolling", create_scroll_test },
   { "test selection", create_selection_test },

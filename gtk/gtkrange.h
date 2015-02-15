@@ -78,12 +78,11 @@ struct _GtkRangeClass
                              GtkScrollType scroll,
                              gdouble       new_value);
 
-  gboolean no_warp;
-
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);
   void (*_gtk_reserved2) (void);
   void (*_gtk_reserved3) (void);
+  void (*_gtk_reserved4) (void);
 };
 
 
@@ -174,22 +173,6 @@ void               gtk_range_set_round_digits              (GtkRange      *range
 GDK_AVAILABLE_IN_ALL
 gint                gtk_range_get_round_digits              (GtkRange      *range);
 
-/* internal API */
-gdouble            _gtk_range_get_wheel_delta              (GtkRange       *range,
-                                                            GdkEventScroll *event);
-void               _gtk_range_set_has_origin               (GtkRange      *range,
-                                                            gboolean       has_origin);
-gboolean           _gtk_range_get_has_origin               (GtkRange      *range);
-void               _gtk_range_set_stop_values              (GtkRange      *range,
-                                                            gdouble       *values,
-                                                            gint           n_values);
-gint               _gtk_range_get_stop_positions           (GtkRange      *range,
-                                                            gint         **values);
-void               _gtk_range_set_steppers                 (GtkRange      *range,
-                                                            gboolean       has_a,
-                                                            gboolean       has_b,
-                                                            gboolean       has_c,
-                                                            gboolean       has_d);
 
 G_END_DECLS
 

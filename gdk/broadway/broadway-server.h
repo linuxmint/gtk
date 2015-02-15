@@ -22,6 +22,8 @@ typedef struct _BroadwayServerClass BroadwayServerClass;
 BroadwayServer     *broadway_server_new                      (char             *address,
 							      int               port,
 							      GError          **error);
+BroadwayServer     *broadway_server_on_unix_socket_new       (char             *address,
+							      GError          **error);
 gboolean            broadway_server_has_client               (BroadwayServer   *server);
 void                broadway_server_flush                    (BroadwayServer   *server);
 void                broadway_server_sync                     (BroadwayServer   *server);
@@ -46,6 +48,8 @@ guint32             broadway_server_grab_pointer             (BroadwayServer   *
 guint32             broadway_server_ungrab_pointer           (BroadwayServer   *server,
 							      guint32           time_);
 gint32              broadway_server_get_mouse_toplevel       (BroadwayServer   *server);
+void                broadway_server_set_show_keyboard        (BroadwayServer   *server,
+                                                              gboolean          show);
 guint32             broadway_server_new_window               (BroadwayServer   *server,
 							      int               x,
 							      int               y,
@@ -57,6 +61,10 @@ void                broadway_server_destroy_window           (BroadwayServer   *
 gboolean            broadway_server_window_show              (BroadwayServer   *server,
 							      gint              id);
 gboolean            broadway_server_window_hide              (BroadwayServer   *server,
+							      gint              id);
+void                broadway_server_window_raise             (BroadwayServer   *server,
+							      gint              id);
+void                broadway_server_window_lower             (BroadwayServer   *server,
 							      gint              id);
 void                broadway_server_window_set_transient_for (BroadwayServer   *server,
 							      gint              id,
@@ -78,6 +86,8 @@ gboolean            broadway_server_window_move_resize       (BroadwayServer   *
 							      int               y,
 							      int               width,
 							      int               height);
+void                broadway_server_focus_window             (BroadwayServer   *server,
+                                                              gint              new_focused_window);
 cairo_surface_t * broadway_server_open_surface (BroadwayServer *server,
 						guint32 id,
 						char *name,

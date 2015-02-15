@@ -36,6 +36,29 @@ G_DEFINE_TYPE (GdkWin32Screen, gdk_win32_screen, GDK_TYPE_SCREEN)
 static void
 gdk_win32_screen_init (GdkWin32Screen *display)
 {
+  GdkScreen *screen = GDK_SCREEN (display);
+  HDC screen_dc;
+  int logpixelsx = -1;
+  const gchar *font_resolution;
+
+  screen_dc = GetDC (NULL);
+
+  if (screen_dc)
+    {
+      logpixelsx = GetDeviceCaps(screen_dc, LOGPIXELSX);
+      ReleaseDC (NULL, screen_dc);
+    }
+
+  font_resolution = g_getenv ("GDK_WIN32_FONT_RESOLUTION");
+  if (font_resolution)
+    {
+      int env_logpixelsx = atol (font_resolution);
+      if (env_logpixelsx > 0)
+        logpixelsx = env_logpixelsx;
+    }
+
+  if (logpixelsx > 0)
+    _gdk_screen_set_resolution (screen, logpixelsx);
 }
 
 static GdkDisplay *

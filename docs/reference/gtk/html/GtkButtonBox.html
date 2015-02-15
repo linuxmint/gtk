@@ -6,9 +6,9 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="GTK+ 3 Reference Manual">
 <link rel="up" href="LayoutContainers.html" title="Layout Containers">
-<link rel="prev" href="GtkAlignment.html" title="GtkAlignment">
+<link rel="prev" href="GtkOverlay.html" title="GtkOverlay">
 <link rel="next" href="GtkPaned.html" title="GtkPaned">
-<meta name="generator" content="GTK-Doc V1.20.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.21.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -24,7 +24,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="LayoutContainers.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="GtkAlignment.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="GtkOverlay.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GtkPaned.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -54,7 +54,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a class="link" href="gtk3-Standard-Enumerations.html#GtkButtonBoxStyle" title="enum GtkButtonBoxStyle"><span class="returnvalue">GtkButtonBoxStyle</span></a>
+<a class="link" href="GtkButtonBox.html#GtkButtonBoxStyle" title="enum GtkButtonBoxStyle"><span class="returnvalue">GtkButtonBoxStyle</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkButtonBox.html#gtk-button-box-get-layout" title="gtk_button_box_get_layout ()">gtk_button_box_get_layout</a> <span class="c_punctuation">()</span>
@@ -62,7 +62,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkButtonBox.html#gtk-button-box-get-child-secondary" title="gtk_button_box_get_child_secondary ()">gtk_button_box_get_child_secondary</a> <span class="c_punctuation">()</span>
@@ -70,7 +70,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GtkButtonBox.html#gtk-button-box-get-child-non-homogeneous" title="gtk_button_box_get_child_non_homogeneous ()">gtk_button_box_get_child_non_homogeneous</a> <span class="c_punctuation">()</span>
@@ -112,7 +112,7 @@
 <col width="200px" class="properties_flags">
 </colgroup>
 <tbody><tr>
-<td class="property_type"><a class="link" href="gtk3-Standard-Enumerations.html#GtkButtonBoxStyle" title="enum GtkButtonBoxStyle"><span class="type">GtkButtonBoxStyle</span></a></td>
+<td class="property_type"><a class="link" href="GtkButtonBox.html#GtkButtonBoxStyle" title="enum GtkButtonBoxStyle"><span class="type">GtkButtonBoxStyle</span></a></td>
 <td class="property_name"><a class="link" href="GtkButtonBox.html#GtkButtonBox--layout-style" title="The “layout-style” property">layout-style</a></td>
 <td class="property_flags">Read / Write</td>
 </tr></tbody>
@@ -128,12 +128,12 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkButtonBox.html#GtkButtonBox--c-non-homogeneous" title="The “non-homogeneous” child property">non-homogeneous</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="GtkButtonBox.html#GtkButtonBox--c-secondary" title="The “secondary” child property">secondary</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -150,22 +150,22 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GtkButtonBox.html#GtkButtonBox--s-child-internal-pad-x" title="The “child-internal-pad-x” style property">child-internal-pad-x</a></td>
 <td class="property_flags">Read</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GtkButtonBox.html#GtkButtonBox--s-child-internal-pad-y" title="The “child-internal-pad-y” style property">child-internal-pad-y</a></td>
 <td class="property_flags">Read</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GtkButtonBox.html#GtkButtonBox--s-child-min-height" title="The “child-min-height” style property">child-min-height</a></td>
 <td class="property_flags">Read</td>
 </tr>
 <tr>
-<td class="property_type"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
 <td class="property_name"><a class="link" href="GtkButtonBox.html#GtkButtonBox--s-child-min-width" title="The “child-min-width” style property">child-min-width</a></td>
 <td class="property_flags">Read</td>
 </tr>
@@ -179,16 +179,26 @@
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="GtkButtonBox.html#GtkButtonBox-struct" title="struct GtkButtonBox">GtkButtonBox</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">struct</td>
+<td class="function_name"><a class="link" href="GtkButtonBox.html#GtkButtonBoxClass" title="struct GtkButtonBoxClass">GtkButtonBoxClass</a></td>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="GtkButtonBox.html#GtkButtonBoxStyle" title="enum GtkButtonBoxStyle">GtkButtonBoxStyle</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="GtkButtonBox.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="http://library.gnome.org/devel/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
         <span class="lineart">╰──</span> <a class="link" href="GtkWidget.html" title="GtkWidget">GtkWidget</a>
             <span class="lineart">╰──</span> <a class="link" href="GtkContainer.html" title="GtkContainer">GtkContainer</a>
                 <span class="lineart">╰──</span> <a class="link" href="GtkBox.html" title="GtkBox">GtkBox</a>
@@ -212,18 +222,16 @@ GtkButtonBox implements
 <a name="GtkButtonBox.description"></a><h2>Description</h2>
 <p>A button box should be used to provide a consistent layout of buttons
 throughout your application. The layout/spacing can be altered by the
-programmer, or if desired, by the user to alter the 'feel' of a
+programmer, or if desired, by the user to alter the “feel” of a
 program to a small degree.</p>
 <p>gtk_button_box_get_layout() and <a class="link" href="GtkButtonBox.html#gtk-button-box-set-layout" title="gtk_button_box_set_layout ()"><code class="function">gtk_button_box_set_layout()</code></a> retrieve and
 alter the method used to spread the buttons in a button box across the
 container, respectively.</p>
 <p>The main purpose of GtkButtonBox is to make sure the children have all the
 same size. GtkButtonBox gives all children the same size, but it does allow
-'outliers' to keep their own larger size. To force all children to be
-strictly the same size without exceptions, you can set the
-<span class="type">“homogeneous”</span> property to <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
-<p>To excempt individual children from homogeneous sizing regardless of their
-'outlier' status, you can set the <span class="type">“non-homogeneous”</span> child
+'outliers' to keep their own larger size.</p>
+<p>To exempt individual children from homogeneous sizing regardless of their
+'outlier' status, you can set the non-homogeneous child
 property.</p>
 </div>
 <div class="refsect1">
@@ -234,7 +242,7 @@ property.</p>
 gtk_button_box_new (<em class="parameter"><code><a class="link" href="gtk3-Standard-Enumerations.html#GtkOrientation" title="enum GtkOrientation"><span class="type">GtkOrientation</span></a> orientation</code></em>);</pre>
 <p>Creates a new <a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.7.11.12.2.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.12.12.2.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -249,7 +257,7 @@ gtk_button_box_new (<em class="parameter"><code><a class="link" href="gtk3-Stand
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.11.12.2.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.12.12.2.6"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a>.</p>
 <p></p>
 </div>
@@ -258,11 +266,11 @@ gtk_button_box_new (<em class="parameter"><code><a class="link" href="gtk3-Stand
 <hr>
 <div class="refsect2">
 <a name="gtk-button-box-get-layout"></a><h3>gtk_button_box_get_layout ()</h3>
-<pre class="programlisting"><a class="link" href="gtk3-Standard-Enumerations.html#GtkButtonBoxStyle" title="enum GtkButtonBoxStyle"><span class="returnvalue">GtkButtonBoxStyle</span></a>
+<pre class="programlisting"><a class="link" href="GtkButtonBox.html#GtkButtonBoxStyle" title="enum GtkButtonBoxStyle"><span class="returnvalue">GtkButtonBoxStyle</span></a>
 gtk_button_box_get_layout (<em class="parameter"><code><a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a> *widget</code></em>);</pre>
 <p>Retrieves the method being used to arrange the buttons in a button box.</p>
 <div class="refsect3">
-<a name="id-1.3.7.11.12.3.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.12.12.3.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -277,7 +285,7 @@ gtk_button_box_get_layout (<em class="parameter"><code><a class="link" href="Gtk
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.11.12.3.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.12.12.3.6"></a><h4>Returns</h4>
 <p> the method used to lay out buttons in <em class="parameter"><code>widget</code></em>
 .</p>
 <p></p>
@@ -286,13 +294,13 @@ gtk_button_box_get_layout (<em class="parameter"><code><a class="link" href="Gtk
 <hr>
 <div class="refsect2">
 <a name="gtk-button-box-get-child-secondary"></a><h3>gtk_button_box_get_child_secondary ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_button_box_get_child_secondary (<em class="parameter"><code><a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a> *widget</code></em>,
                                     <em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *child</code></em>);</pre>
 <p>Returns whether <em class="parameter"><code>child</code></em>
  should appear in a secondary group of children.</p>
 <div class="refsect3">
-<a name="id-1.3.7.11.12.4.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.12.12.4.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -315,7 +323,7 @@ gtk_button_box_get_child_secondary (<em class="parameter"><code><a class="link" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.11.12.4.6"></a><h4>Returns</h4>
+<a name="id-1.3.7.12.12.4.6"></a><h4>Returns</h4>
 <p> whether <em class="parameter"><code>child</code></em>
 should appear in a secondary group of children.</p>
 <p></p>
@@ -325,14 +333,14 @@ should appear in a secondary group of children.</p>
 <hr>
 <div class="refsect2">
 <a name="gtk-button-box-get-child-non-homogeneous"></a><h3>gtk_button_box_get_child_non_homogeneous ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gtk_button_box_get_child_non_homogeneous
                                (<em class="parameter"><code><a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a> *widget</code></em>,
                                 <em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *child</code></em>);</pre>
 <p>Returns whether the child is exempted from homogenous
 sizing.</p>
 <div class="refsect3">
-<a name="id-1.3.7.11.12.5.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.12.12.5.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -355,8 +363,8 @@ sizing.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.7.11.12.5.6"></a><h4>Returns</h4>
-<p> <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the child is not subject to homogenous sizing</p>
+<a name="id-1.3.7.12.12.5.6"></a><h4>Returns</h4>
+<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the child is not subject to homogenous sizing</p>
 <p></p>
 </div>
 <p class="since">Since 3.2</p>
@@ -366,10 +374,10 @@ sizing.</p>
 <a name="gtk-button-box-set-layout"></a><h3>gtk_button_box_set_layout ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_button_box_set_layout (<em class="parameter"><code><a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a> *widget</code></em>,
-                           <em class="parameter"><code><a class="link" href="gtk3-Standard-Enumerations.html#GtkButtonBoxStyle" title="enum GtkButtonBoxStyle"><span class="type">GtkButtonBoxStyle</span></a> layout_style</code></em>);</pre>
+                           <em class="parameter"><code><a class="link" href="GtkButtonBox.html#GtkButtonBoxStyle" title="enum GtkButtonBoxStyle"><span class="type">GtkButtonBoxStyle</span></a> layout_style</code></em>);</pre>
 <p>Changes the way buttons are arranged in their container.</p>
 <div class="refsect3">
-<a name="id-1.3.7.11.12.6.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.12.12.6.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -397,21 +405,21 @@ gtk_button_box_set_layout (<em class="parameter"><code><a class="link" href="Gtk
 <pre class="programlisting"><span class="returnvalue">void</span>
 gtk_button_box_set_child_secondary (<em class="parameter"><code><a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a> *widget</code></em>,
                                     <em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *child</code></em>,
-                                    <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> is_secondary</code></em>);</pre>
+                                    <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> is_secondary</code></em>);</pre>
 <p>Sets whether <em class="parameter"><code>child</code></em>
  should appear in a secondary group of children.
 A typical use of a secondary child is the help button in a dialog.</p>
 <p>This group appears after the other children if the style
-is <a class="link" href="gtk3-Standard-Enumerations.html#GTK-BUTTONBOX-START:CAPS"><code class="literal">GTK_BUTTONBOX_START</code></a>, <a class="link" href="gtk3-Standard-Enumerations.html#GTK-BUTTONBOX-SPREAD:CAPS"><code class="literal">GTK_BUTTONBOX_SPREAD</code></a> or
-<a class="link" href="gtk3-Standard-Enumerations.html#GTK-BUTTONBOX-EDGE:CAPS"><code class="literal">GTK_BUTTONBOX_EDGE</code></a>, and before the other children if the style
-is <a class="link" href="gtk3-Standard-Enumerations.html#GTK-BUTTONBOX-END:CAPS"><code class="literal">GTK_BUTTONBOX_END</code></a>. For horizontal button boxes, the definition
+is <a class="link" href="GtkButtonBox.html#GTK-BUTTONBOX-START:CAPS"><code class="literal">GTK_BUTTONBOX_START</code></a>, <a class="link" href="GtkButtonBox.html#GTK-BUTTONBOX-SPREAD:CAPS"><code class="literal">GTK_BUTTONBOX_SPREAD</code></a> or
+<a class="link" href="GtkButtonBox.html#GTK-BUTTONBOX-EDGE:CAPS"><code class="literal">GTK_BUTTONBOX_EDGE</code></a>, and before the other children if the style
+is <a class="link" href="GtkButtonBox.html#GTK-BUTTONBOX-END:CAPS"><code class="literal">GTK_BUTTONBOX_END</code></a>. For horizontal button boxes, the definition
 of before/after depends on direction of the widget (see
-<a class="link" href="GtkWidget.html#gtk-widget-set-direction" title="gtk_widget_set_direction ()"><code class="function">gtk_widget_set_direction()</code></a>). If the style is <a class="link" href="gtk3-Standard-Enumerations.html#GTK-BUTTONBOX-START:CAPS"><code class="literal">GTK_BUTTONBOX_START</code></a>
-or <a class="link" href="gtk3-Standard-Enumerations.html#GTK-BUTTONBOX-END:CAPS"><code class="literal">GTK_BUTTONBOX_END</code></a>, then the secondary children are aligned at
+<a class="link" href="GtkWidget.html#gtk-widget-set-direction" title="gtk_widget_set_direction ()"><code class="function">gtk_widget_set_direction()</code></a>). If the style is <a class="link" href="GtkButtonBox.html#GTK-BUTTONBOX-START:CAPS"><code class="literal">GTK_BUTTONBOX_START</code></a>
+or <a class="link" href="GtkButtonBox.html#GTK-BUTTONBOX-END:CAPS"><code class="literal">GTK_BUTTONBOX_END</code></a>, then the secondary children are aligned at
 the other end of the button box from the main children. For the
 other styles, they appear immediately next to the main children.</p>
 <div class="refsect3">
-<a name="id-1.3.7.11.12.7.6"></a><h4>Parameters</h4>
+<a name="id-1.3.7.12.12.7.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -432,7 +440,7 @@ other styles, they appear immediately next to the main children.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>is_secondary</p></td>
-<td class="parameter_description"><p>if <a href="http://library.gnome.org/devel/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the <em class="parameter"><code>child</code></em>
+<td class="parameter_description"><p>if <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the <em class="parameter"><code>child</code></em>
 appears in a secondary group of the
 button box.</p></td>
 <td class="parameter_annotations"> </td>
@@ -448,10 +456,10 @@ button box.</p></td>
 gtk_button_box_set_child_non_homogeneous
                                (<em class="parameter"><code><a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a> *widget</code></em>,
                                 <em class="parameter"><code><a class="link" href="GtkWidget.html" title="GtkWidget"><span class="type">GtkWidget</span></a> *child</code></em>,
-                                <em class="parameter"><code><a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> non_homogeneous</code></em>);</pre>
+                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> non_homogeneous</code></em>);</pre>
 <p>Sets whether the child is exempted from homogeous sizing.</p>
 <div class="refsect3">
-<a name="id-1.3.7.11.12.8.5"></a><h4>Parameters</h4>
+<a name="id-1.3.7.12.12.8.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -487,12 +495,97 @@ gtk_button_box_set_child_non_homogeneous
 <a name="GtkButtonBox-struct"></a><h3>struct GtkButtonBox</h3>
 <pre class="programlisting">struct GtkButtonBox;</pre>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GtkButtonBoxClass"></a><h3>struct GtkButtonBoxClass</h3>
+<pre class="programlisting">struct GtkButtonBoxClass {
+  GtkBoxClass parent_class;
+};
+</pre>
+<div class="refsect3">
+<a name="id-1.3.7.12.13.3.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody><tr>
+<td class="struct_member_name"><p><a class="link" href="GtkBox.html#GtkBoxClass" title="struct GtkBoxClass"><span class="type">GtkBoxClass</span></a> <em class="structfield"><code><a name="GtkButtonBoxClass.parent-class"></a>parent_class</code></em>;</p></td>
+<td class="struct_member_description"><p>The parent class.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GtkButtonBoxStyle"></a><h3>enum GtkButtonBoxStyle</h3>
+<p>Used to dictate the style that a <a class="link" href="GtkButtonBox.html" title="GtkButtonBox"><span class="type">GtkButtonBox</span></a> uses to layout the buttons it
+contains.</p>
+<div class="refsect3">
+<a name="id-1.3.7.12.13.4.4"></a><h4>Members</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-BUTTONBOX-SPREAD:CAPS"></a>GTK_BUTTONBOX_SPREAD</p></td>
+<td class="enum_member_description">
+<p>Buttons are evenly spread across the box.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-BUTTONBOX-EDGE:CAPS"></a>GTK_BUTTONBOX_EDGE</p></td>
+<td class="enum_member_description">
+<p>Buttons are placed at the edges of the box.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-BUTTONBOX-START:CAPS"></a>GTK_BUTTONBOX_START</p></td>
+<td class="enum_member_description">
+<p>Buttons are grouped towards the start of the box,
+  (on the left for a HBox, or the top for a VBox).</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-BUTTONBOX-END:CAPS"></a>GTK_BUTTONBOX_END</p></td>
+<td class="enum_member_description">
+<p>Buttons are grouped towards the end of the box,
+  (on the right for a HBox, or the bottom for a VBox).</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-BUTTONBOX-CENTER:CAPS"></a>GTK_BUTTONBOX_CENTER</p></td>
+<td class="enum_member_description">
+<p>Buttons are centered in the box. Since 2.12.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GTK-BUTTONBOX-EXPAND:CAPS"></a>GTK_BUTTONBOX_EXPAND</p></td>
+<td class="enum_member_description">
+<p>Buttons expand to fill the box. Since 3.12.</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="GtkButtonBox.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GtkButtonBox--layout-style"></a><h3>The <code class="literal">“layout-style”</code> property</h3>
-<pre class="programlisting">  “layout-style”             <a class="link" href="gtk3-Standard-Enumerations.html#GtkButtonBoxStyle" title="enum GtkButtonBoxStyle"><span class="type">GtkButtonBoxStyle</span></a></pre>
+<pre class="programlisting">  “layout-style”             <a class="link" href="GtkButtonBox.html#GtkButtonBoxStyle" title="enum GtkButtonBoxStyle"><span class="type">GtkButtonBoxStyle</span></a></pre>
 <p>How to lay out the buttons in the box. Possible values are: spread, edge, start and end.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: GTK_BUTTONBOX_EDGE</p>
@@ -502,7 +595,7 @@ gtk_button_box_set_child_non_homogeneous
 <a name="GtkButtonBox.child-property-details"></a><h2>Child Property Details</h2>
 <div class="refsect2">
 <a name="GtkButtonBox--c-non-homogeneous"></a><h3>The <code class="literal">“non-homogeneous”</code> child property</h3>
-<pre class="programlisting">  “non-homogeneous”          <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “non-homogeneous”          <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>If TRUE, the child will not be subject to homogeneous sizing.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>
@@ -510,7 +603,7 @@ gtk_button_box_set_child_non_homogeneous
 <hr>
 <div class="refsect2">
 <a name="GtkButtonBox--c-secondary"></a><h3>The <code class="literal">“secondary”</code> child property</h3>
-<pre class="programlisting">  “secondary”                <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “secondary”                <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>If TRUE, the child appears in a secondary group of children, suitable for, e.g., help buttons.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>
@@ -520,7 +613,7 @@ gtk_button_box_set_child_non_homogeneous
 <a name="GtkButtonBox.style-property-details"></a><h2>Style Property Details</h2>
 <div class="refsect2">
 <a name="GtkButtonBox--s-child-internal-pad-x"></a><h3>The <code class="literal">“child-internal-pad-x”</code> style property</h3>
-<pre class="programlisting">  “child-internal-pad-x”     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “child-internal-pad-x”     <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>Amount to increase child's size on either side.</p>
 <p>Flags: Read</p>
 <p>Allowed values: &gt;= 0</p>
@@ -529,7 +622,7 @@ gtk_button_box_set_child_non_homogeneous
 <hr>
 <div class="refsect2">
 <a name="GtkButtonBox--s-child-internal-pad-y"></a><h3>The <code class="literal">“child-internal-pad-y”</code> style property</h3>
-<pre class="programlisting">  “child-internal-pad-y”     <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “child-internal-pad-y”     <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>Amount to increase child's size on the top and bottom.</p>
 <p>Flags: Read</p>
 <p>Allowed values: &gt;= 0</p>
@@ -538,7 +631,7 @@ gtk_button_box_set_child_non_homogeneous
 <hr>
 <div class="refsect2">
 <a name="GtkButtonBox--s-child-min-height"></a><h3>The <code class="literal">“child-min-height”</code> style property</h3>
-<pre class="programlisting">  “child-min-height”         <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “child-min-height”         <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>Minimum height of buttons inside the box.</p>
 <p>Flags: Read</p>
 <p>Allowed values: &gt;= 0</p>
@@ -547,7 +640,7 @@ gtk_button_box_set_child_non_homogeneous
 <hr>
 <div class="refsect2">
 <a name="GtkButtonBox--s-child-min-width"></a><h3>The <code class="literal">“child-min-width”</code> style property</h3>
-<pre class="programlisting">  “child-min-width”          <a href="http://library.gnome.org/devel/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “child-min-width”          <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
 <p>Minimum width of buttons inside the box.</p>
 <p>Flags: Read</p>
 <p>Allowed values: &gt;= 0</p>
@@ -557,6 +650,6 @@ gtk_button_box_set_child_non_homogeneous
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.20.1</div>
+          Generated by GTK-Doc V1.21.1</div>
 </body>
 </html>

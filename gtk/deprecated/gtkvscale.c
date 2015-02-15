@@ -43,7 +43,7 @@ G_GNUC_BEGIN_IGNORE_DEPRECATIONS
  * a vertical slider. To create one, use gtk_hscale_new_with_range().
  *
  * The position to show the current value, and the number of decimal places
- * shown can be set using the parent #GtkScale class's functions.
+ * shown can be set using the parent #GtkScale class’s functions.
  *
  * GtkVScale has been deprecated, use #GtkScale instead.
  */
@@ -93,14 +93,14 @@ gtk_vscale_new (GtkAdjustment *adjustment)
  *
  * Creates a new vertical scale widget that lets the user input a
  * number between @min and @max (including @min and @max) with the
- * increment @step.  @step must be nonzero; it's the distance the
+ * increment @step.  @step must be nonzero; it’s the distance the
  * slider moves when using the arrow keys to adjust the scale value.
  *
  * Note that the way in which the precision is derived works best if @step
  * is a power of ten. If the resulting precision is not suitable for your
  * needs, use gtk_scale_set_digits() to correct it.
  *
- * Return value: a new #GtkVScale
+ * Returns: a new #GtkVScale
  *
  * Deprecated: 3.2: Use gtk_scale_new_with_range() with %GTK_ORIENTATION_VERTICAL instead
  **/

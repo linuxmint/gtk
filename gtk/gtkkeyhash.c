@@ -119,7 +119,7 @@ key_hash_keys_changed (GdkKeymap  *keymap,
  * 
  * Create a new key hash object for doing binding resolution. 
  * 
- * Return value: the newly created object. Free with _gtk_key_hash_free().
+ * Returns: the newly created object. Free with _gtk_key_hash_free().
  **/
 GtkKeyHash *
 _gtk_key_hash_new (GdkKeymap      *keymap,
@@ -370,10 +370,10 @@ keyval_in_group (GdkKeymap  *keymap,
  * does not). As long there are any exact matches, only exact matches
  * are returned. If there are no exact matches, fuzzy matches will be
  * returned, as long as they are not shadowing a possible exact match.
- * This means that fuzzy matches won't be considered if their keyval is 
+ * This means that fuzzy matches won’t be considered if their keyval is 
  * present in the current group.
  * 
- * Return value: A newly-allocated #GSList of matching entries.
+ * Returns: A newly-allocated #GSList of matching entries.
  *     Free with g_slist_free() when no longer needed.
  */
 GSList *
@@ -529,12 +529,12 @@ _gtk_key_hash_lookup (GtkKeyHash      *key_hash,
  * @event: a #GtkEvent
  * 
  * Looks up the best matching entry or entries in the hash table for a
- * given keyval/modifiers pair. It's better to use
+ * given keyval/modifiers pair. It’s better to use
  * _gtk_key_hash_lookup() if you have the original #GdkEventKey
  * available.  The results are sorted so that entries with less
  * modifiers come before entries with more modifiers.
  * 
- * Return value: A #GSList of all matching entries.
+ * Returns: A #GSList of all matching entries.
  **/
 GSList *
 _gtk_key_hash_lookup_keyval (GtkKeyHash     *key_hash,

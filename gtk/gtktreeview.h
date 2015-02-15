@@ -149,7 +149,7 @@ typedef gboolean (* GtkTreeViewColumnDropFunc) (GtkTreeView             *tree_vi
 /**
  * GtkTreeViewMappingFunc:
  * @tree_view: A #GtkTreeView
- * @path: The path that's expanded
+ * @path: The path that’s expanded
  * @user_data: user data
  *
  * Function used for gtk_tree_view_map_expanded_rows().
@@ -242,10 +242,10 @@ gboolean               gtk_tree_view_get_headers_clickable         (GtkTreeView 
 GDK_AVAILABLE_IN_ALL
 void                   gtk_tree_view_set_headers_clickable         (GtkTreeView               *tree_view,
 								    gboolean                   setting);
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 void                   gtk_tree_view_set_rules_hint                (GtkTreeView               *tree_view,
 								    gboolean                   setting);
-GDK_AVAILABLE_IN_ALL
+GDK_DEPRECATED_IN_3_14
 gboolean               gtk_tree_view_get_rules_hint                (GtkTreeView               *tree_view);
 GDK_AVAILABLE_IN_3_8
 gboolean               gtk_tree_view_get_activate_on_single_click  (GtkTreeView               *tree_view);
