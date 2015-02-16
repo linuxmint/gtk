@@ -783,8 +783,8 @@ gtk_range_init (GtkRange *range)
 
   priv->long_press_gesture = gtk_gesture_long_press_new (GTK_WIDGET (range));
   gtk_gesture_group (priv->drag_gesture, priv->long_press_gesture);
-  g_signal_connect (priv->long_press_gesture, "pressed",
-                    G_CALLBACK (gtk_range_long_press_gesture_pressed), range);
+  // g_signal_connect (priv->long_press_gesture, "pressed",
+  //                   G_CALLBACK (gtk_range_long_press_gesture_pressed), range);
 }
 
 /**
