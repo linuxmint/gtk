@@ -1,3 +1,11 @@
+gtk+3.0 (3.14.5+1) betsy; urgency=medium
+
+  * GtkRange: Disabled drag-and-hold zoom mode
+  * GtkScrollbars: Disabled warping
+  * Downgraded GtkFileChooser to v3.12 (in 3.14 that widget/dialog only integrates with Shell since https://bugzilla.gnome.org/show_bug.cgi?id=722211)
+
+ -- Clement Lefebvre <root@linuxmint.com>  Mon, 16 Feb 2015 22:50:11 +0100
+
 gtk+3.0 (3.14.5-1) unstable; urgency=medium
 
   * New upstream bugfix release.
