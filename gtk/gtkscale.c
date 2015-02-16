@@ -268,6 +268,7 @@ gtk_scale_class_init (GtkScaleClass *class)
 
   range_class->slider_detail = "Xscale";
   range_class->get_range_border = gtk_scale_get_range_border;
+  range_class->no_warp = FALSE;
 
   class->get_layout_offsets = gtk_scale_real_get_layout_offsets;
 

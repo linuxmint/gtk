@@ -340,6 +340,7 @@ gtk_range_class_init (GtkRangeClass *class)
 
   class->slider_detail = "slider";
   class->stepper_detail = "stepper";
+  class->no_warp = FALSE;
 
   /**
    * GtkRange::value-changed:
@@ -2493,7 +2494,7 @@ gtk_range_multipress_gesture_pressed (GtkGestureMultiPress *gesture,
   g_object_get (gtk_widget_get_settings (widget),
                 "gtk-primary-button-warps-slider", &primary_warps,
                 NULL);
-  if (primary_warps)
+  if (primary_warps && !GTK_RANGE_GET_CLASS (range)->no_warp)
     {
       warp_button = GDK_BUTTON_PRIMARY;
       page_increment_button = GDK_BUTTON_SECONDARY;

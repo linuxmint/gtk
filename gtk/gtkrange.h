@@ -78,11 +78,12 @@ struct _GtkRangeClass
                              GtkScrollType scroll,
                              gdouble       new_value);
 
+  gboolean no_warp;
+
   /* Padding for future expansion */
   void (*_gtk_reserved1) (void);
   void (*_gtk_reserved2) (void);
   void (*_gtk_reserved3) (void);
-  void (*_gtk_reserved4) (void);
 };
 
 

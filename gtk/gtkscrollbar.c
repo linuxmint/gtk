@@ -63,8 +63,10 @@ static void
 gtk_scrollbar_class_init (GtkScrollbarClass *class)
 {
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
+  GtkRangeClass *range_class = (GtkRangeClass*) class;
 
   widget_class->style_updated = gtk_scrollbar_style_updated;
+  range_class->no_warp = TRUE;
 
   gtk_widget_class_install_style_property (widget_class,
 					   g_param_spec_int ("min-slider-length",
