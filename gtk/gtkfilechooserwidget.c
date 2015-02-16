@@ -34,7 +34,6 @@
 #include "gtkclipboard.h"
 #include "gtkcomboboxtext.h"
 #include "gtkentry.h"
-#include "gtkstack.h"
 #include "gtkexpander.h"
 #include "gtkfilechooserprivate.h"
 #include "gtkfilechooserdialog.h"
@@ -51,7 +50,6 @@
 #include "gtkimage.h"
 #include "deprecated/gtkimagemenuitem.h"
 #include "gtkinfobar.h"
-#include "gtksearchbar.h"
 #include "gtklabel.h"
 #include "gtkmarshalers.h"
 #include "gtkmessagedialog.h"
@@ -76,7 +74,6 @@
 #include "gtktreeselection.h"
 #include "gtkbox.h"
 #include "gtkorientable.h"
-#include "gtkwindowgroup.h"
 #include "gtkintl.h"
 
 #include <cairo-gobject.h>
@@ -96,7 +93,7 @@
 
 /**
  * SECTION:gtkfilechooserwidget
- * @Short_description: A file chooser widget
+ * Short_description: A file chooser widget
  * @Title: GtkFileChooserWidget
  * @See_also: #GtkFileChooserDialog
  *
@@ -185,7 +182,6 @@ typedef enum {
 typedef enum {
   OPERATION_MODE_BROWSE,
   OPERATION_MODE_SEARCH,
-  OPERATION_MODE_ENTER_LOCATION,
   OPERATION_MODE_RECENT
 } OperationMode;
 
@@ -203,12 +199,12 @@ struct _GtkFileChooserWidgetPrivate {
   GtkWidget *save_widgets;
   GtkWidget *save_widgets_table;
 
+  GtkWidget *save_folder_label;
+
   /* The file browsing widgets */
   GtkWidget *browse_widgets_box;
   GtkWidget *browse_widgets_hpaned;
   GtkWidget *browse_header_box;
-  GtkWidget *browse_header_stack;
-  GtkWidget *browse_files_box;
   GtkWidget *browse_files_tree_view;
   GtkWidget *browse_files_popup_menu;
   GtkWidget *browse_files_popup_menu_add_shortcut_item;
@@ -220,6 +216,11 @@ struct _GtkFileChooserWidgetPrivate {
   GtkWidget *browse_path_bar_hbox;
   GtkSizeGroup *browse_path_bar_size_group;
   GtkWidget *browse_path_bar;
+  GtkWidget *browse_special_mode_icon;
+  GtkWidget *browse_special_mode_label;
+  GtkWidget *browse_select_a_folder_info_bar;
+  GtkWidget *browse_select_a_folder_label;
+  GtkWidget *browse_select_a_folder_icon;
 
   GtkFileSystemModel *browse_files_model;
   char *browse_files_last_selected_name;
@@ -228,7 +229,7 @@ struct _GtkFileChooserWidgetPrivate {
   StartupMode startup_mode;
 
   /* OPERATION_MODE_SEARCH */
-  GtkWidget *search_bar;
+  GtkWidget *search_hbox;
   GtkWidget *search_entry;
   GtkSearchEngine *search_engine;
   GtkQuery *search_query;
@@ -239,7 +240,6 @@ struct _GtkFileChooserWidgetPrivate {
   GtkFileSystemModel *recent_model;
   guint load_recent_id;
 
-  GtkWidget *extra_and_filters;
   GtkWidget *filter_combo_hbox;
   GtkWidget *filter_combo;
   GtkWidget *preview_box;
@@ -248,6 +248,7 @@ struct _GtkFileChooserWidgetPrivate {
   GtkWidget *extra_align;
   GtkWidget *extra_widget;
 
+  GtkWidget *location_button;
   GtkWidget *location_entry_box;
   GtkWidget *location_label;
   GtkWidget *location_entry;
@@ -400,7 +401,9 @@ enum {
 static void gtk_file_chooser_widget_iface_init       (GtkFileChooserIface        *iface);
 static void gtk_file_chooser_embed_default_iface_init (GtkFileChooserEmbedIface   *iface);
 
-static void     gtk_file_chooser_widget_constructed  (GObject               *object);
+static GObject* gtk_file_chooser_widget_constructor  (GType                  type,
+						       guint                  n_construct_properties,
+						       GObjectConstructParam *construct_params);
 static void     gtk_file_chooser_widget_finalize     (GObject               *object);
 static void     gtk_file_chooser_widget_set_property (GObject               *object,
 						       guint                  prop_id,
@@ -480,7 +483,6 @@ static void recent_shortcut_handler (GtkFileChooserWidget *impl);
 static void update_appearance       (GtkFileChooserWidget *impl);
 
 static void operation_mode_set (GtkFileChooserWidget *impl, OperationMode mode);
-static void location_mode_set  (GtkFileChooserWidget *impl, LocationMode new_mode);
 
 static void set_current_filter   (GtkFileChooserWidget *impl,
 				  GtkFileFilter         *filter);
@@ -513,6 +515,8 @@ static void update_cell_renderer_attributes (GtkFileChooserWidget *impl);
 static void load_remove_timer (GtkFileChooserWidget *impl, LoadState new_load_state);
 static void browse_files_center_selected_row (GtkFileChooserWidget *impl);
 
+static void location_button_toggled_cb (GtkToggleButton *toggle,
+					GtkFileChooserWidget *impl);
 static void location_switch_to_path_bar (GtkFileChooserWidget *impl);
 
 static void stop_loading_and_clear_list_model (GtkFileChooserWidget *impl,
@@ -1137,8 +1141,6 @@ places_sidebar_open_location_cb (GtkPlacesSidebar *sidebar, GFile *location, Gtk
    * GtkPlacesSidebar doesn't have a Search item anymore.  We should put that function in a toolbar-like button, like
    * in Nautilus, and do operation_mode_set (impl, OPERATION_MODE_SEARCH);
    */
-
-  location_mode_set (impl, LOCATION_MODE_PATH_BAR);
 
   if (file_is_recent_uri (location))
     operation_mode_set (impl, OPERATION_MODE_RECENT);
@@ -1957,12 +1959,8 @@ save_widgets_create (GtkFileChooserWidget *impl)
   location_switch_to_path_bar (impl);
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
-  gtk_style_context_add_class (gtk_widget_get_style_context (vbox), "search-bar");
-
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 
   priv->save_widgets_table = gtk_grid_new ();
-  gtk_container_set_border_width (GTK_CONTAINER (priv->save_widgets_table), 10);
   gtk_box_pack_start (GTK_BOX (vbox), priv->save_widgets_table, FALSE, FALSE, 0);
   gtk_widget_show (priv->save_widgets_table);
   gtk_grid_set_row_spacing (GTK_GRID (priv->save_widgets_table), 12);
@@ -1984,6 +1982,13 @@ save_widgets_create (GtkFileChooserWidget *impl)
   gtk_widget_show (priv->location_entry);
   gtk_label_set_mnemonic_widget (GTK_LABEL (widget), priv->location_entry);
 
+  /* Folder combo */
+  priv->save_folder_label = gtk_label_new (NULL);
+  gtk_widget_set_halign (priv->save_folder_label, GTK_ALIGN_START);
+  gtk_widget_set_valign (priv->save_folder_label, GTK_ALIGN_CENTER);
+  gtk_grid_attach (GTK_GRID (priv->save_widgets_table), priv->save_folder_label, 0, 1, 1, 1);
+  gtk_widget_show (priv->save_folder_label);
+
   priv->save_widgets = vbox;
   gtk_box_pack_start (GTK_BOX (impl), priv->save_widgets, FALSE, FALSE, 0);
   gtk_box_reorder_child (GTK_BOX (impl), priv->save_widgets, 0);
@@ -2003,6 +2008,7 @@ save_widgets_destroy (GtkFileChooserWidget *impl)
   priv->save_widgets = NULL;
   priv->save_widgets_table = NULL;
   priv->location_entry = NULL;
+  priv->save_folder_label = NULL;
 }
 
 /* Turns on the path bar widget.  Can be called even if we are already in that
@@ -2019,7 +2025,7 @@ location_switch_to_path_bar (GtkFileChooserWidget *impl)
       priv->location_entry = NULL;
     }
 
-  gtk_stack_set_visible_child_name (GTK_STACK (priv->browse_header_stack), "pathbar");
+  gtk_widget_hide (priv->location_entry_box);
 }
 
 /* Turns on the location entry.  Can be called even if we are already in that
@@ -2031,7 +2037,7 @@ location_switch_to_filename_entry (GtkFileChooserWidget *impl)
   GtkFileChooserWidgetPrivate *priv = impl->priv;
 
   /* when in search or recent files mode, we are not showing the
-   * browse_header_box container, so there's no point in switching
+   * location_entry_box container, so there's no point in switching
    * to it.
    */
   if (priv->operation_mode == OPERATION_MODE_SEARCH ||
@@ -2040,7 +2046,7 @@ location_switch_to_filename_entry (GtkFileChooserWidget *impl)
 
   /* Box */
 
-  gtk_widget_show (priv->browse_header_box);
+  gtk_widget_show (priv->location_entry_box);
 
   /* Entry */
 
@@ -2058,17 +2064,16 @@ location_switch_to_filename_entry (GtkFileChooserWidget *impl)
   /* Done */
 
   gtk_widget_show (priv->location_entry);
-
-  gtk_stack_set_visible_child_name (GTK_STACK (priv->browse_header_stack), "location");
-
   gtk_widget_grab_focus (priv->location_entry);
 }
 
-/* Sets a new location mode.
+/* Sets a new location mode.  set_buttons determines whether the toggle button
+ * for the mode will also be changed.
  */
 static void
 location_mode_set (GtkFileChooserWidget *impl,
-		   LocationMode new_mode)
+		   LocationMode new_mode,
+		   gboolean set_button)
 {
   GtkFileChooserWidgetPrivate *priv = impl->priv;
 
@@ -2077,11 +2082,13 @@ location_mode_set (GtkFileChooserWidget *impl,
     {
       GtkWindow *toplevel;
       GtkWidget *current_focus;
+      gboolean button_active;
       gboolean switch_to_file_list;
 
       switch (new_mode)
 	{
 	case LOCATION_MODE_PATH_BAR:
+	  button_active = FALSE;
 
 	  /* The location_entry will disappear when we switch to path bar mode.  So,
 	   * we'll focus the file list in that case, to avoid having a window with
@@ -2104,6 +2111,7 @@ location_mode_set (GtkFileChooserWidget *impl,
 	  break;
 
 	case LOCATION_MODE_FILENAME_ENTRY:
+	  button_active = TRUE;
 	  location_switch_to_filename_entry (impl);
 	  break;
 
@@ -2111,17 +2119,20 @@ location_mode_set (GtkFileChooserWidget *impl,
 	  g_assert_not_reached ();
 	  return;
 	}
+
+      if (set_button)
+	{
+	  g_signal_handlers_block_by_func (priv->location_button,
+					   G_CALLBACK (location_button_toggled_cb), impl);
+
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->location_button), button_active);
+
+	  g_signal_handlers_unblock_by_func (priv->location_button,
+					     G_CALLBACK (location_button_toggled_cb), impl);
+	}
     }
 
   priv->location_mode = new_mode;
-}
-
-/* Callback used when the places sidebar needs us to enter a location */
-static void
-places_sidebar_show_enter_location_cb (GtkPlacesSidebar *sidebar,
-                                       GtkFileChooserWidget *impl)
-{
-  operation_mode_set (impl, OPERATION_MODE_ENTER_LOCATION);
 }
 
 static void
@@ -2130,7 +2141,7 @@ location_toggle_popup_handler (GtkFileChooserWidget *impl)
   GtkFileChooserWidgetPrivate *priv = impl->priv;
 
   /* when in search or recent files mode, we are not showing the
-   * browse_header_box container, so there's no point in switching
+   * location_entry_box container, so there's no point in switching
    * to it.
    */
   if (priv->operation_mode == OPERATION_MODE_SEARCH ||
@@ -2142,13 +2153,13 @@ location_toggle_popup_handler (GtkFileChooserWidget *impl)
    */
   if (priv->location_mode == LOCATION_MODE_PATH_BAR)
     {
-      location_mode_set (impl, LOCATION_MODE_FILENAME_ENTRY);
+      location_mode_set (impl, LOCATION_MODE_FILENAME_ENTRY, TRUE);
     }
   else if (priv->location_mode == LOCATION_MODE_FILENAME_ENTRY)
     {
       if (gtk_widget_has_focus (priv->location_entry))
         {
-          location_mode_set (impl, LOCATION_MODE_PATH_BAR);
+          location_mode_set (impl, LOCATION_MODE_PATH_BAR, TRUE);
         }
       else
         {
@@ -2157,29 +2168,178 @@ location_toggle_popup_handler (GtkFileChooserWidget *impl)
     }
 }
 
+/* Callback used when one of the location mode buttons is toggled */
 static void
-gtk_file_chooser_widget_constructed (GObject *object)
+location_button_toggled_cb (GtkToggleButton *toggle,
+			    GtkFileChooserWidget *impl)
 {
-  GtkFileChooserWidget *impl = GTK_FILE_CHOOSER_WIDGET (object);
   GtkFileChooserWidgetPrivate *priv = impl->priv;
+  gboolean is_active;
+  LocationMode new_mode;
+
+  is_active = gtk_toggle_button_get_active (toggle);
+
+  if (is_active)
+    {
+      g_assert (priv->location_mode == LOCATION_MODE_PATH_BAR);
+      new_mode = LOCATION_MODE_FILENAME_ENTRY;
+    }
+  else
+    {
+      g_assert (priv->location_mode == LOCATION_MODE_FILENAME_ENTRY);
+      new_mode = LOCATION_MODE_PATH_BAR;
+    }
+
+  location_mode_set (impl, new_mode, FALSE);
+}
+
+typedef enum {
+  PATH_BAR_FOLDER_PATH,
+  PATH_BAR_SELECT_A_FOLDER,
+  PATH_BAR_ERROR_NO_FILENAME,
+  PATH_BAR_ERROR_NO_FOLDER,
+  PATH_BAR_RECENTLY_USED,
+  PATH_BAR_SEARCH
+} PathBarMode;
+
+/* Sets the info bar to show the appropriate informational or warning message */
+static void
+info_bar_set (GtkFileChooserWidget *impl, PathBarMode mode)
+{
+  GtkFileChooserWidgetPrivate *priv = impl->priv;
+  char *str;
+  gboolean free_str;
+  GtkMessageType message_type;
+
+  free_str = FALSE;
+
+  switch (mode)
+    {
+    case PATH_BAR_SELECT_A_FOLDER:
+      str = g_strconcat ("<i>", _("Please select a folder below"), "</i>", NULL);
+      free_str = TRUE;
+      message_type = GTK_MESSAGE_OTHER;
+      break;
+
+    case PATH_BAR_ERROR_NO_FILENAME:
+      str = _("Please type a file name");
+      message_type = GTK_MESSAGE_WARNING;
+      break;
+
+    case PATH_BAR_ERROR_NO_FOLDER:
+      str = _("Please select a folder below");
+      message_type = GTK_MESSAGE_WARNING;
+      break;
+
+    default:
+      g_assert_not_reached ();
+      return;
+    }
+
+  gtk_info_bar_set_message_type (GTK_INFO_BAR (priv->browse_select_a_folder_info_bar), message_type);
+  gtk_image_set_from_icon_name (GTK_IMAGE (priv->browse_select_a_folder_icon),
+                                (message_type == GTK_MESSAGE_WARNING) ? "dialog-warning-symbolic" : "folder-symbolic",
+                                GTK_ICON_SIZE_MENU);
+  gtk_label_set_markup (GTK_LABEL (priv->browse_select_a_folder_label), str);
+
+  if (free_str)
+    g_free (str);
+}
+
+/* Sets the path bar's mode to show a label, the actual folder path, or a
+ * warning message.  You may call this function with PATH_BAR_ERROR_* directly
+ * if the pathbar is already showing the widgets you expect; otherwise, call
+ * path_bar_update() instead to set the appropriate widgets automatically.
+ */
+static void
+path_bar_set_mode (GtkFileChooserWidget *impl, PathBarMode mode)
+{
+  GtkFileChooserWidgetPrivate *priv = impl->priv;
+  gboolean path_bar_visible		= FALSE;
+  gboolean special_mode_widgets_visible = FALSE;
+  gboolean info_bar_visible		= FALSE;
+  gboolean create_folder_visible        = FALSE;
+
+  char *tmp;
+
+  switch (mode)
+    {
+    case PATH_BAR_FOLDER_PATH:
+      path_bar_visible = TRUE;
+      break;
+
+    case PATH_BAR_SELECT_A_FOLDER:
+    case PATH_BAR_ERROR_NO_FILENAME:
+    case PATH_BAR_ERROR_NO_FOLDER:
+      info_bar_set (impl, mode);
+      info_bar_visible = TRUE;
+      break;
+
+    case PATH_BAR_RECENTLY_USED:
+      gtk_image_set_from_icon_name (GTK_IMAGE (priv->browse_special_mode_icon), "document-open-recent", GTK_ICON_SIZE_BUTTON);
+
+      tmp = g_strdup_printf ("<b>%s</b>", _("Recently Used"));
+      gtk_label_set_markup (GTK_LABEL (priv->browse_special_mode_label), tmp);
+      g_free (tmp);
+
+      special_mode_widgets_visible = TRUE;
+      break;
+
+    case PATH_BAR_SEARCH:
+      gtk_image_set_from_icon_name (GTK_IMAGE (priv->browse_special_mode_icon), "edit-find-symbolic", GTK_ICON_SIZE_BUTTON);
+
+      tmp = g_strdup_printf ("<b>%s</b>", _("Search:"));
+      gtk_label_set_markup (GTK_LABEL (priv->browse_special_mode_label), tmp);
+      g_free (tmp);
+
+      special_mode_widgets_visible = TRUE;
+      break;
+
+    default:
+      g_assert_not_reached ();
+    }
+
+  gtk_widget_set_visible (priv->browse_path_bar,			path_bar_visible);
+  gtk_widget_set_visible (priv->browse_special_mode_icon,		special_mode_widgets_visible);
+  gtk_widget_set_visible (priv->browse_special_mode_label,		special_mode_widgets_visible);
+  gtk_widget_set_visible (priv->browse_select_a_folder_info_bar,	info_bar_visible);
+
+  if (path_bar_visible)
+    {
+      if (priv->create_folders
+	  && priv->action != GTK_FILE_CHOOSER_ACTION_OPEN
+	  && priv->operation_mode != OPERATION_MODE_RECENT)
+	create_folder_visible = TRUE;
+    }
+
+  gtk_widget_set_visible (priv->browse_new_folder_button,		create_folder_visible);
+}
+
+
+static GObject*
+gtk_file_chooser_widget_constructor (GType                  type,
+                                     guint                  n_construct_properties,
+                                     GObjectConstructParam *construct_params)
+{
+  GtkFileChooserWidget *impl;
+  GtkFileChooserWidgetPrivate *priv;
+  GObject *object;
 
   profile_start ("start", NULL);
 
-  G_OBJECT_CLASS (gtk_file_chooser_widget_parent_class)->constructed (object);
+  object = G_OBJECT_CLASS (gtk_file_chooser_widget_parent_class)->constructor (type,
+                                                                               n_construct_properties,
+                                                                               construct_params);
+  impl = GTK_FILE_CHOOSER_WIDGET (object);
+  priv = impl->priv;
 
   g_assert (priv->file_system);
 
   update_appearance (impl);
 
   profile_end ("end", NULL);
-}
 
-static void
-update_extra_and_filters (GtkFileChooserWidget *impl)
-{
-  gtk_widget_set_visible (impl->priv->extra_and_filters,
-                          gtk_widget_get_visible (impl->priv->extra_align) ||
-                          gtk_widget_get_visible (impl->priv->filter_combo_hbox));
+  return object;
 }
 
 /* Sets the extra_widget by packing it in the appropriate place */
@@ -2210,8 +2370,6 @@ set_extra_widget (GtkFileChooserWidget *impl,
     }
   else
     gtk_widget_hide (priv->extra_align);
-
-  update_extra_and_filters (impl);
 }
 
 static void
@@ -2305,6 +2463,51 @@ unset_file_system_backend (GtkFileChooserWidget *impl)
   priv->file_system = NULL;
 }
 
+/* Saves the widgets around the pathbar so they can be reparented later
+ * in the correct place.  This function must be called paired with
+ * restore_path_bar().
+ */
+static void
+save_path_bar (GtkFileChooserWidget *impl)
+{
+  GtkFileChooserWidgetPrivate *priv = impl->priv;
+  GtkWidget *parent;
+
+  g_object_ref (priv->browse_path_bar_hbox);
+
+  parent = gtk_widget_get_parent (priv->browse_path_bar_hbox);
+  if (parent)
+    gtk_container_remove (GTK_CONTAINER (parent), priv->browse_path_bar_hbox);
+}
+
+/* Reparents the path bar and the "Create folder" button to the right place:
+ * Above the file list in Open mode, or to the right of the “Save in folder:”
+ * label in Save mode.  The save_path_bar() function must be called before this
+ * one.
+ */
+static void
+restore_path_bar (GtkFileChooserWidget *impl)
+{
+  GtkFileChooserWidgetPrivate *priv = impl->priv;
+
+  if (priv->action == GTK_FILE_CHOOSER_ACTION_OPEN
+      || priv->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    {
+      gtk_box_pack_start (GTK_BOX (priv->browse_header_box), priv->browse_path_bar_hbox, FALSE, FALSE, 0);
+      gtk_box_reorder_child (GTK_BOX (priv->browse_header_box), priv->browse_path_bar_hbox, 0);
+    }
+  else if (priv->action == GTK_FILE_CHOOSER_ACTION_SAVE
+	   || priv->action == GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER)
+    {
+      gtk_widget_set_hexpand (priv->browse_path_bar_hbox, TRUE);
+      gtk_grid_attach (GTK_GRID (priv->save_widgets_table), priv->browse_path_bar_hbox, 1, 1, 1, 1);
+    }
+  else
+    g_assert_not_reached ();
+
+  g_object_unref (priv->browse_path_bar_hbox);
+}
+
 /* Takes the folder stored in a row in the recent_model, and puts it in the pathbar */
 static void
 put_recent_folder_in_pathbar (GtkFileChooserWidget *impl, GtkTreeIter *iter)
@@ -2319,25 +2522,20 @@ put_recent_folder_in_pathbar (GtkFileChooserWidget *impl, GtkTreeIter *iter)
   g_object_unref (file);
 }
 
-/* Sets the location bar in the appropriate mode according to the
- * current operation mode and action.  This is the central function
- * for dealing with the pathbar’s widgets; as long as impl->action and
- * impl->operation_mode are set correctly, then calling this function
- * will update all the pathbar’s widgets.
+/* Sets the pathbar in the appropriate mode according to the current operation mode and action.  This is the central function for
+ * dealing with the pathbar’s widgets; as long as impl->action and impl->operation_mode are set correctly, then calling this
+ * function will update all the pathbar’s widgets.
  */
 static void
-location_bar_update (GtkFileChooserWidget *impl)
+path_bar_update (GtkFileChooserWidget *impl)
 {
   GtkFileChooserWidgetPrivate *priv = impl->priv;
-  gboolean visible = TRUE;
-  gboolean create_folder_visible = FALSE;
+  PathBarMode mode;
 
   switch (priv->operation_mode)
     {
-    case OPERATION_MODE_ENTER_LOCATION:
-      break;
-
     case OPERATION_MODE_BROWSE:
+      mode = PATH_BAR_FOLDER_PATH;
       break;
 
     case OPERATION_MODE_RECENT:
@@ -2354,13 +2552,19 @@ location_bar_update (GtkFileChooserWidget *impl)
 
 	  if (have_selected)
 	    {
+	      mode = PATH_BAR_FOLDER_PATH;
 	      put_recent_folder_in_pathbar (impl, &iter);
 	    }
+	  else
+	    mode = PATH_BAR_SELECT_A_FOLDER;
 	}
-      visible = FALSE;
+      else
+	mode = PATH_BAR_RECENTLY_USED;
+
       break;
 
     case OPERATION_MODE_SEARCH:
+      mode = PATH_BAR_SEARCH;
       break;
 
     default:
@@ -2368,17 +2572,21 @@ location_bar_update (GtkFileChooserWidget *impl)
       return;
     }
 
-  gtk_widget_set_visible (priv->browse_header_box, visible);
+  path_bar_set_mode (impl, mode);
+}
 
-  if (visible)
+static void
+operation_mode_discard_search_widgets (GtkFileChooserWidget *impl)
+{
+  GtkFileChooserWidgetPrivate *priv = impl->priv;
+
+  if (priv->search_hbox)
     {
-      if (priv->create_folders
-          && priv->action != GTK_FILE_CHOOSER_ACTION_OPEN
-          && priv->operation_mode != OPERATION_MODE_RECENT)
-        create_folder_visible = TRUE;
-    }
+      gtk_widget_destroy (priv->search_hbox);
 
-  gtk_widget_set_visible (priv->browse_new_folder_button, create_folder_visible);
+      priv->search_hbox = NULL;
+      priv->search_entry = NULL;
+    }
 }
 
 /* Stops running operations like populating the browse model, searches, and the recent-files model */
@@ -2387,10 +2595,6 @@ operation_mode_stop (GtkFileChooserWidget *impl, OperationMode mode)
 {
   switch (mode)
     {
-    case OPERATION_MODE_ENTER_LOCATION:
-      stop_loading_and_clear_list_model (impl, TRUE);
-      break;
-
     case OPERATION_MODE_BROWSE:
       stop_loading_and_clear_list_model (impl, TRUE);
       break;
@@ -2398,6 +2602,8 @@ operation_mode_stop (GtkFileChooserWidget *impl, OperationMode mode)
     case OPERATION_MODE_SEARCH:
       search_stop_searching (impl, FALSE);
       search_clear_model (impl, TRUE);
+
+      operation_mode_discard_search_widgets (impl);
       break;
 
     case OPERATION_MODE_RECENT:
@@ -2411,20 +2617,21 @@ operation_mode_stop (GtkFileChooserWidget *impl, OperationMode mode)
 }
 
 static void
-operation_mode_set_enter_location (GtkFileChooserWidget *impl)
-{
-  location_mode_set (impl, LOCATION_MODE_FILENAME_ENTRY);
-  location_bar_update (impl);
-}
-
-static void
 operation_mode_set_browse (GtkFileChooserWidget *impl)
 {
   GtkFileChooserWidgetPrivate *priv = impl->priv;
 
-  location_bar_update (impl);
+  path_bar_update (impl);
 
-  gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (priv->search_bar), FALSE);
+  if (priv->action == GTK_FILE_CHOOSER_ACTION_OPEN ||
+      priv->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    {
+      gtk_widget_show (priv->location_button);
+      location_mode_set (impl, priv->location_mode, TRUE);
+
+      if (priv->location_mode == LOCATION_MODE_FILENAME_ENTRY)
+	gtk_widget_show (priv->location_entry_box);
+    }
 }
 
 static void
@@ -2432,17 +2639,27 @@ operation_mode_set_search (GtkFileChooserWidget *impl)
 {
   GtkFileChooserWidgetPrivate *priv = impl->priv;
 
+  g_assert (priv->search_hbox == NULL);
+  g_assert (priv->search_entry == NULL);
   g_assert (priv->search_model == NULL);
 
   search_setup_widgets (impl);
-
-  gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (priv->search_bar), TRUE);
 }
 
 static void
 operation_mode_set_recent (GtkFileChooserWidget *impl)
 {
-  location_bar_update (impl);
+  GtkFileChooserWidgetPrivate *priv = impl->priv;
+
+  path_bar_update (impl);
+
+  /* Hide the location widgets temporarily */
+  if (priv->action == GTK_FILE_CHOOSER_ACTION_OPEN ||
+      priv->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    {
+      gtk_widget_hide (priv->location_button);
+      gtk_widget_hide (priv->location_entry_box);
+    }
 
   recent_start_loading (impl);
 }
@@ -2459,10 +2676,6 @@ operation_mode_set (GtkFileChooserWidget *impl, OperationMode mode)
 
   switch (priv->operation_mode)
     {
-    case OPERATION_MODE_ENTER_LOCATION:
-      operation_mode_set_enter_location (impl);
-      break;
-
     case OPERATION_MODE_BROWSE:
       operation_mode_set_browse (impl);
       break;
@@ -2494,10 +2707,22 @@ update_appearance (GtkFileChooserWidget *impl)
 {
   GtkFileChooserWidgetPrivate *priv = impl->priv;
 
+  save_path_bar (impl);
+
   if (priv->action == GTK_FILE_CHOOSER_ACTION_SAVE ||
       priv->action == GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER)
     {
+      const char *text;
+
+      gtk_widget_hide (priv->location_button);
       save_widgets_create (impl);
+
+      if (priv->action == GTK_FILE_CHOOSER_ACTION_SAVE)
+	text = _("Save in folder:");
+      else
+	text = _("Create in folder:");
+
+      gtk_label_set_text (GTK_LABEL (priv->save_folder_label), text);
 
       if (priv->select_multiple)
 	{
@@ -2509,14 +2734,16 @@ update_appearance (GtkFileChooserWidget *impl)
   else if (priv->action == GTK_FILE_CHOOSER_ACTION_OPEN ||
 	   priv->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER)
     {
+      gtk_widget_show (priv->location_button);
       save_widgets_destroy (impl);
-      location_mode_set (impl, priv->location_mode);
+      location_mode_set (impl, priv->location_mode, TRUE);
     }
 
   if (priv->location_entry)
     _gtk_file_chooser_entry_set_action (GTK_FILE_CHOOSER_ENTRY (priv->location_entry), priv->action);
 
-  location_bar_update (impl);
+  restore_path_bar (impl);
+  path_bar_update (impl);
 
   /* This *is* needed; we need to redraw the file list because the "sensitivity"
    * of files may change depending whether we are in a file or folder-only mode.
@@ -3009,6 +3236,7 @@ static void
 settings_load (GtkFileChooserWidget *impl)
 {
   GtkFileChooserWidgetPrivate *priv = impl->priv;
+  LocationMode location_mode;
   gboolean show_hidden;
   gboolean show_size_column;
   gboolean sort_directories_first;
@@ -3020,6 +3248,7 @@ settings_load (GtkFileChooserWidget *impl)
 
   settings = _gtk_file_chooser_get_settings_for_widget (GTK_WIDGET (impl));
 
+  location_mode = g_settings_get_enum (settings, SETTINGS_KEY_LOCATION_MODE);
   show_hidden = g_settings_get_boolean (settings, SETTINGS_KEY_SHOW_HIDDEN);
   show_size_column = g_settings_get_boolean (settings, SETTINGS_KEY_SHOW_SIZE_COLUMN);
   sort_column = g_settings_get_enum (settings, SETTINGS_KEY_SORT_COLUMN);
@@ -3027,6 +3256,8 @@ settings_load (GtkFileChooserWidget *impl)
   sidebar_width = g_settings_get_int (settings, SETTINGS_KEY_SIDEBAR_WIDTH);
   startup_mode = g_settings_get_enum (settings, SETTINGS_KEY_STARTUP_MODE);
   sort_directories_first = g_settings_get_boolean (settings, SETTINGS_KEY_SORT_DIRECTORIES_FIRST);
+
+  location_mode_set (impl, location_mode, TRUE);
 
   gtk_file_chooser_set_show_hidden (GTK_FILE_CHOOSER (impl), show_hidden);
 
@@ -3717,22 +3948,6 @@ stop_loading_and_clear_list_model (GtkFileChooserWidget *impl,
     gtk_tree_view_set_model (GTK_TREE_VIEW (priv->browse_files_tree_view), NULL);
 }
 
-/* Replace 'target' with 'replacement' in the input string. */
-static gchar *
-string_replace (const gchar *input,
-                const gchar *target,
-                const gchar *replacement)
-{
-  gchar **pieces;
-  gchar *output;
-
-  pieces = g_strsplit (input, target, -1);
-  output = g_strjoinv (replacement, pieces);
-  g_strfreev (pieces);
-
-  return output;
-}
-
 static char *
 my_g_format_time_for_display (GtkFileChooserWidget *impl,
                               glong secs)
@@ -3765,14 +3980,6 @@ my_g_format_time_for_display (GtkFileChooserWidget *impl,
     format = "%x"; /* Any other date */
 
   date_str = g_date_time_format (time, format);
-
-  if (g_get_charset (NULL))
-    {
-      gchar *ret;
-      ret = string_replace (date_str, ":", "\xE2\x80\x8E∶");
-      g_free (date_str);
-      date_str = ret;
-    }
 
   g_date_time_unref (time);
   g_date_time_unref (now);
@@ -4906,8 +5113,6 @@ show_filters (GtkFileChooserWidget *impl,
     gtk_widget_show (priv->filter_combo_hbox);
   else
     gtk_widget_hide (priv->filter_combo_hbox);
-
-  update_extra_and_filters (impl);
 }
 
 static void
@@ -5777,7 +5982,7 @@ gtk_file_chooser_widget_should_respond (GtkFileChooserEmbed *chooser_embed)
 	      && priv->action == GTK_FILE_CHOOSER_ACTION_SAVE
 	      && priv->operation_mode == OPERATION_MODE_RECENT)
 	    {
-	      /* FIXME: ERROR_NO_FOLDER */
+	      path_bar_set_mode (impl, PATH_BAR_ERROR_NO_FOLDER);
 #if 0
 	      /* We'll #ifdef this out, as the fucking treeview selects its first row,
 	       * thus changing our assumption that no selection is present - setting
@@ -5797,7 +6002,7 @@ gtk_file_chooser_widget_should_respond (GtkFileChooserEmbed *chooser_embed)
           if (priv->action == GTK_FILE_CHOOSER_ACTION_SAVE
 	      || priv->action == GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER)
 	    {
-	      /* FIXME: ERROR_NO_FILENAME */
+	      path_bar_set_mode (impl, PATH_BAR_ERROR_NO_FILENAME);
 	      gtk_widget_grab_focus (priv->location_entry);
 	      return FALSE;
 	    }
@@ -6243,6 +6448,16 @@ search_setup_widgets (GtkFileChooserWidget *impl)
 {
   GtkFileChooserWidgetPrivate *priv = impl->priv;
 
+  priv->search_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+
+  path_bar_update (impl);
+
+  priv->search_entry = gtk_entry_new ();
+  g_signal_connect (priv->search_entry, "activate",
+		    G_CALLBACK (search_entry_activate_cb),
+		    impl);
+  gtk_box_pack_start (GTK_BOX (priv->search_hbox), priv->search_entry, TRUE, TRUE, 0);
+
   /* if there already is a query, restart it */
   if (priv->search_query)
     {
@@ -6260,6 +6475,20 @@ search_setup_widgets (GtkFileChooserWidget *impl)
           g_object_unref (priv->search_query);
           priv->search_query = NULL;
         }
+    }
+
+  /* Box for search widgets */
+  gtk_box_pack_start (GTK_BOX (priv->browse_path_bar_hbox), priv->search_hbox, TRUE, TRUE, 0);
+  gtk_widget_show_all (priv->search_hbox);
+  gtk_size_group_add_widget (GTK_SIZE_GROUP (priv->browse_path_bar_size_group), priv->search_hbox);
+
+  /* Hide the location widgets temporarily */
+
+  if (priv->action == GTK_FILE_CHOOSER_ACTION_OPEN ||
+      priv->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER)
+    {
+      gtk_widget_hide (priv->location_button);
+      gtk_widget_hide (priv->location_entry_box);
     }
 
   focus_search_entry_in_idle (impl);
@@ -6688,7 +6917,7 @@ list_selection_changed (GtkTreeSelection      *selection,
   if (priv->location_entry)
     update_chooser_entry (impl);
 
-  location_bar_update (impl);
+  path_bar_update (impl);
 
   check_preview_change (impl);
   check_file_list_menu_sensitivity (impl);
@@ -6854,7 +7083,7 @@ location_popup_handler (GtkFileChooserWidget *impl,
       if (!path)
 	return;
 
-      location_mode_set (impl, LOCATION_MODE_FILENAME_ENTRY);
+      location_mode_set (impl, LOCATION_MODE_FILENAME_ENTRY, TRUE);
       location_set_user_text (impl, path);
     }
   else if (priv->action == GTK_FILE_CHOOSER_ACTION_SAVE ||
@@ -6985,7 +7214,7 @@ gtk_file_chooser_widget_class_init (GtkFileChooserWidgetClass *class)
   int i;
 
   gobject_class->finalize = gtk_file_chooser_widget_finalize;
-  gobject_class->constructed = gtk_file_chooser_widget_constructed;
+  gobject_class->constructor = gtk_file_chooser_widget_constructor;
   gobject_class->set_property = gtk_file_chooser_widget_set_property;
   gobject_class->get_property = gtk_file_chooser_widget_get_property;
   gobject_class->dispose = gtk_file_chooser_widget_dispose;
@@ -7347,25 +7576,26 @@ gtk_file_chooser_widget_class_init (GtkFileChooserWidgetClass *class)
   /* A *lot* of widgets that we need to handle .... */
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_widgets_box);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_widgets_hpaned);
-  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_files_box);
+  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_header_box);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_widgets_box);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, places_sidebar);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_files_tree_view);
-  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_header_box);
-  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_header_stack);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_new_folder_button);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_path_bar_hbox);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_path_bar_size_group);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_path_bar);
+  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_special_mode_icon);
+  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_special_mode_label);
+  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_select_a_folder_info_bar);
+  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_select_a_folder_label);
+  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, browse_select_a_folder_icon);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, filter_combo_hbox);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, filter_combo);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, preview_box);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, extra_align);
-  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, extra_and_filters);
+  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, location_button);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, location_entry_box);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, location_label);
-  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, search_bar);
-  gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, search_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, list_name_column);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, list_pixbuf_renderer);
   gtk_widget_class_bind_template_child_private (widget_class, GtkFileChooserWidget, list_name_renderer);
@@ -7385,12 +7615,11 @@ gtk_file_chooser_widget_class_init (GtkFileChooserWidgetClass *class)
   gtk_widget_class_bind_template_callback (widget_class, renderer_editing_canceled_cb);
   gtk_widget_class_bind_template_callback (widget_class, renderer_edited_cb);
   gtk_widget_class_bind_template_callback (widget_class, filter_combo_changed);
+  gtk_widget_class_bind_template_callback (widget_class, location_button_toggled_cb);
   gtk_widget_class_bind_template_callback (widget_class, new_folder_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, path_bar_clicked);
   gtk_widget_class_bind_template_callback (widget_class, places_sidebar_open_location_cb);
   gtk_widget_class_bind_template_callback (widget_class, places_sidebar_show_error_message_cb);
-  gtk_widget_class_bind_template_callback (widget_class, places_sidebar_show_enter_location_cb);
-  gtk_widget_class_bind_template_callback (widget_class, search_entry_activate_cb);
 }
 
 static void
@@ -7489,6 +7718,10 @@ gtk_file_chooser_widget_init (GtkFileChooserWidget *impl)
   gtk_widget_set_size_request (priv->browse_files_tree_view, 280, -1);
 
   set_file_system_backend (impl);
+
+  if (g_settings_schema_source_lookup (g_settings_schema_source_get_default (),
+                                       "org.gnome.desktop.interface",
+                                       TRUE) != NULL)
 
   priv->bookmarks_manager = _gtk_bookmarks_manager_new (NULL, NULL);
 
