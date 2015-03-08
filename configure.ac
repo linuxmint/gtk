@@ -1867,6 +1867,14 @@ examples/application9/Makefile
 examples/application10/Makefile
 tests/Makefile
 tests/visuals/Makefile
+testsuite/Makefile
+testsuite/a11y/Makefile
+testsuite/a11y/state/Makefile
+testsuite/css/Makefile
+testsuite/css/parser/Makefile
+testsuite/gdk/Makefile
+testsuite/gtk/Makefile
+testsuite/reftests/Makefile
 docs/Makefile
 docs/reference/Makefile
 docs/reference/gdk/Makefile
