@@ -165,6 +165,7 @@ struct _GtkPlacesSidebar {
   guint show_desktop_set       : 1;
   guint show_desktop           : 1;
   guint show_connect_to_server : 1;
+  guint show_enter_location    : 1;
   guint local_only             : 1;
 };
 
@@ -192,6 +193,7 @@ struct _GtkPlacesSidebarClass {
                                       GFile              *dest_file,
                                       GList              *source_file_list,
                                       GdkDragAction       action);
+  void (* show_enter_location) (GtkPlacesSidebar *sidebar);
 };
 
 enum {
@@ -219,6 +221,7 @@ typedef enum {
   PLACES_BOOKMARK,
   PLACES_HEADING,
   PLACES_CONNECT_TO_SERVER,
+  PLACES_ENTER_LOCATION,
   PLACES_DROP_FEEDBACK
 } PlaceType;
 
@@ -234,6 +237,7 @@ enum {
   POPULATE_POPUP,
   SHOW_ERROR_MESSAGE,
   SHOW_CONNECT_TO_SERVER,
+  SHOW_ENTER_LOCATION,
   DRAG_ACTION_REQUESTED,
   DRAG_ACTION_ASK,
   DRAG_PERFORM_DROP,
@@ -245,6 +249,7 @@ enum {
   PROP_OPEN_FLAGS,
   PROP_SHOW_DESKTOP,
   PROP_SHOW_CONNECT_TO_SERVER,
+  PROP_SHOW_ENTER_LOCATION,
   PROP_LOCAL_ONLY,
   NUM_PROPERTIES
 };
@@ -361,6 +366,12 @@ static void
 emit_show_connect_to_server (GtkPlacesSidebar *sidebar)
 {
   g_signal_emit (sidebar, places_sidebar_signals[SHOW_CONNECT_TO_SERVER], 0);
+}
+
+static void
+emit_show_enter_location (GtkPlacesSidebar *sidebar)
+{
+  g_signal_emit (sidebar, places_sidebar_signals[SHOW_ENTER_LOCATION], 0);
 }
 
 static GdkDragAction
@@ -2329,6 +2340,10 @@ open_selected_bookmark (GtkPlacesSidebar   *sidebar,
     {
       emit_show_connect_to_server (sidebar);
     }
+  else if (place_type == PLACES_ENTER_LOCATION)
+    {
+      emit_show_enter_location (sidebar);
+    }
   else
     {
       open_selected_volume (sidebar, model, iter, open_flags);
@@ -3951,6 +3966,10 @@ gtk_places_sidebar_set_property (GObject      *obj,
       gtk_places_sidebar_set_show_connect_to_server (sidebar, g_value_get_boolean (value));
       break;
 
+    case PROP_SHOW_ENTER_LOCATION:
+      gtk_places_sidebar_set_show_enter_location (sidebar, g_value_get_boolean (value));
+    break;
+
     case PROP_LOCAL_ONLY:
       gtk_places_sidebar_set_local_only (sidebar, g_value_get_boolean (value));
       break;
@@ -3986,6 +4005,10 @@ gtk_places_sidebar_get_property (GObject    *obj,
     case PROP_SHOW_CONNECT_TO_SERVER:
       g_value_set_boolean (value, gtk_places_sidebar_get_show_connect_to_server (sidebar));
       break;
+
+    case PROP_SHOW_ENTER_LOCATION:
+      g_value_set_boolean (value, gtk_places_sidebar_get_show_enter_location (sidebar));
+    break;
 
     case PROP_LOCAL_ONLY:
       g_value_set_boolean (value, gtk_places_sidebar_get_local_only (sidebar));
@@ -4186,6 +4209,27 @@ gtk_places_sidebar_class_init (GtkPlacesSidebarClass *class)
                         _gtk_marshal_VOID__VOID,
                         G_TYPE_NONE, 0);
 
+
+   /**
+    * GtkPlacesSidebar::show-enter-location:
+    * @sidebar: the object which received the signal.
+    *
+    * The places sidebar emits this signal when it needs the calling
+    * application to present an way to directly enter a location.
+    * For example, the application may bring up a dialog box asking for
+    * a URL like "http://http.example.com".
+    *
+    * Since: 3.14
+    */
+    places_sidebar_signals [SHOW_ENTER_LOCATION] =
+          g_signal_new (I_("show-enter-location"),
+                        G_OBJECT_CLASS_TYPE (gobject_class),
+                        G_SIGNAL_RUN_FIRST,
+                        G_STRUCT_OFFSET (GtkPlacesSidebarClass, show_enter_location),
+                        NULL, NULL,
+                        _gtk_marshal_VOID__VOID,
+                        G_TYPE_NONE, 0);
+
   /**
    * GtkPlacesSidebar::drag-action-requested:
    * @sidebar: the object which received the signal.
@@ -4294,6 +4338,12 @@ gtk_places_sidebar_class_init (GtkPlacesSidebarClass *class)
           g_param_spec_boolean ("show-connect-to-server",
                                 P_("Show 'Connect to Server'"),
                                 P_("Whether the sidebar includes a builtin shortcut to a 'Connect to server' dialog"),
+                                FALSE,
+                                G_PARAM_READWRITE);
+  properties[PROP_SHOW_ENTER_LOCATION] =
+          g_param_spec_boolean ("show-enter-location",
+                                P_("Show 'Enter Location'"),
+                                P_("Whether the sidebar includes a builtin shortcut to manually enter a location"),
                                 FALSE,
                                 G_PARAM_READWRITE);
   properties[PROP_LOCAL_ONLY] =
@@ -4868,11 +4918,18 @@ gtk_places_sidebar_set_show_enter_location (GtkPlacesSidebar *sidebar,
                                                gboolean          show_enter_location)
 
 {
+  g_return_if_fail (GTK_IS_PLACES_SIDEBAR (sidebar));
+  show_enter_location = !!show_enter_location;
+  if (sidebar->show_enter_location != show_enter_location) {
+    sidebar->show_enter_location = show_enter_location;
+    update_places (sidebar);
+    g_object_notify_by_pspec (G_OBJECT (sidebar), properties[PROP_SHOW_ENTER_LOCATION]);
+  }
 }
 
 gboolean
 gtk_places_sidebar_get_show_enter_location (GtkPlacesSidebar *sidebar)
 {
   g_return_val_if_fail (GTK_IS_PLACES_SIDEBAR (sidebar), FALSE);
-  return TRUE;
+  return sidebar->show_enter_location;
 }
