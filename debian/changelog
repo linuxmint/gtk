@@ -1,3 +1,9 @@
+gtk+3.0 (3.14.5+2) betsy; urgency=medium
+
+  * Reverted GtkFileChooser changes
+
+ -- Clement Lefebvre <root@linuxmint.com>  Sun, 08 Mar 2015 17:42:58 +0100
+
 gtk+3.0 (3.14.5+1) betsy; urgency=medium
 
   * GtkRange: Disabled drag-and-hold zoom mode
