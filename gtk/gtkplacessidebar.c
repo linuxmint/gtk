@@ -3932,7 +3932,7 @@ gtk_places_sidebar_init (GtkPlacesSidebar *sidebar)
   /* tree view */
   tree_view = GTK_TREE_VIEW (gtk_tree_view_new ());
   gtk_tree_view_set_headers_visible (tree_view, FALSE);
-  gtk_widget_set_margin_top (GTK_WIDGET (tree_view), 4);
+  gtk_widget_set_margin_top (GTK_WIDGET (tree_view), 0);
 
   gtk_tree_view_set_row_separator_func (tree_view,
                                         row_separator_func,
@@ -3944,8 +3944,8 @@ gtk_places_sidebar_init (GtkPlacesSidebar *sidebar)
   /* icon renderer */
   cell = gtk_cell_renderer_pixbuf_new ();
   g_object_set (cell,
-                "xpad", 10,
-                "ypad", 8,
+                "xpad", 4,
+                "ypad", 4,
                 "follow-state", TRUE,
                 NULL);
   gtk_tree_view_column_pack_start (col, cell, FALSE);
