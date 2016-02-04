@@ -2473,17 +2473,15 @@ gtk_tree_view_update_height (GtkTreeView *tree_view)
 
   for (list = tree_view->priv->columns; list; list = list->next)
     {
-      GtkRequisition     minimum, natural;
+      GtkRequisition     requisition;
       GtkTreeViewColumn *column = list->data;
       GtkWidget         *button = gtk_tree_view_column_get_button (column);
 
       if (button == NULL)
         continue;
 
-      gtk_widget_get_preferred_size (button, &minimum, &natural);
-      tree_view->priv->header_height = MAX (tree_view->priv->header_height,
-                                            tree_view->priv->vscroll_policy == GTK_SCROLL_MINIMUM ?
-                                                                               minimum.height : natural.height);
+      gtk_widget_get_preferred_size (button, &requisition, NULL);
+      tree_view->priv->header_height = MAX (tree_view->priv->header_height, requisition.height);
     }
 }
 
@@ -2676,9 +2674,7 @@ gtk_tree_view_size_allocate_columns (GtkWidget *widget,
   natural_width = tree_view->priv->natural_width;
   n_expand_columns = tree_view->priv->n_expand_columns;
 
-  width = MAX (widget_allocation.width,
-               tree_view->priv->hscroll_policy == GTK_SCROLL_MINIMUM ?
-                                                  minimum_width : natural_width);
+  width = MAX (widget_allocation.width, minimum_width);
 
   /* We change the width here.  The user might have been resizing columns,
    * which changes the total width of the tree view.  This is of
@@ -6587,22 +6583,18 @@ validate_visible_area (GtkTreeView *tree_view)
   /* update width/height and queue a resize */
   if (size_changed)
     {
-      GtkRequisition minimum, natural;
+      GtkRequisition requisition;
 
       /* We temporarily guess a size, under the assumption that it will be the
        * same when we get our next size_allocate.  If we don't do this, we'll be
        * in an inconsistent state if we call top_row_to_dy. */
 
       gtk_widget_get_preferred_size (GTK_WIDGET (tree_view),
-                                     &minimum, &natural);
+                                     &requisition, NULL);
       gtk_adjustment_set_upper (tree_view->priv->hadjustment,
-                                MAX (gtk_adjustment_get_upper (tree_view->priv->hadjustment),
-                                     tree_view->priv->hscroll_policy == GTK_SCROLL_MINIMUM ?
-                                                                        minimum.width : natural.width));
+                                MAX (gtk_adjustment_get_upper (tree_view->priv->hadjustment), requisition.width));
       gtk_adjustment_set_upper (tree_view->priv->vadjustment,
-                                MAX (gtk_adjustment_get_upper (tree_view->priv->vadjustment),
-                                     tree_view->priv->vscroll_policy == GTK_SCROLL_MINIMUM ?
-                                                                        minimum.height : natural.height));
+                                MAX (gtk_adjustment_get_upper (tree_view->priv->vadjustment), requisition.height));
       gtk_widget_queue_resize (GTK_WIDGET (tree_view));
     }
 
@@ -6798,7 +6790,7 @@ do_validate_rows (GtkTreeView *tree_view, gboolean queue_resize)
  done:
   if (validated_area)
     {
-      GtkRequisition minimum, natural;
+      GtkRequisition requisition;
 
       /* We temporarily guess a size, under the assumption that it will be the
        * same when we get our next size_allocate.  If we don't do this, we'll be
@@ -6815,8 +6807,8 @@ do_validate_rows (GtkTreeView *tree_view, gboolean queue_resize)
        * untill we've recieved an allocation (never update scroll adjustments from size-requests).
        */
       prevent_recursion_hack = TRUE;
-      gtk_tree_view_get_preferred_width (GTK_WIDGET (tree_view), &minimum.width, &natural.width);
-      gtk_tree_view_get_preferred_height (GTK_WIDGET (tree_view), &minimum.height, &natural.height);
+      gtk_tree_view_get_preferred_width (GTK_WIDGET (tree_view), &requisition.width, NULL);
+      gtk_tree_view_get_preferred_height (GTK_WIDGET (tree_view), &requisition.height, NULL);
       prevent_recursion_hack = FALSE;
 
       /* If rows above the current position have changed height, this has
@@ -6826,13 +6818,9 @@ do_validate_rows (GtkTreeView *tree_view, gboolean queue_resize)
         gtk_widget_queue_draw (GTK_WIDGET (tree_view));
 
       gtk_adjustment_set_upper (tree_view->priv->hadjustment,
-                                MAX (gtk_adjustment_get_upper (tree_view->priv->hadjustment),
-                                     tree_view->priv->hscroll_policy == GTK_SCROLL_MINIMUM ?
-                                                                        minimum.width : natural.width));
+                                MAX (gtk_adjustment_get_upper (tree_view->priv->hadjustment), requisition.width));
       gtk_adjustment_set_upper (tree_view->priv->vadjustment,
-                                MAX (gtk_adjustment_get_upper (tree_view->priv->vadjustment),
-                                     tree_view->priv->vscroll_policy == GTK_SCROLL_MINIMUM ?
-                                                                        minimum.height : natural.height));
+                                MAX (gtk_adjustment_get_upper (tree_view->priv->vadjustment), requisition.height));
 
       if (queue_resize)
         gtk_widget_queue_resize_no_redraw (GTK_WIDGET (tree_view));
@@ -6862,19 +6850,15 @@ do_presize_handler (GtkTreeView *tree_view)
 
   if (tree_view->priv->fixed_height_mode)
     {
-      GtkRequisition minimum, natural;
+      GtkRequisition requisition;
 
       gtk_widget_get_preferred_size (GTK_WIDGET (tree_view),
-                                     &minimum, &natural);
+                                     &requisition, NULL);
 
       gtk_adjustment_set_upper (tree_view->priv->hadjustment,
-                                MAX (gtk_adjustment_get_upper (tree_view->priv->hadjustment),
-                                     tree_view->priv->hscroll_policy == GTK_SCROLL_MINIMUM ?
-                                                                        minimum.width : natural.width));
+                                MAX (gtk_adjustment_get_upper (tree_view->priv->hadjustment), requisition.width));
       gtk_adjustment_set_upper (tree_view->priv->vadjustment,
-                                MAX (gtk_adjustment_get_upper (tree_view->priv->vadjustment),
-                                     tree_view->priv->vscroll_policy == GTK_SCROLL_MINIMUM ?
-                                                                        minimum.height : natural.height));
+                                MAX (gtk_adjustment_get_upper (tree_view->priv->vadjustment), requisition.height));
       gtk_widget_queue_resize (GTK_WIDGET (tree_view));
     }
 		   
