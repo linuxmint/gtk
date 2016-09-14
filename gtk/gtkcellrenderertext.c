@@ -1941,8 +1941,6 @@ gtk_cell_renderer_text_editing_done (GtkCellEditable *entry,
 
   priv = GTK_CELL_RENDERER_TEXT (data)->priv;
 
-  g_clear_object (&priv->entry);
-
   if (priv->focus_out_id > 0)
     {
       g_signal_handler_disconnect (entry, priv->focus_out_id);
@@ -1973,6 +1971,8 @@ gtk_cell_renderer_text_editing_done (GtkCellEditable *entry,
   new_text = gtk_entry_get_text (GTK_ENTRY (entry));
 
   g_signal_emit (data, text_cell_renderer_signals[EDITED], 0, path, new_text);
+
+  g_clear_object (&priv->entry);
 }
 
 static gboolean
